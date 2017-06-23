@@ -285,12 +285,57 @@
                     <view key="view" contentMode="scaleToFill" id="KVw-ou-yEe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="S6G-sv-fhK">
+                                <rect key="frame" x="16" y="134" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="XOR-ZI-Uc1"/>
+                                    <constraint firstAttribute="width" constant="150" id="g1C-7w-TJx"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ペット登録" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0sf-ve-RnA">
+                                <rect key="frame" x="37" y="80" width="300" height="24"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="HBy-b4-WNO"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="所在地" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tf8-t6-xdk">
+                                <rect key="frame" x="16" y="306" width="102" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="characterWrap" numberOfLines="6" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="tMb-9I-X2f">
+                                <rect key="frame" x="186" y="134" width="173" height="90"/>
+                                <string key="text">※注意※
+ペットの大きさをわかり
+やすくするため、飼い主
+さんの手が入るように撮
+影してください。</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tMb-9I-X2f" firstAttribute="top" secondItem="S6G-sv-fhK" secondAttribute="top" id="4uf-mZ-sjV"/>
+                            <constraint firstItem="S6G-sv-fhK" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="DoI-cj-KG8"/>
+                            <constraint firstItem="S6G-sv-fhK" firstAttribute="top" secondItem="0sf-ve-RnA" secondAttribute="bottom" constant="30" id="GFJ-Aa-aao"/>
+                            <constraint firstItem="0sf-ve-RnA" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="La9-En-oG8"/>
+                            <constraint firstItem="tMb-9I-X2f" firstAttribute="leading" secondItem="S6G-sv-fhK" secondAttribute="trailing" constant="20" id="S3z-SK-sne"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="tMb-9I-X2f" secondAttribute="trailing" id="V9a-CN-lUO"/>
+                            <constraint firstItem="0sf-ve-RnA" firstAttribute="top" secondItem="ndY-Le-b8L" secondAttribute="bottom" constant="60" id="yzR-8q-PGO"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdx-ol-5lQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2662" y="124"/>
+            <point key="canvasLocation" x="2661.5999999999999" y="123.68815592203899"/>
         </scene>
         <!--Setting View Controller-->
         <scene sceneID="emG-Gd-CIx">
