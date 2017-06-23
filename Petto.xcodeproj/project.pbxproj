@@ -20,7 +20,37 @@
 		84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */; };
 		84F244171EFCDEFC00938F35 /* TestNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F244161EFCDEFC00938F35 /* TestNavigationController.swift */; };
 		84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84F244181EFCE01400938F35 /* GoogleService-Info.plist */; };
+		84F6ACA81EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; };
+		84F6ACA91EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		84F6ACAB1EFD01F20086BBB9 /* AdobeCreativeSDKImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */; };
+		84F6ACAC1EFD01F20086BBB9 /* AdobeCreativeSDKImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		84F6ACAE1EFD022C0086BBB9 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACAD1EFD022C0086BBB9 /* libc++.tbd */; };
+		84F6ACB01EFD02350086BBB9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACAF1EFD02350086BBB9 /* libz.tbd */; };
+		84F6ACB21EFD023C0086BBB9 /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACB11EFD023C0086BBB9 /* libz.1.2.5.tbd */; };
+		84F6ACB41EFD02430086BBB9 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACB31EFD02430086BBB9 /* libsqlite3.0.tbd */; };
+		84F6ACB61EFD024A0086BBB9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACB51EFD024A0086BBB9 /* MobileCoreServices.framework */; };
+		84F6ACB81EFD02500086BBB9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACB71EFD02500086BBB9 /* SystemConfiguration.framework */; };
+		84F6ACBA1EFD02560086BBB9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACB91EFD02560086BBB9 /* Accelerate.framework */; };
+		84F6ACBC1EFD025C0086BBB9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACBB1EFD025C0086BBB9 /* CoreData.framework */; };
+		84F6ACBE1EFD02630086BBB9 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACBD1EFD02630086BBB9 /* MessageUI.framework */; };
+		84F6ACC01EFD02690086BBB9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACBF1EFD02690086BBB9 /* OpenGLES.framework */; };
+		84F6ACC21EFD026F0086BBB9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACC11EFD026F0086BBB9 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		84F6ACAA1EFD01EE0086BBB9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				84F6ACAC1EFD01F20086BBB9 /* AdobeCreativeSDKImage.framework in Embed Frameworks */,
+				84F6ACA91EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Petto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,6 +68,20 @@
 		84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		84F244161EFCDEFC00938F35 /* TestNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestNavigationController.swift; sourceTree = "<group>"; };
 		84F244181EFCE01400938F35 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
+		84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKImage.framework; sourceTree = "<group>"; };
+		84F6ACAD1EFD022C0086BBB9 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		84F6ACAF1EFD02350086BBB9 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		84F6ACB11EFD023C0086BBB9 /* libz.1.2.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.5.tbd; path = usr/lib/libz.1.2.5.tbd; sourceTree = SDKROOT; };
+		84F6ACB31EFD02430086BBB9 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		84F6ACB51EFD024A0086BBB9 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		84F6ACB71EFD02500086BBB9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		84F6ACB91EFD02560086BBB9 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		84F6ACBB1EFD025C0086BBB9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		84F6ACBD1EFD02630086BBB9 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		84F6ACBF1EFD02690086BBB9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		84F6ACC11EFD026F0086BBB9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Petto-Bridging-Header.h"; sourceTree = "<group>"; };
 		B81EF91AE6E4CACD52E5751F /* Pods-Petto.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Petto.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Petto/Pods-Petto.debug.xcconfig"; sourceTree = "<group>"; };
 		D1CF0AE273C1752201C0D265 /* Pods-Petto.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Petto.release.xcconfig"; path = "Pods/Target Support Files/Pods-Petto/Pods-Petto.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -47,7 +91,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F6ACC21EFD026F0086BBB9 /* QuartzCore.framework in Frameworks */,
+				84F6ACC01EFD02690086BBB9 /* OpenGLES.framework in Frameworks */,
+				84F6ACBE1EFD02630086BBB9 /* MessageUI.framework in Frameworks */,
+				84F6ACBC1EFD025C0086BBB9 /* CoreData.framework in Frameworks */,
+				84F6ACBA1EFD02560086BBB9 /* Accelerate.framework in Frameworks */,
+				84F6ACB81EFD02500086BBB9 /* SystemConfiguration.framework in Frameworks */,
+				84F6ACB61EFD024A0086BBB9 /* MobileCoreServices.framework in Frameworks */,
+				84F6ACB41EFD02430086BBB9 /* libsqlite3.0.tbd in Frameworks */,
+				84F6ACB21EFD023C0086BBB9 /* libz.1.2.5.tbd in Frameworks */,
+				84F6ACB01EFD02350086BBB9 /* libz.tbd in Frameworks */,
+				84F6ACAE1EFD022C0086BBB9 /* libc++.tbd in Frameworks */,
 				14AE20106A61980E89F4EB7E /* Pods_Petto.framework in Frameworks */,
+				84F6ACAB1EFD01F20086BBB9 /* AdobeCreativeSDKImage.framework in Frameworks */,
+				84F6ACA81EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +114,17 @@
 		06FAA2B132BA87C253DF4E2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				84F6ACC11EFD026F0086BBB9 /* QuartzCore.framework */,
+				84F6ACBF1EFD02690086BBB9 /* OpenGLES.framework */,
+				84F6ACBD1EFD02630086BBB9 /* MessageUI.framework */,
+				84F6ACBB1EFD025C0086BBB9 /* CoreData.framework */,
+				84F6ACB91EFD02560086BBB9 /* Accelerate.framework */,
+				84F6ACB71EFD02500086BBB9 /* SystemConfiguration.framework */,
+				84F6ACB51EFD024A0086BBB9 /* MobileCoreServices.framework */,
+				84F6ACB31EFD02430086BBB9 /* libsqlite3.0.tbd */,
+				84F6ACB11EFD023C0086BBB9 /* libz.1.2.5.tbd */,
+				84F6ACAF1EFD02350086BBB9 /* libz.tbd */,
+				84F6ACAD1EFD022C0086BBB9 /* libc++.tbd */,
 				4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */,
 			);
 			name = Frameworks;
@@ -84,18 +152,21 @@
 		84CCE0071EFB791D0025B5D3 /* Petto */ = {
 			isa = PBXGroup;
 			children = (
+				84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */,
+				84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */,
+				84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */,
+				84CCE0141EFB791D0025B5D3 /* Info.plist */,
 				84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */,
-				84CCE00A1EFB791D0025B5D3 /* ViewController.swift */,
-				84F244161EFCDEFC00938F35 /* TestNavigationController.swift */,
-				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
-				84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */,
-				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
 				84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */,
 				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
+				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
 				84CCE0201EFB8C380025B5D3 /* PostViewController.swift */,
 				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
+				84F244161EFCDEFC00938F35 /* TestNavigationController.swift */,
+				84CCE00A1EFB791D0025B5D3 /* ViewController.swift */,
+				84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
-				84CCE0141EFB791D0025B5D3 /* Info.plist */,
+				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
 			);
 			path = Petto;
 			sourceTree = "<group>";
@@ -122,6 +193,8 @@
 				84CCE0031EFB791D0025B5D3 /* Resources */,
 				8EE3287561B254FA10A763D2 /* [CP] Embed Pods Frameworks */,
 				5A33CE4A0AD4348E73839884 /* [CP] Copy Pods Resources */,
+				84F6ACAA1EFD01EE0086BBB9 /* Embed Frameworks */,
+				84F6ACC31EFD02830086BBB9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -196,6 +269,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Petto/Pods-Petto-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		84F6ACC31EFD02830086BBB9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/AdobeCreativeSDKCore.framework/strip-frameworks.sh\"";
 		};
 		8EE3287561B254FA10A763D2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -366,10 +452,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 52B62KUG6G;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Petto",
+				);
 				INFOPLIST_FILE = Petto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.techacademy.aoi.sueki.Petto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Petto/Petto-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -380,10 +471,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 52B62KUG6G;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Petto",
+				);
 				INFOPLIST_FILE = Petto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.techacademy.aoi.sueki.Petto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Petto/Petto-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
