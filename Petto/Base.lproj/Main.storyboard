@@ -287,14 +287,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="S6G-sv-fhK">
-                                <rect key="frame" x="16" y="134" width="150" height="150"/>
+                                <rect key="frame" x="16" y="153" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="150" id="XOR-ZI-Uc1"/>
                                     <constraint firstAttribute="width" constant="150" id="g1C-7w-TJx"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ペット登録" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0sf-ve-RnA">
-                                <rect key="frame" x="37" y="80" width="300" height="24"/>
+                                <rect key="frame" x="37" y="80" width="300" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="HBy-b4-WNO"/>
                                 </constraints>
@@ -302,15 +302,17 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="所在地" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tf8-t6-xdk">
-                                <rect key="frame" x="16" y="306" width="102" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="所在地" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tf8-t6-xdk">
+                                <rect key="frame" x="16" y="323" width="80" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="xgJ-f1-wXs"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="characterWrap" numberOfLines="6" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="tMb-9I-X2f">
-                                <rect key="frame" x="186" y="134" width="173" height="90"/>
+                                <rect key="frame" x="186" y="153" width="173" height="90"/>
                                 <string key="text">※注意※
 ペットの大きさをわかり
 やすくするため、飼い主
@@ -320,18 +322,41 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9YT-VV-hhW">
+                                <rect key="frame" x="106" y="323" width="253" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIU-8G-ENw">
+                                <rect key="frame" x="16" y="354" width="343" height="216"/>
+                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="tMb-9I-X2f" firstAttribute="top" secondItem="S6G-sv-fhK" secondAttribute="top" id="4uf-mZ-sjV"/>
+                            <constraint firstItem="9YT-VV-hhW" firstAttribute="trailing" secondItem="KVw-ou-yEe" secondAttribute="trailingMargin" id="AFm-w2-PBr"/>
                             <constraint firstItem="S6G-sv-fhK" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="DoI-cj-KG8"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="iIU-8G-ENw" secondAttribute="trailing" id="Fcn-1I-lpz"/>
                             <constraint firstItem="S6G-sv-fhK" firstAttribute="top" secondItem="0sf-ve-RnA" secondAttribute="bottom" constant="30" id="GFJ-Aa-aao"/>
                             <constraint firstItem="0sf-ve-RnA" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="La9-En-oG8"/>
                             <constraint firstItem="tMb-9I-X2f" firstAttribute="leading" secondItem="S6G-sv-fhK" secondAttribute="trailing" constant="20" id="S3z-SK-sne"/>
+                            <constraint firstItem="tf8-t6-xdk" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="SeB-E9-aO4"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tMb-9I-X2f" secondAttribute="trailing" id="V9a-CN-lUO"/>
+                            <constraint firstItem="iIU-8G-ENw" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="fAm-xm-tVF"/>
+                            <constraint firstItem="tf8-t6-xdk" firstAttribute="centerY" secondItem="KVw-ou-yEe" secondAttribute="centerY" id="fem-6l-D1y"/>
+                            <constraint firstItem="9YT-VV-hhW" firstAttribute="leading" secondItem="tf8-t6-xdk" secondAttribute="trailing" constant="10" id="kfm-Wr-CPC"/>
+                            <constraint firstItem="iIU-8G-ENw" firstAttribute="top" secondItem="9YT-VV-hhW" secondAttribute="bottom" constant="10" id="ozB-qp-9TU"/>
+                            <constraint firstItem="9YT-VV-hhW" firstAttribute="centerY" secondItem="KVw-ou-yEe" secondAttribute="centerY" id="xth-iq-3CW"/>
+                            <constraint firstItem="tf8-t6-xdk" firstAttribute="top" secondItem="S6G-sv-fhK" secondAttribute="bottom" constant="20" id="y9A-cl-RO8"/>
                             <constraint firstItem="0sf-ve-RnA" firstAttribute="top" secondItem="ndY-Le-b8L" secondAttribute="bottom" constant="60" id="yzR-8q-PGO"/>
+                            <constraint firstItem="iIU-8G-ENw" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="zQN-Ij-Fue"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="areaLabel" destination="9YT-VV-hhW" id="mi5-Pn-ewZ"/>
+                        <outlet property="areaPickerView" destination="iIU-8G-ENw" id="gDz-Gc-k1G"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdx-ol-5lQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
