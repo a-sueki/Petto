@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-
+import SlideMenuControllerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,11 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Adobeの管理画面で登録したアプリの API key と Client secret の文字列を設定する
         AdobeUXAuthManager.shared().setAuthenticationParametersWithClientID("2643141de91c492087357e553e904699", withClientSecret: "efb2a972-e7a0-4d97-bc5c-084d2e3ddc96")
-
-
-        //NavigationControllerBarのカスタマイズ
-        //UINavigationBar.appearance().barTintColor = UIColor.white //背景色
-        //UINavigationBar.appearance().tintColor = UIColor.lightGray //アイテム色
+        
+        let slideMenuController = SlideMenuController(mainViewController: mainViewController, leftMenuViewController: leftViewController, rightMenuViewController: rightViewController)
+        self.window?.rootViewController = slideMenuController
+        self.window?.makeKeyAndVisible()
         
         return true
     }

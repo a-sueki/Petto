@@ -28,23 +28,23 @@ class PostViewController: UIViewController , UIPickerViewDataSource, UIPickerVie
     }
     
     //PicerViewの列数は1とする
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in: UIPickerView) -> Int {
         return 1
     }
     //PickerViewの行数は配列数にする
-    func pickerView(areaPickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ areaPickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return areaList.count
     }
     //PickerViewに表示する文字列を指定する
     func pickerView(areaPickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return list.count
+        return areaList.count
     }
     //PickerViewに表示する配列の要素数を設定する
     func pickerView(areaPickerView: UIPickerView, titleForRow row: Int, forComponent component: Int)-> String! {
-        return list[row]
+        return areaList[row]
     }
     //ラベル表示
     func pickerView(areaPickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
-        areaPickerView.text = list[row]
+        areaLabel.text = areaList[row]
     }
 }

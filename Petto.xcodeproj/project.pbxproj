@@ -18,6 +18,8 @@
 		84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */; };
 		84CCE0211EFB8C380025B5D3 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0201EFB8C380025B5D3 /* PostViewController.swift */; };
 		84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */; };
+		84D3DF8B1EFE4E5400EB52A8 /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3DF8A1EFE4E5400EB52A8 /* SlideMenuController.swift */; };
+		84D3DF8D1EFE4EA000EB52A8 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3DF8C1EFE4EA000EB52A8 /* ContainerViewController.swift */; };
 		84F244171EFCDEFC00938F35 /* TestNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F244161EFCDEFC00938F35 /* TestNavigationController.swift */; };
 		84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84F244181EFCE01400938F35 /* GoogleService-Info.plist */; };
 		84F6ACA81EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; };
@@ -66,6 +68,8 @@
 		84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelectViewController.swift; sourceTree = "<group>"; };
 		84CCE0201EFB8C380025B5D3 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		84D3DF8A1EFE4E5400EB52A8 /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideMenuController.swift; sourceTree = "<group>"; };
+		84D3DF8C1EFE4EA000EB52A8 /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		84F244161EFCDEFC00938F35 /* TestNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestNavigationController.swift; sourceTree = "<group>"; };
 		84F244181EFCE01400938F35 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
@@ -158,6 +162,8 @@
 				84CCE0141EFB791D0025B5D3 /* Info.plist */,
 				84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */,
 				84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */,
+				84D3DF8A1EFE4E5400EB52A8 /* SlideMenuController.swift */,
+				84D3DF8C1EFE4EA000EB52A8 /* ContainerViewController.swift */,
 				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
 				84CCE0201EFB8C380025B5D3 /* PostViewController.swift */,
@@ -322,8 +328,10 @@
 			files = (
 				84CCE0211EFB8C380025B5D3 /* PostViewController.swift in Sources */,
 				84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */,
+				84D3DF8D1EFE4EA000EB52A8 /* ContainerViewController.swift in Sources */,
 				84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */,
 				84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */,
+				84D3DF8B1EFE4E5400EB52A8 /* SlideMenuController.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84F244171EFCDEFC00938F35 /* TestNavigationController.swift in Sources */,
 				84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */,

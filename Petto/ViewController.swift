@@ -8,12 +8,16 @@
 
 import UIKit
 import FirebaseAuth
+import SlideMenuControllerSwift
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let slideMenuController = self.slideMenuController() {
+            // some code
+        }
 
     }
 
