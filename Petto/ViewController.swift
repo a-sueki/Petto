@@ -15,17 +15,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let slideMenuController = self.slideMenuController() {
-            // some code
-        }
-
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -38,8 +35,11 @@ class ViewController: UIViewController {
                 self.present(loginViewController!, animated: true, completion: nil)
             }
         }
-
     }
     
+/*    func onMenu(sender: UIButton) {
+        self.slideMenuController()?.openLeft()
+    }
+*/
 }
 

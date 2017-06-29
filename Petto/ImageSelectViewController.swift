@@ -56,7 +56,7 @@ class ImageSelectViewController: UIViewController, UIImagePickerControllerDelega
         
         // 投稿の画面を開く
         let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "Post") as! PostViewController
-        postViewController.image = image
+        postViewController.petImage = image
         present(postViewController, animated: true, completion: nil)
     }
     
