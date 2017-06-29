@@ -36,10 +36,6 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-/*    func onMenu(sender: UIButton) {
-        self.slideMenuController()?.openLeft()
-    }
-*/
+
 }
 

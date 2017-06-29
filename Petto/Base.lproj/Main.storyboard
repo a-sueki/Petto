@@ -275,6 +275,12 @@
                                     <constraint firstAttribute="width" constant="300" id="SBY-10-jDN"/>
                                 </constraints>
                                 <state key="normal" title="ライブラリ" backgroundImage="btn"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="handleLibraryButton:" destination="w9l-p2-aOF" eventType="touchUpInside" id="rzq-qz-fJP"/>
                                 </connections>
@@ -285,6 +291,12 @@
                                     <constraint firstAttribute="width" constant="300" id="4As-As-eJn"/>
                                 </constraints>
                                 <state key="normal" title="カメラ" backgroundImage="btn"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="handleCameraButton:" destination="w9l-p2-aOF" eventType="touchUpInside" id="vDP-af-qqk"/>
                                 </connections>
@@ -295,6 +307,12 @@
                                     <constraint firstAttribute="width" constant="300" id="cNy-cj-Gmb"/>
                                 </constraints>
                                 <state key="normal" title="キャンセル" backgroundImage="btn"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="handleCancelButton:" destination="w9l-p2-aOF" eventType="touchUpInside" id="ojl-An-hrS"/>
                                 </connections>
@@ -329,6 +347,10 @@
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="S6G-sv-fhK">
                                 <rect key="frame" x="16" y="153" width="150" height="150"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="150" id="XOR-ZI-Uc1"/>
                                     <constraint firstAttribute="width" constant="150" id="g1C-7w-TJx"/>
@@ -345,6 +367,9 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="所在地" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tf8-t6-xdk">
                                 <rect key="frame" x="16" y="323" width="80" height="21"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <bool key="isElement" value="NO"/>
+                                </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="xgJ-f1-wXs"/>
                                 </constraints>
@@ -363,15 +388,63 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9YT-VV-hhW">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="エリアを選択" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9YT-VV-hhW">
                                 <rect key="frame" x="106" y="323" width="253" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIU-8G-ENw">
                                 <rect key="frame" x="16" y="354" width="343" height="216"/>
                             </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dn7-fB-HkV">
+                                <rect key="frame" x="37" y="607" width="300" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="E15-1R-an2"/>
+                                </constraints>
+                                <state key="normal" title="キャンセル" backgroundImage="btn"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="handleCancelButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="Ih2-NL-Qaz"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0KY-nw-7MZ">
+                                <rect key="frame" x="37" y="557" width="300" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="GpK-QV-4uP"/>
+                                </constraints>
+                                <state key="normal" title="OK" backgroundImage="btn"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="handlePostButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="2kO-Hx-q3g"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fdb-EU-4HO">
+                                <rect key="frame" x="16" y="153" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="WWI-Io-vt7"/>
+                                    <constraint firstAttribute="width" constant="150" id="oAU-cW-Fwi"/>
+                                </constraints>
+                                <state key="normal" image="icons8-カメラ-50"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="handleCameraButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="nOP-pJ-Jcv"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -379,14 +452,22 @@
                             <constraint firstItem="9YT-VV-hhW" firstAttribute="trailing" secondItem="KVw-ou-yEe" secondAttribute="trailingMargin" id="AFm-w2-PBr"/>
                             <constraint firstItem="S6G-sv-fhK" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="DoI-cj-KG8"/>
                             <constraint firstAttribute="trailingMargin" secondItem="iIU-8G-ENw" secondAttribute="trailing" id="Fcn-1I-lpz"/>
+                            <constraint firstItem="Fdb-EU-4HO" firstAttribute="top" secondItem="0sf-ve-RnA" secondAttribute="bottom" constant="30" id="Fem-Bo-0rH"/>
                             <constraint firstItem="S6G-sv-fhK" firstAttribute="top" secondItem="0sf-ve-RnA" secondAttribute="bottom" constant="30" id="GFJ-Aa-aao"/>
+                            <constraint firstItem="0KY-nw-7MZ" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="GKw-TD-Oa3"/>
                             <constraint firstItem="0sf-ve-RnA" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="La9-En-oG8"/>
+                            <constraint firstItem="9YT-VV-hhW" firstAttribute="top" secondItem="Fdb-EU-4HO" secondAttribute="bottom" constant="20" id="RPx-7L-xJC"/>
                             <constraint firstItem="tMb-9I-X2f" firstAttribute="leading" secondItem="S6G-sv-fhK" secondAttribute="trailing" constant="20" id="S3z-SK-sne"/>
                             <constraint firstItem="tf8-t6-xdk" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="SeB-E9-aO4"/>
+                            <constraint firstItem="XD4-4A-dQk" firstAttribute="top" secondItem="dn7-fB-HkV" secondAttribute="bottom" constant="20" id="Tw8-fS-QhP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tMb-9I-X2f" secondAttribute="trailing" id="V9a-CN-lUO"/>
+                            <constraint firstItem="dn7-fB-HkV" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="b63-FC-QkR"/>
                             <constraint firstItem="iIU-8G-ENw" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="fAm-xm-tVF"/>
                             <constraint firstItem="tf8-t6-xdk" firstAttribute="centerY" secondItem="KVw-ou-yEe" secondAttribute="centerY" id="fem-6l-D1y"/>
+                            <constraint firstItem="Fdb-EU-4HO" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="g3b-1A-Jbk"/>
+                            <constraint firstItem="dn7-fB-HkV" firstAttribute="top" secondItem="0KY-nw-7MZ" secondAttribute="bottom" constant="10" id="gz1-Bq-t3c"/>
                             <constraint firstItem="9YT-VV-hhW" firstAttribute="leading" secondItem="tf8-t6-xdk" secondAttribute="trailing" constant="10" id="kfm-Wr-CPC"/>
+                            <constraint firstItem="tMb-9I-X2f" firstAttribute="leading" secondItem="Fdb-EU-4HO" secondAttribute="trailing" constant="20" id="oeS-Dq-jfR"/>
                             <constraint firstItem="iIU-8G-ENw" firstAttribute="top" secondItem="9YT-VV-hhW" secondAttribute="bottom" constant="10" id="ozB-qp-9TU"/>
                             <constraint firstItem="9YT-VV-hhW" firstAttribute="centerY" secondItem="KVw-ou-yEe" secondAttribute="centerY" id="xth-iq-3CW"/>
                             <constraint firstItem="tf8-t6-xdk" firstAttribute="top" secondItem="S6G-sv-fhK" secondAttribute="bottom" constant="20" id="y9A-cl-RO8"/>
@@ -431,6 +512,12 @@
                                     <constraint firstAttribute="width" constant="300" id="xsh-zD-gGY"/>
                                 </constraints>
                                 <state key="normal" title="表示名を変更" backgroundImage="btn"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="handleChangeButton:" destination="M9W-zV-Kdb" eventType="touchUpInside" id="vtX-BK-LJz"/>
                                 </connections>
@@ -441,6 +528,12 @@
                                     <constraint firstAttribute="width" constant="300" id="LNZ-Pr-nef"/>
                                 </constraints>
                                 <state key="normal" title="ログアウト" backgroundImage="btn"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="handleLogoutButton:" destination="M9W-zV-Kdb" eventType="touchUpInside" id="gfQ-jd-9Zu"/>
                                 </connections>
@@ -467,6 +560,7 @@
     </scenes>
     <resources>
         <image name="btn" width="300" height="40"/>
+        <image name="icons8-カメラ-50" width="50" height="50"/>
         <image name="logo" width="188" height="69"/>
     </resources>
 </document>

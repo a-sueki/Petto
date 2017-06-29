@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14AE20106A61980E89F4EB7E /* Pods_Petto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */; };
+		8480595D1F04CCB3003E2613 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480595C1F04CCB3003E2613 /* Const.swift */; };
 		84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */; };
 		84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE00A1EFB791D0025B5D3 /* ViewController.swift */; };
 		84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CCE00C1EFB791D0025B5D3 /* Main.storyboard */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Petto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8480595C1F04CCB3003E2613 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		84CCE0051EFB791D0025B5D3 /* Petto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Petto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84CCE00A1EFB791D0025B5D3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
 				84CCE0201EFB8C380025B5D3 /* PostViewController.swift */,
+				8480595C1F04CCB3003E2613 /* Const.swift */,
 				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
 				84CCE00A1EFB791D0025B5D3 /* ViewController.swift */,
 				84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */,
@@ -328,6 +331,7 @@
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
 				84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */,
 				84CCE01D1EFB8C040025B5D3 /* HomeViewController.swift in Sources */,
+				8480595D1F04CCB3003E2613 /* Const.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

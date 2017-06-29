@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseDatabase
+import SVProgressHUD
 
 class PostViewController: UIViewController , UIPickerViewDataSource, UIPickerViewDelegate {
 
@@ -16,20 +19,28 @@ class PostViewController: UIViewController , UIPickerViewDataSource, UIPickerVie
     @IBOutlet weak var areaPickerView: UIPickerView!
     @IBOutlet weak var petImageView: UIImageView!
     
-    var areaList = ["森永アイス　ラムネバー　ソーダ味","森永アイス　ラムネバー　白桃ソーダ味","赤城乳業ミント","森永Pinoバニラ","森永Pinoアーモンド","森永Pinoチョコ"]
+    var areaList = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.navigationController?.title = "ペット登録"
         areaPickerView.dataSource = self
         areaPickerView.delegate = self
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        // 受け取った画像をImageViewに設定する
+        petImageView.image = petImage
+        
     }
     
+    @IBAction func handleCameraButton(_ sender: Any) {
+
+        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        self.navigationController?.pushViewController(viewController4, animated: true)
+
+    }
+    
+
     //列数
     func numberOfComponents(in areaPickerView: UIPickerView) -> Int {
         return 1
@@ -45,5 +56,37 @@ class PostViewController: UIViewController , UIPickerViewDataSource, UIPickerVie
     //選択時
     func pickerView(_ areaPickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
         areaLabel.text = areaList[row]
+        areaLabel.textColor = UIColor.black
     }
+    
+    @IBAction func handlePostButton(_ sender: Any) {
+        // ImageViewから画像を取得する
+        let imageData = UIImageJPEGRepresentation(petImageView.image!, 0.5)
+        let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+        
+        // postDataに必要な情報を取得しておく
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let name = FIRAuth.auth()?.currentUser?.displayName
+        
+        // 辞書を作成してFirebaseに保存する
+        let postRef = FIRDatabase.database().reference().child(Const.PostPath)
+        let postData = ["area": areaLabel.text!, "image": imageString, "time": String(time), "name": name!]
+        postRef.childByAutoId().setValue(postData)
+        
+        // HUDで投稿完了を表示する
+        SVProgressHUD.showSuccess(withStatus: "投稿しました")
+        
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func handleCancelButton(_ sender: Any) {
+        // 画面を閉じる
+        dismiss(animated: true, completion: nil)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
 }
