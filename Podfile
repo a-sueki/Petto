@@ -11,4 +11,6 @@ target 'Petto' do
   pod 'Firebase/Database'
   pod 'SVProgressHUD'
   pod 'SlideMenuControllerSwift'
+  pod 'RxCocoa'
+  pod 'RxSwift'
 end

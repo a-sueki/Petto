@@ -394,9 +394,6 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iIU-8G-ENw">
-                                <rect key="frame" x="16" y="354" width="343" height="216"/>
-                            </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dn7-fB-HkV">
                                 <rect key="frame" x="37" y="607" width="300" height="40"/>
                                 <constraints>
@@ -445,13 +442,20 @@
                                     <action selector="handleCameraButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="nOP-pJ-Jcv"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ckh-5b-aRw">
+                                <rect key="frame" x="106" y="323" width="253" height="30"/>
+                                <connections>
+                                    <action selector="handleAreaSelectButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="RCN-yG-0zS"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="tMb-9I-X2f" firstAttribute="top" secondItem="S6G-sv-fhK" secondAttribute="top" id="4uf-mZ-sjV"/>
+                            <constraint firstItem="ckh-5b-aRw" firstAttribute="leading" secondItem="tf8-t6-xdk" secondAttribute="trailing" constant="10" id="6Ot-TL-lWl"/>
                             <constraint firstItem="9YT-VV-hhW" firstAttribute="trailing" secondItem="KVw-ou-yEe" secondAttribute="trailingMargin" id="AFm-w2-PBr"/>
+                            <constraint firstItem="ckh-5b-aRw" firstAttribute="top" secondItem="Fdb-EU-4HO" secondAttribute="bottom" constant="20" id="Cnr-O1-J8k"/>
                             <constraint firstItem="S6G-sv-fhK" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="DoI-cj-KG8"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="iIU-8G-ENw" secondAttribute="trailing" id="Fcn-1I-lpz"/>
                             <constraint firstItem="Fdb-EU-4HO" firstAttribute="top" secondItem="0sf-ve-RnA" secondAttribute="bottom" constant="30" id="Fem-Bo-0rH"/>
                             <constraint firstItem="S6G-sv-fhK" firstAttribute="top" secondItem="0sf-ve-RnA" secondAttribute="bottom" constant="30" id="GFJ-Aa-aao"/>
                             <constraint firstItem="0KY-nw-7MZ" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="GKw-TD-Oa3"/>
@@ -459,25 +463,21 @@
                             <constraint firstItem="9YT-VV-hhW" firstAttribute="top" secondItem="Fdb-EU-4HO" secondAttribute="bottom" constant="20" id="RPx-7L-xJC"/>
                             <constraint firstItem="tMb-9I-X2f" firstAttribute="leading" secondItem="S6G-sv-fhK" secondAttribute="trailing" constant="20" id="S3z-SK-sne"/>
                             <constraint firstItem="tf8-t6-xdk" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="SeB-E9-aO4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ckh-5b-aRw" secondAttribute="trailing" id="TXt-Ka-aHW"/>
                             <constraint firstItem="XD4-4A-dQk" firstAttribute="top" secondItem="dn7-fB-HkV" secondAttribute="bottom" constant="20" id="Tw8-fS-QhP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="tMb-9I-X2f" secondAttribute="trailing" id="V9a-CN-lUO"/>
                             <constraint firstItem="dn7-fB-HkV" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="b63-FC-QkR"/>
-                            <constraint firstItem="iIU-8G-ENw" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="fAm-xm-tVF"/>
+                            <constraint firstItem="9YT-VV-hhW" firstAttribute="leading" secondItem="tf8-t6-xdk" secondAttribute="trailing" constant="10" id="by1-mc-bRy"/>
                             <constraint firstItem="tf8-t6-xdk" firstAttribute="centerY" secondItem="KVw-ou-yEe" secondAttribute="centerY" id="fem-6l-D1y"/>
                             <constraint firstItem="Fdb-EU-4HO" firstAttribute="leading" secondItem="KVw-ou-yEe" secondAttribute="leadingMargin" id="g3b-1A-Jbk"/>
                             <constraint firstItem="dn7-fB-HkV" firstAttribute="top" secondItem="0KY-nw-7MZ" secondAttribute="bottom" constant="10" id="gz1-Bq-t3c"/>
-                            <constraint firstItem="9YT-VV-hhW" firstAttribute="leading" secondItem="tf8-t6-xdk" secondAttribute="trailing" constant="10" id="kfm-Wr-CPC"/>
                             <constraint firstItem="tMb-9I-X2f" firstAttribute="leading" secondItem="Fdb-EU-4HO" secondAttribute="trailing" constant="20" id="oeS-Dq-jfR"/>
-                            <constraint firstItem="iIU-8G-ENw" firstAttribute="top" secondItem="9YT-VV-hhW" secondAttribute="bottom" constant="10" id="ozB-qp-9TU"/>
-                            <constraint firstItem="9YT-VV-hhW" firstAttribute="centerY" secondItem="KVw-ou-yEe" secondAttribute="centerY" id="xth-iq-3CW"/>
                             <constraint firstItem="tf8-t6-xdk" firstAttribute="top" secondItem="S6G-sv-fhK" secondAttribute="bottom" constant="20" id="y9A-cl-RO8"/>
                             <constraint firstItem="0sf-ve-RnA" firstAttribute="top" secondItem="ndY-Le-b8L" secondAttribute="bottom" constant="60" id="yzR-8q-PGO"/>
-                            <constraint firstItem="iIU-8G-ENw" firstAttribute="centerX" secondItem="KVw-ou-yEe" secondAttribute="centerX" id="zQN-Ij-Fue"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="areaLabel" destination="9YT-VV-hhW" id="mi5-Pn-ewZ"/>
-                        <outlet property="areaPickerView" destination="iIU-8G-ENw" id="gDz-Gc-k1G"/>
                         <outlet property="petImageView" destination="S6G-sv-fhK" id="L8D-pu-r79"/>
                     </connections>
                 </viewController>
