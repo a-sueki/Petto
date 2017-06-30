@@ -10,11 +10,6 @@ import UIKit
 
 class HomeViewController: UIViewController {
 
-/*    var navController1: UINavigationController!
-    var navController2: UINavigationController!
-    var navController3: UINavigationController!
-    var navController4: UINavigationController!
-*/
     // ボタンを用意
     var btn1: UIBarButtonItem!
     var btn2: UIBarButtonItem!
@@ -25,11 +20,11 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        btn1 = UIBarButtonItem(image: UIImage(named: "icons8-Menu.png"), style: .plain, target: self, action: #selector(HomeViewController.onClick1))
-        btn2 = UIBarButtonItem(image: UIImage(named: "logo_small.png"), style: .plain, target: self, action: #selector(HomeViewController.onClick2))
-        btn3 = UIBarButtonItem(image: UIImage(named: "icons8-Checked.png"), style: .plain, target: self, action: #selector(HomeViewController.onClick3))
-        btn4 = UIBarButtonItem(image: UIImage(named: "icons8-Mailbox.png"), style: .plain, target: self, action: #selector(HomeViewController.onClick4))
-        btn5 = UIBarButtonItem(image: UIImage(named: "icons8-Search.png"), style: .plain, target: self, action: #selector(HomeViewController.onClick5))
+        btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(HomeViewController.onClick1))
+        btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(HomeViewController.onClick2))
+        btn3 = UIBarButtonItem(image: UIImage(named: "todolist"), style: .plain, target: self, action: #selector(HomeViewController.onClick3))
+        btn4 = UIBarButtonItem(image: UIImage(named: "mail"), style: .plain, target: self, action: #selector(HomeViewController.onClick4))
+        btn5 = UIBarButtonItem(image: UIImage(named: "search"), style: .plain, target: self, action: #selector(HomeViewController.onClick5))
 
         let leftBtns: [UIBarButtonItem] = [btn1,btn2]
         let rightBtns: [UIBarButtonItem] = [btn3,btn4,btn5]

@@ -11,6 +11,7 @@
 		8401D7211F04E4F7008AFB24 /* PopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8401D71E1F04E4F7008AFB24 /* PopUpPickerView.swift */; };
 		8401D7221F04E4F7008AFB24 /* PopUpPickerViewBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8401D71F1F04E4F7008AFB24 /* PopUpPickerViewBase.swift */; };
 		8480595D1F04CCB3003E2613 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480595C1F04CCB3003E2613 /* Const.swift */; };
+		848A9BDA1F0541D500DA83B0 /* PostData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848A9BD91F0541D500DA83B0 /* PostData.swift */; };
 		84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */; };
 		84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE00A1EFB791D0025B5D3 /* ViewController.swift */; };
 		84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CCE00C1EFB791D0025B5D3 /* Main.storyboard */; };
@@ -60,6 +61,7 @@
 		8401D71E1F04E4F7008AFB24 /* PopUpPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpPickerView.swift; sourceTree = "<group>"; };
 		8401D71F1F04E4F7008AFB24 /* PopUpPickerViewBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpPickerViewBase.swift; sourceTree = "<group>"; };
 		8480595C1F04CCB3003E2613 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
+		848A9BD91F0541D500DA83B0 /* PostData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostData.swift; sourceTree = "<group>"; };
 		84CCE0051EFB791D0025B5D3 /* Petto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Petto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84CCE00A1EFB791D0025B5D3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +138,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		848A9BD81F05105B00DA83B0 /* PopUpPickerView */ = {
+			isa = PBXGroup;
+			children = (
+				8401D71E1F04E4F7008AFB24 /* PopUpPickerView.swift */,
+				8401D71F1F04E4F7008AFB24 /* PopUpPickerViewBase.swift */,
+			);
+			name = PopUpPickerView;
+			sourceTree = "<group>";
+		};
 		84CCDFFC1EFB791D0025B5D3 = {
 			isa = PBXGroup;
 			children = (
@@ -161,21 +172,21 @@
 				84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */,
 				84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */,
 				84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */,
-				84CCE0141EFB791D0025B5D3 /* Info.plist */,
 				84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */,
-				84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */,
-				8401D71E1F04E4F7008AFB24 /* PopUpPickerView.swift */,
-				8401D71F1F04E4F7008AFB24 /* PopUpPickerViewBase.swift */,
-				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
-				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
-				84CCE0201EFB8C380025B5D3 /* PostViewController.swift */,
+				84CCE0141EFB791D0025B5D3 /* Info.plist */,
 				8480595C1F04CCB3003E2613 /* Const.swift */,
-				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
+				848A9BD91F0541D500DA83B0 /* PostData.swift */,
+				848A9BD81F05105B00DA83B0 /* PopUpPickerView */,
 				84CCE00A1EFB791D0025B5D3 /* ViewController.swift */,
+				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
+				84D253071F0217D700D877A9 /* LeftViewController.swift */,
+				84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */,
+				84CCE0201EFB8C380025B5D3 /* PostViewController.swift */,
+				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
+				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
 				84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
-				84D253071F0217D700D877A9 /* LeftViewController.swift */,
 			);
 			path = Petto;
 			sourceTree = "<group>";
@@ -330,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8401D7221F04E4F7008AFB24 /* PopUpPickerViewBase.swift in Sources */,
+				848A9BDA1F0541D500DA83B0 /* PostData.swift in Sources */,
 				84CCE0211EFB8C380025B5D3 /* PostViewController.swift in Sources */,
 				84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */,
 				8401D7211F04E4F7008AFB24 /* PopUpPickerView.swift in Sources */,
