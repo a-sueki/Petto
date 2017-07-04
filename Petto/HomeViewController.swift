@@ -63,6 +63,30 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: viewWillAppear")
         
+        // currentUserがnilならログインしていない
+        if FIRAuth.auth()?.currentUser == nil {
+            
+            if observing == true {
+                // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
+                // テーブルをクリアする
+                postArray = []
+                collectionView.reloadData()
+                // オブザーバーを削除する
+                FIRDatabase.database().reference().removeAllObservers()
+                
+                // FIRDatabaseのobserveEventが上記コードにより解除されたため
+                // falseとする
+                observing = false
+            }
+
+            // ログインしていないときの処理
+            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+            DispatchQueue.main.async {
+                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+                self.present(loginViewController!, animated: true, completion: nil)
+            }
+        }
+        
         if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
@@ -111,7 +135,8 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
                 // trueとする
                 observing = true
             }
-        } else {
+        }
+        /*else {
             if observing == true {
                 // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
                 // テーブルをクリアする
@@ -125,6 +150,7 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
                 observing = false
             }
         }
+ */
     }
     
     
