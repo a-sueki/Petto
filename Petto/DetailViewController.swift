@@ -10,6 +10,10 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    @IBOutlet weak var petImageView: UIImageView!
+    @IBOutlet weak var areaLabel: UILabel!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

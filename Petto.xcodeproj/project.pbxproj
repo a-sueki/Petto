@@ -190,12 +190,12 @@
 				84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */,
 				84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */,
 				84CCE0201EFB8C380025B5D3 /* PostViewController.swift */,
+				84376B981F063777001E270F /* DetailViewController.swift */,
 				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
 				84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
-				84376B981F063777001E270F /* DetailViewController.swift */,
 			);
 			path = Petto;
 			sourceTree = "<group>";

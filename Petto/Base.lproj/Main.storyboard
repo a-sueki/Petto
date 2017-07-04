@@ -1195,9 +1195,9 @@
                     </view>
                     <connections>
                         <outlet property="ageLabel" destination="Al2-Pc-ihR" id="Wcv-W5-I79"/>
-                        <outlet property="areaLabel" destination="dmT-ED-u2n" id="QD9-xo-tdo"/>
+                        <outlet property="areaLabel" destination="oLb-zm-tVN" id="Rvr-dS-nsi"/>
                         <outlet property="kindLabel" destination="oLb-zm-tVN" id="UQO-Wc-Q2Z"/>
-                        <outlet property="petImageView" destination="4mX-Hm-7Ei" id="cjR-Wy-UcT"/>
+                        <outlet property="petImageView" destination="4mX-Hm-7Ei" id="yjX-FV-BF4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mjs-PK-1Yv" userLabel="First Responder" sceneMemberID="firstResponder"/>

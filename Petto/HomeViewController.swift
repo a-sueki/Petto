@@ -13,14 +13,6 @@ import FirebaseDatabase
 
 class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
-    
-    // サムネイル画像のタイトル
-    let photos = ["dog1", "dog2","dog3","cat1","cat2","cat3","cat4","cat5","cat6","cat7"]
-    let kinds = ["dog-lightgray", "dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray"]
-    let sexs = ["male-lightgray", "male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray"]
-    let areas = ["東京都", "東京都","神奈川県","神奈川県","神奈川県","東京都","東京都","神奈川県","静岡県","沖縄県"]
-    let terms = ["期間：1~30 days", "期間：7 days","期間：3 days","期間：10 days","期間：1 day","期間：1 days","期間：29 days","期間：14~30 days","期間：14~30 days","期間：14~30 days"]
-    
     // NavigationBarボタンを用意
     var btn1: UIBarButtonItem!
     var btn2: UIBarButtonItem!
@@ -136,54 +128,18 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
                 observing = true
             }
         }
-        /*else {
-            if observing == true {
-                // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
-                // テーブルをクリアする
-                postArray = []
-                collectionView.reloadData()
-                // オブザーバーを削除する
-                FIRDatabase.database().reference().removeAllObservers()
-                
-                // FIRDatabaseのobserveEventが上記コードにより解除されたため
-                // falseとする
-                observing = false
-            }
-        }
- */
     }
     
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         
-        // Cell はストーリーボードで設定したセルのID
-        let testCell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath)
-        
-        // Tag番号を使ってImageViewのインスタンス生成
-        let imageView = testCell.contentView.viewWithTag(1) as! UIImageView
-        imageView.image = UIImage(named: photos[(indexPath as NSIndexPath).row])
-        
-        // Tag番号を使ってImageViewのインスタンス生成
-        let kindImageView = testCell.contentView.viewWithTag(2) as! UIImageView
-        kindImageView.image = UIImage(named: kinds[(indexPath as NSIndexPath).row])
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCollectionViewCell
+        cell.setPostData(postData: postArray[indexPath.row])
+        // セル内のボタンのアクションをソースコードで設定する
+        cell.likeButton.addTarget(self, action:#selector(handleLikeButton(sender:event:)), for:  UIControlEvents.touchUpInside)
 
-        // Tag番号を使ってImageViewのインスタンス生成
-        let sexImageView = testCell.contentView.viewWithTag(3) as! UIImageView
-        sexImageView.image = UIImage(named: sexs[(indexPath as NSIndexPath).row])
-
-        // Tag番号を使ってLabelのインスタンス生成
-        let arealabel = testCell.contentView.viewWithTag(4) as! UILabel
-        arealabel.text = areas[(indexPath as NSIndexPath).row]
-
-        // Tag番号を使ってLabelのインスタンス生成
-        let termlabel = testCell.contentView.viewWithTag(5) as! UILabel
-        termlabel.text = terms[(indexPath as NSIndexPath).row]
-        
-//        let likeButton = testCell.contentView.viewWithTag(6) as! UIButton
-//        likeButton.image = UIImage(named: likes)
-
-        return testCell
+        return cell
     }
     
     // Screenサイズに応じたセルサイズを返す
@@ -201,7 +157,8 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // 要素数を入れる、要素以上の数字を入れると表示でエラーとなる
-        return 10;
+        //return 10;
+        return postArray.count
     }
     
 
@@ -230,5 +187,40 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
         self.navigationController?.pushViewController(viewController5, animated: true)
     }
 
-    
+    // セル内のボタンがタップされた時に呼ばれるメソッド
+    func handleLikeButton(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: likeボタンがタップされました。")
+        
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.collectionView)
+        let indexPath = collectionView.indexPathForItem(at: point)
+        
+        // 配列からタップされたインデックスのデータを取り出す
+        let postData = postArray[indexPath!.row]
+        
+        // Firebaseに保存するデータの準備
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            if postData.isLiked {
+                // すでにいいねをしていた場合はいいねを解除するためIDを取り除く
+                var index = -1
+                for likeId in postData.likes {
+                    if likeId == uid {
+                        // 削除するためにインデックスを保持しておく
+                        index = postData.likes.index(of: likeId)!
+                        break
+                    }
+                }
+                postData.likes.remove(at: index)
+            } else {
+                postData.likes.append(uid)
+            }
+            
+            // 増えたlikesをFirebaseに保存する
+            let postRef = FIRDatabase.database().reference().child(Const.PostPath).child(postData.id!)
+            let likes = ["likes": postData.likes]
+            postRef.updateChildValues(likes)
+            
+        }
+    }
 }

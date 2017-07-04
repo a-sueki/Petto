@@ -15,8 +15,8 @@ class HomeCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var categoryImageView: UIImageView!
     @IBOutlet weak var sexImageView: UIImageView!
     @IBOutlet weak var areaLabel: UILabel!
-    @IBOutlet weak var termLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var termLabel: UILabel!
     
     
     override func awakeFromNib() {
@@ -38,7 +38,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
         
         if postData.isLiked {
             let buttonImage = UIImage(named: "like")
-            self.likeButton.setImage(buttonImage, for: UIControlState.selected)
+            self.likeButton.setImage(buttonImage, for: UIControlState.normal)
         } else {
             let buttonImage = UIImage(named: "unlike")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)

@@ -80,6 +80,7 @@
                 <outlet property="likeButton" destination="HMb-mT-llA" id="RAQ-eB-arg"/>
                 <outlet property="petImageView" destination="KQW-lg-eQn" id="HAW-k0-hWh"/>
                 <outlet property="sexImageView" destination="v1v-pB-o3E" id="Iza-Zq-xWZ"/>
+                <outlet property="termLabel" destination="vb9-TX-jmf" id="sjd-uQ-4rm"/>
             </connections>
             <point key="canvasLocation" x="-24.5" y="-7.5"/>
         </collectionViewCell>

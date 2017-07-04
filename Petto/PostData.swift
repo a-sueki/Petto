@@ -12,8 +12,6 @@ import FirebaseDatabase
 
 class PostData: NSObject {
     var id: String?
-//    var image: UIImage?
-//    var imageString: String?
     var petImage: UIImage?
     var petImageString: String?
     var name: String?

@@ -26,16 +26,7 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-/*        // currentUserがnilならログインしていない
-        if FIRAuth.auth()?.currentUser == nil {
-            // ログインしていないときの処理
-            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
-            }
-        }
-*/    }
+   }
 
 }
 
