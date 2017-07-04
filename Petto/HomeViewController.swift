@@ -8,9 +8,17 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
+    
 
-    // ボタンを用意
+    // サムネイル画像のタイトル
+    let photos = ["dog1", "dog2","dog3","cat1","cat2","cat3","cat4","cat5","cat6","cat7"]
+    let kinds = ["dog-lightgray", "dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray"]
+    let sexs = ["male-lightgray", "male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray"]
+    let areas = ["東京都", "東京都","神奈川県","神奈川県","神奈川県","東京都","東京都","神奈川県","静岡県","沖縄県"]
+    let terms = ["期間：1~30 days", "期間：7 days","期間：3 days","期間：10 days","期間：1 day","期間：1 days","期間：29 days","期間：14~30 days","期間：14~30 days","期間：14~30 days"]
+    
+    // NavigationBarボタンを用意
     var btn1: UIBarButtonItem!
     var btn2: UIBarButtonItem!
     var btn3: UIBarButtonItem!
@@ -33,6 +41,53 @@ class HomeViewController: UIViewController {
         self.navigationItem.rightBarButtonItems = rightBtns
 
     }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
+        
+        // Cell はストーリーボードで設定したセルのID
+        let testCell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
+        
+        // Tag番号を使ってImageViewのインスタンス生成
+        let imageView = testCell.contentView.viewWithTag(1) as! UIImageView
+        imageView.image = UIImage(named: photos[(indexPath as NSIndexPath).row])
+        
+        // Tag番号を使ってImageViewのインスタンス生成
+        let kindImageView = testCell.contentView.viewWithTag(2) as! UIImageView
+        kindImageView.image = UIImage(named: kinds[(indexPath as NSIndexPath).row])
+
+        // Tag番号を使ってImageViewのインスタンス生成
+        let sexImageView = testCell.contentView.viewWithTag(3) as! UIImageView
+        sexImageView.image = UIImage(named: sexs[(indexPath as NSIndexPath).row])
+
+        // Tag番号を使ってLabelのインスタンス生成
+        let arealabel = testCell.contentView.viewWithTag(4) as! UILabel
+        arealabel.text = areas[(indexPath as NSIndexPath).row]
+
+        // Tag番号を使ってLabelのインスタンス生成
+        let termlabel = testCell.contentView.viewWithTag(5) as! UILabel
+        termlabel.text = terms[(indexPath as NSIndexPath).row]
+
+        return testCell
+    }
+    
+    // Screenサイズに応じたセルサイズを返す
+    // UICollectionViewDelegateFlowLayoutの設定が必要
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellSize:CGFloat = self.view.frame.size.width/2-2
+        // 正方形で返すためにwidth,heightを同じにする
+        return CGSize(width: cellSize, height: cellSize*1.4141)
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        // section数は１つ
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // 要素数を入れる、要素以上の数字を入れると表示でエラーとなる
+        return 10;
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
