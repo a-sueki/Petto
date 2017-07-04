@@ -10,6 +10,8 @@
 		14AE20106A61980E89F4EB7E /* Pods_Petto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */; };
 		8401D7211F04E4F7008AFB24 /* PopUpPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8401D71E1F04E4F7008AFB24 /* PopUpPickerView.swift */; };
 		8401D7221F04E4F7008AFB24 /* PopUpPickerViewBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8401D71F1F04E4F7008AFB24 /* PopUpPickerViewBase.swift */; };
+		84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */; };
+		84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */; };
 		84376B991F063777001E270F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84376B981F063777001E270F /* DetailViewController.swift */; };
 		8480595D1F04CCB3003E2613 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480595C1F04CCB3003E2613 /* Const.swift */; };
 		848A9BDA1F0541D500DA83B0 /* PostData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848A9BD91F0541D500DA83B0 /* PostData.swift */; };
@@ -61,6 +63,8 @@
 		4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Petto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8401D71E1F04E4F7008AFB24 /* PopUpPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpPickerView.swift; sourceTree = "<group>"; };
 		8401D71F1F04E4F7008AFB24 /* PopUpPickerViewBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpPickerViewBase.swift; sourceTree = "<group>"; };
+		84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
+		84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCollectionViewCell.xib; sourceTree = "<group>"; };
 		84376B981F063777001E270F /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		8480595C1F04CCB3003E2613 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		848A9BD91F0541D500DA83B0 /* PostData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostData.swift; sourceTree = "<group>"; };
@@ -183,6 +187,8 @@
 				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
 				84D253071F0217D700D877A9 /* LeftViewController.swift */,
 				84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */,
+				84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */,
+				84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */,
 				84CCE0201EFB8C380025B5D3 /* PostViewController.swift */,
 				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
@@ -268,6 +274,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */,
 				84CCE0131EFB791D0025B5D3 /* LaunchScreen.storyboard in Resources */,
 				84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */,
 				84CCE0101EFB791D0025B5D3 /* Assets.xcassets in Resources */,
@@ -350,6 +357,7 @@
 				84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */,
 				8401D7211F04E4F7008AFB24 /* PopUpPickerView.swift in Sources */,
 				84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */,
+				84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */,
 				84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,

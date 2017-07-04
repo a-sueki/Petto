@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
-
+    
     // サムネイル画像のタイトル
     let photos = ["dog1", "dog2","dog3","cat1","cat2","cat3","cat4","cat5","cat6","cat7"]
     let kinds = ["dog-lightgray", "dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray"]
@@ -24,9 +27,23 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
     var btn3: UIBarButtonItem!
     var btn4: UIBarButtonItem!
     var btn5: UIBarButtonItem!
+    
+    @IBOutlet weak var collectionView: UICollectionView!
+    var postArray: [PostData] = []
+    
+    // FIRDatabaseのobserveEventの登録状態を表す
+    var observing = false
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        let nib = UINib(nibName: "HomeCollectionViewCell", bundle: nil)
+        collectionView.register(nib, forCellWithReuseIdentifier: "homeCell")
+        
         
         btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(HomeViewController.onClick1))
         btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(HomeViewController.onClick2))
@@ -42,10 +59,80 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
 
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("DEBUG_PRINT: viewWillAppear")
+        
+        if FIRAuth.auth()?.currentUser != nil {
+            if self.observing == false {
+                // 要素が追加されたらpostArrayに追加してTableViewを再表示する
+                let postsRef = FIRDatabase.database().reference().child(Const.PostPath)
+                postsRef.observe(.childAdded, with: { snapshot in
+                    print("DEBUG_PRINT: .childAddedイベントが発生しました。")
+                    
+                    // PostDataクラスを生成して受け取ったデータを設定する
+                    if let uid = FIRAuth.auth()?.currentUser?.uid {
+                        let postData = PostData(snapshot: snapshot, myId: uid)
+                        self.postArray.insert(postData, at: 0)
+                        
+                        // collectionViewを再表示する
+                        self.collectionView.reloadData()
+                    }
+                })
+                // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
+                postsRef.observe(.childChanged, with: { snapshot in
+                    print("DEBUG_PRINT: .childChangedイベントが発生しました。")
+                    
+                    if let uid = FIRAuth.auth()?.currentUser?.uid {
+                        // PostDataクラスを生成して受け取ったデータを設定する
+                        let postData = PostData(snapshot: snapshot, myId: uid)
+                        
+                        // 保持している配列からidが同じものを探す
+                        var index: Int = 0
+                        for post in self.postArray {
+                            if post.id == postData.id {
+                                index = self.postArray.index(of: post)!
+                                break
+                            }
+                        }
+                        
+                        // 差し替えるため一度削除する
+                        self.postArray.remove(at: index)
+                        
+                        // 削除したところに更新済みのでデータを追加する
+                        self.postArray.insert(postData, at: index)
+                        
+                        // TableViewの現在表示されているセルを更新する
+                        self.collectionView.reloadData()
+                    }
+                })
+                
+                // FIRDatabaseのobserveEventが上記コードにより登録されたため
+                // trueとする
+                observing = true
+            }
+        } else {
+            if observing == true {
+                // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
+                // テーブルをクリアする
+                postArray = []
+                collectionView.reloadData()
+                // オブザーバーを削除する
+                FIRDatabase.database().reference().removeAllObservers()
+                
+                // FIRDatabaseのobserveEventが上記コードにより解除されたため
+                // falseとする
+                observing = false
+            }
+        }
+    }
+    
+    
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         
         // Cell はストーリーボードで設定したセルのID
-        let testCell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
+        let testCell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath)
         
         // Tag番号を使ってImageViewのインスタンス生成
         let imageView = testCell.contentView.viewWithTag(1) as! UIImageView
@@ -66,6 +153,9 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
         // Tag番号を使ってLabelのインスタンス生成
         let termlabel = testCell.contentView.viewWithTag(5) as! UILabel
         termlabel.text = terms[(indexPath as NSIndexPath).row]
+        
+//        let likeButton = testCell.contentView.viewWithTag(6) as! UIButton
+//        likeButton.image = UIImage(named: likes)
 
         return testCell
     }
@@ -114,4 +204,5 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
         self.navigationController?.pushViewController(viewController5, animated: true)
     }
 
+    
 }

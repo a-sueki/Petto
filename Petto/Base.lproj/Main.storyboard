@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -212,70 +211,7 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="sPT-wE-7YN">
-                                        <rect key="frame" x="0.0" y="0.0" width="150" height="211"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="150" height="211"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hHM-rF-obx">
-                                                    <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="hHM-rF-obx" secondAttribute="height" multiplier="75:75" id="2AP-fH-9o1"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggg-wQ-poC">
-                                                    <rect key="frame" x="0.0" y="190" width="150" height="20.666666666666657"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <imageView userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hoU-gU-RVZ">
-                                                    <rect key="frame" x="0.0" y="155" width="30" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="Mmd-YH-2qx"/>
-                                                        <constraint firstAttribute="width" constant="30" id="NKC-Cj-D0J"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <imageView userInteractionEnabled="NO" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0Va-kT-Zt2">
-                                                    <rect key="frame" x="35" y="155" width="30" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="Sv7-63-d0m"/>
-                                                        <constraint firstAttribute="width" constant="30" id="UkU-g4-Nmq"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ue4-ez-gEk">
-                                                    <rect key="frame" x="70" y="159.66666666666666" width="42" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </view>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstItem="Ue4-ez-gEk" firstAttribute="centerY" secondItem="hoU-gU-RVZ" secondAttribute="centerY" id="JNa-Ho-qT7"/>
-                                            <constraint firstItem="hoU-gU-RVZ" firstAttribute="leading" secondItem="sPT-wE-7YN" secondAttribute="leading" id="UBs-YP-lzl"/>
-                                            <constraint firstItem="Ue4-ez-gEk" firstAttribute="leading" secondItem="0Va-kT-Zt2" secondAttribute="trailing" constant="5" id="ZHf-mm-QYM"/>
-                                            <constraint firstItem="hHM-rF-obx" firstAttribute="leading" secondItem="sPT-wE-7YN" secondAttribute="leading" id="ZNO-80-JVF"/>
-                                            <constraint firstItem="hoU-gU-RVZ" firstAttribute="top" secondItem="hHM-rF-obx" secondAttribute="bottom" constant="5" id="aBe-LQ-GZi"/>
-                                            <constraint firstAttribute="trailing" secondItem="hHM-rF-obx" secondAttribute="trailing" id="dFJ-ey-Ve3"/>
-                                            <constraint firstItem="0Va-kT-Zt2" firstAttribute="centerY" secondItem="hoU-gU-RVZ" secondAttribute="centerY" id="dHg-sx-yqo"/>
-                                            <constraint firstItem="0Va-kT-Zt2" firstAttribute="leading" secondItem="hoU-gU-RVZ" secondAttribute="trailing" constant="5" id="ggn-6u-PDZ"/>
-                                            <constraint firstItem="hHM-rF-obx" firstAttribute="top" secondItem="sPT-wE-7YN" secondAttribute="top" id="j0p-sN-Mi6"/>
-                                            <constraint firstItem="ggg-wQ-poC" firstAttribute="top" secondItem="hoU-gU-RVZ" secondAttribute="bottom" constant="5" id="j9I-OM-9Ug"/>
-                                            <constraint firstItem="Ue4-ez-gEk" firstAttribute="leading" secondItem="0Va-kT-Zt2" secondAttribute="trailing" constant="5" id="kwQ-Lt-zCO"/>
-                                            <constraint firstItem="ggg-wQ-poC" firstAttribute="leading" secondItem="sPT-wE-7YN" secondAttribute="leading" id="qVO-Jz-0js"/>
-                                            <constraint firstAttribute="trailing" secondItem="ggg-wQ-poC" secondAttribute="trailing" id="r0C-UV-VhU"/>
-                                        </constraints>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="Kbz-Jc-Q80" id="76S-PV-zet"/>
-                                    <outlet property="delegate" destination="Kbz-Jc-Q80" id="qFL-ea-Zsd"/>
-                                </connections>
+                                <cells/>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -287,6 +223,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="collectionView" destination="xRq-m0-zeu" id="Zmv-Sf-h7g"/>
                         <segue destination="jEe-MZ-JWF" kind="modal" identifier="toDetailViewController" id="N9o-Jg-Dfn"/>
                     </connections>
                 </viewController>
@@ -636,6 +573,9 @@
                                     <constraint firstAttribute="height" constant="40" id="jh5-l0-CDj"/>
                                 </constraints>
                                 <state key="normal" title="Button" image="unchecked"/>
+                                <connections>
+                                    <action selector="handleVaccineButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="UQw-uu-vRc"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="去勢/避妊" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KL5-vV-oBF">
                                 <rect key="frame" x="20" y="394.66666666666669" width="100" height="40"/>
@@ -816,6 +756,7 @@
                         <outlet property="areaLabel" destination="9YT-VV-hhW" id="mi5-Pn-ewZ"/>
                         <outlet property="kindLabel" destination="ewr-Pz-2tE" id="bET-3h-LLd"/>
                         <outlet property="petImageView" destination="S6G-sv-fhK" id="L8D-pu-r79"/>
+                        <outlet property="vaccineButton" destination="9Gd-1g-pHP" id="Vzq-A7-oAI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdx-ol-5lQ" userLabel="First Responder" sceneMemberID="firstResponder"/>

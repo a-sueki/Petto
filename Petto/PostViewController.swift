@@ -23,6 +23,9 @@ class PostViewController: UIViewController , PopUpPickerViewDelegate{
     @IBOutlet weak var ageLabel: UILabel!
     @IBOutlet weak var petImageView: UIImageView!
     
+    @IBOutlet weak var vaccineButton: UIButton!
+
+    
     var setPickerData = [String]()
     var selectIndex = 0
     
@@ -125,9 +128,15 @@ class PostViewController: UIViewController , PopUpPickerViewDelegate{
         let time = NSDate.timeIntervalSinceReferenceDate
         let name = FIRAuth.auth()?.currentUser?.displayName
         
+        var isVaccinated :Bool = false
+        if self.vaccineButton.isSelected {
+            isVaccinated = true
+        }
+        
+        
         // 辞書を作成してFirebaseに保存する
         let postRef = FIRDatabase.database().reference().child(Const.PostPath)
-        let postData = ["area": areaLabel.text!, "image": imageString, "time": String(time), "name": name!]
+        let postData = ["petImage": imageString,"kind": kindLabel.text!,"area": areaLabel.text!,"age": ageLabel.text!, "isVaccinated": String(isVaccinated), "time": String(time), "name": name!]
         postRef.childByAutoId().setValue(postData)
         
         // HUDで投稿完了を表示する
@@ -146,4 +155,13 @@ class PostViewController: UIViewController , PopUpPickerViewDelegate{
         super.didReceiveMemoryWarning()
     }
     
+    @IBAction func handleVaccineButton(_ sender: Any) {
+        if self.vaccineButton.isSelected {
+            self.vaccineButton.isSelected = false
+            self.vaccineButton.setImage(UIImage(named: "unchecked"), for: UIControlState.normal)
+        }else{
+            self.vaccineButton.isSelected = true
+            self.vaccineButton.setImage(UIImage(named: "checked-yellow"), for: UIControlState.selected)
+        }
+    }
 }
