@@ -13,4 +13,6 @@ target 'Petto' do
   pod 'SlideMenuControllerSwift'
   pod 'RxCocoa'
   pod 'RxSwift'
+  pod 'JSQMessagesViewController'
+  pod 'SwiftyJSON'
 end
