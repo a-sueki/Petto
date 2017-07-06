@@ -179,7 +179,7 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
         self.navigationController?.pushViewController(viewController3, animated: true)
     }
     func onClick4() {
-        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
         self.navigationController?.pushViewController(viewController4, animated: true)
     }
     func onClick5() {

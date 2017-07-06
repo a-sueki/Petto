@@ -11,7 +11,7 @@ import SwiftyJSON
 import JSQMessagesViewController
 
 class MessagesViewController: JSQMessagesViewController {
-
+    
     private var messages: [JSQMessage] = []
     private var incomingBubble: JSQMessagesBubbleImage!
     private var outgoingBubble: JSQMessagesBubbleImage!
@@ -34,7 +34,7 @@ class MessagesViewController: JSQMessagesViewController {
         self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
         
         // 相手の画像設定
-        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "sample_user")!, diameter: 64)
+        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "dog")!, diameter: 64)
         // 自分の画像を表示しない
         self.collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
     }
@@ -85,6 +85,95 @@ class MessagesViewController: JSQMessagesViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // 送信時刻を出すために高さを調整する
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
+        let message = messages[indexPath.item]
+        if indexPath.item == 0 {
+            return JSQMessagesTimestampFormatter.shared().attributedTimestamp(for: message.date)
+        }
+        if indexPath.item - 1 > 0 {
+            let previousMessage = messages[indexPath.item - 1]
+            if message.date.timeIntervalSince(previousMessage.date) / 60 > 1 {
+                return JSQMessagesTimestampFormatter.shared().attributedTimestamp(for: message.date)
+            }
+        }
+        return nil
+    }
+    
+    // 送信時刻を出すために高さを調整する
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
+        
+        if indexPath.item == 0 {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        }
+        if indexPath.item - 1 > 0 {
+            let previousMessage = messages[indexPath.item - 1]
+            let message = messages[indexPath.item]
+            if message.date.timeIntervalSince(previousMessage.date) / 60 > 1 {
+                return kJSQMessagesCollectionViewCellLabelHeightDefault
+            }
+        }
+        return 0.0
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as! JSQMessagesCollectionViewCell
+        // ユーザーアイコンに対してジェスチャーをつける
+        let avatarImageTap = UITapGestureRecognizer(target: self, action: #selector(MessagesViewController.tappedAvatar))
+        cell.avatarImageView?.isUserInteractionEnabled = true
+        cell.avatarImageView?.addGestureRecognizer(avatarImageTap)
+        
+        // 文字色を変える
+        if messages[indexPath.item].senderId != senderId {
+            cell.textView?.textColor = UIColor.darkGray
+        } else {
+            cell.textView?.textColor = UIColor.white
+        }
+        
+        return cell
+    }
+    
+    func tappedAvatar() {
+        print("tapped user avatar")
+    }
+    
+    override func didPressAccessoryButton(_ sender: UIButton!) {
+        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        viewController4.delegate = self
+        self.navigationController?.pushViewController(viewController4, animated: true)
+    }
+    
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let image = info[UIImagePickerControllerEditedImage] {
+            sendImageMessage(image: image as! UIImage)
+        }
+        picker.dismiss(animated: true, completion: nil)
+    }
+    private func sendImageMessage(image: UIImage) {
+        let photoItem = JSQPhotoMediaItem(image: image)
+        let imageMessage = JSQMessage(senderId: senderId, displayName: senderDisplayName, media: photoItem)
+        messages.append(imageMessage!)
+        finishSendingMessage(animated: true)
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
+        if messages[indexPath.item].isMediaMessage {
+            let media = messages[indexPath.item].media
+            //            if media?.isKindOfClass(JSQPhotoMediaItem) {
+            if (media?.isKind(of: JSQPhotoMediaItem.self))!{
+                print("tapped Image")
+            }
+        }
+    }
+}
+
+extension MessagesViewController:ImageSelectViewDelegate{
+    
+    func didCompletion(image :UIImage){
+        
     }
     
 }

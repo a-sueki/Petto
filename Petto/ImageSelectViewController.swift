@@ -7,9 +7,15 @@
 //
 
 import UIKit
+protocol ImageSelectViewDelegate: class {
+    func didCompletion(image :UIImage)
+}
 
 class ImageSelectViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate , AdobeUXImageEditorViewControllerDelegate {
-
+    weak var delegate: ImageSelectViewDelegate?
+    
+    var resultHandler: ((UIImage) -> Void)?
+    
     @IBAction func handleLibraryButton(_ sender: Any) {
         // ライブラリ（カメラロール）を指定してピッカーを開く
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary) {
@@ -39,25 +45,33 @@ class ImageSelectViewController: UIViewController, UIImagePickerControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     // AdobeImageEditorで加工が終わったときに呼ばれるメソッド
     func photoEditor(_ editor: AdobeUXImageEditorViewController, finishedWith image: UIImage?) {
         // 画像加工画面を閉じる
         editor.dismiss(animated: true, completion: nil)
         
         // 投稿の画面を開く
-        let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "Post") as! PostViewController
-        postViewController.petImage = image
-        present(postViewController, animated: true, completion: nil)
+        /*        let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "Post") as! PostViewController
+         postViewController.petImage = image
+         present(postViewController, animated: true, completion: nil)
+         */
+        // handlerに関数がセットされているか確認
+        if let handler = self.resultHandler {
+            handler(image!)
+        }
+        
+        self.delegate?.didCompletion(image: image!)
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     // AdobeImageEditorで加工をキャンセルしたときに呼ばれる
@@ -86,5 +100,5 @@ class ImageSelectViewController: UIViewController, UIImagePickerControllerDelega
         // 閉じる
         picker.dismiss(animated: true, completion: nil)
     }
-
+    
 }
