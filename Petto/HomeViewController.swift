@@ -11,14 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
-    
-    // NavigationBarボタンを用意
-    var btn1: UIBarButtonItem!
-    var btn2: UIBarButtonItem!
-    var btn3: UIBarButtonItem!
-    var btn4: UIBarButtonItem!
-    var btn5: UIBarButtonItem!
+class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView: UICollectionView!
     var postArray: [PostData] = []
@@ -36,13 +29,6 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
         let nib = UINib(nibName: "HomeCollectionViewCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "homeCell")
         
-        
-        btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(HomeViewController.onClick1))
-        btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(HomeViewController.onClick2))
-        btn3 = UIBarButtonItem(image: UIImage(named: "todolist"), style: .plain, target: self, action: #selector(HomeViewController.onClick3))
-        btn4 = UIBarButtonItem(image: UIImage(named: "mail"), style: .plain, target: self, action: #selector(HomeViewController.onClick4))
-        btn5 = UIBarButtonItem(image: UIImage(named: "search"), style: .plain, target: self, action: #selector(HomeViewController.onClick5))
-
         let leftBtns: [UIBarButtonItem] = [btn1,btn2]
         let rightBtns: [UIBarButtonItem] = [btn3,btn4,btn5]
         
@@ -167,25 +153,6 @@ class HomeViewController: UIViewController ,UICollectionViewDataSource, UICollec
         // Dispose of any resources that can be recreated.
     }
 
-    func onClick1() {
-        self.slideMenuController()?.openLeft()
-    }
-    func onClick2() {
-        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-        self.navigationController?.pushViewController(viewController2, animated: true)
-    }
-    func onClick3() {
-        let viewController3 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
-        self.navigationController?.pushViewController(viewController3, animated: true)
-    }
-    func onClick4() {
-        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-        self.navigationController?.pushViewController(viewController4, animated: true)
-    }
-    func onClick5() {
-        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Post") as! PostViewController
-        self.navigationController?.pushViewController(viewController5, animated: true)
-    }
 
     // セル内のボタンがタップされた時に呼ばれるメソッド
     func handleLikeButton(sender: UIButton, event:UIEvent) {

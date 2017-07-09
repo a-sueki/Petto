@@ -152,7 +152,7 @@ class MessagesViewController: JSQMessagesViewController {
         }
         picker.dismiss(animated: true, completion: nil)
     }
-    private func sendImageMessage(image: UIImage) {
+    func sendImageMessage(image: UIImage) {
         let photoItem = JSQPhotoMediaItem(image: image)
         let imageMessage = JSQMessage(senderId: senderId, displayName: senderDisplayName, media: photoItem)
         messages.append(imageMessage!)
@@ -162,7 +162,6 @@ class MessagesViewController: JSQMessagesViewController {
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAt indexPath: IndexPath!) {
         if messages[indexPath.item].isMediaMessage {
             let media = messages[indexPath.item].media
-            //            if media?.isKindOfClass(JSQPhotoMediaItem) {
             if (media?.isKind(of: JSQPhotoMediaItem.self))!{
                 print("tapped Image")
             }
@@ -170,10 +169,10 @@ class MessagesViewController: JSQMessagesViewController {
     }
 }
 
-extension MessagesViewController:ImageSelectViewDelegate{
+extension MessagesViewController: ImageSelectViewDelegate{
     
     func didCompletion(image :UIImage){
-        
+        sendImageMessage(image: image)
     }
     
 }

@@ -1,16 +1,14 @@
 //
-//  DetailViewController.swift
+//  SignUpViewController.swift
 //  Petto
 //
-//  Created by admin on 2017/06/30.
+//  Created by admin on 2017/07/09.
 //  Copyright © 2017年 aoi.sueki. All rights reserved.
 //
 
 import UIKit
 
-class DetailViewController: UIViewController {
-
-    @IBOutlet weak var tavleView: UITableView!
+class SignUpViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,4 +33,3 @@ class DetailViewController: UIViewController {
     */
 
 }
-

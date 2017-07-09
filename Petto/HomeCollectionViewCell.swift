@@ -10,7 +10,6 @@ import UIKit
 
 class HomeCollectionViewCell: UICollectionViewCell {
 
-
     @IBOutlet weak var petImageView: UIImageView!
     @IBOutlet weak var categoryImageView: UIImageView!
     @IBOutlet weak var sexImageView: UIImageView!
@@ -24,13 +23,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
         // Initialization code
     }
     
-/*    override func isSelected(_ selected: Bool, animated: Bool) {
-        super.isSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
- */
-
+    
     //表示される時の値をセット
     func setPostData(postData: PostData) {
         self.petImageView.image = postData.petImage
@@ -43,13 +36,6 @@ class HomeCollectionViewCell: UICollectionViewCell {
             let buttonImage = UIImage(named: "unlike")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)
         }
-        
-        /*let formatter = DateFormatter()
-         formatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale!
-         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-         
-         let dateString:String = formatter.string(from: postData.date! as Date)
-         */
     }
 
 }
