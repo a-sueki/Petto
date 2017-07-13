@@ -23,6 +23,7 @@ class PostViewController: BaseViewController, PopUpPickerViewDelegate{
     @IBOutlet weak var ageLabel: UILabel!
     @IBOutlet weak var petImageView: UIImageView!
     
+    @IBOutlet weak var nameLabel: UITextField!
     @IBOutlet weak var vaccineButton: UIButton!
 
     
@@ -40,9 +41,6 @@ class PostViewController: BaseViewController, PopUpPickerViewDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 受け取った画像をImageViewに設定する
-        petImageView.image = petImage
-        
         kindPickerView = PopUpPickerView()
         areaPickerView = PopUpPickerView()
         agePickerView = PopUpPickerView()
@@ -54,10 +52,9 @@ class PostViewController: BaseViewController, PopUpPickerViewDelegate{
     }
     
     @IBAction func handleCameraButton(_ sender: Any) {
-        
         let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        viewController4.delegate = self
         self.navigationController?.pushViewController(viewController4, animated: true)
-        
     }
     
     @IBAction func handleKindSelectButton(_ sender: Any) {
@@ -118,10 +115,17 @@ class PostViewController: BaseViewController, PopUpPickerViewDelegate{
         
     }
     
+    func setImage(image: UIImage){
+        
+        // 受け取った画像をImageViewに設定する
+        self.petImageView.image = image
+        
+    }
+    
     
     @IBAction func handlePostButton(_ sender: Any) {
         // ImageViewから画像を取得する
-        let imageData = UIImageJPEGRepresentation(petImageView.image!, 0.5)
+        let imageData = UIImageJPEGRepresentation(self.petImageView.image!, 0.5)
         let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
         
         // postDataに必要な情報を取得しておく
@@ -137,21 +141,18 @@ class PostViewController: BaseViewController, PopUpPickerViewDelegate{
         // 辞書を作成してFirebaseに保存する
         let postRef = FIRDatabase.database().reference().child(Const.PostPath)
         let postData = ["imageString": imageString,
-                        "createAt": String(time),
-                        "createBy": uid!]
-    /*        let postData = ["imageString": imageString,
                         "area": areaLabel.text!,
                         "name": nameLabel.text!,
                         "kind": kindLabel.text!,
-                        "category": categoryLabel.text!,
-                        "sex": sexLabel.text!,
+                        //"category": categoryLabel.text!,
+                        //"sex": sexLabel.text!,
                         "age": ageLabel.text!,
                         "isVaccinated": String(isVaccinated),
-                        "isCastrated": String(isCastrated),
-                        "wanted": String(wanted),
+                        //"isCastrated": String(isCastrated),
+                        //"wanted": String(wanted),
                         "createAt": String(time),
                         "createBy": uid!]
-*/
+
         postRef.childByAutoId().setValue(postData)
         
         // HUDで投稿完了を表示する
@@ -178,5 +179,12 @@ class PostViewController: BaseViewController, PopUpPickerViewDelegate{
             self.vaccineButton.isSelected = true
             self.vaccineButton.setImage(UIImage(named: "checked-yellow"), for: UIControlState.selected)
         }
+    }
+}
+
+extension PostViewController: ImageSelectViewDelegate{
+    
+    func didCompletion(image :UIImage){
+        setImage(image: image)
     }
 }

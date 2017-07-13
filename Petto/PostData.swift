@@ -39,6 +39,8 @@ class PostData: NSObject {
         let valueDictionary = snapshot.value as! [String: AnyObject]
 
         // ペット基本情報
+        
+    
         imageString = valueDictionary["imageString"] as? String
         self.image = UIImage(data: NSData(base64Encoded: imageString!, options: .ignoreUnknownCharacters)! as Data)
         self.area = valueDictionary["area"] as? String
@@ -55,10 +57,10 @@ class PostData: NSObject {
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
         self.createBy = valueDictionary["createBy"] as? String
-        let updateAt = valueDictionary["updateAt"] as? String
+/*        let updateAt = valueDictionary["updateAt"] as? String
         self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt!)!)
         self.updateBy = valueDictionary["updateBy"] as? String
-        
+*/        
         // 評価
         if let likes = valueDictionary["likes"] as? [String] {
             self.likes = likes

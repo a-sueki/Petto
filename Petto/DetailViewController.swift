@@ -8,31 +8,30 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DetailViewController: BaseViewController {
+    
+    fileprivate let viewModel = ProfileViewModel()
 
-    @IBOutlet weak var tavleView: UITableView!
-
+    @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        tableView?.dataSource = viewModel
+        
+        tableView?.estimatedRowHeight = 100
+        tableView?.rowHeight = UITableViewAutomaticDimension
+        
+        tableView?.register(AboutCell.nib, forCellReuseIdentifier: AboutCell.identifier)
+        tableView?.register(NamePictureCell.nib, forCellReuseIdentifier: NamePictureCell.identifier)
+        tableView?.register(FriendCell.nib, forCellReuseIdentifier: FriendCell.identifier)
+        tableView?.register(AttributeCell.nib, forCellReuseIdentifier: AttributeCell.identifier)
+        tableView?.register(EmailCell.nib, forCellReuseIdentifier: EmailCell.identifier)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 

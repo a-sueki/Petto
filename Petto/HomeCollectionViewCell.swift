@@ -26,7 +26,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
     
     //表示される時の値をセット
     func setPostData(postData: PostData) {
-        self.petImageView.image = postData.petImage
+        self.petImageView.image = postData.image
         self.areaLabel.text = postData.area!
         
         if postData.isLiked {

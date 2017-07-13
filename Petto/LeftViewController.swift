@@ -20,10 +20,13 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     
-    var menus = ["ホーム", "ペット投稿","メッセージ"]
+    var menus = ["ホーム", "ペット投稿","メッセージ","詳細","メッセージ一覧"]
     var homeViewController: UIViewController!
     var postViewController: UIViewController!
     var messagesViewController: UIViewController!
+    var detailViewController: UIViewController!
+    var messageListViewController: UIViewController!
+    
     //    var imageHeaderView: ImageHeaderView!
     
     override func viewDidLoad() {
@@ -69,6 +72,14 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
             let navigationController = UINavigationController(rootViewController: messagesViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+        case 3:
+            let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
+            let navigationController = UINavigationController(rootViewController: detailViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+        case 4:
+            let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
+            let navigationController = UINavigationController(rootViewController: messageListViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         default:
             break
         }
@@ -97,3 +108,4 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.view.layoutIfNeeded()
     }
 }
+

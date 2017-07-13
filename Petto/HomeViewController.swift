@@ -13,6 +13,14 @@ import FirebaseDatabase
 
 class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
+    // test用
+    let photos = ["dog1", "dog2","dog3","cat1","cat2","cat3","cat4","cat5","cat6","cat7"]
+    let kinds = ["dog-lightgray", "dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray"]
+    let sexs = ["male-lightgray", "male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray"]
+    let areas = ["東京都", "東京都","神奈川県","神奈川県","神奈川県","東京都","東京都","神奈川県","静岡県","沖縄県"]
+    let terms = ["期間：1~30 days", "期間：7 days","期間：3 days","期間：10 days","期間：1 day","期間：1 days","期間：29 days","期間：14~30 days","期間：14~30 days","期間：14~30 days"]
+
+    
     @IBOutlet weak var collectionView: UICollectionView!
     var postArray: [PostData] = []
     
@@ -119,13 +127,35 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
-        
+
+        // test用
+        /*        // Cell はストーリーボードで設定したセルのID
+        let testCell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath)
+        // Tag番号を使ってImageViewのインスタンス生成
+        let imageView = testCell.contentView.viewWithTag(1) as! UIImageView
+        imageView.image = UIImage(named: photos[(indexPath as NSIndexPath).row])
+        // Tag番号を使ってImageViewのインスタンス生成
+        let kindImageView = testCell.contentView.viewWithTag(2) as! UIImageView
+        kindImageView.image = UIImage(named: kinds[(indexPath as NSIndexPath).row])
+        // Tag番号を使ってImageViewのインスタンス生成
+        let sexImageView = testCell.contentView.viewWithTag(3) as! UIImageView
+        sexImageView.image = UIImage(named: sexs[(indexPath as NSIndexPath).row])
+        // Tag番号を使ってLabelのインスタンス生成
+        let arealabel = testCell.contentView.viewWithTag(4) as! UILabel
+        arealabel.text = areas[(indexPath as NSIndexPath).row]
+        // Tag番号を使ってLabelのインスタンス生成
+        let termlabel = testCell.contentView.viewWithTag(5) as! UILabel
+        termlabel.text = terms[(indexPath as NSIndexPath).row]
+        return testCell
+*/
+
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCollectionViewCell
         cell.setPostData(postData: postArray[indexPath.row])
         // セル内のボタンのアクションをソースコードで設定する
         cell.likeButton.addTarget(self, action:#selector(handleLikeButton(sender:event:)), for:  UIControlEvents.touchUpInside)
 
         return cell
+
     }
     
     // Screenサイズに応じたセルサイズを返す

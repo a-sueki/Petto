@@ -439,7 +439,6 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="xRq-m0-zeu" id="Zmv-Sf-h7g"/>
-                        <segue destination="jEe-MZ-JWF" kind="modal" identifier="toDetailViewController" id="N9o-Jg-Dfn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KLT-3V-GmV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -594,13 +593,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="※大きさがわかるように、撫でながら撮影して下さい。" textAlignment="justified" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="none" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="tMb-9I-X2f">
-                                <rect key="frame" x="20" y="65" width="374" height="14.666666666666671"/>
+                                <rect key="frame" x="20" y="65" width="374" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="S6G-sv-fhK">
-                                <rect key="frame" x="20" y="84.666666666666686" width="150" height="150"/>
+                                <rect key="frame" x="20" y="85" width="150" height="150"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="YES"/>
@@ -621,7 +620,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="品種を選択" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ewr-Pz-2tE">
-                                <rect key="frame" x="225" y="198.66666666666663" width="87" height="20.333333333333343"/>
+                                <rect key="frame" x="225" y="200" width="87" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -659,7 +658,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fdb-EU-4HO">
-                                <rect key="frame" x="20" y="84.666666666666686" width="150" height="150"/>
+                                <rect key="frame" x="20" y="85" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="150" id="WWI-Io-vt7"/>
                                     <constraint firstAttribute="width" constant="150" id="oAU-cW-Fwi"/>
@@ -676,7 +675,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="種類" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGZ-kk-UPU">
-                                <rect key="frame" x="180" y="89.666666666666657" width="35" height="39.999999999999972"/>
+                                <rect key="frame" x="180" y="90" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="0cs-1O-g6x"/>
                                     <constraint firstAttribute="height" constant="40" id="Oqe-wc-sWV"/>
@@ -686,7 +685,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="性別" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IjD-en-nec">
-                                <rect key="frame" x="180" y="139.66666666666666" width="35" height="40"/>
+                                <rect key="frame" x="180" y="140" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="SR3-Ab-7PN"/>
                                     <constraint firstAttribute="width" constant="35" id="xWm-60-4qM"/>
@@ -696,7 +695,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="品種" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YME-03-2Km">
-                                <rect key="frame" x="180" y="189" width="35" height="40"/>
+                                <rect key="frame" x="180" y="190" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="arE-qu-wQT"/>
                                 </constraints>
@@ -705,7 +704,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFH-hS-fwM">
-                                <rect key="frame" x="225" y="89.666666666666657" width="35" height="39.999999999999972"/>
+                                <rect key="frame" x="225" y="90" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="1X9-9c-BEd"/>
                                     <constraint firstAttribute="height" constant="40" id="dF6-vf-Rzo"/>
@@ -713,7 +712,7 @@
                                 <state key="normal" title="Button" image="dog"/>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="151-vP-t3f">
-                                <rect key="frame" x="270" y="89" width="35" height="40"/>
+                                <rect key="frame" x="270" y="90" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="0kK-xn-B6d"/>
                                     <constraint firstAttribute="width" constant="35" id="Ix4-vG-ctQ"/>
@@ -721,7 +720,7 @@
                                 <state key="normal" title="Button" image="cat"/>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xMs-N5-B6q">
-                                <rect key="frame" x="225" y="139" width="35" height="40"/>
+                                <rect key="frame" x="225" y="140" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Hgn-4D-6es"/>
                                     <constraint firstAttribute="width" constant="35" id="MR7-gd-dRf"/>
@@ -729,7 +728,7 @@
                                 <state key="normal" title="Button" image="male"/>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48T-OZ-3PL">
-                                <rect key="frame" x="270" y="139" width="35" height="40"/>
+                                <rect key="frame" x="270" y="140" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="FWM-AX-bSq"/>
                                     <constraint firstAttribute="height" constant="40" id="Fl4-ei-YHq"/>
@@ -737,7 +736,7 @@
                                 <state key="normal" title="Button" image="female"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="所在地" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tf8-t6-xdk">
-                                <rect key="frame" x="20" y="244.66666666666669" width="100" height="40.000000000000057"/>
+                                <rect key="frame" x="20" y="245" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -750,13 +749,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="エリアを選択" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9YT-VV-hhW">
-                                <rect key="frame" x="130" y="254.66666666666663" width="264" height="20.333333333333371"/>
+                                <rect key="frame" x="130" y="255" width="264" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="年齢" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GN2-Cg-0LQ">
-                                <rect key="frame" x="20" y="294.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="295" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -782,13 +781,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="年齢を選択" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OjJ-pU-2Gd">
-                                <rect key="frame" x="130" y="304.66666666666669" width="87" height="21"/>
+                                <rect key="frame" x="130" y="305" width="87" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ワクチン" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pug-QN-Idm">
-                                <rect key="frame" x="20" y="344.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="345" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -801,7 +800,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Gd-1g-pHP">
-                                <rect key="frame" x="130" y="344.66666666666669" width="35" height="40"/>
+                                <rect key="frame" x="130" y="345" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="Z6L-rY-FVc"/>
                                     <constraint firstAttribute="height" constant="40" id="jh5-l0-CDj"/>
@@ -812,7 +811,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="去勢/避妊" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KL5-vV-oBF">
-                                <rect key="frame" x="20" y="394.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="395" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -825,7 +824,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FCM-3P-Ig8">
-                                <rect key="frame" x="130" y="394.66666666666669" width="35" height="40"/>
+                                <rect key="frame" x="130" y="395" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="8kP-Lw-LBr"/>
                                     <constraint firstAttribute="height" constant="40" id="SWb-El-C6o"/>
@@ -833,7 +832,7 @@
                                 <state key="normal" title="Button" image="unchecked"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="里親募集中" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZJ-wf-c1R">
-                                <rect key="frame" x="20" y="444.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="445" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -846,7 +845,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ueV-MS-hNs">
-                                <rect key="frame" x="130" y="444.66666666666669" width="35" height="40"/>
+                                <rect key="frame" x="130" y="445" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="HtJ-Wz-Kp3"/>
                                     <constraint firstAttribute="height" constant="40" id="REQ-t9-Uv5"/>
@@ -854,7 +853,7 @@
                                 <state key="normal" title="Button" image="unchecked"/>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gnZ-IC-Jz6">
-                                <rect key="frame" x="359" y="494" width="35" height="40"/>
+                                <rect key="frame" x="359" y="495" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="5IA-fb-S02"/>
                                     <constraint firstAttribute="height" constant="40" id="uNQ-q5-QRn"/>
@@ -862,7 +861,7 @@
                                 <state key="normal" title="Button" image="unchecked"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="お名前" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oIW-bB-g4i">
-                                <rect key="frame" x="20" y="494.66666666666663" width="100" height="39.999999999999886"/>
+                                <rect key="frame" x="20" y="495" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -875,13 +874,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ADO-Tj-jzd">
-                                <rect key="frame" x="130" y="499" width="219" height="30"/>
+                                <rect key="frame" x="130" y="500" width="219" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="未定" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksm-ki-gRS">
-                                <rect key="frame" x="359" y="534" width="29" height="17"/>
+                                <rect key="frame" x="359" y="535" width="29" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -894,14 +893,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aZa-Yd-pMz">
-                                <rect key="frame" x="130" y="249" width="264" height="30"/>
+                                <rect key="frame" x="130" y="250" width="264" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="handleAreaSelectButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="7lw-rf-mCf"/>
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1G9-yK-qYZ">
-                                <rect key="frame" x="225" y="194" width="169" height="30"/>
+                                <rect key="frame" x="225" y="195" width="169" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="handleKindSelectButton:" destination="Cp8-45-BEl" eventType="touchUpInside" id="YR3-nb-DEf"/>
@@ -989,6 +988,7 @@
                         <outlet property="ageLabel" destination="OjJ-pU-2Gd" id="Hgl-bz-d6d"/>
                         <outlet property="areaLabel" destination="9YT-VV-hhW" id="mi5-Pn-ewZ"/>
                         <outlet property="kindLabel" destination="ewr-Pz-2tE" id="bET-3h-LLd"/>
+                        <outlet property="nameLabel" destination="ADO-Tj-jzd" id="hYN-Yc-Rr6"/>
                         <outlet property="petImageView" destination="S6G-sv-fhK" id="L8D-pu-r79"/>
                         <outlet property="vaccineButton" destination="9Gd-1g-pHP" id="Vzq-A7-oAI"/>
                     </connections>
@@ -1072,7 +1072,7 @@
         <!--View Controller-->
         <scene sceneID="rY6-VI-xKH">
             <objects>
-                <viewController id="jEe-MZ-JWF" sceneMemberID="viewController">
+                <viewController id="jEe-MZ-JWF" customClass="ViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Ub-xN-w1Y"/>
                         <viewControllerLayoutGuide type="bottom" id="dra-pF-Kea"/>
@@ -1082,7 +1082,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4mX-Hm-7Ei">
-                                <rect key="frame" x="20" y="84.666666666666686" width="150" height="150"/>
+                                <rect key="frame" x="20" y="85" width="150" height="150"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="YES"/>
@@ -1103,7 +1103,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="神奈川県" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oLb-zm-tVN">
-                                <rect key="frame" x="245" y="94" width="70" height="21"/>
+                                <rect key="frame" x="245" y="95" width="70" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1141,7 +1141,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="種類" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ans-wL-j9i">
-                                <rect key="frame" x="180" y="134" width="55" height="40"/>
+                                <rect key="frame" x="180" y="135" width="55" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1lx-J0-RKw"/>
                                     <constraint firstAttribute="width" constant="55" id="ccH-Rf-oMR"/>
@@ -1151,7 +1151,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="性別" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3gf-97-k2N">
-                                <rect key="frame" x="180" y="184" width="55" height="40"/>
+                                <rect key="frame" x="180" y="185" width="55" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="55" id="Pou-7i-tJG"/>
                                     <constraint firstAttribute="height" constant="40" id="YdG-Lk-qcJ"/>
@@ -1161,7 +1161,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="所在地" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhe-rr-tjq">
-                                <rect key="frame" x="180" y="84" width="55" height="40"/>
+                                <rect key="frame" x="180" y="85" width="55" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="MFX-4p-6rj"/>
                                     <constraint firstAttribute="width" constant="55" id="Wiz-Ur-fJF"/>
@@ -1171,7 +1171,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hba-o8-J5U">
-                                <rect key="frame" x="245" y="134" width="35" height="40"/>
+                                <rect key="frame" x="245" y="135" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="Ldj-a3-un9"/>
                                     <constraint firstAttribute="height" constant="40" id="mvC-TJ-e0G"/>
@@ -1179,7 +1179,7 @@
                                 <state key="normal" title="Button" image="dog"/>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8fX-mx-Pai">
-                                <rect key="frame" x="290" y="134" width="35" height="40"/>
+                                <rect key="frame" x="290" y="135" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="1aI-SX-A31"/>
                                     <constraint firstAttribute="height" constant="40" id="f15-J1-29K"/>
@@ -1187,7 +1187,7 @@
                                 <state key="normal" title="Button" image="cat"/>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urY-6L-Kkb">
-                                <rect key="frame" x="245" y="184" width="35" height="40"/>
+                                <rect key="frame" x="245" y="185" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="wVg-eO-jvE"/>
                                     <constraint firstAttribute="width" constant="35" id="xFp-6w-8FP"/>
@@ -1195,7 +1195,7 @@
                                 <state key="normal" title="Button" image="male"/>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SxH-Or-GQi">
-                                <rect key="frame" x="290" y="184" width="35" height="40"/>
+                                <rect key="frame" x="290" y="185" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="4tZ-Aj-Ire"/>
                                     <constraint firstAttribute="width" constant="35" id="or4-RC-SIv"/>
@@ -1203,7 +1203,7 @@
                                 <state key="normal" title="Button" image="female"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="品種" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Lr-hF-Hks">
-                                <rect key="frame" x="20" y="284.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="285" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -1216,13 +1216,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="アイリッシュ・ウルフハウンド" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dmT-ED-u2n">
-                                <rect key="frame" x="130" y="295" width="264" height="19.666666666666686"/>
+                                <rect key="frame" x="130" y="295" width="264" height="20"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="年齢" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vmr-sd-zB9">
-                                <rect key="frame" x="20" y="334.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="335" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -1248,13 +1248,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10〜15歳" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Al2-Pc-ihR">
-                                <rect key="frame" x="130" y="344.66666666666669" width="71" height="21"/>
+                                <rect key="frame" x="130" y="345" width="71" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ワクチン" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J4X-Wb-Wjr">
-                                <rect key="frame" x="20" y="384.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="385" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -1267,7 +1267,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9FY-07-gBK">
-                                <rect key="frame" x="130" y="384.66666666666669" width="35" height="40"/>
+                                <rect key="frame" x="130" y="385" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="KoW-pc-kQb"/>
                                     <constraint firstAttribute="height" constant="40" id="Nyz-xS-yB6"/>
@@ -1275,7 +1275,7 @@
                                 <state key="normal" title="Button" image="checked"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="去勢/避妊" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gw7-Tn-PKb">
-                                <rect key="frame" x="20" y="434.66666666666669" width="100" height="40"/>
+                                <rect key="frame" x="20" y="435" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -1288,7 +1288,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lVM-pX-fCY">
-                                <rect key="frame" x="130" y="434.66666666666669" width="35" height="40"/>
+                                <rect key="frame" x="130" y="435" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="YDt-3x-Drk"/>
                                     <constraint firstAttribute="height" constant="40" id="f5m-0g-KI0"/>
@@ -1296,7 +1296,7 @@
                                 <state key="normal" title="Button" image="checked"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="里親募集中" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lrg-gf-zgr">
-                                <rect key="frame" x="20" y="484.66666666666663" width="100" height="39.999999999999886"/>
+                                <rect key="frame" x="20" y="485" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -1309,7 +1309,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UMm-Pw-b06">
-                                <rect key="frame" x="130" y="484.66666666666663" width="35" height="39.999999999999886"/>
+                                <rect key="frame" x="130" y="485" width="35" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="BdZ-L1-vz4"/>
                                     <constraint firstAttribute="height" constant="40" id="MxI-1Z-Rwb"/>
@@ -1317,7 +1317,7 @@
                                 <state key="normal" title="Button" image="unchecked"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="お名前" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5P2-8B-1YA">
-                                <rect key="frame" x="20" y="534.66666666666663" width="100" height="40"/>
+                                <rect key="frame" x="20" y="535" width="100" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -1330,7 +1330,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ポチ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Omy-yM-tEY">
-                                <rect key="frame" x="130" y="534" width="80" height="40"/>
+                                <rect key="frame" x="130" y="535" width="80" height="40"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -1444,16 +1444,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hQS-VT-y1O">
-                                <rect key="frame" x="0.0" y="74" width="414" height="662"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hQS-VT-y1O">
+                                <rect key="frame" x="0.0" y="50" width="414" height="686"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ifc-8D-lJX" firstAttribute="top" secondItem="hQS-VT-y1O" secondAttribute="bottom" id="2ID-kD-7wL"/>
+                            <constraint firstItem="hQS-VT-y1O" firstAttribute="top" secondItem="yOJ-5h-4OI" secondAttribute="bottom" constant="30" id="kRA-Z8-UGI"/>
+                            <constraint firstItem="hQS-VT-y1O" firstAttribute="leading" secondItem="PSF-gp-00V" secondAttribute="leading" id="rBo-s5-uCZ"/>
+                            <constraint firstAttribute="trailing" secondItem="hQS-VT-y1O" secondAttribute="trailing" id="vuc-QI-ndF"/>
+                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="tavleView" destination="hQS-VT-y1O" id="0rX-Kv-uFf"/>
+                        <outlet property="tableView" destination="hQS-VT-y1O" id="voL-te-nBE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wcu-1w-4cj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1503,32 +1508,6 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YI6-Zq-rUz">
                                 <rect key="frame" x="0.0" y="81" width="414" height="655"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="Am6-Aa-aKq" detailTextLabel="Ntk-Vh-z0S" style="IBUITableViewCellStyleSubtitle" id="5q4-4z-Rqm">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5q4-4z-Rqm" id="0Lw-QW-HRD">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Am6-Aa-aKq">
-                                                    <rect key="frame" x="15" y="5" width="33.333333333333336" height="20.333333333333332"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ntk-Vh-z0S">
-                                                    <rect key="frame" x="14.999999999999996" y="25.333333333333332" width="43.666666666666664" height="14.333333333333334"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

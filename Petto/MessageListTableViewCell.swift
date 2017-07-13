@@ -40,8 +40,8 @@ class MessageListTableViewCell: UITableViewCell {
     
     //表示される時の値をセット
     func setData(postData: PostData, userData: UserData, messageData: MessageData) {
-        self.userImageView.image = userData.image
-        //self.userNameLabel.text = "\(userData.lastname)" + " " + "\(userData.firstname)"
+        print("MessageListTableViewCell.setData:一覧表示中！！！！")
+/*        self.userImageView.image = userData.image
         self.userNameLabel.text = userData.firstname
         let goodNumber = userData.goods.count
         self.goodIntLabel.text = "\(goodNumber)"
@@ -58,7 +58,7 @@ class MessageListTableViewCell: UITableViewCell {
 
         self.petImageView.image = postData.image
         self.petNameLabel.text = postData.name
-        
+*/
     }
 
 }
