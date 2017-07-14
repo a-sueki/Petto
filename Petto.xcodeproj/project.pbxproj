@@ -48,6 +48,9 @@
 		84CCE0211EFB8C380025B5D3 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0201EFB8C380025B5D3 /* PostViewController.swift */; };
 		84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */; };
 		84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D253071F0217D700D877A9 /* LeftViewController.swift */; };
+		84D6CD2C1F187956000CA101 /* EntrySectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */; };
+		84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD2D1F1880DC000CA101 /* ImageRow.swift */; };
+		84D6CD301F18817E000CA101 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */; };
 		84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84F244181EFCE01400938F35 /* GoogleService-Info.plist */; };
 		84F6ACA81EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; };
 		84F6ACA91EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -125,6 +128,9 @@
 		84CCE0201EFB8C380025B5D3 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		84D253071F0217D700D877A9 /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
+		84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntrySectionHeader.xib; sourceTree = "<group>"; };
+		84D6CD2D1F1880DC000CA101 /* ImageRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRow.swift; sourceTree = "<group>"; };
+		84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		84F244181EFCE01400938F35 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
 		84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKImage.framework; sourceTree = "<group>"; };
@@ -294,8 +300,19 @@
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
 				849D5D631F186AFB004A0D5A /* EntryViewController.swift */,
+				84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */,
+				84D6CD311F18819E000CA101 /* imageRow */,
 			);
 			path = Petto;
+			sourceTree = "<group>";
+		};
+		84D6CD311F18819E000CA101 /* imageRow */ = {
+			isa = PBXGroup;
+			children = (
+				84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */,
+				84D6CD2D1F1880DC000CA101 /* ImageRow.swift */,
+			);
+			name = imageRow;
 			sourceTree = "<group>";
 		};
 		A30E84074C5613E5B9CEA289 /* Pods */ = {
@@ -374,6 +391,7 @@
 			files = (
 				84AC71281F11FDD5001F7563 /* AttributeCell.xib in Resources */,
 				84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */,
+				84D6CD2C1F187956000CA101 /* EntrySectionHeader.xib in Resources */,
 				84AC71221F11FDD5001F7563 /* NamePictureCell.xib in Resources */,
 				84AC70E91F11F80D001F7563 /* ServerData.json in Resources */,
 				84AC71241F11FDD5001F7563 /* AboutCell.xib in Resources */,
@@ -455,6 +473,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84D6CD301F18817E000CA101 /* ImagePickerController.swift in Sources */,
 				841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */,
 				846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */,
 				84376B991F063777001E270F /* DetailViewController.swift in Sources */,
@@ -475,6 +494,7 @@
 				84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */,
 				84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
+				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
 				84AC70ED1F11FD91001F7563 /* ProfileViewModel.swift in Sources */,
 				84AC70E51F11B755001F7563 /* SignUpViewController.swift in Sources */,
