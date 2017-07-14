@@ -12,8 +12,6 @@ import Eureka
 
 class EntryViewController: FormViewController  {
     
-    var navigationOptionsBackup : RowNavigationOptions?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,7 +38,7 @@ class EntryViewController: FormViewController  {
             }
             
             <<< ImageRow(){
-                $0.title = "ImageRow"
+                $0.title = "写真"
             }
             <<< NameRow() {
                 $0.title = "ペットの名前"
@@ -95,7 +93,16 @@ class EntryViewController: FormViewController  {
                 $0.value = true
             }
             
-            +++ Section("おあずけ条件")
+            +++ Section("requirement")
+            <<< SwitchRow("あずかり人を募集する"){
+                $0.title = $0.tag
+            }
+            <<< ButtonRow("おあずけ条件設定") { (row: ButtonRow) -> Void in
+                row.title = row.tag
+                row.presentationMode = .segueName(segueName: "ListSectionsControllerSegue", onDismiss: nil)
+            }
+
+/*
             <<< SwitchRow("Show Next Row"){
                 $0.title = $0.tag
             }
@@ -115,7 +122,20 @@ class EntryViewController: FormViewController  {
             }
             <<< TextRow() {
                 $0.placeholder = "Gonna dissapear soon!!"
-        }
+            }
+        
+            for option in oceans {
+                form.last! <<< ImageCheckRow<String>(option){ lrow in
+                    lrow.title = option
+                    lrow.selectableValue = option
+                    lrow.value = nil
+                    }.cellSetup { cell, _ in
+                        cell.trueImage = UIImage(named: "checked-yellow")!
+                        cell.falseImage = UIImage(named: "unchecked")!
+                        cell.accessoryType = .checkmark
+                }
+            }
+ */
 
     }
 
@@ -126,80 +146,86 @@ class EntryViewController: FormViewController  {
 
 }
 
-
-//MARK: Navigation Accessory View Example
-
-class NavigationAccessoryController : FormViewController {
-    
-    var navigationOptionsBackup : RowNavigationOptions?
+class ListSectionsController: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationOptions = RowNavigationOptions.Enabled.union(.SkipCanNotBecomeFirstResponderRow)
-        navigationOptionsBackup = navigationOptions
+/*        let continents = ["Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"]
         
-        form = Section(header: "Settings", footer: "These settings change how the navigation accessory view behaves")
-            
-            <<< SwitchRow("set_none") { [weak self] in
-                $0.title = "おあずけ条件を設定する"
-                $0.value = self?.navigationOptions != .Disabled
-                }.onChange { [weak self] in
-                    if $0.value ?? false {
-                        self?.navigationOptions = self?.navigationOptionsBackup
-                        self?.form.rowBy(tag: "set_disabled")?.baseValue = self?.navigationOptions?.contains(.StopDisabledRow)
-                        self?.form.rowBy(tag: "set_skip")?.baseValue = self?.navigationOptions?.contains(.SkipCanNotBecomeFirstResponderRow)
-                        self?.form.rowBy(tag: "set_disabled")?.updateCell()
-                        self?.form.rowBy(tag: "set_skip")?.updateCell()
-                    }
-                    else {
-                        self?.navigationOptionsBackup = self?.navigationOptions
-                        self?.navigationOptions = .Disabled
-                    }
+        form +++ SelectableSection<ImageCheckRow<String>>() { section in
+            section.header = HeaderFooterView(title: "Where do you live?")
+        }
+        
+        for option in continents {
+            form.last! <<< ImageCheckRow<String>(option){ lrow in
+                lrow.title = option
+                lrow.selectableValue = option
+                lrow.value = nil
             }
-            
-            <<< CheckRow("set_disabled") { [weak self] in
-                $0.title = "Stop at disabled row"
-                $0.value = self?.navigationOptions?.contains(.StopDisabledRow)
-                $0.hidden = "$set_none == false" // .Predicate(NSPredicate(format: "$set_none == false"))
-                }.onChange { [weak self] row in
-                    if row.value ?? false {
-                        self?.navigationOptions = self?.navigationOptions?.union(.StopDisabledRow)
-                    }
-                    else{
-                        self?.navigationOptions = self?.navigationOptions?.subtracting(.StopDisabledRow)
-                    }
+        }
+*/
+        
+        let environments = ["室内のみ", "エアコンあり", "専有面積30㎡以上","2部屋以上"]
+        form +++ SelectableSection<ImageCheckRow<String>>("飼養環境", selectionType: .multipleSelection)
+        for option in environments {
+            form.last! <<< ImageCheckRow<String>(option){ lrow in
+                lrow.title = option
+                lrow.selectableValue = option
+                lrow.value = nil
+                }.cellSetup { cell, _ in
+                    cell.trueImage = UIImage(named: "checked-yellow")!
+                    cell.falseImage = UIImage(named: "unchecked")!
+                    cell.accessoryType = .checkmark
             }
-            
-            <<< CheckRow("set_skip") { [weak self] in
-                $0.title = "Skip non first responder view"
-                $0.value = self?.navigationOptions?.contains(.SkipCanNotBecomeFirstResponderRow)
-                $0.hidden = "$set_none  == false"
-                }.onChange { [weak self] row in
-                    if row.value ?? false {
-                        self?.navigationOptions = self?.navigationOptions?.union(.SkipCanNotBecomeFirstResponderRow)
-                    }
-                    else{
-                        self?.navigationOptions = self?.navigationOptions?.subtracting(.SkipCanNotBecomeFirstResponderRow)
-                    }
+        }
+        
+        let tools = ["ペット用ベッド", "ペット用トイレ", "首輪＆リード", "ケージ（柵）" , "キャットタワー", "爪とぎ"]
+        form +++ SelectableSection<ImageCheckRow<String>>("必要な道具", selectionType: .multipleSelection)
+        for option in tools {
+            form.last! <<< ImageCheckRow<String>(option){ lrow in
+                lrow.title = option
+                lrow.selectableValue = option
+                lrow.value = nil
+                }.cellSetup { cell, _ in
+                    cell.trueImage = UIImage(named: "checked-yellow")!
+                    cell.falseImage = UIImage(named: "unchecked")!
+                    cell.accessoryType = .checkmark
             }
-            +++
-            Section()
-            
-            <<< PhoneRow() { $0.title = "Your phone number" }
-            
-            <<< URLRow() {
-                $0.title = "Disabled"
-                $0.disabled = true
+        }
+        
+        let ngs = ["Bad評価1以上", "定時帰宅できない", "一人暮らし", "小児と同居" , "高齢者と同居"]
+        form +++ SelectableSection<ImageCheckRow<String>>("あずかり人NG条件", selectionType: .multipleSelection)
+        for option in ngs {
+            form.last! <<< ImageCheckRow<String>(option){ lrow in
+                lrow.title = option
+                lrow.selectableValue = option
+                lrow.value = nil
+                }.cellSetup { cell, _ in
+                    cell.trueImage = UIImage(named: "checked-yellow")!
+                    cell.falseImage = UIImage(named: "unchecked")!
+                    cell.accessoryType = .checkmark
             }
-            
-            <<< TextRow() { $0.title = "Your father's name"}
-            
-            <<< TextRow(){ $0.title = "Your mother's name"}
+        }
+        
+        //TODO: 餌やりのタイミング
+        //TODO: 歯磨きのタイミング
+        //TODO: 散歩のタイミング
+        //TODO: おあずけ可能期間
+
 
     }
+    
+    override func valueHasBeenChanged(for row: BaseRow, oldValue: Any?, newValue: Any?) {
+/*        if row.section === form[0] {
+            print("Single Selection:\((row.section as! SelectableSection<ImageCheckRow<String>>).selectedRow()?.baseValue ?? "No row selected")")
+        }
+        else if row.section === form[1] {
+            print("Mutiple Selection:\((row.section as! SelectableSection<ImageCheckRow<String>>).selectedRows().map({$0.baseValue}))")
+        }
+         */
+    }
 }
-
 
 
 class PettoLogoViewNib: UIView {
