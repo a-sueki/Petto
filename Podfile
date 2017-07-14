@@ -15,4 +15,5 @@ target 'Petto' do
   pod 'RxSwift'
   pod 'JSQMessagesViewController'
   pod 'SwiftyJSON'
+  pod 'Eureka'
 end

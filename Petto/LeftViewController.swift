@@ -20,7 +20,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     
-    var menus = ["ホーム", "ペット投稿","メッセージ","詳細","メッセージ一覧"]
+    var menus = ["ホーム", "ペット投稿","メッセージ","詳細","メッセージ一覧","Entry"]
     var homeViewController: UIViewController!
     var postViewController: UIViewController!
     var messagesViewController: UIViewController!
@@ -34,7 +34,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.delegate = self
         tableView.dataSource = self
-        self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
+        self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 0.5)
         
     }
     
@@ -79,6 +79,10 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 4:
             let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
             let navigationController = UINavigationController(rootViewController: messageListViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+        case 5:
+            let entryViewController = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
+            let navigationController = UINavigationController(rootViewController: entryViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         default:
             break
