@@ -11,7 +11,9 @@ import Eureka
 
 
 class EntryViewController: FormViewController  {
-
+    
+    var navigationOptionsBackup : RowNavigationOptions?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -92,8 +94,29 @@ class EntryViewController: FormViewController  {
                 $0.title = "里親募集中"
                 $0.value = true
             }
-        
-    
+            
+            +++ Section("おあずけ条件")
+            <<< SwitchRow("Show Next Row"){
+                $0.title = $0.tag
+            }
+            <<< SwitchRow("Show Next Section"){
+                $0.title = $0.tag
+                $0.hidden = .function(["Show Next Row"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "Show Next Row")
+                    return row.value ?? false == false
+                })
+            }
+            
+            +++ Section(footer: "This section is shown only when 'Show Next Row' switch is enabled"){
+                $0.hidden = .function(["Show Next Section"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "Show Next Section")
+                    return row.value ?? false == false
+                })
+            }
+            <<< TextRow() {
+                $0.placeholder = "Gonna dissapear soon!!"
+        }
+
     }
 
     override func didReceiveMemoryWarning() {
