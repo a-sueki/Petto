@@ -25,14 +25,14 @@ class EntryViewController: FormViewController  {
 //                $0.header = HeaderFooterView<PettoLogoView>(.class)
                 var header = HeaderFooterView<PettoLogoViewNib>(.nibFile(name: "EntrySectionHeader", bundle: nil))
                 header.onSetupView = { (view, section) -> () in
-                    view.imageView.alpha = 0;
-                    UIView.animate(withDuration: 2.0, animations: { [weak view] in
-                        view?.imageView.alpha = 1
-                    })
+                    view.imageView.alpha = 1;
+//                    UIView.animate(withDuration: 2.0, animations: { [weak view] in
+//                        view?.imageView.alpha = 1
+//                    })
                     view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-                    UIView.animate(withDuration: 1.0, animations: { [weak view] in
-                        view?.layer.transform = CATransform3DIdentity
-                    })
+//                    UIView.animate(withDuration: 1.0, animations: { [weak view] in
+//                        view?.layer.transform = CATransform3DIdentity
+//                    })
                 }
                 $0.header = header
             }
