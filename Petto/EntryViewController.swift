@@ -38,7 +38,7 @@ class EntryViewController: FormViewController  {
             }
             
             <<< ImageRow(){
-                $0.title = "写真"
+                $0.title = "写真をセットする"
             }
             <<< NameRow() {
                 $0.title = "ペットの名前"
@@ -81,11 +81,11 @@ class EntryViewController: FormViewController  {
 
             +++ Section("Condition")
             <<< CheckRow() {
-                $0.title = "ワクチン接種"
+                $0.title = "ワクチン接種済み"
                 $0.value = true
             }
             <<< CheckRow() {
-                $0.title = "去勢"
+                $0.title = "去勢/避妊手術済み"
                 $0.value = true
             }
             <<< CheckRow() {
@@ -208,11 +208,45 @@ class ListSectionsController: FormViewController {
             }
         }
         
-        //TODO: 餌やりのタイミング
-        //TODO: 歯磨きのタイミング
-        //TODO: 散歩のタイミング
-        //TODO: おあずけ可能期間
+        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
 
+        form
+            +++
+                Section("お世話の方法")
+                <<< SegmentedRow<String>() {
+                    $0.title =  "ごはんの回数/日"
+                    $0.options = ["1回","2回","3回"]
+                }
+                <<< SegmentedRow<String>() {
+                    $0.title = "歯磨きの回数/日"
+                    $0.options = ["1回","2回","3回"]
+                }
+                <<< SegmentedRow<String>() {
+                    $0.title = "お散歩の回数/日"
+                    $0.options = ["不要","1回","2回"]
+                }
+
+            +++
+                Section("おあずけ可能期間")
+                <<< DateRow() {
+                    $0.value = Date()
+                    $0.title = "開始日付"
+                }
+                <<< DateRow() {
+                    $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
+                    $0.title = "終了日付"
+                }
+            +++
+                Section("連続おあずけ日数")
+            <<< IntRow() {
+                $0.title = "最短"
+                $0.value = 1
+            }
+            <<< IntRow() {
+                $0.title = "最長"
+                $0.value = 30
+            }
+        
 
     }
     
@@ -226,6 +260,11 @@ class ListSectionsController: FormViewController {
          */
     }
 }
+
+//MARK: Emoji
+
+typealias Emoji = String
+let 👦🏼 = "👦🏼", 🍐 = "🍐", 💁🏻 = "💁🏻", 🐗 = "🐗", 🐼 = "🐼", 🐻 = "🐻", 🐖 = "🐖", 🐡 = "🐡"
 
 
 class PettoLogoViewNib: UIView {
