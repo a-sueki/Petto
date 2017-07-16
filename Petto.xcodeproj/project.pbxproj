@@ -237,6 +237,17 @@
 			name = PopUpPickerView;
 			sourceTree = "<group>";
 		};
+		849ED1E01F1B2F60003AD9F5 /* Entry */ = {
+			isa = PBXGroup;
+			children = (
+				849D5D631F186AFB004A0D5A /* EntryViewController.swift */,
+				84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */,
+				84D6CD321F18F7E3000CA101 /* CustomCells.swift */,
+				84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */,
+			);
+			name = Entry;
+			sourceTree = "<group>";
+		};
 		84AC712B1F11FDDE001F7563 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,10 +314,7 @@
 				84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
-				849D5D631F186AFB004A0D5A /* EntryViewController.swift */,
-				84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */,
-				84D6CD321F18F7E3000CA101 /* CustomCells.swift */,
-				84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */,
+				849ED1E01F1B2F60003AD9F5 /* Entry */,
 				84D6CD311F18819E000CA101 /* imageRow */,
 			);
 			path = Petto;

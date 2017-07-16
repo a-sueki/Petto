@@ -8,12 +8,18 @@
 
 import UIKit
 import Eureka
-
+import Firebase
+import FirebaseDatabase
+import SVProgressHUD
 
 class EntryViewController: FormViewController  {
     
+    var postData = [String : String]()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         ImageRow.defaultCellUpdate = { cell, row in
             cell.accessoryView?.layer.cornerRadius = 17
@@ -22,77 +28,85 @@ class EntryViewController: FormViewController  {
 
         form +++
             Section() {
-//                $0.header = HeaderFooterView<PettoLogoView>(.class)
                 var header = HeaderFooterView<PettoLogoViewNib>(.nibFile(name: "EntrySectionHeader", bundle: nil))
                 header.onSetupView = { (view, section) -> () in
                     view.imageView.alpha = 1;
-//                    UIView.animate(withDuration: 2.0, animations: { [weak view] in
-//                        view?.imageView.alpha = 1
-//                    })
                     view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-//                    UIView.animate(withDuration: 1.0, animations: { [weak view] in
-//                        view?.layer.transform = CATransform3DIdentity
-//                    })
                 }
                 $0.header = header
             }
             
             <<< ImageRow(){
-                $0.title = "写真をセットする"
+                $0.title = "写真"
+                }.onChange{row in
+                    let image = row.value!
+                    let imageData = UIImageJPEGRepresentation(image, 0.5)
+                    let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+                    
+                    self.postData["imageString"] = imageString
             }
             <<< NameRow() {
-                $0.title = "ペットの名前"
+                $0.title = "名前"
                 $0.placeholder = "ポチ"
+                }.onChange{row in
+                    self.postData["name"] = row.value!
             }
             <<< PickerInputRow<String>("areaPiker"){
                 $0.title = "エリア"
-                $0.options = []
-                for i in 1...10{
-                    $0.options.append("エリア \(i)")
-                }
+                $0.options = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
                 $0.value = $0.options.first
+                }.onChange{row in
+                    self.postData["area"] = row.value!
             }
 
             +++ Section("Profile")
             <<< SegmentedRow<String>() {
                 $0.title =  "性別"
                 $0.options = ["♂", "♀"]
+                }.onChange{row in
+                    self.postData["sex"] = row.value!
             }
             <<< SegmentedRow<String>() {
                 $0.title =  "種類"
                 $0.options = ["イヌ", "ネコ"]
+                }.onChange{row in
+                    self.postData["kind"] = row.value!
             }
             <<< PickerInputRow<String>("categoryPicker"){
-                $0.title = "カテゴリ"
-                $0.options = []
-                for i in 1...10{
-                    $0.options.append("category \(i)")
-                }
+                $0.title = "品種"
+                $0.options = ["雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
                 $0.value = $0.options.first
+                }.onChange{row in
+                    self.postData["category"] = row.value!
             }
             <<< PickerInputRow<String>("agePicker"){
                 $0.title = "年齢"
-                $0.options = []
-                for i in 1...10{
-                    $0.options.append("age \(i)")
-                }
+                $0.options = ["8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
                 $0.value = $0.options.first
+                }.onChange{row in
+                    self.postData["age"] = row.value!
             }
 
             +++ Section("Condition")
             <<< CheckRow() {
                 $0.title = "ワクチン接種済み"
                 $0.value = true
+                }.onChange{row in
+                    self.postData["isVaccinated"] = String(describing: row.value)
             }
             <<< CheckRow() {
                 $0.title = "去勢/避妊手術済み"
                 $0.value = true
+                }.onChange{row in
+                    self.postData["isCastrated"] = String(describing: row.value)
             }
             <<< CheckRow() {
                 $0.title = "里親募集中"
                 $0.value = true
+                }.onChange{row in
+                    self.postData["wanted"] = String(describing: row.value)
             }
-            
+            // TODO: Firebase連携
             +++ Section("requirement")
             <<< SwitchRow("あずかり人を募集する"){
                 $0.title = $0.tag
@@ -101,42 +115,35 @@ class EntryViewController: FormViewController  {
                 row.title = row.tag
                 row.presentationMode = .segueName(segueName: "ListSectionsControllerSegue", onDismiss: nil)
             }
-
-/*
-            <<< SwitchRow("Show Next Row"){
-                $0.title = $0.tag
-            }
-            <<< SwitchRow("Show Next Section"){
-                $0.title = $0.tag
-                $0.hidden = .function(["Show Next Row"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "Show Next Row")
-                    return row.value ?? false == false
-                })
-            }
-            
-            +++ Section(footer: "This section is shown only when 'Show Next Row' switch is enabled"){
-                $0.hidden = .function(["Show Next Section"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "Show Next Section")
-                    return row.value ?? false == false
-                })
-            }
-            <<< TextRow() {
-                $0.placeholder = "Gonna dissapear soon!!"
+        
+            +++ Section()
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "投稿する"
+                }
+                .onCellSelection { [weak self] (cell, row) in
+                    self?.executePost()
             }
         
-            for option in oceans {
-                form.last! <<< ImageCheckRow<String>(option){ lrow in
-                    lrow.title = option
-                    lrow.selectableValue = option
-                    lrow.value = nil
-                    }.cellSetup { cell, _ in
-                        cell.trueImage = UIImage(named: "checked-yellow")!
-                        cell.falseImage = UIImage(named: "unchecked")!
-                        cell.accessoryType = .checkmark
-                }
-            }
- */
+    }
 
+    @IBAction func executePost() {
+        
+        // postDataに必要な情報を取得しておく
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let uid = FIRAuth.auth()?.currentUser?.uid
+
+        // 辞書を作成してFirebaseに保存する
+        let postRef = FIRDatabase.database().reference().child(Const.PostPath)
+        self.postData["createAt"] = String(time)
+        self.postData["createBy"] = uid!
+        
+        postRef.childByAutoId().setValue(postData)
+        
+        // HUDで投稿完了を表示する
+        SVProgressHUD.showSuccess(withStatus: "投稿しました")
+        
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -150,21 +157,6 @@ class ListSectionsController: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-/*        let continents = ["Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"]
-        
-        form +++ SelectableSection<ImageCheckRow<String>>() { section in
-            section.header = HeaderFooterView(title: "Where do you live?")
-        }
-        
-        for option in continents {
-            form.last! <<< ImageCheckRow<String>(option){ lrow in
-                lrow.title = option
-                lrow.selectableValue = option
-                lrow.value = nil
-            }
-        }
-*/
         
         let environments = ["室内のみ", "エアコンあり", "専有面積30㎡以上","2部屋以上"]
         form +++ SelectableSection<ImageCheckRow<String>>("飼養環境", selectionType: .multipleSelection)
@@ -260,12 +252,6 @@ class ListSectionsController: FormViewController {
          */
     }
 }
-
-//MARK: Emoji
-
-typealias Emoji = String
-let 👦🏼 = "👦🏼", 🍐 = "🍐", 💁🏻 = "💁🏻", 🐗 = "🐗", 🐼 = "🐼", 🐻 = "🐻", 🐖 = "🐖", 🐡 = "🐡"
-
 
 class PettoLogoViewNib: UIView {
     
