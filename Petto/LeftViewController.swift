@@ -65,7 +65,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let navigationController = UINavigationController(rootViewController: homeViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 1:
-            let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "Post") as! PostViewController
+            let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
             let navigationController = UINavigationController(rootViewController: postViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 2:
@@ -73,7 +73,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let navigationController = UINavigationController(rootViewController: messagesViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 3:
-            let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
+            let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
             let navigationController = UINavigationController(rootViewController: detailViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 4:

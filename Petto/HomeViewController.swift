@@ -22,7 +22,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
 
     
     @IBOutlet weak var collectionView: UICollectionView!
-    var postArray: [PostData] = []
+    var petInfoArray: [PetInfoData] = []
     
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -55,7 +55,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             if observing == true {
                 // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
                 // テーブルをクリアする
-                postArray = []
+                petInfoArray = []
                 collectionView.reloadData()
                 // オブザーバーを削除する
                 FIRDatabase.database().reference().removeAllObservers()
@@ -76,14 +76,14 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
-                let postsRef = FIRDatabase.database().reference().child(Const.PostPath)
+                let postsRef = FIRDatabase.database().reference().child(Const.PetInfoPath)
                 postsRef.observe(.childAdded, with: { snapshot in
                     print("DEBUG_PRINT: .childAddedイベントが発生しました。")
                     
-                    // PostDataクラスを生成して受け取ったデータを設定する
+                    // PetInfoDataクラスを生成して受け取ったデータを設定する
                     if let uid = FIRAuth.auth()?.currentUser?.uid {
-                        let postData = PostData(snapshot: snapshot, myId: uid)
-                        self.postArray.insert(postData, at: 0)
+                        let petInfoData = PetInfoData(snapshot: snapshot, myId: uid)
+                        self.petInfoArray.insert(petInfoData, at: 0)
                         
                         // collectionViewを再表示する
                         self.collectionView.reloadData()
@@ -94,23 +94,23 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                     print("DEBUG_PRINT: .childChangedイベントが発生しました。")
                     
                     if let uid = FIRAuth.auth()?.currentUser?.uid {
-                        // PostDataクラスを生成して受け取ったデータを設定する
-                        let postData = PostData(snapshot: snapshot, myId: uid)
+                        // PetInfoDataクラスを生成して受け取ったデータを設定する
+                        let petInfoData = PetInfoData(snapshot: snapshot, myId: uid)
                         
                         // 保持している配列からidが同じものを探す
                         var index: Int = 0
-                        for post in self.postArray {
-                            if post.id == postData.id {
-                                index = self.postArray.index(of: post)!
+                        for petInfo in self.petInfoArray {
+                            if petInfo.id == petInfoData.id {
+                                index = self.petInfoArray.index(of: petInfo)!
                                 break
                             }
                         }
                         
                         // 差し替えるため一度削除する
-                        self.postArray.remove(at: index)
+                        self.petInfoArray.remove(at: index)
                         
                         // 削除したところに更新済みのでデータを追加する
-                        self.postArray.insert(postData, at: index)
+                        self.petInfoArray.insert(petInfoData, at: index)
                         
                         // TableViewの現在表示されているセルを更新する
                         self.collectionView.reloadData()
@@ -129,7 +129,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
 
         // test用
-        /*        // Cell はストーリーボードで設定したセルのID
+/*                // Cell はストーリーボードで設定したセルのID
         let testCell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath)
         // Tag番号を使ってImageViewのインスタンス生成
         let imageView = testCell.contentView.viewWithTag(1) as! UIImageView
@@ -147,10 +147,10 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         let termlabel = testCell.contentView.viewWithTag(5) as! UILabel
         termlabel.text = terms[(indexPath as NSIndexPath).row]
         return testCell
-*/
 
+*/
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCollectionViewCell
-        cell.setPostData(postData: postArray[indexPath.row])
+        cell.setPetInfoData(petInfoData: petInfoArray[indexPath.row])
         // セル内のボタンのアクションをソースコードで設定する
         cell.likeButton.addTarget(self, action:#selector(handleLikeButton(sender:event:)), for:  UIControlEvents.touchUpInside)
 
@@ -173,8 +173,9 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // 要素数を入れる、要素以上の数字を入れると表示でエラーとなる
+        // test用
         //return 10;
-        return postArray.count
+        return petInfoArray.count
     }
     
 
@@ -194,28 +195,28 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         let indexPath = collectionView.indexPathForItem(at: point)
         
         // 配列からタップされたインデックスのデータを取り出す
-        let postData = postArray[indexPath!.row]
+        let petInfoData = petInfoArray[indexPath!.row]
         
         // Firebaseに保存するデータの準備
         if let uid = FIRAuth.auth()?.currentUser?.uid {
-            if postData.isLiked {
+            if petInfoData.isLiked {
                 // すでにいいねをしていた場合はいいねを解除するためIDを取り除く
                 var index = -1
-                for likeId in postData.likes {
+                for likeId in petInfoData.likes {
                     if likeId == uid {
                         // 削除するためにインデックスを保持しておく
-                        index = postData.likes.index(of: likeId)!
+                        index = petInfoData.likes.index(of: likeId)!
                         break
                     }
                 }
-                postData.likes.remove(at: index)
+                petInfoData.likes.remove(at: index)
             } else {
-                postData.likes.append(uid)
+                petInfoData.likes.append(uid)
             }
             
             // 増えたlikesをFirebaseに保存する
-            let postRef = FIRDatabase.database().reference().child(Const.PostPath).child(postData.id!)
-            let likes = ["likes": postData.likes]
+            let postRef = FIRDatabase.database().reference().child(Const.PetInfoPath).child(petInfoData.id!)
+            let likes = ["likes": petInfoData.likes]
             postRef.updateChildValues(likes)
             
         }

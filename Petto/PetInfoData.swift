@@ -1,29 +1,29 @@
 //
-//  PostData.swift
+//  PetInfoData.swift
 //  Petto
 //
-//  Created by admin on 2017/06/29.
+//  Created by admin on 2017/07/17.
 //  Copyright © 2017年 aoi.sueki. All rights reserved.
 //
 
-import UIKit
 import Firebase
 import FirebaseDatabase
 
-class PostData: NSObject {
+class PetInfoData: NSObject {
     var id: String?
     // ペット基本情報
     var image: UIImage?
     var imageString: String?
-    var area: String?
     var name: String?
+    var area: String?
+    var sex: String?
     var kind: String?
     var category: String?
-    var sex: String?
     var age: String?
     var isVaccinated: Bool?
     var isCastrated: Bool?
     var wanted: Bool?
+    
     // システム項目
     var createAt: NSDate?
     var createBy: String?
@@ -37,10 +37,8 @@ class PostData: NSObject {
         self.id = snapshot.key
         
         let valueDictionary = snapshot.value as! [String: AnyObject]
-
-        // ペット基本情報
         
-    
+        // ペット基本情報
         imageString = valueDictionary["imageString"] as? String
         self.image = UIImage(data: NSData(base64Encoded: imageString!, options: .ignoreUnknownCharacters)! as Data)
         self.area = valueDictionary["area"] as? String
@@ -57,10 +55,11 @@ class PostData: NSObject {
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
         self.createBy = valueDictionary["createBy"] as? String
-/*        let updateAt = valueDictionary["updateAt"] as? String
-        self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt!)!)
-        self.updateBy = valueDictionary["updateBy"] as? String
-*/        
+        /*        let updateAt = valueDictionary["updateAt"] as? String
+         self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt!)!)
+         self.updateBy = valueDictionary["updateBy"] as? String
+         */
+
         // 評価
         if let likes = valueDictionary["likes"] as? [String] {
             self.likes = likes
@@ -71,6 +70,6 @@ class PostData: NSObject {
                 break
             }
         }
-
+        
     }
 }

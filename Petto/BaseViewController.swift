@@ -62,7 +62,7 @@ class BaseViewController: UIViewController {
         self.navigationController?.pushViewController(viewController4, animated: true)
     }
     func onClick5() {
-        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Post") as! PostViewController
+        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
         self.navigationController?.pushViewController(viewController5, animated: true)
     }
 

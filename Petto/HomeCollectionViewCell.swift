@@ -25,11 +25,11 @@ class HomeCollectionViewCell: UICollectionViewCell {
     
     
     //表示される時の値をセット
-    func setPostData(postData: PostData) {
-        self.petImageView.image = postData.image
-        self.areaLabel.text = postData.area!
+    func setPetInfoData(petInfoData: PetInfoData) {
+        self.petImageView.image = petInfoData.image
+        self.areaLabel.text = petInfoData.area ?? "未選択"
         
-        if postData.isLiked {
+        if petInfoData.isLiked {
             let buttonImage = UIImage(named: "like")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)
         } else {
