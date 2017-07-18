@@ -11,7 +11,7 @@ import UIKit
 class HomeCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var petImageView: UIImageView!
-    @IBOutlet weak var categoryImageView: UIImageView!
+    @IBOutlet weak var kindImageView: UIImageView!
     @IBOutlet weak var sexImageView: UIImageView!
     @IBOutlet weak var areaLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
@@ -28,6 +28,13 @@ class HomeCollectionViewCell: UICollectionViewCell {
     func setPetInfoData(petInfoData: PetInfoData) {
         self.petImageView.image = petInfoData.image
         self.areaLabel.text = petInfoData.area ?? "未選択"
+        
+        if petInfoData.kind == "イヌ" {
+            self.kindImageView.image = UIImage(named: "dog-lightgray")
+        } else {
+            self.kindImageView.image = UIImage(named: "cat-lightgray")
+        }
+        
         
         if petInfoData.isLiked {
             let buttonImage = UIImage(named: "like")

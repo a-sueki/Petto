@@ -76,7 +76,7 @@
             <size key="customSize" width="149" height="219"/>
             <connections>
                 <outlet property="areaLabel" destination="qsA-3y-aN3" id="qb4-UU-4gY"/>
-                <outlet property="categoryImageView" destination="S8j-FD-jhy" id="dtf-wT-zQh"/>
+                <outlet property="kindImageView" destination="S8j-FD-jhy" id="GiY-dZ-Qx9"/>
                 <outlet property="likeButton" destination="HMb-mT-llA" id="RAQ-eB-arg"/>
                 <outlet property="petImageView" destination="KQW-lg-eQn" id="HAW-k0-hWh"/>
                 <outlet property="sexImageView" destination="v1v-pB-o3E" id="Iza-Zq-xWZ"/>

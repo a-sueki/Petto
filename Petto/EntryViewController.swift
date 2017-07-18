@@ -14,17 +14,32 @@ import SVProgressHUD
 
 
 class EntryViewController: FormViewController  {
-
+    
     var petInfoData = [String : String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 必須入力チェック
+        LabelRow.defaultCellUpdate = { cell, row in
+            cell.contentView.backgroundColor = .red
+            cell.textLabel?.textColor = .white
+            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+            cell.textLabel?.textAlignment = .right
+            
+        }
+        ImageRow.defaultCellUpdate = { cell, row in
+            if !row.isValid {
+                cell.textLabel?.textColor = .red
+            }
+        }
+        
+        
         ImageRow.defaultCellUpdate = { cell, row in
             cell.accessoryView?.layer.cornerRadius = 17
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
-
+        
         form +++
             Section() {
                 var header = HeaderFooterView<PettoLogoViewNib>(.nibFile(name: "EntrySectionHeader", bundle: nil))
@@ -35,78 +50,114 @@ class EntryViewController: FormViewController  {
                 $0.header = header
             }
             
-            <<< ImageRow(){
+            <<< ImageRow("image"){
                 $0.title = "写真"
-                }.onChange{row in
-                    let image = row.value!
-                    let imageData = UIImageJPEGRepresentation(image, 0.5)
-                    let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                    
-                    self.petInfoData["imageString"] = imageString
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.textLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
-            <<< NameRow() {
+            
+            <<< NameRow("name") {
                 $0.title = "名前"
                 $0.placeholder = "ポチ"
-                // TODO: keyboard表示
-                // TODO: nil対策
-                }.onChange{row in
-                    self.petInfoData["name"] = row.value!
             }
-            <<< PickerInputRow<String>("areaPiker"){
+            <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
                 $0.value = $0.options.first
-                }.onChange{row in
-                    self.petInfoData["area"] = row.value!
             }
-
+            
             +++ Section("Profile")
-            <<< SegmentedRow<String>() {
+            <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
                 $0.options = ["♂", "♀"]
-                }.onChange{row in
-                    self.petInfoData["sex"] = row.value!
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
-            <<< SegmentedRow<String>() {
+            <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
                 $0.options = ["イヌ", "ネコ"]
-                }.onChange{row in
-                    self.petInfoData["kind"] = row.value!
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
-            <<< PickerInputRow<String>("categoryPicker"){
+            <<< PickerInputRow<String>("category"){
                 $0.title = "品種"
                 $0.options = ["雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
                 $0.value = $0.options.first
-                }.onChange{row in
-                    self.petInfoData["category"] = row.value!
             }
-            <<< PickerInputRow<String>("agePicker"){
+            <<< PickerInputRow<String>("age"){
                 $0.title = "年齢"
                 $0.options = ["8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
                 $0.value = $0.options.first
-                }.onChange{row in
-                    self.petInfoData["age"] = row.value!
             }
-
+            
             +++ Section("Condition")
-            <<< CheckRow() {
+            <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
                 $0.value = true
-                }.onChange{row in
-                    self.petInfoData["isVaccinated"] = String(describing: row.value)
             }
-            <<< CheckRow() {
+            <<< CheckRow("isCastrated") {
                 $0.title = "去勢/避妊手術済み"
                 $0.value = true
-                }.onChange{row in
-                    self.petInfoData["isCastrated"] = String(describing: row.value)
             }
-            <<< CheckRow() {
+            <<< CheckRow("wanted") {
                 $0.title = "里親募集中"
                 $0.value = true
-                }.onChange{row in
-                    self.petInfoData["wanted"] = String(describing: row.value)
             }
+            
             // TODO: Firebase連携
             +++ Section("requirement")
             <<< SwitchRow("あずかり人を募集する"){
@@ -129,14 +180,15 @@ class EntryViewController: FormViewController  {
                     print("+++++\(Array(mySet!))++++++")
                     //TODO: environmentsにpetIDを紐づけて登録する
                     self.petInfoData["environments"] = String(describing: row.value)
-                }
-
-        
+            }
+            
+            
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "投稿する"
-                }
-                .onCellSelection { [weak self] (cell, row) in
+                }.onCellSelection { [weak self] (cell, row) in
+                    print("---EntryViewController.viewDidLoad 3")
+                    row.section?.form?.validate()
                     self?.executePost()
             }
         
@@ -145,24 +197,33 @@ class EntryViewController: FormViewController  {
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
-
-
+    
+    
     @IBAction func executePost() {
-        //TODO: 必須項目チェック
+        print("---EntryViewController.executePost")
         
         // petInfoDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
         let uid = FIRAuth.auth()?.currentUser?.uid
-
+        
         // 辞書を作成してFirebaseに保存する
         let postRef = FIRDatabase.database().reference().child(Const.PetInfoPath)
         self.petInfoData["createAt"] = String(time)
         self.petInfoData["createBy"] = uid!
         
-        print("---EntryViewController.executePost")
         print(form.values())
-
-        
+        for item in form.values() {
+            if let itemValue = item.value {
+                if item.key == "image" {
+                    let imageData = UIImageJPEGRepresentation(item.value! as! UIImage, 0.5)
+                    let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+                    self.petInfoData["imageString"] = imageString
+                }else{
+                    self.petInfoData["\(item.key)"] = String(describing: itemValue)
+                }
+            }
+        }
+        print(self.petInfoData)
         postRef.childByAutoId().setValue(petInfoData)
         
         // HUDで投稿完了を表示する
@@ -171,7 +232,7 @@ class EntryViewController: FormViewController  {
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -185,12 +246,12 @@ class PettoLogoViewNib: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
+    
 }
 
 class PettoLogoView: UIView {
     
-   override init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         let imageView = UIImageView(image: UIImage(named: "catFootptint_orenge"))
         imageView.frame = CGRect(x: 0, y: 0, width: 320, height: 130)
