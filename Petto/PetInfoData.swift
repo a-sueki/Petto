@@ -20,9 +20,12 @@ class PetInfoData: NSObject {
     var kind: String?
     var category: String?
     var age: String?
-    var isVaccinated: Bool?
-    var isCastrated: Bool?
-    var wanted: Bool?
+    var isVaccinated: String?
+    var isCastrated: String?
+    var wanted: String?
+    
+    var isAvailable: String?
+    var environments = [String:String]() // envID : true
     
     // システム項目
     var createAt: NSDate?
@@ -47,9 +50,15 @@ class PetInfoData: NSObject {
         self.category = valueDictionary["category"] as? String
         self.sex = valueDictionary["sex"] as? String
         self.age = valueDictionary["age"] as? String
-        self.isVaccinated = valueDictionary["isVaccinated"] as? Bool
-        self.isCastrated = valueDictionary["isCastrated"] as? Bool
-        self.wanted = valueDictionary["wanted"] as? Bool
+        self.isVaccinated = valueDictionary["isVaccinated"] as? String
+        self.isCastrated = valueDictionary["isCastrated"] as? String
+        self.wanted = valueDictionary["wanted"] as? String
+        
+        self.isAvailable = valueDictionary["isAvailable"] as? String
+        if let environments = valueDictionary["environments"] as? [String:String] {
+            self.environments = environments
+        }
+
         
         // システム項目
         let createAt = valueDictionary["createAt"] as? String

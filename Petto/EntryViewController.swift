@@ -15,10 +15,13 @@ import SVProgressHUD
 
 class EntryViewController: FormViewController  {
     
-    var petInfoData = [String : String]()
+    var inputData1 = [String : Any]()
+    var inputData2 = [String : Bool]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //TODO: NavigationBar表示
         
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
@@ -158,30 +161,24 @@ class EntryViewController: FormViewController  {
                 $0.value = true
             }
             
+            // TODO: UI作成
             // TODO: Firebase連携
             +++ Section("requirement")
-            <<< SwitchRow("あずかり人を募集する"){
-                $0.title = $0.tag
+            <<< SwitchRow("isAvailable"){
+                $0.title = "あずかり人を募集する"
             }
-            <<< ButtonRow("おあずけ条件設定") { (row: ButtonRow) -> Void in
-                row.title = row.tag
-                row.presentationMode = .segueName(segueName: "ListSectionsControllerSegue", onDismiss: nil)
-            }
-            
-            <<< MultipleSelectorRow<String>() {
-                $0.title = "環境条件"
+            <<< MultipleSelectorRow<String>("environments") {
+                $0.title = "飼養環境"
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
                 $0.options = ["室内のみ", "エアコンあり", "専有面積30㎡以上","2部屋以上"]
                 $0.value = []
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-                }.onChange{row in
-                    let mySet = row.value
-                    print("+++++\(Array(mySet!))++++++")
-                    //TODO: environmentsにpetIDを紐づけて登録する
-                    self.petInfoData["environments"] = String(describing: row.value)
-            }
-            
+                }
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -202,29 +199,50 @@ class EntryViewController: FormViewController  {
     @IBAction func executePost() {
         print("---EntryViewController.executePost")
         
-        // petInfoDataに必要な情報を取得しておく
+        // inputData1に必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
         let uid = FIRAuth.auth()?.currentUser?.uid
         
-        // 辞書を作成してFirebaseに保存する
+        // 辞書を作成
         let postRef = FIRDatabase.database().reference().child(Const.PetInfoPath)
-        self.petInfoData["createAt"] = String(time)
-        self.petInfoData["createBy"] = uid!
+        self.inputData1["createAt"] = String(time)
+        self.inputData1["createBy"] = uid!
         
-        print(form.values())
-        for item in form.values() {
-            if let itemValue = item.value {
-                if item.key == "image" {
-                    let imageData = UIImageJPEGRepresentation(item.value! as! UIImage, 0.5)
-                    let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                    self.petInfoData["imageString"] = imageString
-                }else{
-                    self.petInfoData["\(item.key)"] = String(describing: itemValue)
+        for (key,value) in form.values() {
+            // String
+            if value == nil {
+                break
+            }else if case let itemValue as String = value {
+                self.inputData1["\(key)"] = String(describing: itemValue)
+            // UIImage
+            }else if case let itemValue as UIImage = value {
+                let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
+                let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+                self.inputData1["imageString"] = imageString
+            // Bool
+            }else if case _ as Bool = value {
+                self.inputData1["\(key)"] = true
+            }else {
+                var count = 0
+                let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
+                print("fmap:::::::::::::\(fmap)")
+                print("fmap:::::::::::::\(String(describing: type(of: fmap)))" )
+                
+                
+                let myarray = Array(fmap )
+                for data in myarray {
+                    self.inputData1["environments"] = ["env0\(count)", true]
+                    count = count+1
+                    print("data;;;;;;;\(data)")
                 }
+
             }
         }
-        print(self.petInfoData)
-        postRef.childByAutoId().setValue(petInfoData)
+        
+        // FireBaseに保存
+        print("inputData1:::\(inputData1)")
+        postRef.childByAutoId().setValue(inputData1)
+
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: "投稿しました")
@@ -266,143 +284,19 @@ class PettoLogoView: UIView {
     }
 }
 
-
-
-
-
 /*
- 
- // MARK: ListSectionsController
- class ListSectionsController: FormViewController {
- var postData = [String : String]()
- 
- override func viewDidLoad() {
- super.viewDidLoad()
- 
- let environments = ["室内のみ", "エアコンあり", "専有面積30㎡以上","2部屋以上"]
- form +++ SelectableSection<ImageCheckRow<String>>("飼養環境", selectionType: .multipleSelection)
- for option in environments {
- form.last! <<< ImageCheckRow<String>(option){ lrow in
- lrow.title = option
- lrow.selectableValue = option
- lrow.value = nil
- }.cellSetup { cell, _ in
- cell.trueImage = UIImage(named: "checked-yellow")!
- cell.falseImage = UIImage(named: "unchecked")!
- cell.accessoryType = .checkmark
- }
- 
- }
- 
- let tools = ["ペット用ベッド", "ペット用トイレ", "首輪＆リード", "ケージ（柵）" , "キャットタワー", "爪とぎ"]
- form +++ SelectableSection<ImageCheckRow<String>>("必要な道具", selectionType: .multipleSelection)
- for option in tools {
- form.last! <<< ImageCheckRow<String>(option){ lrow in
- lrow.title = option
- lrow.selectableValue = option
- lrow.value = nil
- }.cellSetup { cell, _ in
- cell.trueImage = UIImage(named: "checked-yellow")!
- cell.falseImage = UIImage(named: "unchecked")!
- cell.accessoryType = .checkmark
- }
- }
- 
- let ngs = ["Bad評価1以上", "定時帰宅できない", "一人暮らし", "小児と同居" , "高齢者と同居"]
- form +++ SelectableSection<ImageCheckRow<String>>("あずかり人NG条件", selectionType: .multipleSelection)
- for option in ngs {
- form.last! <<< ImageCheckRow<String>(option){ lrow in
- lrow.title = option
- lrow.selectableValue = option
- lrow.value = nil
- }.cellSetup { cell, _ in
- cell.trueImage = UIImage(named: "checked-yellow")!
- cell.falseImage = UIImage(named: "unchecked")!
- cell.accessoryType = .checkmark
- }
- }
- 
- DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
- 
- // TODO: Firebase連携
- form
- +++
- Section("お世話の方法")
- <<< SegmentedRow<String>() {
- $0.title =  "ごはんの回数/日"
- $0.options = ["1回","2回","3回"]
- }
- <<< SegmentedRow<String>() {
- $0.title = "歯磨きの回数/日"
- $0.options = ["1回","2回","3回"]
- }
- <<< SegmentedRow<String>() {
- $0.title = "お散歩の回数/日"
- $0.options = ["不要","1回","2回"]
- }
- 
- +++
- Section("おあずけ可能期間")
- <<< DateRow() {
- $0.value = Date()
- $0.title = "開始日付"
- }
- <<< DateRow() {
- $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
- $0.title = "終了日付"
- }
- 
- +++
- Section("連続おあずけ日数")
- <<< IntRow() {
- $0.title = "最短"
- $0.value = 1
- }
- <<< IntRow() {
- $0.title = "最長"
- $0.value = 30
- }
- 
- print("---ListSectionsController.viewDidLoad--end")
- print(form.values())
- 
- }
- // 選択が変更された時の処理
- //   ２回呼ばれる。
- //     １回目：　oldValue = some  ,  newValue = nil
- //     2回目：　oldValue = nil   ,  newValue = some
- override func valueHasBeenChanged(for row: BaseRow, oldValue: Any?, newValue: Any?) {
- print("---ListSectionsController.valueHasBeenChanged--start")
- row.updateCell()
- 
- //TODO: フォームごとの処理切り替え
- if row.section === form[0]{
- let selectedList = (row.section as! SelectableSection<ImageCheckRow<String>>).selectedRows().map({$0.baseValue})
- for selectedRow in selectedList {
- if let rowname = selectedRow {
- self.postData["\(rowname)"] = "true"
- }
- }
- }else if row.section === form[1]{
- let selectedList = (row.section as! SelectableSection<ImageCheckRow<String>>).selectedRows().map({$0.baseValue})
- for selectedRow in selectedList {
- if let rowname = selectedRow {
- self.postData["\(rowname)"] = "true"
- }
- }
- }else if row.section === form[2]{
- let selectedList = (row.section as! SelectableSection<ImageCheckRow<String>>).selectedRows().map({$0.baseValue})
- for selectedRow in selectedList {
- if let rowname = selectedRow {
- self.postData["\(rowname)"] = "true"
- }
- }
- }
- print(self.postData)
- print("---ListSectionsController.valueHasBeenChanged--end")
- 
- 
- }
- 
- }
- */
+enum RepeatInterval : String, CustomStringConvertible {
+    case Never = "Never"
+    case Every_Day = "Every Day"
+    case Every_Week = "Every Week"
+    case Every_2_Weeks = "Every 2 Weeks"
+    case Every_Month = "Every Month"
+    case Every_Year = "Every Year"
+    
+    var description : String { return rawValue }
+    
+    static let allValues = [Never, Every_Day, Every_Week, Every_2_Weeks, Every_Month, Every_Year]
+}
+*/
+
+
