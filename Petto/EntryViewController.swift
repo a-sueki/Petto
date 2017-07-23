@@ -20,10 +20,14 @@ class EntryViewController: FormViewController  {
     var inputData3 = [String : Any]() //tools
     var inputData4 = [String : Any]() //ngs
     
+    var navigationOptionsBackup : RowNavigationOptions?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //TODO: NavigationBar表示
+        //TODO: NavigationBar
+        navigationOptions = RowNavigationOptions.Enabled.union(.SkipCanNotBecomeFirstResponderRow)
+        navigationOptionsBackup = navigationOptions
         
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
