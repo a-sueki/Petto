@@ -15,8 +15,10 @@ import SVProgressHUD
 
 class EntryViewController: FormViewController  {
     
-    var inputData1 = [String : Any]()
-    var inputData2 = [String : Any]()
+    var inputData = [String : Any]()
+    var inputData2 = [String : Any]() //environments
+    var inputData3 = [String : Any]() //tools
+    var inputData4 = [String : Any]() //ngs
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -192,7 +194,59 @@ class EntryViewController: FormViewController  {
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
+            <<< MultipleSelectorRow<String>("ngs") {
+                $0.title = "NGユーザ条件"
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+                $0.options = ["Bad評価1つ以上","定時帰宅できない","一人暮らし","小児あり世帯","高齢者のみ世帯"]
+                $0.value = []
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            
+/*        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
+        
+        form
+            +++
+            Section("お世話の方法")
+            <<< SegmentedRow<String>() {
+                $0.title =  "ごはんの回数/日"
+                $0.options = ["1回","2回","3回"]
+            }
+            <<< SegmentedRow<String>() {
+                $0.title = "歯磨きの回数/日"
+                $0.options = ["1回","2回","3回"]
+            }
+            <<< SegmentedRow<String>() {
+                $0.title = "お散歩の回数/日"
+                $0.options = ["不要","1回","2回"]
+            }
+            
+            +++
+            Section("おあずけ可能期間")
+            <<< DateRow() {
+                $0.value = Date()
+                $0.title = "開始日付"
+            }
+            <<< DateRow() {
+                $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
+                $0.title = "終了日付"
+            }
+            +++
+            Section("連続おあずけ日数")
+            <<< IntRow() {
+                $0.title = "最短"
+                $0.value = 1
+            }
+            <<< IntRow() {
+                $0.title = "最長"
+                $0.value = 30
+            }
 
+*/
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -213,40 +267,70 @@ class EntryViewController: FormViewController  {
     @IBAction func executePost() {
         print("---EntryViewController.executePost")
         
-        // inputData1に必要な情報を取得しておく
+        // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
         let uid = FIRAuth.auth()?.currentUser?.uid
-        self.inputData1["createAt"] = String(time)
-        self.inputData1["createBy"] = uid!
+        self.inputData["createAt"] = String(time)
+        self.inputData["createBy"] = uid!
         
         for (key,value) in form.values() {
             // String
             if value == nil {
                 break
             }else if case let itemValue as String = value {
-                self.inputData1["\(key)"] = String(describing: itemValue)
+                self.inputData["\(key)"] = String(describing: itemValue)
             // UIImage
             }else if case let itemValue as UIImage = value {
                 let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
                 let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                self.inputData1["imageString"] = imageString
+                self.inputData["imageString"] = imageString
             // Bool
             }else if case _ as Bool = value {
-                self.inputData1["\(key)"] = true
+                self.inputData["\(key)"] = true
             // List
             // TODO : コード化。もっとスマートにできないか。
             }else {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
-                for itemValue in [String] (Array(fmap)){
-                    switch itemValue {
-                    case "室内のみ": inputData2["env01"] = true
-                    case "エアコンあり": inputData2["env02"] = true
-                    case "２部屋以上": inputData2["env03"] = true
-                    case "庭あり": inputData2["env04"] = true
-                    default: break
+                switch key {
+                case "environments" :
+                    for itemValue in [String] (Array(fmap)){
+                        switch itemValue {
+                        case "室内のみ": inputData2["code01"] = true
+                        case "エアコンあり": inputData2["code02"] = true
+                        case "２部屋以上": inputData2["code03"] = true
+                        case "庭あり": inputData2["code04"] = true
+                        default: break
+                        }
                     }
+                    inputData["environments"] = inputData2
+                case "tools" :
+                    for itemValue in [String] (Array(fmap)){
+                        switch itemValue {
+                        case "寝床": inputData3["code01"] = true
+                        case "トイレ": inputData3["code02"] = true
+                        case "ケージ": inputData3["code03"] = true
+                        case "歯ブラシ": inputData3["code04"] = true
+                        case "ブラシ": inputData3["code05"] = true
+                        case "爪研ぎ": inputData3["code06"] = true
+                        case "キャットタワー": inputData3["code07"] = true
+                        default: break
+                        }
+                    }
+                    inputData["tools"] = inputData3
+                case "ngs" :
+                    for itemValue in [String] (Array(fmap)){
+                        switch itemValue {
+                        case "Bad評価1つ以上": inputData4["code01"] = true
+                        case "定時帰宅できない": inputData4["code02"] = true
+                        case "一人暮らし": inputData4["code03"] = true
+                        case "小児あり世帯": inputData4["code04"] = true
+                        case "高齢者のみ世帯": inputData4["code05"] = true
+                        default: break
+                        }
+                    }
+                    inputData["ngs"] = inputData4
+                default: break
                 }
-                inputData1["environments"] = inputData2
             }
         }
         
@@ -255,7 +339,7 @@ class EntryViewController: FormViewController  {
         let key = ref.child(Const.PetInfoPath).childByAutoId().key
 
         // FireBaseに保存
-        ref.child(Const.PetInfoPath).child(key).setValue(inputData1)
+        ref.child(Const.PetInfoPath).child(key).setValue(inputData)
 //        ref.child(Const.PetInfoPath).child(key).child("environments").setValue(inputData2)
         
         
