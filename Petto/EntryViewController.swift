@@ -16,7 +16,7 @@ import SVProgressHUD
 class EntryViewController: FormViewController  {
     
     var inputData1 = [String : Any]()
-    var inputData2 = [String : Bool]()
+    var inputData2 = [String : Any]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -162,23 +162,37 @@ class EntryViewController: FormViewController  {
             }
             
             // TODO: UI作成
-            // TODO: Firebase連携
             +++ Section("requirement")
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集する"
             }
+            // TODO: コード化。ベタにしないでもっとスマートにできないか？
             <<< MultipleSelectorRow<String>("environments") {
                 $0.title = "飼養環境"
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
-                $0.options = ["室内のみ", "エアコンあり", "専有面積30㎡以上","2部屋以上"]
+                $0.options = ["室内のみ","エアコンあり","２部屋以上","庭あり"] //FeedingEnvironment.allValues
                 $0.value = []
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
                 }
+            
+            <<< MultipleSelectorRow<String>("tools") {
+                $0.title = "必要な道具"
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+                $0.options = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
+                $0.value = []
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -202,9 +216,6 @@ class EntryViewController: FormViewController  {
         // inputData1に必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
         let uid = FIRAuth.auth()?.currentUser?.uid
-        
-        // 辞書を作成
-        let postRef = FIRDatabase.database().reference().child(Const.PetInfoPath)
         self.inputData1["createAt"] = String(time)
         self.inputData1["createBy"] = uid!
         
@@ -222,27 +233,31 @@ class EntryViewController: FormViewController  {
             // Bool
             }else if case _ as Bool = value {
                 self.inputData1["\(key)"] = true
+            // List
+            // TODO : コード化。もっとスマートにできないか。
             }else {
-                var count = 0
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
-                print("fmap:::::::::::::\(fmap)")
-                print("fmap:::::::::::::\(String(describing: type(of: fmap)))" )
-                
-                
-                let myarray = Array(fmap )
-                for data in myarray {
-                    self.inputData1["environments"] = ["env0\(count)", true]
-                    count = count+1
-                    print("data;;;;;;;\(data)")
+                for itemValue in [String] (Array(fmap)){
+                    switch itemValue {
+                    case "室内のみ": inputData2["env01"] = true
+                    case "エアコンあり": inputData2["env02"] = true
+                    case "２部屋以上": inputData2["env03"] = true
+                    case "庭あり": inputData2["env04"] = true
+                    default: break
+                    }
                 }
-
+                inputData1["environments"] = inputData2
             }
         }
         
-        // FireBaseに保存
-        print("inputData1:::\(inputData1)")
-        postRef.childByAutoId().setValue(inputData1)
+        // 辞書を作成
+        let ref = FIRDatabase.database().reference()
+        let key = ref.child(Const.PetInfoPath).childByAutoId().key
 
+        // FireBaseに保存
+        ref.child(Const.PetInfoPath).child(key).setValue(inputData1)
+//        ref.child(Const.PetInfoPath).child(key).child("environments").setValue(inputData2)
+        
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: "投稿しました")
@@ -284,18 +299,16 @@ class PettoLogoView: UIView {
     }
 }
 
-/*
-enum RepeatInterval : String, CustomStringConvertible {
-    case Never = "Never"
-    case Every_Day = "Every Day"
-    case Every_Week = "Every Week"
-    case Every_2_Weeks = "Every 2 Weeks"
-    case Every_Month = "Every Month"
-    case Every_Year = "Every Year"
+// TODO: コード化
+/*enum FeedingEnvironment : String, CustomStringConvertible {
+    case Indoor_Only = "室内のみ"
+    case Air_Conditioned = "エアコンあり"
+    case Two_Rooms_More = "二部屋以上"
+    case With_Garden = "庭あり"
     
     var description : String { return rawValue }
     
-    static let allValues = [Never, Every_Day, Every_Week, Every_2_Weeks, Every_Month, Every_Year]
+    static let allValues = [Indoor_Only, Air_Conditioned, Two_Rooms_More, With_Garden]
 }
 */
 
