@@ -23,10 +23,15 @@ class PetInfoData: NSObject {
     var isVaccinated: Bool?
     var isCastrated: Bool?
     var wanted: Bool?
-    
+    // おあずけ条件
     var isAvailable: Bool?
-    var environments = [String:Bool]() // envID : true
-    var tools = [String:Bool]() // tooID : true
+    var environments = [String:Bool]()
+    var tools = [String:Bool]()
+    var ngs = [String:Bool]()
+    var startDate: String?
+    var endDate: String?
+    var minDays: Int?
+    var maxDays: Int?
     
     // システム項目
     var createAt: NSDate?
@@ -55,6 +60,7 @@ class PetInfoData: NSObject {
         self.isCastrated = valueDictionary["isCastrated"] as? Bool
         self.wanted = valueDictionary["wanted"] as? Bool
         
+        // おあずけ条件
         self.isAvailable = valueDictionary["isAvailable"] as? Bool
         if let environments = valueDictionary["environments"] as? [String:Bool] {
             self.environments = environments
@@ -62,7 +68,13 @@ class PetInfoData: NSObject {
         if let tools = valueDictionary["tools"] as? [String:Bool] {
             self.tools = tools
         }
-
+        if let ngs = valueDictionary["ngs"] as? [String:Bool] {
+            self.ngs = ngs
+        }
+        self.startDate = valueDictionary["startDate"] as? String
+        self.endDate = valueDictionary["endDate"] as? String
+        self.minDays = valueDictionary["minDays"] as? Int
+        self.maxDays = valueDictionary["maxDays"] as? Int
         
         // システム項目
         let createAt = valueDictionary["createAt"] as? String

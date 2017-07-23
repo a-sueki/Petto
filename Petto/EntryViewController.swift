@@ -91,7 +91,7 @@ class EntryViewController: FormViewController  {
                 $0.value = $0.options.first
             }
             
-            +++ Section("Profile")
+            +++ Section("プロフィール")
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
                 $0.options = ["♂", "♀"]
@@ -151,7 +151,7 @@ class EntryViewController: FormViewController  {
                 $0.value = $0.options.first
             }
             
-            +++ Section("Condition")
+            +++ Section("状態")
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
                 $0.value = true
@@ -165,9 +165,16 @@ class EntryViewController: FormViewController  {
                 $0.value = true
             }
             
-            +++ Section("requirement")
+            +++ Section()
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集する"
+            }
+            
+            +++ Section("おあずけ条件"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
             }
             <<< MultipleSelectorRow<String>("environments") {
                 $0.title = "飼養環境"
@@ -195,7 +202,7 @@ class EntryViewController: FormViewController  {
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
             <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "NGユーザ条件"
+                $0.title = "NGユーザ"
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -303,7 +310,7 @@ class EntryViewController: FormViewController  {
             }else if case let itemValue as Int = value {
                 self.inputData["\(key)"] = itemValue
             // List
-            // TODO : コード化。もっとスマートにできないか。
+            // TODO: コード化。もっとスマートにできないか。
             }else {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
@@ -363,6 +370,8 @@ class EntryViewController: FormViewController  {
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        
+        //TODO: HOMEに画面遷移
     }
     
     override func didReceiveMemoryWarning() {
@@ -398,7 +407,6 @@ class PettoLogoView: UIView {
     }
 }
 
-// TODO: コード化。ベタにしないでもっとスマートにできないか？
 /*enum FeedingEnvironment : String, CustomStringConvertible {
     case Indoor_Only = "室内のみ"
     case Air_Conditioned = "エアコンあり"
