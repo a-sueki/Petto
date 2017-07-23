@@ -45,6 +45,8 @@ class EntryViewController: FormViewController  {
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
         
+        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
+
         form +++
             Section() {
                 var header = HeaderFooterView<PettoLogoViewNib>(.nibFile(name: "EntrySectionHeader", bundle: nil))
@@ -163,12 +165,10 @@ class EntryViewController: FormViewController  {
                 $0.value = true
             }
             
-            // TODO: UI作成
             +++ Section("requirement")
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集する"
             }
-            // TODO: コード化。ベタにしないでもっとスマートにできないか？
             <<< MultipleSelectorRow<String>("environments") {
                 $0.title = "飼養環境"
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
@@ -206,47 +206,56 @@ class EntryViewController: FormViewController  {
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
-            
-/*        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
-        
-        form
-            +++
-            Section("お世話の方法")
-            <<< SegmentedRow<String>() {
+    
+
+            +++ Section("お世話の方法"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+            }
+            <<< SegmentedRow<String>("feeding"){
                 $0.title =  "ごはんの回数/日"
                 $0.options = ["1回","2回","3回"]
             }
-            <<< SegmentedRow<String>() {
+            <<< SegmentedRow<String>("dentifrice") {
                 $0.title = "歯磨きの回数/日"
                 $0.options = ["1回","2回","3回"]
             }
-            <<< SegmentedRow<String>() {
+            <<< SegmentedRow<String>("walk") {
                 $0.title = "お散歩の回数/日"
                 $0.options = ["不要","1回","2回"]
             }
-            
             +++
-            Section("おあずけ可能期間")
-            <<< DateRow() {
+            Section("おあずけ可能期間"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+            }
+            <<< DateRow("startDate") {
                 $0.value = Date()
                 $0.title = "開始日付"
             }
-            <<< DateRow() {
+            <<< DateRow("endDate") {
                 $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 $0.title = "終了日付"
             }
             +++
-            Section("連続おあずけ日数")
-            <<< IntRow() {
+            Section("連続おあずけ日数"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+            }
+            <<< IntRow("minDays") {
                 $0.title = "最短"
                 $0.value = 1
             }
-            <<< IntRow() {
+            <<< IntRow("maxDays") {
                 $0.title = "最長"
                 $0.value = 30
             }
-
-*/
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -278,7 +287,7 @@ class EntryViewController: FormViewController  {
             if value == nil {
                 break
             }else if case let itemValue as String = value {
-                self.inputData["\(key)"] = String(describing: itemValue)
+                self.inputData["\(key)"] = itemValue
             // UIImage
             }else if case let itemValue as UIImage = value {
                 let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
@@ -287,6 +296,12 @@ class EntryViewController: FormViewController  {
             // Bool
             }else if case _ as Bool = value {
                 self.inputData["\(key)"] = true
+            // Date
+            }else if case let itemValue as Date = value {
+                self.inputData["\(key)"] = itemValue.description
+            // Int
+            }else if case let itemValue as Int = value {
+                self.inputData["\(key)"] = itemValue
             // List
             // TODO : コード化。もっとスマートにできないか。
             }else {
@@ -340,7 +355,7 @@ class EntryViewController: FormViewController  {
 
         // FireBaseに保存
         ref.child(Const.PetInfoPath).child(key).setValue(inputData)
-//        ref.child(Const.PetInfoPath).child(key).child("environments").setValue(inputData2)
+        //ref.child(Const.PetInfoPath).child(key).child("environments").setValue(inputData2)
         
         
         // HUDで投稿完了を表示する
@@ -383,7 +398,7 @@ class PettoLogoView: UIView {
     }
 }
 
-// TODO: コード化
+// TODO: コード化。ベタにしないでもっとスマートにできないか？
 /*enum FeedingEnvironment : String, CustomStringConvertible {
     case Indoor_Only = "室内のみ"
     case Air_Conditioned = "エアコンあり"
