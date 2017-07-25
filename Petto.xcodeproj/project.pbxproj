@@ -10,6 +10,7 @@
 		14AE20106A61980E89F4EB7E /* Pods_Petto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */; };
 		84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */; };
 		84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */; };
+		84109A2F1F272627002384EF /* EntrySectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84109A311F272627002384EF /* EntrySectionHeader.xib */; };
 		841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ADB171F0CA18C00534A37 /* MessagesViewController.swift */; };
 		846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */; };
 		846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */; };
@@ -21,17 +22,16 @@
 		849ED1E21F1CEE47003AD9F5 /* PetInfoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849ED1E11F1CEE47003AD9F5 /* PetInfoData.swift */; };
 		84AC70E51F11B755001F7563 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AC70E41F11B755001F7563 /* SignUpViewController.swift */; };
 		84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AC70E61F11E43A001F7563 /* MessageData.swift */; };
+		84BC45A41F2729FE0017AF53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84BC45A31F2729FE0017AF53 /* Assets.xcassets */; };
 		84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */; };
 		84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE00A1EFB791D0025B5D3 /* ViewController.swift */; };
 		84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CCE00C1EFB791D0025B5D3 /* Main.storyboard */; };
-		84CCE0101EFB791D0025B5D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */; };
 		84CCE0131EFB791D0025B5D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */; };
 		84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */; };
 		84CCE01D1EFB8C040025B5D3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */; };
 		84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */; };
 		84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */; };
 		84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D253071F0217D700D877A9 /* LeftViewController.swift */; };
-		84D6CD2C1F187956000CA101 /* EntrySectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */; };
 		84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD2D1F1880DC000CA101 /* ImageRow.swift */; };
 		84D6CD301F18817E000CA101 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */; };
 		84D6CD331F18F7E3000CA101 /* CustomCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD321F18F7E3000CA101 /* CustomCells.swift */; };
@@ -73,6 +73,7 @@
 		4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Petto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCollectionViewCell.xib; sourceTree = "<group>"; };
+		84109A301F272627002384EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/EntrySectionHeader.xib; sourceTree = "<group>"; };
 		841ADB171F0CA18C00534A37 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListViewController.swift; sourceTree = "<group>"; };
@@ -84,11 +85,11 @@
 		849ED1E11F1CEE47003AD9F5 /* PetInfoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetInfoData.swift; sourceTree = "<group>"; };
 		84AC70E41F11B755001F7563 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		84AC70E61F11E43A001F7563 /* MessageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageData.swift; sourceTree = "<group>"; };
+		84BC45A31F2729FE0017AF53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84CCE0051EFB791D0025B5D3 /* Petto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Petto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84CCE00A1EFB791D0025B5D3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		84CCE00D1EFB791D0025B5D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84CCE0121EFB791D0025B5D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84CCE0141EFB791D0025B5D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -96,7 +97,6 @@
 		84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelectViewController.swift; sourceTree = "<group>"; };
 		84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		84D253071F0217D700D877A9 /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
-		84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntrySectionHeader.xib; sourceTree = "<group>"; };
 		84D6CD2D1F1880DC000CA101 /* ImageRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRow.swift; sourceTree = "<group>"; };
 		84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		84D6CD321F18F7E3000CA101 /* CustomCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCells.swift; sourceTree = "<group>"; };
@@ -189,7 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				849D5D631F186AFB004A0D5A /* EntryViewController.swift */,
-				84D6CD2B1F187956000CA101 /* EntrySectionHeader.xib */,
+				84109A311F272627002384EF /* EntrySectionHeader.xib */,
 			);
 			name = Entry;
 			sourceTree = "<group>";
@@ -231,13 +231,13 @@
 				84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */,
 				84D6CD311F18819E000CA101 /* Eureka */,
 				84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */,
+				84BC45A31F2729FE0017AF53 /* Assets.xcassets */,
 				846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */,
 				84CCE00A1EFB791D0025B5D3 /* ViewController.swift */,
 				84CCE0141EFB791D0025B5D3 /* Info.plist */,
 				84F244181EFCE01400938F35 /* GoogleService-Info.plist */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
-				84CCE00F1EFB791D0025B5D3 /* Assets.xcassets */,
 				849ED1E31F1CF912003AD9F5 /* Model */,
 				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 				84D253071F0217D700D877A9 /* LeftViewController.swift */,
@@ -337,11 +337,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */,
-				84D6CD2C1F187956000CA101 /* EntrySectionHeader.xib in Resources */,
+				84109A2F1F272627002384EF /* EntrySectionHeader.xib in Resources */,
 				846705E71F0F81E400FFEA8D /* MessageListTableViewCell.xib in Resources */,
 				84CCE0131EFB791D0025B5D3 /* LaunchScreen.storyboard in Resources */,
+				84BC45A41F2729FE0017AF53 /* Assets.xcassets in Resources */,
 				84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */,
-				84CCE0101EFB791D0025B5D3 /* Assets.xcassets in Resources */,
 				84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -442,6 +442,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		84109A311F272627002384EF /* EntrySectionHeader.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84109A301F272627002384EF /* Base */,
+			);
+			name = EntrySectionHeader.xib;
+			sourceTree = "<group>";
+		};
 		84CCE00C1EFB791D0025B5D3 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

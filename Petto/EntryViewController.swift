@@ -20,15 +20,29 @@ class EntryViewController: FormViewController  {
     var inputData3 = [String : Any]() //tools
     var inputData4 = [String : Any]() //ngs
     
-    var navigationOptionsBackup : RowNavigationOptions?
-
+    // NavigationBarボタンを用意
+    var btn1: UIBarButtonItem!
+    var btn2: UIBarButtonItem!
+    var btn3: UIBarButtonItem!
+    var btn4: UIBarButtonItem!
+    var btn5: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //TODO: NavigationBar
-        navigationOptions = RowNavigationOptions.Enabled.union(.SkipCanNotBecomeFirstResponderRow)
-        navigationOptionsBackup = navigationOptions
+        // NavigationBar
+        btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(HomeViewController.onClick1))
+        btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(HomeViewController.onClick2))
+        btn3 = UIBarButtonItem(image: UIImage(named: "todolist"), style: .plain, target: self, action: #selector(HomeViewController.onClick3))
+        btn4 = UIBarButtonItem(image: UIImage(named: "mail"), style: .plain, target: self, action: #selector(HomeViewController.onClick4))
+        btn5 = UIBarButtonItem(image: UIImage(named: "search"), style: .plain, target: self, action: #selector(HomeViewController.onClick5))
         
+        let leftBtns: [UIBarButtonItem] = [btn1,btn2]
+        let rightBtns: [UIBarButtonItem] = [btn3,btn4,btn5]
+        
+        self.navigationItem.leftBarButtonItems = leftBtns
+        self.navigationItem.rightBarButtonItems = rightBtns
+
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
             cell.contentView.backgroundColor = .red
@@ -43,22 +57,17 @@ class EntryViewController: FormViewController  {
             }
         }
         
-        
+        // Cell初期設定
         ImageRow.defaultCellUpdate = { cell, row in
             cell.accessoryView?.layer.cornerRadius = 17
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
-        
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
 
+        // フォーム
         form +++
             Section() {
-                var header = HeaderFooterView<PettoLogoViewNib>(.nibFile(name: "EntrySectionHeader", bundle: nil))
-                header.onSetupView = { (view, section) -> () in
-                    view.imageView.alpha = 1;
-                    view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-                }
-                $0.header = header
+                $0.header = HeaderFooterView<PettoLogoView>(.class)
             }
             
             <<< ImageRow("image"){
@@ -398,10 +407,10 @@ class PettoLogoView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let imageView = UIImageView(image: UIImage(named: "catFootptint_orenge"))
-        imageView.frame = CGRect(x: 0, y: 0, width: 320, height: 130)
+        let imageView = UIImageView(image: UIImage(named: "registerpet"))
+        imageView.frame = CGRect(x: 0, y: 0, width: 661, height: 240)
         imageView.autoresizingMask = .flexibleWidth
-        self.frame = CGRect(x: 0, y: 0, width: 320, height: 130)
+        self.frame = CGRect(x: 0, y: 0, width: 661, height: 240)
         imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
     }

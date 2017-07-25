@@ -80,7 +80,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
             let navigationController = UINavigationController(rootViewController: messageListViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 5:
+        case 5: 
             let entryViewController = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
             let navigationController = UINavigationController(rootViewController: entryViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
