@@ -31,11 +31,11 @@ class EntryViewController: FormViewController  {
         super.viewDidLoad()
         
         // NavigationBar
-        btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(HomeViewController.onClick1))
-        btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(HomeViewController.onClick2))
-        btn3 = UIBarButtonItem(image: UIImage(named: "todolist"), style: .plain, target: self, action: #selector(HomeViewController.onClick3))
-        btn4 = UIBarButtonItem(image: UIImage(named: "mail"), style: .plain, target: self, action: #selector(HomeViewController.onClick4))
-        btn5 = UIBarButtonItem(image: UIImage(named: "search"), style: .plain, target: self, action: #selector(HomeViewController.onClick5))
+        btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(BaseViewController.onClick1))
+        btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(BaseViewController.onClick2))
+        btn3 = UIBarButtonItem(image: UIImage(named: "todolist"), style: .plain, target: self, action: #selector(BaseViewController.onClick3))
+        btn4 = UIBarButtonItem(image: UIImage(named: "mail"), style: .plain, target: self, action: #selector(BaseViewController.onClick4))
+        btn5 = UIBarButtonItem(image: UIImage(named: "search"), style: .plain, target: self, action: #selector(BaseViewController.onClick5))
         
         let leftBtns: [UIBarButtonItem] = [btn1,btn2]
         let rightBtns: [UIBarButtonItem] = [btn3,btn4,btn5]
@@ -407,10 +407,10 @@ class PettoLogoView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let imageView = UIImageView(image: UIImage(named: "registerpet"))
-        imageView.frame = CGRect(x: 0, y: 0, width: 661, height: 240)
+        let imageView = UIImageView(image: UIImage(named: "pet2"))
+        imageView.frame = CGRect(x: 0, y: 10, width: 320, height: 100)
         imageView.autoresizingMask = .flexibleWidth
-        self.frame = CGRect(x: 0, y: 0, width: 661, height: 240)
+        self.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
         imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
     }

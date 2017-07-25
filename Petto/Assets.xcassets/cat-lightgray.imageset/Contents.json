@@ -2,15 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "CatFootprint.png",
+      "filename" : "cat-lightgray.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "cat-lightgray@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
+      "filename" : "cat-lightgray@3x.png",
       "scale" : "3x"
     }
   ],

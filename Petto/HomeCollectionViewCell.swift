@@ -26,16 +26,22 @@ class HomeCollectionViewCell: UICollectionViewCell {
     
     //表示される時の値をセット
     func setPetInfoData(petInfoData: PetInfoData) {
+        // TODO: nilチェック
+        
         self.petImageView.image = petInfoData.image
         self.areaLabel.text = petInfoData.area ?? "未選択"
-        
         if petInfoData.kind == "イヌ" {
             self.kindImageView.image = UIImage(named: "dog-lightgray")
         } else {
             self.kindImageView.image = UIImage(named: "cat-lightgray")
         }
-        
-        
+        if petInfoData.sex == "♂" {
+            self.sexImageView.image = UIImage(named: "male-lightgray")
+        } else {
+            self.sexImageView.image = UIImage(named: "female-lightgray")
+        }
+        self.termLabel.text = "期間：\(String(petInfoData.minDays!))〜\(String(petInfoData.maxDays!))days"
+
         if petInfoData.isLiked {
             let buttonImage = UIImage(named: "like")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)
