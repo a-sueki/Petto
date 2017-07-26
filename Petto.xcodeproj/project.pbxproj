@@ -20,6 +20,9 @@
 		8480595D1F04CCB3003E2613 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480595C1F04CCB3003E2613 /* Const.swift */; };
 		849D5D641F186AFB004A0D5A /* EntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D5D631F186AFB004A0D5A /* EntryViewController.swift */; };
 		849ED1E21F1CEE47003AD9F5 /* PetInfoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849ED1E11F1CEE47003AD9F5 /* PetInfoData.swift */; };
+		84A847F41F28251200D898EC /* MyPetListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A847F31F28251200D898EC /* MyPetListViewController.swift */; };
+		84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A847F51F2826A900D898EC /* MyPetListTableViewCell.swift */; };
+		84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */; };
 		84AC70E51F11B755001F7563 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AC70E41F11B755001F7563 /* SignUpViewController.swift */; };
 		84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AC70E61F11E43A001F7563 /* MessageData.swift */; };
 		84BC45A41F2729FE0017AF53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84BC45A31F2729FE0017AF53 /* Assets.xcassets */; };
@@ -83,6 +86,9 @@
 		8480595C1F04CCB3003E2613 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		849D5D631F186AFB004A0D5A /* EntryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryViewController.swift; sourceTree = "<group>"; };
 		849ED1E11F1CEE47003AD9F5 /* PetInfoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetInfoData.swift; sourceTree = "<group>"; };
+		84A847F31F28251200D898EC /* MyPetListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPetListViewController.swift; sourceTree = "<group>"; };
+		84A847F51F2826A900D898EC /* MyPetListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPetListTableViewCell.swift; sourceTree = "<group>"; };
+		84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPetListTableViewCell.xib; sourceTree = "<group>"; };
 		84AC70E41F11B755001F7563 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		84AC70E61F11E43A001F7563 /* MessageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageData.swift; sourceTree = "<group>"; };
 		84BC45A31F2729FE0017AF53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -185,13 +191,16 @@
 			name = Messages;
 			sourceTree = "<group>";
 		};
-		849ED1E01F1B2F60003AD9F5 /* Entry */ = {
+		849ED1E01F1B2F60003AD9F5 /* MyPet */ = {
 			isa = PBXGroup;
 			children = (
 				849D5D631F186AFB004A0D5A /* EntryViewController.swift */,
 				84109A311F272627002384EF /* EntrySectionHeader.xib */,
+				84A847F31F28251200D898EC /* MyPetListViewController.swift */,
+				84A847F51F2826A900D898EC /* MyPetListTableViewCell.swift */,
+				84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */,
 			);
-			name = Entry;
+			name = MyPet;
 			sourceTree = "<group>";
 		};
 		849ED1E31F1CF912003AD9F5 /* Model */ = {
@@ -246,7 +255,7 @@
 				84AC70E41F11B755001F7563 /* SignUpViewController.swift */,
 				846705DF1F0F7B2300FFEA8D /* Home */,
 				846705E11F0F7BAA00FFEA8D /* Messages */,
-				849ED1E01F1B2F60003AD9F5 /* Entry */,
+				849ED1E01F1B2F60003AD9F5 /* MyPet */,
 			);
 			path = Petto;
 			sourceTree = "<group>";
@@ -337,6 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */,
+				84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */,
 				84109A2F1F272627002384EF /* EntrySectionHeader.xib in Resources */,
 				846705E71F0F81E400FFEA8D /* MessageListTableViewCell.xib in Resources */,
 				84CCE0131EFB791D0025B5D3 /* LaunchScreen.storyboard in Resources */,
@@ -427,6 +437,8 @@
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
+				84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */,
+				84A847F41F28251200D898EC /* MyPetListViewController.swift in Sources */,
 				84AC70E51F11B755001F7563 /* SignUpViewController.swift in Sources */,
 				84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */,
 				84D6CD331F18F7E3000CA101 /* CustomCells.swift in Sources */,

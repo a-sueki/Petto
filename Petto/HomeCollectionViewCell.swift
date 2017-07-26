@@ -43,7 +43,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
         self.termLabel.text = "期間：\(String(petInfoData.minDays!))〜\(String(petInfoData.maxDays!))days"
 
         if petInfoData.isLiked {
-            let buttonImage = UIImage(named: "like")
+            let buttonImage = UIImage(named: "like-red")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)
         } else {
             let buttonImage = UIImage(named: "unlike")

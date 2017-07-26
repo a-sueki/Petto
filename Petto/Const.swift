@@ -10,6 +10,6 @@ import Foundation
 
 struct Const {
     static let PetInfoPath = "petInfo"
-    static let UserPath = "users"
-    static let MessagePath = "messages"
+    static let UserPath = "user"
+    static let MessagePath = "message"
 }
