@@ -42,6 +42,7 @@ class EntryViewController: FormViewController  {
         
         self.navigationItem.leftBarButtonItems = leftBtns
         self.navigationItem.rightBarButtonItems = rightBtns
+        
 
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
@@ -153,9 +154,22 @@ class EntryViewController: FormViewController  {
                         }
                     }
             }
-            <<< PickerInputRow<String>("category"){
+            <<< PickerInputRow<String>("categoryDog"){
                 $0.title = "品種"
+                $0.hidden = .function(["kind"], { form -> Bool in
+                    let row: RowOf<String>! = form.rowBy(tag: "kind")
+                    return row.value ?? "イヌ" == "ネコ"
+                })
                 $0.options = ["雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
+                $0.value = $0.options.first
+            }
+            <<< PickerInputRow<String>("categoryCat"){
+                $0.title = "品種"
+                $0.hidden = .function(["kind"], { form -> Bool in
+                    let row: RowOf<String>! = form.rowBy(tag: "kind")
+                    return row.value ?? "イヌ" == "イヌ"
+                })
+                $0.options = ["雑種","アビシニアン","アメリカンカール","アメリカンショートヘア","エキゾチックショートヘア","サイベリアン","シャム","シャルトリュー","シンガプーラ","スコティッシュフォールド","スフィンクス","ソマリ","ノルウェージャンフォレストキャット","ヒマラヤン","ブリティッシュショートヘア","ペルシャ","ベンガル","マンチカン","メインクーン","ラグドール","ロシアンブルー","不明"]
                 $0.value = $0.options.first
             }
             <<< PickerInputRow<String>("age"){
@@ -303,10 +317,13 @@ class EntryViewController: FormViewController  {
         self.inputData["createBy"] = uid!
         
         for (key,value) in form.values() {
-            // String
             if value == nil {
                 break
+            // String
             }else if case let itemValue as String = value {
+                if key == "categoryDog" || key == "categoryCat" {
+                    self.inputData["category"] = itemValue
+                }
                 self.inputData["\(key)"] = itemValue
             // UIImage
             }else if case let itemValue as UIImage = value {
@@ -375,7 +392,6 @@ class EntryViewController: FormViewController  {
 
         // FireBaseに保存
         ref.child(Const.PetInfoPath).child(key).setValue(inputData)
-        //ref.child(Const.PetInfoPath).child(key).child("environments").setValue(inputData2)
         
         
         // HUDで投稿完了を表示する
@@ -384,13 +400,37 @@ class EntryViewController: FormViewController  {
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         
-        //TODO: HOMEに画面遷移
+        // HOMEに画面遷移
+        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        self.navigationController?.pushViewController(viewController2, animated: true)
+
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func onClick1() {
+        self.slideMenuController()?.openLeft()
+    }
+    func onClick2() {
+        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        self.navigationController?.pushViewController(viewController2, animated: true)
+    }
+    func onClick3() {
+        let viewController3 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        self.navigationController?.pushViewController(viewController3, animated: true)
+    }
+    func onClick4() {
+        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+        self.navigationController?.pushViewController(viewController4, animated: true)
+    }
+    func onClick5() {
+        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
+        self.navigationController?.pushViewController(viewController5, animated: true)
+    }
+
 }
 
 class PettoLogoViewNib: UIView {
