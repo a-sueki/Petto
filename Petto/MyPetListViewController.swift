@@ -7,11 +7,18 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource  {
 
     @IBOutlet weak var tableView: UITableView!
-    
+    var petInfoArray: [PetInfoData] = []
+
+    // FIRDatabaseのobserveEventの登録状態を表す
+    var observing = false
+
     // test用
     var petphotos = ["dog1", "dog2","dog3"]
     var petname = ["豆助1", "豆助2","豆助3"]
@@ -26,8 +33,91 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         let nib = UINib(nibName: "MyPetListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "myPetListCell")
         tableView.rowHeight = UITableViewAutomaticDimension
-
+        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("DEBUG_PRINT: viewWillAppear")
+        
+        // currentUserがnilならログインしていない
+        if FIRAuth.auth()?.currentUser == nil {
+            
+            if observing == true {
+                // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
+                // テーブルをクリアする
+                petInfoArray = []
+                tableView.reloadData()
+                // オブザーバーを削除する
+                FIRDatabase.database().reference().removeAllObservers()
+                
+                // FIRDatabaseのobserveEventが上記コードにより解除されたため
+                // falseとする
+                observing = false
+            }
+            
+            // ログインしていないときの処理
+            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+            DispatchQueue.main.async {
+                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+                self.present(loginViewController!, animated: true, completion: nil)
+            }
+        }
+        
+        if FIRAuth.auth()?.currentUser != nil {
+            if self.observing == false {
+                //TODO: userInfoPathからMyPetsIdを取得
+                //TODO: MyPetsIdからPetInfoを取得
+                // 要素が追加されたらpostArrayに追加してTableViewを再表示する
+                let postsRef = FIRDatabase.database().reference().child(Const.PetInfoPath)
+                postsRef.observe(.childAdded, with: { snapshot in
+                    print("DEBUG_PRINT: .childAddedイベントが発生しました。")
+                    
+                    // PetInfoDataクラスを生成して受け取ったデータを設定する
+                    if let uid = FIRAuth.auth()?.currentUser?.uid {
+                        let petInfoData = PetInfoData(snapshot: snapshot, myId: uid)
+                        self.petInfoArray.insert(petInfoData, at: 0)
+                        
+                        // tableViewを再表示する
+                        self.tableView.reloadData()
+                    }
+                })
+                // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
+                postsRef.observe(.childChanged, with: { snapshot in
+                    print("DEBUG_PRINT: .childChangedイベントが発生しました。")
+                    
+                    if let uid = FIRAuth.auth()?.currentUser?.uid {
+                        // PetInfoDataクラスを生成して受け取ったデータを設定する
+                        let petInfoData = PetInfoData(snapshot: snapshot, myId: uid)
+                        
+                        // 保持している配列からidが同じものを探す
+                        var index: Int = 0
+                        for petInfo in self.petInfoArray {
+                            if petInfo.id == petInfoData.id {
+                                index = self.petInfoArray.index(of: petInfo)!
+                                break
+                            }
+                        }
+                        
+                        // 差し替えるため一度削除する
+                        self.petInfoArray.remove(at: index)
+                        
+                        // 削除したところに更新済みのでデータを追加する
+                        self.petInfoArray.insert(petInfoData, at: index)
+                        
+                        // TableViewの現在表示されているセルを更新する
+                        self.tableView.reloadData()
+                    }
+                })
+                
+                // FIRDatabaseのobserveEventが上記コードにより登録されたため
+                // trueとする
+                observing = true
+            }
+        }
+    }
+
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -37,12 +127,12 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
 
     // データの数（＝セルの数）を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return petphotos.count
+        return petInfoArray.count
     }
     
     // 各セルの内容を返すメソッド
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // 再利用可能な cell を得る
+/*        // 再利用可能な cell を得る
         let testCell = tableView.dequeueReusableCell(withIdentifier: "myPetListCell", for: indexPath)
         
         // Tag番号を使ってImageViewのインスタンス生成
@@ -51,16 +141,22 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         // Tag番号を使ってLabelのインスタンス生成
         let userNameLabel = testCell.contentView.viewWithTag(2) as? UILabel
         userNameLabel?.text = petname[(indexPath as NSIndexPath).row]
-        
-        
         return testCell
+ */
+        let cell = tableView.dequeueReusableCell(withIdentifier: "myPetListCell", for: indexPath) as! MyPetListTableViewCell
+        cell.setData(petInfoData: petInfoArray[indexPath.row])
+        
+        // セル内のボタンのアクションをソースコードで設定する
+        cell.photoImageButton.addTarget(self, action:#selector(handleImageView(sender:event:)), for:  UIControlEvents.touchUpInside)
+        
+        return cell
+
     }
     
     // 各セルを選択した時に実行されるメソッド
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // セルをタップされたら何もせずに選択状態を解除する
         tableView.deselectRow(at: indexPath as IndexPath, animated: true)
-        
     }
     
     // セルが削除が可能なことを伝えるメソッド
@@ -71,5 +167,23 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         // Auto Layoutを使ってセルの高さを動的に変更する
         return UITableViewAutomaticDimension
+    }
+    
+    //TODO: ペットの写真がタップされたら編集画面に遷移
+    func handleImageView(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: likeボタンがタップされました。")
+        
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        
+        // 配列からタップされたインデックスのデータを取り出す
+        let petInfoData = petInfoArray[indexPath!.row]
+        
+        let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
+        editViewController.petInfoData = petInfoData
+        self.navigationController?.pushViewController(editViewController, animated: true)
+    
     }
 }

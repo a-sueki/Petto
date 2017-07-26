@@ -28,13 +28,14 @@ class UserData: NSObject {
     var address: String?
     var area: String?
     var tel: String?
-
-    //追加情報
     var hasAnotherPet: Bool?        // 他にペットを飼っている
     var isExperienced: Bool?        // ペット飼育経験あり
     var historyId: String?          // Petto利用履歴
 //    var environment: [String] = []  // 飼育環境
 //    var equipment: [String] = []    // 飼育道具
+    
+    // マイペット情報
+    var myPetsId: [String] = []
     
     
     init(snapshot: FIRDataSnapshot, myId: String) {
@@ -74,6 +75,11 @@ class UserData: NSObject {
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
         self.isExperienced = valueDictionary["isExperienced"] as? Bool
         self.historyId = valueDictionary["historyId"] as? String
+
+        // マイペット情報
+        if let myPetsId = valueDictionary["myPetsId"] as? [String] {
+            self.myPetsId = myPetsId
+        }
 
     }
 }

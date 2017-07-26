@@ -10,6 +10,7 @@ import UIKit
 
 class MyPetListTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var photoImageButton: UIButton!
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     
@@ -39,5 +40,6 @@ class MyPetListTableViewCell: UITableViewCell {
         self.nameLabel.text = petInfoData.name
 
     }
+    
     
 }
