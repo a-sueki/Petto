@@ -20,9 +20,6 @@ class BaseViewController: UIViewController {
     var btn4: UIBarButtonItem!
     var btn5: UIBarButtonItem!
 
-    // FIRDatabaseのobserveEventの登録状態を表す
-//    var observing = false
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,7 +59,7 @@ class BaseViewController: UIViewController {
         self.navigationController?.pushViewController(viewController4, animated: true)
     }
     func onClick5() {
-        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
+        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
         self.navigationController?.pushViewController(viewController5, animated: true)
     }
 

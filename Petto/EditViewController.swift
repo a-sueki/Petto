@@ -528,7 +528,7 @@ class EditViewController: FormViewController {
         self.navigationController?.pushViewController(viewController4, animated: true)
     }
     func onClick5() {
-        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
+        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
         self.navigationController?.pushViewController(viewController5, animated: true)
     }
     

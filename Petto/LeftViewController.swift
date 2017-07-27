@@ -20,7 +20,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     
-    var menus = ["ホーム", "マイペット一覧","メッセージ","詳細","メッセージ一覧","Edit"]
+    var menus = ["ホーム", "マイペット一覧","メッセージ","????","メッセージ一覧","Edit"]
     var homeViewController: UIViewController!
     var postViewController: UIViewController!
     var messagesViewController: UIViewController!
@@ -72,10 +72,8 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
             let navigationController = UINavigationController(rootViewController: messagesViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 3:
-            let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "Entry") as! EntryViewController
-            let navigationController = UINavigationController(rootViewController: detailViewController)
-            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+        case 3: break
+            
         case 4:
             let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
             let navigationController = UINavigationController(rootViewController: messageListViewController)
