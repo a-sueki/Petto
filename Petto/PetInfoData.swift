@@ -28,6 +28,10 @@ class PetInfoData: NSObject {
     var environments = [String:Bool]()
     var tools = [String:Bool]()
     var ngs = [String:Bool]()
+    var feeding: String?
+    var dentifrice: String?
+    var walk: String?
+    //おかずけ期間
     var startDate: String?
     var endDate: String?
     var minDays: Int?
@@ -71,6 +75,10 @@ class PetInfoData: NSObject {
         if let ngs = valueDictionary["ngs"] as? [String:Bool] {
             self.ngs = ngs
         }
+        self.feeding = valueDictionary["feeding"] as? String
+        self.dentifrice = valueDictionary["dentifrice"] as? String
+        self.walk = valueDictionary["walk"] as? String
+        
         self.startDate = valueDictionary["startDate"] as? String
         self.endDate = valueDictionary["endDate"] as? String
         self.minDays = valueDictionary["minDays"] as? Int

@@ -14,7 +14,7 @@ import SVProgressHUD
 
 class EditViewController: FormViewController {
 
-    var petInfoData: PetInfoData!
+    var petInfoData: PetInfoData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     
@@ -67,16 +67,25 @@ class EditViewController: FormViewController {
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
+
+        //DateFormatter
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+
         
         // フォーム
         form +++
             Section() {
-                $0.header = HeaderFooterView<EditView>(.class)
+                if let _ = self.petInfoData {
+                    $0.header = HeaderFooterView<EditView>(.class)
+                }else {
+                    $0.header = HeaderFooterView<EntryView>(.class)
+                }
             }
             
             <<< ImageRow("image"){
                 $0.title = "写真"
-                $0.baseValue = self.petInfoData.image
+                $0.baseValue = self.petInfoData?.image ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -102,18 +111,19 @@ class EditViewController: FormViewController {
             <<< NameRow("name") {
                 $0.title = "名前"
                 $0.placeholder = "ポチ"
-                //TODO: petInfoからデータを取得
+                $0.value = self.petInfoData?.name ?? nil
             }
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
-                $0.value = $0.options.first
+                $0.value = self.petInfoData?.area ?? $0.options.first
             }
             
             +++ Section("プロフィール")
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
                 $0.options = ["♂", "♀"]
+                $0.value = self.petInfoData?.sex ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -138,6 +148,7 @@ class EditViewController: FormViewController {
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
                 $0.options = ["イヌ", "ネコ"]
+                $0.value = self.petInfoData?.kind ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -166,7 +177,7 @@ class EditViewController: FormViewController {
                     return row.value ?? "イヌ" == "ネコ"
                 })
                 $0.options = ["雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
-                $0.value = $0.options.first
+                $0.value = self.petInfoData?.category ?? $0.options.first
             }
             <<< PickerInputRow<String>("categoryCat"){
                 $0.title = "品種"
@@ -175,31 +186,32 @@ class EditViewController: FormViewController {
                     return row.value ?? "イヌ" == "イヌ"
                 })
                 $0.options = ["雑種","アビシニアン","アメリカンカール","アメリカンショートヘア","エキゾチックショートヘア","サイベリアン","シャム","シャルトリュー","シンガプーラ","スコティッシュフォールド","スフィンクス","ソマリ","ノルウェージャンフォレストキャット","ヒマラヤン","ブリティッシュショートヘア","ペルシャ","ベンガル","マンチカン","メインクーン","ラグドール","ロシアンブルー","不明"]
-                $0.value = $0.options.first
+                $0.value = self.petInfoData?.category ?? $0.options.first
             }
             <<< PickerInputRow<String>("age"){
                 $0.title = "年齢"
                 $0.options = ["8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
-                $0.value = $0.options.first
+                $0.value = self.petInfoData?.age ?? $0.options.first
             }
             
             +++ Section("状態")
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
-                $0.value = true
+                $0.value = self.petInfoData?.isVaccinated ?? false
             }
             <<< CheckRow("isCastrated") {
                 $0.title = "去勢/避妊手術済み"
-                $0.value = true
+                $0.value = self.petInfoData?.isCastrated ?? false
             }
             <<< CheckRow("wanted") {
                 $0.title = "里親募集中"
-                $0.value = true
+                $0.value = self.petInfoData?.wanted ?? false
             }
             
             +++ Section()
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集する"
+                $0.value = self.petInfoData?.isAvailable ?? false
             }
             
             +++ Section("おあずけ条件"){
@@ -215,7 +227,13 @@ class EditViewController: FormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = ["室内のみ","エアコンあり","２部屋以上","庭あり"] //FeedingEnvironment.allValues
-                $0.value = []
+                if let data = self.petInfoData , data.environments.count > 0 {
+                    let codes = Array(data.environments.keys)
+                    let names:Set<String> = codeToString(key:"environments", codeList: codes)
+                    $0.value = names
+                }else{
+                    $0.value = []
+                }
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
@@ -228,7 +246,13 @@ class EditViewController: FormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
-                $0.value = []
+                if let data = self.petInfoData , data.tools.count > 0 {
+                    let codes = Array(data.tools.keys)
+                    let names:Set<String> = codeToString(key:"tools", codeList: codes)
+                    $0.value = names
+                }else{
+                    $0.value = []
+                }
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
@@ -240,7 +264,13 @@ class EditViewController: FormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = ["Bad評価1つ以上","定時帰宅できない","一人暮らし","小児あり世帯","高齢者のみ世帯"]
-                $0.value = []
+                if let data = self.petInfoData , data.ngs.count > 0 {
+                    let codes = Array(data.ngs.keys)
+                    let names:Set<String> = codeToString(key:"ngs", codeList: codes)
+                    $0.value = names
+                }else{
+                    $0.value = []
+                }
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
@@ -256,14 +286,18 @@ class EditViewController: FormViewController {
             <<< SegmentedRow<String>("feeding"){
                 $0.title =  "ごはんの回数/日"
                 $0.options = ["1回","2回","3回"]
+                $0.value = self.petInfoData?.feeding ?? nil
+
             }
             <<< SegmentedRow<String>("dentifrice") {
                 $0.title = "歯磨きの回数/日"
                 $0.options = ["1回","2回","3回"]
+                $0.value = self.petInfoData?.dentifrice ?? nil
             }
             <<< SegmentedRow<String>("walk") {
                 $0.title = "お散歩の回数/日"
                 $0.options = ["不要","1回","2回"]
+                $0.value = self.petInfoData?.walk ?? nil
             }
             +++
             Section("おあずけ可能期間"){
@@ -273,11 +307,19 @@ class EditViewController: FormViewController {
                 })
             }
             <<< DateRow("startDate") {
-                $0.value = Date()
+                if let dateString = self.petInfoData?.startDate {
+                    $0.value = dateFormatter.date(from: dateString)
+                }else{
+                    $0.value = Date()
+                }
                 $0.title = "開始日付"
             }
             <<< DateRow("endDate") {
-                $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
+                if let dateString = self.petInfoData?.endDate {
+                    $0.value = dateFormatter.date(from: dateString)
+                }else{
+                    $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
+                }
                 $0.title = "終了日付"
             }
             +++
@@ -287,13 +329,21 @@ class EditViewController: FormViewController {
                     return row.value ?? false == false
                 })
             }
-            <<< IntRow("minDays") {
+            <<< PickerInputRow<Int>("minDays"){
                 $0.title = "最短"
-                $0.value = 1
+                $0.options = []
+                for i in 1...30{
+                    $0.options.append(i)
+                }
+                $0.value = self.petInfoData?.minDays ?? $0.options.first
             }
-            <<< IntRow("maxDays") {
+            <<< PickerInputRow<Int>("maxDays"){
                 $0.title = "最長"
-                $0.value = 30
+                $0.options = []
+                for i in 1...30{
+                    $0.options.append(i)
+                }
+                $0.value = self.petInfoData?.maxDays ?? $0.options.last
             }
             
             +++ Section()
@@ -309,6 +359,48 @@ class EditViewController: FormViewController {
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+    }
+    
+    func codeToString(key: String ,codeList: [String]) -> Set<String>{
+        var nameList:Set<String> = []
+        switch key {
+        case "environments" :
+            for code in codeList {
+                switch code {
+                case "code01" : nameList.insert("室内のみ")
+                case "code02" : nameList.insert("エアコンあり")
+                case "code03" : nameList.insert("２部屋以上")
+                case "code04" : nameList.insert("庭あり")
+                default: break
+                }
+            }
+        case "tools" :
+            for code in codeList {
+                switch code {
+                case "code01" : nameList.insert("寝床")
+                case "code02" : nameList.insert("トイレ")
+                case "code03" : nameList.insert("ケージ")
+                case "code04" : nameList.insert("歯ブラシ")
+                case "code05" : nameList.insert("ブラシ")
+                case "code06" : nameList.insert("爪研ぎ")
+                case "code07" : nameList.insert("キャットタワー")
+                default: break
+                }
+            }
+        case "ngs" :
+            for code in codeList {
+                switch code {
+                case "code01" : nameList.insert("Bad評価1つ以上")
+                case "code02" : nameList.insert("定時帰宅できない")
+                case "code03" : nameList.insert("一人暮らし")
+                case "code04" : nameList.insert("小児あり世帯")
+                case "code05" : nameList.insert("高齢者のみ世帯")
+                default: break
+                }
+            }
+        default: break
+        }
+        return nameList
     }
     
     
@@ -328,8 +420,9 @@ class EditViewController: FormViewController {
             }else if case let itemValue as String = value {
                 if key == "categoryDog" || key == "categoryCat" {
                     self.inputData["category"] = itemValue
+                }else{
+                    self.inputData["\(key)"] = itemValue
                 }
-                self.inputData["\(key)"] = itemValue
                 // UIImage
             }else if case let itemValue as UIImage = value {
                 let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
@@ -393,11 +486,14 @@ class EditViewController: FormViewController {
         
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
-        let key = ref.child(Const.PetInfoPath).childByAutoId().key
-        
-        // FireBaseに保存
-        ref.child(Const.PetInfoPath).child(key).setValue(inputData)
-        
+        if let data = self.petInfoData {
+            // FireBaseに保存（update）
+            ref.child(Const.PetInfoPath).child(data.id!).updateChildValues(inputData)
+        }else{
+            let key = ref.child(Const.PetInfoPath).childByAutoId().key
+            // FireBaseに保存（insert）
+            ref.child(Const.PetInfoPath).child(key).setValue(inputData)
+        }
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: "投稿しました")
@@ -464,3 +560,21 @@ class EditView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+class EntryView: UIView {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        let imageView = UIImageView(image: UIImage(named: "pet2"))
+        imageView.frame = CGRect(x: 0, y: 10, width: 320, height: 100)
+        imageView.autoresizingMask = .flexibleWidth
+        self.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
+        imageView.contentMode = .scaleAspectFit
+        addSubview(imageView)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+

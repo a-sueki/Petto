@@ -282,6 +282,7 @@ class EntryViewController: FormViewController  {
                     return row.value ?? false == false
                 })
             }
+            //TODO: 1〜30以外はバリデーション。もしくはピッカー？
             <<< IntRow("minDays") {
                 $0.title = "最短"
                 $0.value = 1
@@ -323,8 +324,9 @@ class EntryViewController: FormViewController  {
             }else if case let itemValue as String = value {
                 if key == "categoryDog" || key == "categoryCat" {
                     self.inputData["category"] = itemValue
+                }else {
+                    self.inputData["\(key)"] = itemValue
                 }
-                self.inputData["\(key)"] = itemValue
             // UIImage
             }else if case let itemValue as UIImage = value {
                 let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
@@ -403,6 +405,7 @@ class EntryViewController: FormViewController  {
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)
+        print("---EntryViewController.executePost ......end!")
 
     }
     
