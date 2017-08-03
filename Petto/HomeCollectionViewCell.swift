@@ -25,24 +25,24 @@ class HomeCollectionViewCell: UICollectionViewCell {
     
     
     //表示される時の値をセット
-    func setPetInfoData(petInfoData: PetInfoData) {
+    func setPetData(petData: PetData) {
         // TODO: nilチェック
         
-        self.petImageView.image = petInfoData.image
-        self.areaLabel.text = petInfoData.area ?? "未選択"
-        if petInfoData.kind == "イヌ" {
+        self.petImageView.image = petData.image
+        self.areaLabel.text = petData.area ?? "未選択"
+        if petData.kind == "イヌ" {
             self.kindImageView.image = UIImage(named: "dog-lightgray")
         } else {
             self.kindImageView.image = UIImage(named: "cat-lightgray")
         }
-        if petInfoData.sex == "♂" {
+        if petData.sex == "♂" {
             self.sexImageView.image = UIImage(named: "male-lightgray")
         } else {
             self.sexImageView.image = UIImage(named: "female-lightgray")
         }
-        self.termLabel.text = "期間：\(String(petInfoData.minDays!))〜\(String(petInfoData.maxDays!))days"
+        self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))days"
 
-        if petInfoData.isLiked {
+        if petData.isLiked {
             let buttonImage = UIImage(named: "like-red")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)
         } else {

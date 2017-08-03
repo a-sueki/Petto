@@ -1,8 +1,8 @@
 //
-//  EditViewController.swift
+//  UserProfileViewController.swift
 //  Petto
 //
-//  Created by admin on 2017/07/26.
+//  Created by admin on 2017/07/27.
 //  Copyright © 2017年 aoi.sueki. All rights reserved.
 //
 
@@ -11,17 +11,14 @@ import Eureka
 import Firebase
 import FirebaseDatabase
 import SVProgressHUD
+import CoreLocation
+import PostalAddressRow
 
-class EditViewController: FormViewController {
-
-    var petData: PetData?
+class UserViewController: FormViewController {
+    var addressString: String?
+    var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
-    
-    var inputData = [String : Any]()
-    var inputData2 = [String : Any]() //environments
-    var inputData3 = [String : Any]() //tools
-    var inputData4 = [String : Any]() //ngs
     
     // NavigationBarボタンを用意
     var btn1: UIBarButtonItem!
@@ -66,26 +63,29 @@ class EditViewController: FormViewController {
             cell.accessoryView?.layer.cornerRadius = 17
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
-        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
-
+        //DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
+        
         //DateFormatter
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-
+        
+        
         
         // フォーム
         form +++
+            
             Section() {
-                if let _ = self.petData {
-                    $0.header = HeaderFooterView<EditView>(.class)
+                if let _ = self.userData {
+                    $0.header = HeaderFooterView<UserEditView>(.class)
                 }else {
-                    $0.header = HeaderFooterView<EntryView>(.class)
+                    $0.header = HeaderFooterView<UserEntryView>(.class)
                 }
             }
+            //TODO: コミットメント＆小さなバッチ（メダル）
             //TODO: カメラ起動追加
             <<< ImageRow("image"){
                 $0.title = "写真"
-                $0.baseValue = self.petData?.image ?? nil
+                $0.baseValue = self.userData?.image ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -107,23 +107,9 @@ class EditViewController: FormViewController {
                         }
                     }
             }
-            
-            <<< NameRow("name") {
-                $0.title = "名前"
-                $0.placeholder = "ポチ"
-                $0.value = self.petData?.name ?? nil
-            }
-            <<< PickerInputRow<String>("area"){
-                $0.title = "エリア"
-                $0.options = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
-                $0.value = self.petData?.area ?? $0.options.first
-            }
-            
-            +++ Section("プロフィール")
-            <<< SegmentedRow<String>("sex") {
-                $0.title =  "性別"
-                $0.options = ["♂", "♀"]
-                $0.value = self.petData?.sex ?? nil
+            <<< NameRow("lastname") {
+                $0.title = "姓"
+                $0.value = self.userData?.lastname ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -145,10 +131,9 @@ class EditViewController: FormViewController {
                         }
                     }
             }
-            <<< SegmentedRow<String>("kind") {
-                $0.title =  "種類"
-                $0.options = ["イヌ", "ネコ"]
-                $0.value = self.petData?.kind ?? nil
+            <<< NameRow("firstname") {
+                $0.title = "名"
+                $0.value = self.userData?.firstname ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -170,183 +155,117 @@ class EditViewController: FormViewController {
                         }
                     }
             }
-            <<< PickerInputRow<String>("categoryDog"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? "イヌ" == "ネコ"
-                })
-                $0.options = ["雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
-                $0.value = self.petData?.category ?? $0.options.first
-            }
-            <<< PickerInputRow<String>("categoryCat"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? "イヌ" == "イヌ"
-                })
-                $0.options = ["雑種","アビシニアン","アメリカンカール","アメリカンショートヘア","エキゾチックショートヘア","サイベリアン","シャム","シャルトリュー","シンガプーラ","スコティッシュフォールド","スフィンクス","ソマリ","ノルウェージャンフォレストキャット","ヒマラヤン","ブリティッシュショートヘア","ペルシャ","ベンガル","マンチカン","メインクーン","ラグドール","ロシアンブルー","不明"]
-                $0.value = self.petData?.category ?? $0.options.first
-            }
-            <<< PickerInputRow<String>("age"){
-                $0.title = "年齢"
-                $0.options = ["8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
-                $0.value = self.petData?.age ?? $0.options.first
-            }
-            
-            +++ Section("状態")
-            <<< CheckRow("isVaccinated") {
-                $0.title = "ワクチン接種済み"
-                $0.value = self.petData?.isVaccinated ?? false
-            }
-            <<< CheckRow("isCastrated") {
-                $0.title = "去勢/避妊手術済み"
-                $0.value = self.petData?.isCastrated ?? false
-            }
-            <<< CheckRow("wanted") {
-                $0.title = "里親募集中"
-                $0.value = self.petData?.wanted ?? false
-            }
-            
-            +++ Section()
-            <<< SwitchRow("isAvailable"){
-                $0.title = "あずかり人を募集する"
-                $0.value = self.petData?.isAvailable ?? false
-            }
-            
-            +++ Section("おあずけ条件"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
-            <<< MultipleSelectorRow<String>("environments") {
-                $0.title = "飼養環境"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = ["室内のみ","エアコンあり","２部屋以上","庭あり"] //FeedingEnvironment.allValues
-                if let data = self.petData , data.environments.count > 0 {
-                    let codes = Array(data.environments.keys)
-                    let names:Set<String> = codeToString(key:"environments", codeList: codes)
-                    $0.value = names
+            <<< DateRow("birthday") {
+                if let dateString = self.userData?.birthday {
+                    $0.value = dateFormatter.date(from: dateString)
                 }else{
-                    $0.value = []
+                    $0.value = dateFormatter.date(from: "1980-01-01 00:00:00 +000")
                 }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                $0.title = "生年月日"
             }
-            
-            <<< MultipleSelectorRow<String>("tools") {
-                $0.title = "必要な道具"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
-                if let data = self.petData , data.tools.count > 0 {
-                    let codes = Array(data.tools.keys)
-                    let names:Set<String> = codeToString(key:"tools", codeList: codes)
-                    $0.value = names
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            //TODO:入力中に赤字になる
+            <<< ZipCodeRow("zipCode") {
+                $0.title = "郵便番号"
+                $0.placeholder = "1234567"
+                $0.add(rule: RuleMinLength(minLength: 7))
+                $0.add(rule: RuleMaxLength(maxLength: 7))
+                $0.validationOptions = .validatesOnChange
+/*                }.onCellHighlightChanged {cell,row in
+                    if row.value != nil {
+                        self.getAdressString(zipCode: row.value!)
+                    }
+*/                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
-            <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "NGユーザ"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = ["Bad評価1つ以上","定時帰宅できない","一人暮らし","小児あり世帯","高齢者のみ世帯"]
-                if let data = self.petData , data.ngs.count > 0 {
-                    let codes = Array(data.ngs.keys)
-                    let names:Set<String> = codeToString(key:"ngs", codeList: codes)
-                    $0.value = names
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            
-            
-            +++ Section("お世話の方法"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
-            <<< SegmentedRow<String>("feeding"){
-                $0.title =  "ごはんの回数/日"
-                $0.options = ["1回","2回","3回"]
-                $0.value = self.petData?.feeding ?? nil
+            /*            <<< ButtonRow("search") { (row: ButtonRow) -> Void in
+             row.title = "住所検索"
+             }.onCellSelection { [weak self] (cell, row) in
+             print("---住所検索中---")
+             if let code: RowOf<String> = self!.form.rowBy(tag: "zipCode"){
+             print("---住所検索中2---")
+             self?.getAdressString(zipCode: code.value!)
+             self!.form.rowBy(tag: "address")?.baseValue = self?.userData?.address ?? "不明！！"
+             }
+             }
+             */
 
-            }
-            <<< SegmentedRow<String>("dentifrice") {
-                $0.title = "歯磨きの回数/日"
-                $0.options = ["1回","2回","3回"]
-                $0.value = self.petData?.dentifrice ?? nil
-            }
-            <<< SegmentedRow<String>("walk") {
-                $0.title = "お散歩の回数/日"
-                $0.options = ["不要","1回","2回"]
-                $0.value = self.petData?.walk ?? nil
-            }
+            //TODO:スイッチじゃなくボタンにする
+            +++ Section()
+            <<< SwitchRow("searchAddress"){
+                $0.title = "郵便番号で住所検索"
+                }.onChange{ row in
+                    if let code: RowOf<String> = self.form.rowBy(tag: "zipCode"){
+                    print("---住所検索中っっっっ---")
+                    let aa = self.getAdressString(zipCode: code.value!)
+                    self.form.rowBy(tag: "address")?.baseValue = aa
+                    }
+                //$0.value = self.petData?.isAvailable ?? false
+                }
+            
             +++
-            Section("おあずけ可能期間"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+            Section("じゅうしょ")
+
+            //TODO:ZIPCODE入力で自動補完
+            <<< NameRow("address") {
+                $0.title = "住所"
+                $0.hidden = .function(["searchAddress"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "searchAddress")
                     return row.value ?? false == false
                 })
+                $0.value = self.userData?.address ?? nil
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                    print("---住所検索中---")
+                    if let code: RowOf<String> = self.form.rowBy(tag: "zipCode"){
+                        print("---住所検索中2---")
+                        let jj = self.getAdressString(zipCode: code.value!)
+                        self.form.rowBy(tag: "address")?.baseValue = jj 
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
-            <<< DateRow("startDate") {
-                if let dateString = self.petData?.startDate {
-                    $0.value = dateFormatter.date(from: dateString)
-                }else{
-                    $0.value = Date()
-                }
-                $0.title = "開始日付"
-            }
-            //TODO: 開始日付以降のチェック
-            <<< DateRow("endDate") {
-                if let dateString = self.petData?.endDate {
-                    $0.value = dateFormatter.date(from: dateString)
-                }else{
-                    $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
-                }
-                $0.title = "終了日付"
-            }
-            +++
-            Section("連続おあずけ日数"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
-            <<< PickerInputRow<Int>("minDays"){
-                $0.title = "最短"
-                $0.options = []
-                for i in 1...30{
-                    $0.options.append(i)
-                }
-                $0.value = self.petData?.minDays ?? $0.options.first
-            }
-            <<< PickerInputRow<Int>("maxDays"){
-                $0.title = "最長"
-                $0.options = []
-                for i in 1...30{
-                    $0.options.append(i)
-                }
-                $0.value = self.petData?.maxDays ?? $0.options.last
-            }
-            //TODO: その他、特記事項入力フォーム
+            //TODO:エリア（表示のみ。Disable）
+            //TODO:TEL
+            //TODO:現在、他にペットを飼っている
+            //TODO:過去、ペット飼育経験がある
+
+            //TODO:飼養環境
+            //TODO:用意できる道具
+            //TODO:NGペット（吠える、生後8ヶ月未満の子犬、噛み癖、毛が抜ける）
+            //TODO:Petto利用履歴
+            
 
             
             +++ Section()
@@ -358,6 +277,24 @@ class EditViewController: FormViewController {
                     self?.executePost()
         }
         
+    }
+
+    func getAdressString(zipCode: String) -> String {
+        var kk :String = "karappo"
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(zipCode, completionHandler: {(placemarks, error) -> Void in
+            if((error) != nil){
+                print("Error", error ?? "unknown...")
+            }
+            if let placemark = placemarks?.first {
+                print("State:       \(placemark.administrativeArea!)")
+                print("City:        \(placemark.locality!)")
+                print("SubLocality: \(placemark.subLocality!)")
+                self.addressString = placemark.administrativeArea!
+                //kk = placemark.administrativeArea!
+            }
+        })
+        return self.addressString ?? kk
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
@@ -410,7 +347,7 @@ class EditViewController: FormViewController {
     @IBAction func executePost() {
         print("---EntryViewController.executePost")
         
-        for (key,value) in form.values() {
+/*        for (key,value) in form.values() {
             if value == nil {
                 break
                 // String
@@ -486,7 +423,7 @@ class EditViewController: FormViewController {
         let uid = FIRAuth.auth()?.currentUser?.uid
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
-
+        
         //Firebaseに保存
         if let data = self.petData {
             self.inputData["updateAt"] = String(time)
@@ -506,7 +443,7 @@ class EditViewController: FormViewController {
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-        
+*/
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)
@@ -540,9 +477,9 @@ class EditViewController: FormViewController {
     
 }
 
-class EditViewNib: UIView {
+class UserViewNib: UIView {
     
-    @IBOutlet weak var imageView: UIImageView!
+    //    @IBOutlet weak var imageView: UIImageView!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -550,11 +487,11 @@ class EditViewNib: UIView {
     
 }
 
-class EditView: UIView {
+class UserEditView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let imageView = UIImageView(image: UIImage(named: "pet2edit"))
+        let imageView = UIImageView(image: UIImage(named: "userProfile"))
         imageView.frame = CGRect(x: 0, y: 10, width: 320, height: 100)
         imageView.autoresizingMask = .flexibleWidth
         self.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
@@ -567,11 +504,11 @@ class EditView: UIView {
     }
 }
 
-class EntryView: UIView {
+class UserEntryView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let imageView = UIImageView(image: UIImage(named: "pet2"))
+        let imageView = UIImageView(image: UIImage(named: "userProfile"))
         imageView.frame = CGRect(x: 0, y: 10, width: 320, height: 100)
         imageView.autoresizingMask = .flexibleWidth
         self.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
@@ -583,4 +520,3 @@ class EntryView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

@@ -11,6 +11,8 @@
 		84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */; };
 		84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */; };
 		841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ADB171F0CA18C00534A37 /* MessagesViewController.swift */; };
+		8420E0AD1F29C1300088E509 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8420E0AC1F29C1300088E509 /* UserViewController.swift */; };
+		8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */; };
 		846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */; };
 		846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */; };
 		846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */; };
@@ -77,6 +79,8 @@
 		84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCollectionViewCell.xib; sourceTree = "<group>"; };
 		841ADB171F0CA18C00534A37 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		8420E0AC1F29C1300088E509 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
+		8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserEditSectionHeader.xib; sourceTree = "<group>"; };
 		846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListViewController.swift; sourceTree = "<group>"; };
 		846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewCell.swift; sourceTree = "<group>"; };
@@ -170,6 +174,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8457462F1F2FF73300CE5470 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				8420E0AC1F29C1300088E509 /* UserViewController.swift */,
+				8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */,
+			);
+			name = User;
+			sourceTree = "<group>";
+		};
 		846705DF1F0F7B2300FFEA8D /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +266,7 @@
 				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
 				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
 				84AC70E41F11B755001F7563 /* SignUpViewController.swift */,
+				8457462F1F2FF73300CE5470 /* User */,
 				846705DF1F0F7B2300FFEA8D /* Home */,
 				846705E11F0F7BAA00FFEA8D /* Messages */,
 				849ED1E01F1B2F60003AD9F5 /* MyPet */,
@@ -346,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */,
+				8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */,
 				84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */,
 				846705E71F0F81E400FFEA8D /* MessageListTableViewCell.xib in Resources */,
 				84CCE0131EFB791D0025B5D3 /* LaunchScreen.storyboard in Resources */,
@@ -425,6 +440,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8491640D1F288093007597F9 /* EditViewController.swift in Sources */,
+				8420E0AD1F29C1300088E509 /* UserViewController.swift in Sources */,
 				84D6CD301F18817E000CA101 /* ImagePickerController.swift in Sources */,
 				841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */,
 				846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */,

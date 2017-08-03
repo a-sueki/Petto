@@ -18,6 +18,9 @@ class UserData: NSObject {
     var isGooded: Bool = false
     var bads: [String] = []
     var isBaded: Bool = false
+    // ログイン情報
+    var mail: String?
+    var nickname: String?
     // 個人情報
     var image: UIImage?
     var imageString: String?
@@ -30,12 +33,19 @@ class UserData: NSObject {
     var tel: String?
     var hasAnotherPet: Bool?        // 他にペットを飼っている
     var isExperienced: Bool?        // ペット飼育経験あり
+    //あずかり情報
+    var environments = [String:Bool]()
+    var tools = [String:Bool]()
+    var ngs = [String:Bool]()
     var historyId: String?          // Petto利用履歴
-//    var environment: [String] = []  // 飼育環境
-//    var equipment: [String] = []    // 飼育道具
-    
     // マイペット情報
     var myPetsId: [String] = []
+    // システム項目
+    var createAt: NSDate?
+    var createBy: String?
+    var updateAt: NSDate?
+    var updateBy: String?
+
     
     
     init(snapshot: FIRDataSnapshot, myId: String) {
@@ -62,6 +72,10 @@ class UserData: NSObject {
                 break
             }
         }
+        // ログイン情報
+        self.mail = valueDictionary["mail"] as? String
+        self.nickname = valueDictionary["nickname"] as? String
+
         // 個人情報
         imageString = valueDictionary["image"] as? String
         self.image = UIImage(data: NSData(base64Encoded: imageString!, options: .ignoreUnknownCharacters)! as Data)
@@ -74,12 +88,28 @@ class UserData: NSObject {
         self.tel = valueDictionary["tel"] as? String
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
         self.isExperienced = valueDictionary["isExperienced"] as? Bool
+        if let environments = valueDictionary["environments"] as? [String:Bool] {
+            self.environments = environments
+        }
+        if let tools = valueDictionary["tools"] as? [String:Bool] {
+            self.tools = tools
+        }
+        if let ngs = valueDictionary["ngs"] as? [String:Bool] {
+            self.ngs = ngs
+        }
         self.historyId = valueDictionary["historyId"] as? String
 
         // マイペット情報
         if let myPetsId = valueDictionary["myPetsId"] as? [String] {
             self.myPetsId = myPetsId
         }
+        // システム項目
+        let createAt = valueDictionary["createAt"] as? String
+        self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
+        self.createBy = valueDictionary["createBy"] as? String
+        let updateAt = valueDictionary["updateAt"] as? String
+        self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt!)!)
+        self.updateBy = valueDictionary["updateBy"] as? String
 
     }
 }

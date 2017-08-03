@@ -1,5 +1,5 @@
 //
-//  PetInfoData.swift
+//  PetData.swift
 //  Petto
 //
 //  Created by admin on 2017/07/17.
@@ -9,7 +9,7 @@
 import Firebase
 import FirebaseDatabase
 
-class PetInfoData: NSObject {
+class PetData: NSObject {
     var id: String?
     // ペット基本情報
     var image: UIImage?
@@ -88,11 +88,10 @@ class PetInfoData: NSObject {
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
         self.createBy = valueDictionary["createBy"] as? String
-        /*        let updateAt = valueDictionary["updateAt"] as? String
-         self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt!)!)
-         self.updateBy = valueDictionary["updateBy"] as? String
-         */
-
+        if let updateAt = valueDictionary["updateAt"] as? String {
+            self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt)!)
+            self.updateBy = valueDictionary["updateBy"] as? String
+        }
         // 評価
         if let likes = valueDictionary["likes"] as? [String] {
             self.likes = likes

@@ -20,7 +20,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     
-    var menus = ["ホーム", "マイペット一覧","メッセージ","????","メッセージ一覧","Edit"]
+    var menus = ["Home", "My pet list","Message","User","Message list","Edit"]
     var homeViewController: UIViewController!
     var postViewController: UIViewController!
     var messagesViewController: UIViewController!
@@ -72,13 +72,16 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
             let navigationController = UINavigationController(rootViewController: messagesViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 3: break
+        case 3:
+            let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
+            let navigationController = UINavigationController(rootViewController: userViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             
         case 4:
             let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
             let navigationController = UINavigationController(rootViewController: messageListViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 5: 
+        case 5:
             let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
             let navigationController = UINavigationController(rootViewController: editViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)

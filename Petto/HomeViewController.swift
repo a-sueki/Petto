@@ -13,16 +13,8 @@ import FirebaseDatabase
 
 class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
-    // test用
-/*    let photos = ["dog1", "dog2","dog3","cat1","cat2","cat3","cat4","cat5","cat6","cat7"]
-    let kinds = ["dog-lightgray", "dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray","dog-lightgray"]
-    let sexs = ["male-lightgray", "male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray","male-lightgray"]
-    let areas = ["東京都", "東京都","神奈川県","神奈川県","神奈川県","東京都","東京都","神奈川県","静岡県","沖縄県"]
-    let terms = ["期間：1~30 days", "期間：7 days","期間：3 days","期間：10 days","期間：1 day","期間：1 days","期間：29 days","期間：14~30 days","期間：14~30 days","期間：14~30 days"]
-*/
-    
     @IBOutlet weak var collectionView: UICollectionView!
-    var petInfoArray: [PetInfoData] = []
+    var petData: [PetData] = []
     
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -55,7 +47,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             if observing == true {
                 // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
                 // テーブルをクリアする
-                petInfoArray = []
+                petData = []
                 collectionView.reloadData()
                 // オブザーバーを削除する
                 FIRDatabase.database().reference().removeAllObservers()
@@ -76,14 +68,14 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
-                let postsRef = FIRDatabase.database().reference().child(Const.PetInfoPath)
+                let postsRef = FIRDatabase.database().reference().child(Const.PetPath)
                 postsRef.observe(.childAdded, with: { snapshot in
                     print("DEBUG_PRINT: .childAddedイベントが発生しました。")
                     
-                    // PetInfoDataクラスを生成して受け取ったデータを設定する
+                    // petDataクラスを生成して受け取ったデータを設定する
                     if let uid = FIRAuth.auth()?.currentUser?.uid {
-                        let petInfoData = PetInfoData(snapshot: snapshot, myId: uid)
-                        self.petInfoArray.insert(petInfoData, at: 0)
+                        let petData = PetData(snapshot: snapshot, myId: uid)
+                        self.petData.insert(petData, at: 0)
                         
                         // collectionViewを再表示する
                         self.collectionView.reloadData()
@@ -94,23 +86,23 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                     print("DEBUG_PRINT: .childChangedイベントが発生しました。")
                     
                     if let uid = FIRAuth.auth()?.currentUser?.uid {
-                        // PetInfoDataクラスを生成して受け取ったデータを設定する
-                        let petInfoData = PetInfoData(snapshot: snapshot, myId: uid)
+                        // petDataクラスを生成して受け取ったデータを設定する
+                        let petData = PetData(snapshot: snapshot, myId: uid)
                         
                         // 保持している配列からidが同じものを探す
                         var index: Int = 0
-                        for petInfo in self.petInfoArray {
-                            if petInfo.id == petInfoData.id {
-                                index = self.petInfoArray.index(of: petInfo)!
+                        for petInfo in self.petData {
+                            if petInfo.id == petData.id {
+                                index = self.petData.index(of: petInfo)!
                                 break
                             }
                         }
                         
                         // 差し替えるため一度削除する
-                        self.petInfoArray.remove(at: index)
+                        self.petData.remove(at: index)
                         
                         // 削除したところに更新済みのでデータを追加する
-                        self.petInfoArray.insert(petInfoData, at: index)
+                        self.petData.insert(petData, at: index)
                         
                         // TableViewの現在表示されているセルを更新する
                         self.collectionView.reloadData()
@@ -128,29 +120,8 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
 
-        // test用
-/*                // Cell はストーリーボードで設定したセルのID
-        let testCell:UICollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath)
-        // Tag番号を使ってImageViewのインスタンス生成
-        let imageView = testCell.contentView.viewWithTag(1) as! UIImageView
-        imageView.image = UIImage(named: photos[(indexPath as NSIndexPath).row])
-        // Tag番号を使ってImageViewのインスタンス生成
-        let kindImageView = testCell.contentView.viewWithTag(2) as! UIImageView
-        kindImageView.image = UIImage(named: kinds[(indexPath as NSIndexPath).row])
-        // Tag番号を使ってImageViewのインスタンス生成
-        let sexImageView = testCell.contentView.viewWithTag(3) as! UIImageView
-        sexImageView.image = UIImage(named: sexs[(indexPath as NSIndexPath).row])
-        // Tag番号を使ってLabelのインスタンス生成
-        let arealabel = testCell.contentView.viewWithTag(4) as! UILabel
-        arealabel.text = areas[(indexPath as NSIndexPath).row]
-        // Tag番号を使ってLabelのインスタンス生成
-        let termlabel = testCell.contentView.viewWithTag(5) as! UILabel
-        termlabel.text = terms[(indexPath as NSIndexPath).row]
-        return testCell
-
-*/
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCollectionViewCell
-        cell.setPetInfoData(petInfoData: petInfoArray[indexPath.row])
+        cell.setPetData(petData: petData[indexPath.row])
         // セル内のボタンのアクションをソースコードで設定する
         cell.likeButton.addTarget(self, action:#selector(handleLikeButton(sender:event:)), for:  UIControlEvents.touchUpInside)
 
@@ -173,9 +144,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // 要素数を入れる、要素以上の数字を入れると表示でエラーとなる
-        // test用
-        //return 10;
-        return petInfoArray.count
+        return petData.count
     }
     
 
@@ -195,28 +164,28 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         let indexPath = collectionView.indexPathForItem(at: point)
         
         // 配列からタップされたインデックスのデータを取り出す
-        let petInfoData = petInfoArray[indexPath!.row]
+        let petData = self.petData[indexPath!.row]
         
         // Firebaseに保存するデータの準備
         if let uid = FIRAuth.auth()?.currentUser?.uid {
-            if petInfoData.isLiked {
+            if petData.isLiked {
                 // すでにいいねをしていた場合はいいねを解除するためIDを取り除く
                 var index = -1
-                for likeId in petInfoData.likes {
+                for likeId in petData.likes {
                     if likeId == uid {
                         // 削除するためにインデックスを保持しておく
-                        index = petInfoData.likes.index(of: likeId)!
+                        index = petData.likes.index(of: likeId)!
                         break
                     }
                 }
-                petInfoData.likes.remove(at: index)
+                petData.likes.remove(at: index)
             } else {
-                petInfoData.likes.append(uid)
+                petData.likes.append(uid)
             }
             
             // 増えたlikesをFirebaseに保存する
-            let postRef = FIRDatabase.database().reference().child(Const.PetInfoPath).child(petInfoData.id!)
-            let likes = ["likes": petInfoData.likes]
+            let postRef = FIRDatabase.database().reference().child(Const.PetPath).child(petData.id!)
+            let likes = ["likes": petData.likes]
             postRef.updateChildValues(likes)
             
         }

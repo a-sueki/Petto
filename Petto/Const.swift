@@ -9,7 +9,7 @@
 import Foundation
 
 struct Const {
-    static let PetInfoPath = "petInfo"
+    static let PetPath = "pet"
     static let UserPath = "user"
     static let MessagePath = "message"
 }

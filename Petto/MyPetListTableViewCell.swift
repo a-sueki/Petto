@@ -33,11 +33,11 @@ class MyPetListTableViewCell: UITableViewCell {
     }
     
     //表示される時の値をセット
-    func setData(petInfoData: PetInfoData) {
+    func setData(petData: PetData) {
         print("MyPetListTableViewCell.setData:一覧表示中！！！！")
         
-        self.photoImageView.image = petInfoData.image
-        self.nameLabel.text = petInfoData.name
+        self.photoImageView.image = petData.image
+        self.nameLabel.text = petData.name
 
     }
     

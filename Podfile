@@ -16,4 +16,5 @@ target 'Petto' do
   pod 'JSQMessagesViewController'
   pod 'SwiftyJSON'
   pod 'Eureka'
+  pod 'PostalAddressRow', '~> 1.0'
 end
