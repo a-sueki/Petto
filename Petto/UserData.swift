@@ -34,10 +34,11 @@ class UserData: NSObject {
     var hasAnotherPet: Bool?        // 他にペットを飼っている
     var isExperienced: Bool?        // ペット飼育経験あり
     //あずかり情報
-    var environments = [String:Bool]()
-    var tools = [String:Bool]()
-    var ngs = [String:Bool]()
-    var historyId: String?          // Petto利用履歴
+    var expectTo: Bool?             // ペットあずかりを希望する
+    var userEnvironments = [String:Bool]()
+    var userTools = [String:Bool]()
+    var userNgs = [String:Bool]()
+    var historyId: String?      // Petto利用履歴
     // マイペット情報
     var myPetsId: [String] = []
     // システム項目
@@ -88,14 +89,16 @@ class UserData: NSObject {
         self.tel = valueDictionary["tel"] as? String
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
         self.isExperienced = valueDictionary["isExperienced"] as? Bool
-        if let environments = valueDictionary["environments"] as? [String:Bool] {
-            self.environments = environments
+        //あずかり情報
+        self.expectTo = valueDictionary["expectTo"] as? Bool
+        if let userEnvironments = valueDictionary["userEnvironments"] as? [String:Bool] {
+            self.userEnvironments = userEnvironments
         }
-        if let tools = valueDictionary["tools"] as? [String:Bool] {
-            self.tools = tools
+        if let userTools = valueDictionary["userTools"] as? [String:Bool] {
+            self.userTools = userTools
         }
-        if let ngs = valueDictionary["ngs"] as? [String:Bool] {
-            self.ngs = ngs
+        if let userNgs = valueDictionary["userNgs"] as? [String:Bool] {
+            self.userNgs = userNgs
         }
         self.historyId = valueDictionary["historyId"] as? String
 

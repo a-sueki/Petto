@@ -12,11 +12,9 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 import CoreLocation
-//import PostalAddressRow
-
 
 class UserViewController: FormViewController {
-    var addressString: String?
+    
     var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -64,17 +62,13 @@ class UserViewController: FormViewController {
             cell.accessoryView?.layer.cornerRadius = 17
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
-        //DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
-        
         //DateFormatter
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
         
-        
         // フォーム
         form +++
-            
             Section() {
                 if let _ = self.userData {
                     $0.header = HeaderFooterView<UserEditView>(.class)
@@ -164,6 +158,8 @@ class UserViewController: FormViewController {
                 }
                 $0.title = "生年月日"
             }
+            
+            +++ Section("じゅうしょ")
             //TODO:入力中に赤字になる
             <<< ZipCodeRow("zipCode") {
                 $0.title = "郵便番号"
@@ -204,26 +200,17 @@ class UserViewController: FormViewController {
                                 print("State:       \(placemark.administrativeArea!)")
                                 print("City:        \(placemark.locality!)")
                                 print("SubLocality: \(placemark.subLocality!)")
-                                //self.addressString = placemark.administrativeArea!
-                                //kk = placemark.administrativeArea!
-                                
+                                // 住所ROW更新
                                 self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
                                 self?.form.rowBy(tag: "address")?.updateCell()
+                                self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
+                                self?.form.rowBy(tag: "areaLabel")?.updateCell()
                             }
                         })
-
-
-                        
-//                        let aa = self?.getAdressString(zipCode: code.value!)
-//                        self?.form.rowBy(tag: "address")?.baseValue = aa
-//                        self?.form.rowBy(tag: "address")?.updateCell()
                     }
             }
-            +++
-            Section("じゅうしょ")
             
-            //TODO:ZIPCODE入力で自動補完
-            <<< NameRow("address") {
+            <<< TextRow("address") {
                 $0.title = "住所"
                 $0.value = self.userData?.address ?? nil
                 $0.add(rule: RuleRequired())
@@ -247,50 +234,125 @@ class UserViewController: FormViewController {
                         }
                     }
             }
-            //TODO:エリア（表示のみ。Disable）
-            //TODO:TEL
-            //TODO:現在、他にペットを飼っている
-            //TODO:過去、ペット飼育経験がある
+            <<< TextRow("area") {
+                $0.title = "エリア"
+                $0.value = self.userData?.area ?? nil
+                $0.disabled = true
+            }
+            <<< PhoneRow("tel") {
+                $0.title = "Tel"
+                $0.value = self.userData?.tel ?? nil
+                $0.placeholder = "09012345678"
+                $0.disabled = true
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+            }
+
+            +++ Section("あなたのペット経験")
+            <<< CheckRow("hasAnotherPet") {
+                $0.title = "現在、他にペットを飼っている"
+                $0.value = self.userData?.hasAnotherPet ?? false
+            }
+            <<< CheckRow("isExperienced") {
+                $0.title = "過去、ペットを飼った経験がある"
+                $0.value = self.userData?.isExperienced ?? false
+            }
+            
+            +++ Section()
+            <<< SwitchRow("expectTo"){
+                $0.title = "あずかり人を募集する"
+                $0.value = self.userData?.expectTo ?? false
+            }
             
             //TODO:飼養環境
+            +++ Section("おあずかり環境"){
+                $0.hidden = .function(["expectTo"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
+                    return row.value ?? false == false
+                })
+            }
+            <<< MultipleSelectorRow<String>("userEnvironments") {
+                $0.title = "飼養環境"
+                $0.options = ["室内飼いOK","エアコンあり","２部屋以上","庭あり"]
+                if let data = self.userData , data.userEnvironments.count > 0 {
+                    let codes = Array(data.userEnvironments.keys)
+                    let names:Set<String> = codeToString(key:"userEnvironments", codeList: codes)
+                    $0.value = names
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
             //TODO:用意できる道具
             //TODO:NGペット（吠える、生後8ヶ月未満の子犬、噛み癖、毛が抜ける）
+            <<< MultipleSelectorRow<String>("userTools") {
+                $0.title = "用意できる道具"
+                $0.hidden = .function(["expectTo"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
+                    return row.value ?? false == false
+                })
+                $0.options = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
+                if let data = self.userData , data.userTools.count > 0 {
+                    let codes = Array(data.userTools.keys)
+                    let names:Set<String> = codeToString(key:"userTools", codeList: codes)
+                    $0.value = names
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            <<< MultipleSelectorRow<String>("userNgs") {
+                $0.title = "NGペット"
+                $0.hidden = .function(["expectTo"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
+                    return row.value ?? false == false
+                })
+                $0.options = ["吠え癖","噛み癖","生まれたて","持病あり"]
+                if let data = self.userData , data.userNgs.count > 0 {
+                    let codes = Array(data.userNgs.keys)
+                    let names:Set<String> = codeToString(key:"userNgs", codeList: codes)
+                    $0.value = names
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
             //TODO:Petto利用履歴
-            
-            
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "投稿する"
                 }.onCellSelection { [weak self] (cell, row) in
-                    print("---EntryViewController.viewDidLoad 3")
+                    print("---UserViewController.viewDidLoad 3")
                     row.section?.form?.validate()
                     self?.executePost()
         }
         
     }
-    
-/*    func getAdressString(zipCode: String) -> String {
-        var kk :String = "karappo"
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(zipCode, completionHandler: {(placemarks, error) -> Void in
-            if((error) != nil){
-                print("Error", error ?? "unknown...")
-            }
-            if let placemark = placemarks?.first {
-                print("State:       \(placemark.administrativeArea!)")
-                print("City:        \(placemark.locality!)")
-                print("SubLocality: \(placemark.subLocality!)")
-                self.addressString = placemark.administrativeArea!
-                //kk = placemark.administrativeArea!
-            }
-        })
-//        XCPSetExecutionShouldContinueIndefinitely()
-        //XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
-        //PlaygroundPage.current.needsIndefiniteExecution = true
-        return self.addressString ?? kk
-    }
-*/
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
@@ -302,7 +364,7 @@ class UserViewController: FormViewController {
         case "environments" :
             for code in codeList {
                 switch code {
-                case "code01" : nameList.insert("室内のみ")
+                case "code01" : nameList.insert("室内飼いOK")
                 case "code02" : nameList.insert("エアコンあり")
                 case "code03" : nameList.insert("２部屋以上")
                 case "code04" : nameList.insert("庭あり")
@@ -325,11 +387,10 @@ class UserViewController: FormViewController {
         case "ngs" :
             for code in codeList {
                 switch code {
-                case "code01" : nameList.insert("Bad評価1つ以上")
-                case "code02" : nameList.insert("定時帰宅できない")
-                case "code03" : nameList.insert("一人暮らし")
-                case "code04" : nameList.insert("小児あり世帯")
-                case "code05" : nameList.insert("高齢者のみ世帯")
+                case "code01" : nameList.insert("吠え癖")
+                case "code02" : nameList.insert("噛み癖")
+                case "code03" : nameList.insert("生まれたて")
+                case "code04" : nameList.insert("持病あり")
                 default: break
                 }
             }
@@ -474,7 +535,7 @@ class UserViewController: FormViewController {
 
 class UserViewNib: UIView {
     
-    //    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
