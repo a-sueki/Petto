@@ -412,7 +412,8 @@ class EditViewController: FormViewController {
         
         for (key,value) in form.values() {
             if value == nil {
-                break
+                //break
+                print("ALERT::: key値「\(key)」がnilです。")
                 // String
             }else if case let itemValue as String = value {
                 if key == "categoryDog" || key == "categoryCat" {

@@ -6,7 +6,6 @@
 //  Copyright © 2017年 aoi.sueki. All rights reserved.
 //
 
-import UIKit
 import Firebase
 import FirebaseDatabase
 
