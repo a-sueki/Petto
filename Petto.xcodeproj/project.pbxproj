@@ -249,7 +249,6 @@
 			isa = PBXGroup;
 			children = (
 				84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */,
-				84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */,
 				84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */,
 				84D6CD311F18819E000CA101 /* Eureka */,
 				84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */,
@@ -277,6 +276,7 @@
 		84D6CD311F18819E000CA101 /* Eureka */ = {
 			isa = PBXGroup;
 			children = (
+				84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */,
 				84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */,
 				84D6CD321F18F7E3000CA101 /* CustomCells.swift */,
 				84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */,

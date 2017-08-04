@@ -12,7 +12,8 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 import CoreLocation
-import PostalAddressRow
+//import PostalAddressRow
+
 
 class UserViewController: FormViewController {
     var addressString: String?
@@ -170,11 +171,7 @@ class UserViewController: FormViewController {
                 $0.add(rule: RuleMinLength(minLength: 7))
                 $0.add(rule: RuleMaxLength(maxLength: 7))
                 $0.validationOptions = .validatesOnChange
-/*                }.onCellHighlightChanged {cell,row in
-                    if row.value != nil {
-                        self.getAdressString(zipCode: row.value!)
-                    }
-*/                }.cellUpdate { cell, row in
+                }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
                     }
@@ -193,53 +190,47 @@ class UserViewController: FormViewController {
                         }
                     }
             }
-            /*            <<< ButtonRow("search") { (row: ButtonRow) -> Void in
-             row.title = "住所検索"
-             }.onCellSelection { [weak self] (cell, row) in
-             print("---住所検索中---")
-             if let code: RowOf<String> = self!.form.rowBy(tag: "zipCode"){
-             print("---住所検索中2---")
-             self?.getAdressString(zipCode: code.value!)
-             self!.form.rowBy(tag: "address")?.baseValue = self?.userData?.address ?? "不明！！"
-             }
-             }
-             */
+            <<< ButtonRow("search") { (row: ButtonRow) -> Void in
+                row.title = "住所検索"
+                }.onCellSelection { [weak self] (cell, row) in
+                    if let code: RowOf<String> = self?.form.rowBy(tag: "zipCode"){
+                        print("---住所検索中っっっっ---")
+                        let geocoder = CLGeocoder()
+                        geocoder.geocodeAddressString(code.value!, completionHandler: {(placemarks, error) -> Void in
+                            if((error) != nil){
+                                print("Error", error ?? "unknown...")
+                            }
+                            if let placemark = placemarks?.first {
+                                print("State:       \(placemark.administrativeArea!)")
+                                print("City:        \(placemark.locality!)")
+                                print("SubLocality: \(placemark.subLocality!)")
+                                //self.addressString = placemark.administrativeArea!
+                                //kk = placemark.administrativeArea!
+                                
+                                self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
+                                self?.form.rowBy(tag: "address")?.updateCell()
+                            }
+                        })
 
-            //TODO:スイッチじゃなくボタンにする
-            +++ Section()
-            <<< SwitchRow("searchAddress"){
-                $0.title = "郵便番号で住所検索"
-                }.onChange{ row in
-                    if let code: RowOf<String> = self.form.rowBy(tag: "zipCode"){
-                    print("---住所検索中っっっっ---")
-                    let aa = self.getAdressString(zipCode: code.value!)
-                    self.form.rowBy(tag: "address")?.baseValue = aa
+
+                        
+//                        let aa = self?.getAdressString(zipCode: code.value!)
+//                        self?.form.rowBy(tag: "address")?.baseValue = aa
+//                        self?.form.rowBy(tag: "address")?.updateCell()
                     }
-                //$0.value = self.petData?.isAvailable ?? false
-                }
-            
+            }
             +++
             Section("じゅうしょ")
-
+            
             //TODO:ZIPCODE入力で自動補完
             <<< NameRow("address") {
                 $0.title = "住所"
-                $0.hidden = .function(["searchAddress"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "searchAddress")
-                    return row.value ?? false == false
-                })
                 $0.value = self.userData?.address ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
-                    }
-                    print("---住所検索中---")
-                    if let code: RowOf<String> = self.form.rowBy(tag: "zipCode"){
-                        print("---住所検索中2---")
-                        let jj = self.getAdressString(zipCode: code.value!)
-                        self.form.rowBy(tag: "address")?.baseValue = jj 
                     }
                 }.onRowValidationChanged { cell, row in
                     let rowIndex = row.indexPath!.row
@@ -260,13 +251,13 @@ class UserViewController: FormViewController {
             //TODO:TEL
             //TODO:現在、他にペットを飼っている
             //TODO:過去、ペット飼育経験がある
-
+            
             //TODO:飼養環境
             //TODO:用意できる道具
             //TODO:NGペット（吠える、生後8ヶ月未満の子犬、噛み癖、毛が抜ける）
             //TODO:Petto利用履歴
             
-
+            
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -278,8 +269,8 @@ class UserViewController: FormViewController {
         }
         
     }
-
-    func getAdressString(zipCode: String) -> String {
+    
+/*    func getAdressString(zipCode: String) -> String {
         var kk :String = "karappo"
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(zipCode, completionHandler: {(placemarks, error) -> Void in
@@ -294,8 +285,12 @@ class UserViewController: FormViewController {
                 //kk = placemark.administrativeArea!
             }
         })
+//        XCPSetExecutionShouldContinueIndefinitely()
+        //XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
+        //PlaygroundPage.current.needsIndefiniteExecution = true
         return self.addressString ?? kk
     }
+*/
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
@@ -347,103 +342,103 @@ class UserViewController: FormViewController {
     @IBAction func executePost() {
         print("---EntryViewController.executePost")
         
-/*        for (key,value) in form.values() {
-            if value == nil {
-                break
-                // String
-            }else if case let itemValue as String = value {
-                if key == "categoryDog" || key == "categoryCat" {
-                    self.inputData["category"] = itemValue
-                }else{
-                    self.inputData["\(key)"] = itemValue
-                }
-                // UIImage
-            }else if case let itemValue as UIImage = value {
-                let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
-                let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                self.inputData["imageString"] = imageString
-                // Bool
-            }else if case _ as Bool = value {
-                self.inputData["\(key)"] = true
-                // Date
-            }else if case let itemValue as Date = value {
-                self.inputData["\(key)"] = itemValue.description
-                // Int
-            }else if case let itemValue as Int = value {
-                self.inputData["\(key)"] = itemValue
-                // List
-                // TODO: コード化。もっとスマートにできないか。
-            }else {
-                let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
-                switch key {
-                case "environments" :
-                    for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case "室内のみ": inputData2["code01"] = true
-                        case "エアコンあり": inputData2["code02"] = true
-                        case "２部屋以上": inputData2["code03"] = true
-                        case "庭あり": inputData2["code04"] = true
-                        default: break
-                        }
-                    }
-                    inputData["environments"] = inputData2
-                case "tools" :
-                    for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case "寝床": inputData3["code01"] = true
-                        case "トイレ": inputData3["code02"] = true
-                        case "ケージ": inputData3["code03"] = true
-                        case "歯ブラシ": inputData3["code04"] = true
-                        case "ブラシ": inputData3["code05"] = true
-                        case "爪研ぎ": inputData3["code06"] = true
-                        case "キャットタワー": inputData3["code07"] = true
-                        default: break
-                        }
-                    }
-                    inputData["tools"] = inputData3
-                case "ngs" :
-                    for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case "Bad評価1つ以上": inputData4["code01"] = true
-                        case "定時帰宅できない": inputData4["code02"] = true
-                        case "一人暮らし": inputData4["code03"] = true
-                        case "小児あり世帯": inputData4["code04"] = true
-                        case "高齢者のみ世帯": inputData4["code05"] = true
-                        default: break
-                        }
-                    }
-                    inputData["ngs"] = inputData4
-                default: break
-                }
-            }
-        }
-        
-        // inputDataに必要な情報を取得しておく
-        let time = NSDate.timeIntervalSinceReferenceDate
-        let uid = FIRAuth.auth()?.currentUser?.uid
-        // 辞書を作成
-        let ref = FIRDatabase.database().reference()
-        
-        //Firebaseに保存
-        if let data = self.petData {
-            self.inputData["updateAt"] = String(time)
-            self.inputData["updateBy"] = uid!
-            // update
-            ref.child(Const.PetPath).child(data.id!).updateChildValues(inputData)
-        }else{
-            let key = ref.child(Const.PetPath).childByAutoId().key
-            self.inputData["createAt"] = String(time)
-            self.inputData["createBy"] = uid!
-            // insert
-            ref.child(Const.PetPath).child(key).setValue(inputData)
-        }
-        
-        // HUDで投稿完了を表示する
-        SVProgressHUD.showSuccess(withStatus: "投稿しました")
-        
-        // 全てのモーダルを閉じる
-        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-*/
+        /*        for (key,value) in form.values() {
+         if value == nil {
+         break
+         // String
+         }else if case let itemValue as String = value {
+         if key == "categoryDog" || key == "categoryCat" {
+         self.inputData["category"] = itemValue
+         }else{
+         self.inputData["\(key)"] = itemValue
+         }
+         // UIImage
+         }else if case let itemValue as UIImage = value {
+         let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
+         let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+         self.inputData["imageString"] = imageString
+         // Bool
+         }else if case _ as Bool = value {
+         self.inputData["\(key)"] = true
+         // Date
+         }else if case let itemValue as Date = value {
+         self.inputData["\(key)"] = itemValue.description
+         // Int
+         }else if case let itemValue as Int = value {
+         self.inputData["\(key)"] = itemValue
+         // List
+         // TODO: コード化。もっとスマートにできないか。
+         }else {
+         let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
+         switch key {
+         case "environments" :
+         for itemValue in [String] (Array(fmap)){
+         switch itemValue {
+         case "室内のみ": inputData2["code01"] = true
+         case "エアコンあり": inputData2["code02"] = true
+         case "２部屋以上": inputData2["code03"] = true
+         case "庭あり": inputData2["code04"] = true
+         default: break
+         }
+         }
+         inputData["environments"] = inputData2
+         case "tools" :
+         for itemValue in [String] (Array(fmap)){
+         switch itemValue {
+         case "寝床": inputData3["code01"] = true
+         case "トイレ": inputData3["code02"] = true
+         case "ケージ": inputData3["code03"] = true
+         case "歯ブラシ": inputData3["code04"] = true
+         case "ブラシ": inputData3["code05"] = true
+         case "爪研ぎ": inputData3["code06"] = true
+         case "キャットタワー": inputData3["code07"] = true
+         default: break
+         }
+         }
+         inputData["tools"] = inputData3
+         case "ngs" :
+         for itemValue in [String] (Array(fmap)){
+         switch itemValue {
+         case "Bad評価1つ以上": inputData4["code01"] = true
+         case "定時帰宅できない": inputData4["code02"] = true
+         case "一人暮らし": inputData4["code03"] = true
+         case "小児あり世帯": inputData4["code04"] = true
+         case "高齢者のみ世帯": inputData4["code05"] = true
+         default: break
+         }
+         }
+         inputData["ngs"] = inputData4
+         default: break
+         }
+         }
+         }
+         
+         // inputDataに必要な情報を取得しておく
+         let time = NSDate.timeIntervalSinceReferenceDate
+         let uid = FIRAuth.auth()?.currentUser?.uid
+         // 辞書を作成
+         let ref = FIRDatabase.database().reference()
+         
+         //Firebaseに保存
+         if let data = self.petData {
+         self.inputData["updateAt"] = String(time)
+         self.inputData["updateBy"] = uid!
+         // update
+         ref.child(Const.PetPath).child(data.id!).updateChildValues(inputData)
+         }else{
+         let key = ref.child(Const.PetPath).childByAutoId().key
+         self.inputData["createAt"] = String(time)
+         self.inputData["createBy"] = uid!
+         // insert
+         ref.child(Const.PetPath).child(key).setValue(inputData)
+         }
+         
+         // HUDで投稿完了を表示する
+         SVProgressHUD.showSuccess(withStatus: "投稿しました")
+         
+         // 全てのモーダルを閉じる
+         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+         */
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)
