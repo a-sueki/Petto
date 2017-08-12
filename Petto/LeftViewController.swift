@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+
 
 enum LeftMenu: Int {
     case home = 0
@@ -15,7 +18,9 @@ enum LeftMenu: Int {
 }
 
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-    
+    // FIRDatabaseのobserveEventの登録状態を表す
+    var observing = false
+
     var mainViewController: UINavigationController!
     
     @IBOutlet weak var tableView: UITableView!
@@ -76,7 +81,6 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
             let navigationController = UINavigationController(rootViewController: userViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-            
         case 4:
             let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
             let navigationController = UINavigationController(rootViewController: messageListViewController)
@@ -109,8 +113,10 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        //        self.imageHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)
+        //self.imageHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)
         self.view.layoutIfNeeded()
     }
+    
+
 }
 

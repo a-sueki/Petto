@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
 
-        self.window?.backgroundColor = UIColor.white
+        //self.window?.backgroundColor = UIColor.red
         self.window?.rootViewController = slideMenuController
         self.window?.makeKeyAndVisible()
         

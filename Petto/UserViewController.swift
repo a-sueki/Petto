@@ -34,6 +34,35 @@ class UserViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("DEBUG_PRINT: UserViewController.viewDidLoad start")
+
+        //TODO: Firebaseから登録済みデータを取得 -> Formの表示が先に行われてしまうのはなぜか？
+        if FIRAuth.auth()?.currentUser != nil {
+            if self.observing == false {
+                // 要素が追加されたら再表示
+                let postsRef = FIRDatabase.database().reference().child(Paths.UserPath)
+                postsRef.observe(.childAdded, with: { snapshot in
+                    print("DEBUG_PRINT１: UserViewController.viewDidLoad あたいせっと start")
+                    // userDataクラスを生成して受け取ったデータを設定する
+                    if let uid = FIRAuth.auth()?.currentUser?.uid {
+                        
+                        self.userData = UserData(snapshot: snapshot, myId: uid)
+                        print(self.userData?.birthday)
+                    }
+                    //Firebaseからアカウント情報取得
+                    let user = FIRAuth.auth()?.currentUser
+                    print(user?.email)
+                    self.userData?.mail = user?.email
+                    self.userData?.displayName = user?.displayName
+                    print(self.userData?.displayName)
+                })
+                // FIRDatabaseのobserveEventが上記コードにより登録されたため
+                // trueとする
+                observing = true
+            }
+        }
+        print(self.userData?.area)
+        
         // NavigationBar
         btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(BaseViewController.onClick1))
         btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(BaseViewController.onClick2))
@@ -71,18 +100,94 @@ class UserViewController: FormViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
-        
         // フォーム
         form +++
-            Section() {
+            Section("Account") {
                 if let _ = self.userData {
                     $0.header = HeaderFooterView<UserEditView>(.class)
                 }else {
                     $0.header = HeaderFooterView<UserEntryView>(.class)
                 }
             }
+
+            <<< EmailRow("mail") {
+                $0.title = "メールアドレス"
+                print("DEBUG_PRINT: UserViewController.viewDidLoad メールアドレス")
+                $0.value = self.userData?.mail ?? nil
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+            }
+            <<< PasswordRow("password") {
+                $0.title = "パスワード"
+                $0.value = self.userData?.password ?? nil
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+            }
+            <<< AccountRow("displayName") {
+                $0.title = "ニックネーム"
+                $0.placeholder = "Placeholder"
+                $0.value = self.userData?.displayName ?? nil
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+            }
+
+            
             //TODO: コミットメント＆小さなバッチ（メダル）
-            //TODO: カメラ起動追加
+            +++ Section("プロフィール")
             <<< ImageRow("image"){
                 $0.title = "写真"
                 $0.baseValue = self.userData?.image ?? nil
@@ -296,11 +401,11 @@ class UserViewController: FormViewController {
             }
             <<< MultipleSelectorRow<String>("userEnvironments") {
                 $0.title = "飼養環境"
-                $0.options = ["室内飼いOK","エアコンあり","２部屋以上","庭あり"]
+                //TODO:アイコン表示
+                $0.options = Environment.strings
                 if let data = self.userData , data.userEnvironments.count > 0 {
                     let codes = Array(data.userEnvironments.keys)
-                    let names:Set<String> = codeToString(key:"userEnvironments", codeList: codes)
-                    $0.value = names
+                    $0.value = Environment.convertList(codes)
                 }else{
                     $0.value = []
                 }
@@ -314,11 +419,10 @@ class UserViewController: FormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
                     return row.value ?? false == false
                 })
-                $0.options = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
+                $0.options = Tool.strings
                 if let data = self.userData , data.userTools.count > 0 {
                     let codes = Array(data.userTools.keys)
-                    let names:Set<String> = codeToString(key:"userTools", codeList: codes)
-                    $0.value = names
+                    $0.value = Tool.convertList(codes)
                 }else{
                     $0.value = []
                 }
@@ -332,11 +436,10 @@ class UserViewController: FormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
                     return row.value ?? false == false
                 })
-                $0.options = ["吠え癖","噛み癖","生まれたて","持病あり"]
+                $0.options = UserNGs.strings
                 if let data = self.userData , data.userNgs.count > 0 {
                     let codes = Array(data.userNgs.keys)
-                    let names:Set<String> = codeToString(key:"userNgs", codeList: codes)
-                    $0.value = names
+                    $0.value = UserNGs.convertList(codes)
                 }else{
                     $0.value = []
                 }
@@ -348,65 +451,82 @@ class UserViewController: FormViewController {
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
-                row.title = "投稿する"
+                row.title = "OK"
                 }.onCellSelection { [weak self] (cell, row) in
                     print("---UserViewController.viewDidLoad 3")
                     row.section?.form?.validate()
                     self?.executePost()
         }
-        
+        print("DEBUG_PRINT: UserViewController.viewDidLoad end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
     
-    func codeToString(key: String ,codeList: [String]) -> Set<String>{
-        var nameList:Set<String> = []
-        switch key {
-        case "userEnvironments" :
-            for code in codeList {
-                switch code {
-                case "code01" : nameList.insert("室内飼いOK")
-                case "code02" : nameList.insert("エアコンあり")
-                case "code03" : nameList.insert("２部屋以上")
-                case "code04" : nameList.insert("庭あり")
-                default: break
-                }
-            }
-        case "userTools" :
-            for code in codeList {
-                switch code {
-                case "code01" : nameList.insert("寝床")
-                case "code02" : nameList.insert("トイレ")
-                case "code03" : nameList.insert("ケージ")
-                case "code04" : nameList.insert("歯ブラシ")
-                case "code05" : nameList.insert("ブラシ")
-                case "code06" : nameList.insert("爪研ぎ")
-                case "code07" : nameList.insert("キャットタワー")
-                default: break
-                }
-            }
-        case "userNgs" :
-            for code in codeList {
-                switch code {
-                case "code01" : nameList.insert("吠え癖")
-                case "code02" : nameList.insert("噛み癖")
-                case "code03" : nameList.insert("生まれたて")
-                case "code04" : nameList.insert("持病あり")
-                default: break
-                }
-            }
-        default: break
-        }
-        return nameList
-    }
-    
-    
     @IBAction func executePost() {
         print("---UserViewController.executePost  1")
         print(form.values())
+        
+        // アカウント情報の修正
+        //TODO:ユーザーを再認証する
+        
+        for (key,value) in form.values() {
+            if value == nil {
+                print("ALERT::: key値「\(key)」がnilです。")
+            }else if case let itemValue as String = value {
+                // 表示名を設定する
+                if key == "displayName" {
+                    let user = FIRAuth.auth()?.currentUser
+                    if let user = user {
+                        let changeRequest = user.profileChangeRequest()
+                        changeRequest.displayName = itemValue
+                        changeRequest.commitChanges { error in
+                            if let error = error {
+                                print("DEBUG_PRINT: " + error.localizedDescription)
+                            }
+                            print("DEBUG_PRINT: [displayName = \(user.displayName!)]の設定に成功しました。")
+                            // HUDで完了を知らせる
+                            SVProgressHUD.showSuccess(withStatus: "表示名を変更しました")
+                        }
+                    } else {
+                        print("DEBUG_PRINT: 表示名の設定に失敗しました。")
+                    }
+                    // メールアドレスを設定する
+                }else if key == "mail" {
+                    let user = FIRAuth.auth()?.currentUser
+                    if let user = user {
+                        user.updateEmail(itemValue, completion: { error in
+                            if let error = error {
+                                print("DEBUG_PRINT: " + error.localizedDescription)
+                            }
+                            print("DEBUG_PRINT: [email = \(user.email!)]の設定に成功しました。")
+                            // HUDで完了を知らせる
+                            SVProgressHUD.showSuccess(withStatus: "メールアドレスを変更しました")
+                        })
+                    } else {
+                        print("DEBUG_PRINT: メールアドレスの設定に失敗しました。")
+                    }
+                    // メールアドレスを設定する
+                }else if key == "password" {
+                    let user = FIRAuth.auth()?.currentUser
+                    if let user = user {
+                        user.updatePassword(itemValue, completion: { error in
+                            if let error = error {
+                                print("DEBUG_PRINT: " + error.localizedDescription)
+                            }
+                            print("DEBUG_PRINT: passwordの設定に成功しました。")
+                            // HUDで完了を知らせる
+                            SVProgressHUD.showSuccess(withStatus: "パスワードを変更しました")
+                        })
+                    } else {
+                        print("DEBUG_PRINT: パスワードの設定に失敗しました。")
+                    }
+                }
+            }
+        }
 
+        // その他ユーザ情報
         for (key,value) in form.values() {
             if value == nil {
                 print("ALERT::: key値「\(key)」がnilです。")
@@ -436,10 +556,10 @@ class UserViewController: FormViewController {
                 case "userEnvironments" :
                     for itemValue in [String] (Array(fmap)){
                         switch itemValue {
-                        case "室内飼いOK": inputData2["code01"] = true
-                        case "エアコンあり": inputData2["code02"] = true
-                        case "２部屋以上": inputData2["code03"] = true
-                        case "庭あり": inputData2["code04"] = true
+                        case Environment.strings[0]: inputData2[Environment.codes[0]] = true
+                        case Environment.strings[1]: inputData2[Environment.codes[1]] = true
+                        case Environment.strings[2]: inputData2[Environment.codes[2]] = true
+                        case Environment.strings[3]: inputData2[Environment.codes[3]] = true
                         default: break
                         }
                     }
@@ -447,13 +567,13 @@ class UserViewController: FormViewController {
                 case "userTools" :
                     for itemValue in [String] (Array(fmap)){
                         switch itemValue {
-                        case "寝床": inputData3["code01"] = true
-                        case "トイレ": inputData3["code02"] = true
-                        case "ケージ": inputData3["code03"] = true
-                        case "歯ブラシ": inputData3["code04"] = true
-                        case "ブラシ": inputData3["code05"] = true
-                        case "爪研ぎ": inputData3["code06"] = true
-                        case "キャットタワー": inputData3["code07"] = true
+                        case Tool.strings[0]: inputData3[Tool.codes[0]] = true
+                        case Tool.strings[1]: inputData3[Tool.codes[1]] = true
+                        case Tool.strings[2]: inputData3[Tool.codes[2]] = true
+                        case Tool.strings[3]: inputData3[Tool.codes[3]] = true
+                        case Tool.strings[4]: inputData3[Tool.codes[4]] = true
+                        case Tool.strings[5]: inputData3[Tool.codes[5]] = true
+                        case Tool.strings[6]: inputData3[Tool.codes[6]] = true
                         default: break
                         }
                     }
@@ -461,10 +581,10 @@ class UserViewController: FormViewController {
                 case "userNgs" :
                     for itemValue in [String] (Array(fmap)){
                         switch itemValue {
-                        case "吠え癖": inputData4["code01"] = true
-                        case "噛み癖": inputData4["code02"] = true
-                        case "生まれたて": inputData4["code03"] = true
-                        case "持病あり": inputData4["code04"] = true
+                        case UserNGs.strings[0]: inputData4[UserNGs.codes[0]] = true
+                        case UserNGs.strings[1]: inputData4[UserNGs.codes[1]] = true
+                        case UserNGs.strings[2]: inputData4[UserNGs.codes[2]] = true
+                        case UserNGs.strings[3]: inputData4[UserNGs.codes[3]] = true
                         default: break
                         }
                     }
@@ -489,13 +609,13 @@ class UserViewController: FormViewController {
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // update
-            ref.child(Const.UserPath).child(data.id!).updateChildValues(self.inputData)
+            ref.child(Paths.UserPath).child(data.id!).updateChildValues(self.inputData)
         }else{
-            let key = uid//ref.child(Const.UserPath).childByAutoId().key
+            let key = uid//ref.child(Paths.UserPath).childByAutoId().key
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert
-            ref.child(Const.UserPath).child(key!).setValue(self.inputData)
+            ref.child(Paths.UserPath).child(key!).setValue(self.inputData)
         }
         
         // HUDで投稿完了を表示する

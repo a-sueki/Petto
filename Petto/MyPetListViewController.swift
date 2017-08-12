@@ -66,10 +66,8 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         
         if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
-                //TODO: userInfoPathからMyPetsIdを取得
-                //TODO: MyPetsIdからPetInfoを取得
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
-                let postsRef = FIRDatabase.database().reference().child(Const.PetPath)
+                let postsRef = FIRDatabase.database().reference().child(Paths.PetPath)
                 postsRef.observe(.childAdded, with: { snapshot in
                     print("DEBUG_PRINT: .childAddedイベントが発生しました。")
                     

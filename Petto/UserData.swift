@@ -19,7 +19,8 @@ class UserData: NSObject {
     var isBaded: Bool = false
     // ログイン情報
     var mail: String?
-    var nickname: String?
+    var password: String?
+    var displayName: String?
     // 個人情報
     var image: UIImage?
     var imageString: String?
@@ -74,10 +75,11 @@ class UserData: NSObject {
         }
         // ログイン情報
         self.mail = valueDictionary["mail"] as? String
-        self.nickname = valueDictionary["nickname"] as? String
+        self.password = valueDictionary["password"] as? String
+        self.displayName = valueDictionary["displayName"] as? String
 
         // 個人情報
-        imageString = valueDictionary["image"] as? String
+        imageString = valueDictionary["imageString"] as? String
         self.image = UIImage(data: NSData(base64Encoded: imageString!, options: .ignoreUnknownCharacters)! as Data)
         self.firstname = valueDictionary["firstname"] as? String
         self.lastname = valueDictionary["lastname"] as? String
@@ -109,9 +111,10 @@ class UserData: NSObject {
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
         self.createBy = valueDictionary["createBy"] as? String
-        let updateAt = valueDictionary["updateAt"] as? String
-        self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt!)!)
-        self.updateBy = valueDictionary["updateBy"] as? String
+        if let updateAt = valueDictionary["updateAt"] as? String {
+            self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt)!)
+            self.updateBy = valueDictionary["updateBy"] as? String
+        }
 
     }
 }

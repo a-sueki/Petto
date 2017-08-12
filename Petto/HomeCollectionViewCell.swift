@@ -26,7 +26,6 @@ class HomeCollectionViewCell: UICollectionViewCell {
     
     //表示される時の値をセット
     func setPetData(petData: PetData) {
-        // TODO: nilチェック
         
         self.petImageView.image = petData.image
         self.areaLabel.text = petData.area ?? "未選択"

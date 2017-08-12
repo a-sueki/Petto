@@ -18,6 +18,9 @@
 		846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */; };
 		846705E71F0F81E400FFEA8D /* MessageListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 846705E51F0F81E400FFEA8D /* MessageListTableViewCell.xib */; };
 		8470FD7E1F10C613002F4690 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8470FD7D1F10C613002F4690 /* UserData.swift */; };
+		847CA55E1F3ACD4E00C68672 /* LeaveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847CA55D1F3ACD4E00C68672 /* LeaveViewController.swift */; };
+		847CA5661F3AFFE500C68672 /* ConditionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */; };
+		847CA5671F3AFFE500C68672 /* ConditionsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 847CA5651F3AFFE400C68672 /* ConditionsCollectionViewCell.xib */; };
 		8480595D1F04CCB3003E2613 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480595C1F04CCB3003E2613 /* Const.swift */; };
 		8491640D1F288093007597F9 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8491640C1F288093007597F9 /* EditViewController.swift */; };
 		8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8491640E1F2884B7007597F9 /* EditSectionHeader.xib */; };
@@ -86,6 +89,9 @@
 		846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewCell.swift; sourceTree = "<group>"; };
 		846705E51F0F81E400FFEA8D /* MessageListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageListTableViewCell.xib; sourceTree = "<group>"; };
 		8470FD7D1F10C613002F4690 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		847CA55D1F3ACD4E00C68672 /* LeaveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaveViewController.swift; sourceTree = "<group>"; };
+		847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionsCollectionViewCell.swift; sourceTree = "<group>"; };
+		847CA5651F3AFFE400C68672 /* ConditionsCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConditionsCollectionViewCell.xib; sourceTree = "<group>"; };
 		8480595C1F04CCB3003E2613 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		8491640C1F288093007597F9 /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		8491640E1F2884B7007597F9 /* EditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSectionHeader.xib; sourceTree = "<group>"; };
@@ -204,6 +210,16 @@
 			name = Messages;
 			sourceTree = "<group>";
 		};
+		847CA55F1F3ACE1000C68672 /* Leave */ = {
+			isa = PBXGroup;
+			children = (
+				847CA55D1F3ACD4E00C68672 /* LeaveViewController.swift */,
+				847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */,
+				847CA5651F3AFFE400C68672 /* ConditionsCollectionViewCell.xib */,
+			);
+			name = Leave;
+			sourceTree = "<group>";
+		};
 		849ED1E01F1B2F60003AD9F5 /* MyPet */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +285,7 @@
 				846705DF1F0F7B2300FFEA8D /* Home */,
 				846705E11F0F7BAA00FFEA8D /* Messages */,
 				849ED1E01F1B2F60003AD9F5 /* MyPet */,
+				847CA55F1F3ACE1000C68672 /* Leave */,
 			);
 			path = Petto;
 			sourceTree = "<group>";
@@ -367,6 +384,7 @@
 				84BC45A41F2729FE0017AF53 /* Assets.xcassets in Resources */,
 				84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */,
 				84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */,
+				847CA5671F3AFFE500C68672 /* ConditionsCollectionViewCell.xib in Resources */,
 				8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -454,6 +472,7 @@
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
 				84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */,
+				847CA5661F3AFFE500C68672 /* ConditionsCollectionViewCell.swift in Sources */,
 				84A847F41F28251200D898EC /* MyPetListViewController.swift in Sources */,
 				84AC70E51F11B755001F7563 /* SignUpViewController.swift in Sources */,
 				84CCE0231EFB8C460025B5D3 /* SettingViewController.swift in Sources */,
@@ -461,6 +480,7 @@
 				84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */,
 				846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */,
 				84CCE01D1EFB8C040025B5D3 /* HomeViewController.swift in Sources */,
+				847CA55E1F3ACD4E00C68672 /* LeaveViewController.swift in Sources */,
 				849ED1E21F1CEE47003AD9F5 /* PetData.swift in Sources */,
 				8470FD7E1F10C613002F4690 /* UserData.swift in Sources */,
 				8480595D1F04CCB3003E2613 /* Const.swift in Sources */,

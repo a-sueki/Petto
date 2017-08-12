@@ -38,9 +38,10 @@ class MessageListTableViewCell: UITableViewCell {
     }
     
     
-    //表示される時の値をセット
+    //TODO: 表示される時の値をセット
     func setData(petData: PetData, userData: UserData, messageData: MessageData) {
         print("MessageListTableViewCell.setData:一覧表示中！！！！")
+        
 /*        self.userImageView.image = userData.image
         self.userNameLabel.text = userData.firstname
         let goodNumber = userData.goods.count

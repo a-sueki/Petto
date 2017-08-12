@@ -82,7 +82,6 @@ class EditViewController: FormViewController {
                     $0.header = HeaderFooterView<EntryView>(.class)
                 }
             }
-            //TODO: カメラ起動追加
             <<< ImageRow("image"){
                 $0.title = "写真"
                 $0.baseValue = self.petData?.image ?? nil
@@ -226,11 +225,10 @@ class EditViewController: FormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
-                $0.options = ["室内のみ","エアコンあり","２部屋以上","庭あり"] //FeedingEnvironment.allValues
+                $0.options = Environment.strings
                 if let data = self.petData , data.environments.count > 0 {
                     let codes = Array(data.environments.keys)
-                    let names:Set<String> = codeToString(key:"environments", codeList: codes)
-                    $0.value = names
+                    $0.value = Environment.convertList(codes)
                 }else{
                     $0.value = []
                 }
@@ -245,11 +243,11 @@ class EditViewController: FormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
-                $0.options = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
+                //TODO:アイコン表示
+                $0.options = Tool.strings
                 if let data = self.petData , data.tools.count > 0 {
                     let codes = Array(data.tools.keys)
-                    let names:Set<String> = codeToString(key:"tools", codeList: codes)
-                    $0.value = names
+                    $0.value = Tool.convertList(codes)
                 }else{
                     $0.value = []
                 }
@@ -263,11 +261,10 @@ class EditViewController: FormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
-                $0.options = ["Bad評価1つ以上","定時帰宅できない","一人暮らし","小児あり世帯","高齢者のみ世帯"]
+                $0.options = PetNGs.strings
                 if let data = self.petData , data.ngs.count > 0 {
                     let codes = Array(data.ngs.keys)
-                    let names:Set<String> = codeToString(key:"ngs", codeList: codes)
-                    $0.value = names
+                    $0.value = PetNGs.convertList(codes)
                 }else{
                     $0.value = []
                 }
@@ -364,49 +361,6 @@ class EditViewController: FormViewController {
         _ = navigationController?.popViewController(animated: true)
     }
     
-    func codeToString(key: String ,codeList: [String]) -> Set<String>{
-        var nameList:Set<String> = []
-        switch key {
-        case "environments" :
-            for code in codeList {
-                switch code {
-                case "code01" : nameList.insert("室内のみ")
-                case "code02" : nameList.insert("エアコンあり")
-                case "code03" : nameList.insert("２部屋以上")
-                case "code04" : nameList.insert("庭あり")
-                default: break
-                }
-            }
-        case "tools" :
-            for code in codeList {
-                switch code {
-                case "code01" : nameList.insert("寝床")
-                case "code02" : nameList.insert("トイレ")
-                case "code03" : nameList.insert("ケージ")
-                case "code04" : nameList.insert("歯ブラシ")
-                case "code05" : nameList.insert("ブラシ")
-                case "code06" : nameList.insert("爪研ぎ")
-                case "code07" : nameList.insert("キャットタワー")
-                default: break
-                }
-            }
-        case "ngs" :
-            for code in codeList {
-                switch code {
-                case "code01" : nameList.insert("Bad評価1つ以上")
-                case "code02" : nameList.insert("定時帰宅できない")
-                case "code03" : nameList.insert("一人暮らし")
-                case "code04" : nameList.insert("小児あり世帯")
-                case "code05" : nameList.insert("高齢者のみ世帯")
-                default: break
-                }
-            }
-        default: break
-        }
-        return nameList
-    }
-    
-    
     @IBAction func executePost() {
         print("---EntryViewController.executePost")
         
@@ -443,10 +397,10 @@ class EditViewController: FormViewController {
                 case "environments" :
                     for itemValue in [String] (Array(fmap)){
                         switch itemValue {
-                        case "室内のみ": inputData2["code01"] = true
-                        case "エアコンあり": inputData2["code02"] = true
-                        case "２部屋以上": inputData2["code03"] = true
-                        case "庭あり": inputData2["code04"] = true
+                        case Environment.strings[0]: inputData2[Environment.codes[0]] = true
+                        case Environment.strings[1]: inputData2[Environment.codes[1]] = true
+                        case Environment.strings[2]: inputData2[Environment.codes[2]] = true
+                        case Environment.strings[3]: inputData2[Environment.codes[3]] = true
                         default: break
                         }
                     }
@@ -454,13 +408,13 @@ class EditViewController: FormViewController {
                 case "tools" :
                     for itemValue in [String] (Array(fmap)){
                         switch itemValue {
-                        case "寝床": inputData3["code01"] = true
-                        case "トイレ": inputData3["code02"] = true
-                        case "ケージ": inputData3["code03"] = true
-                        case "歯ブラシ": inputData3["code04"] = true
-                        case "ブラシ": inputData3["code05"] = true
-                        case "爪研ぎ": inputData3["code06"] = true
-                        case "キャットタワー": inputData3["code07"] = true
+                        case Tool.strings[0]: inputData3[Tool.codes[0]] = true
+                        case Tool.strings[1]: inputData3[Tool.codes[1]] = true
+                        case Tool.strings[2]: inputData3[Tool.codes[2]] = true
+                        case Tool.strings[3]: inputData3[Tool.codes[3]] = true
+                        case Tool.strings[4]: inputData3[Tool.codes[4]] = true
+                        case Tool.strings[5]: inputData3[Tool.codes[5]] = true
+                        case Tool.strings[6]: inputData3[Tool.codes[6]] = true
                         default: break
                         }
                     }
@@ -468,11 +422,11 @@ class EditViewController: FormViewController {
                 case "ngs" :
                     for itemValue in [String] (Array(fmap)){
                         switch itemValue {
-                        case "Bad評価1つ以上": inputData4["code01"] = true
-                        case "定時帰宅できない": inputData4["code02"] = true
-                        case "一人暮らし": inputData4["code03"] = true
-                        case "小児あり世帯": inputData4["code04"] = true
-                        case "高齢者のみ世帯": inputData4["code05"] = true
+                        case PetNGs.strings[0]: inputData4[PetNGs.codes[0]] = true
+                        case PetNGs.strings[1]: inputData4[PetNGs.codes[1]] = true
+                        case PetNGs.strings[2]: inputData4[PetNGs.codes[2]] = true
+                        case PetNGs.strings[3]: inputData4[PetNGs.codes[3]] = true
+                        case PetNGs.strings[4]: inputData4[PetNGs.codes[4]] = true
                         default: break
                         }
                     }
@@ -493,13 +447,13 @@ class EditViewController: FormViewController {
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // update
-            ref.child(Const.PetPath).child(data.id!).updateChildValues(inputData)
+            ref.child(Paths.PetPath).child(data.id!).updateChildValues(inputData)
         }else{
-            let key = ref.child(Const.PetPath).childByAutoId().key
+            let key = ref.child(Paths.PetPath).childByAutoId().key
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert
-            ref.child(Const.PetPath).child(key).setValue(inputData)
+            ref.child(Paths.PetPath).child(key).setValue(inputData)
         }
         
         // HUDで投稿完了を表示する

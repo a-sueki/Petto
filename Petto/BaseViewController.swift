@@ -51,7 +51,7 @@ class BaseViewController: UIViewController {
         self.navigationController?.pushViewController(viewController2, animated: true)
     }
     func onClick3() {
-        let viewController3 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        let viewController3 = self.storyboard?.instantiateViewController(withIdentifier: "Leave") as! LeaveViewController
         self.navigationController?.pushViewController(viewController3, animated: true)
     }
     func onClick4() {
