@@ -12,10 +12,13 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 
+// ブリーダーが「マイペットおあずけ」を実行
 class LeaveViewController: FormViewController,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
 
     var petData: PetData?
-    
+    var userData: UserData?
+    var conditionArray = [String : Bool]()
+
     @IBOutlet weak var petImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var ageLabel: UILabel!
@@ -28,7 +31,7 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
     
 
     // FIRDatabaseのobserveEventの登録状態を表す
-    //var observing = false
+    var observing = false
     
     // NavigationBarボタンを用意
     var btn1: UIBarButtonItem!
@@ -62,7 +65,6 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
         
         
     }
-    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -95,47 +97,9 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // 要素数を入れる、要素以上の数字を入れると表示でエラーとなる
-        return 1//petData.count
+        return 1//TODO: conditionArray.count
     }
-    
-    // セル内のボタンがタップされた時に呼ばれるメソッド
-/*    func handleLikeButton(sender: UIButton, event:UIEvent) {
-        print("DEBUG_PRINT: likeボタンがタップされました。")
-        
-        // タップされたセルのインデックスを求める
-        let touch = event.allTouches?.first
-        let point = touch!.location(in: self.conditionsCollectionView)
-        let indexPath = conditionsCollectionView.indexPathForItem(at: point)
-        
-        // 配列からタップされたインデックスのデータを取り出す
-        //let petData = self.petData[indexPath!.row]
-        
-        // Firebaseに保存するデータの準備
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            if petData.isLiked {
-                // すでにいいねをしていた場合はいいねを解除するためIDを取り除く
-                var index = -1
-                for likeId in petData.likes {
-                    if likeId == uid {
-                        // 削除するためにインデックスを保持しておく
-                        index = petData.likes.index(of: likeId)!
-                        break
-                    }
-                }
-                petData.likes.remove(at: index)
-            } else {
-                petData.likes.append(uid)
-            }
-            
-            // 増えたlikesをFirebaseに保存する
-            let postRef = FIRDatabase.database().reference().child(Paths.PetPath).child(petData.id!)
-            let likes = ["likes": petData.likes]
-            postRef.updateChildValues(likes)
-        }
- 
 
-    }
-    */
     func onClick1() {
         self.slideMenuController()?.openLeft()
     }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PetDetailViewNib" customModule="Petto" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="130"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="itw-Rk-fmV">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="130"/>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="itw-Rk-fmV" secondAttribute="trailing" id="cJ0-Dc-yhh"/>
+                <constraint firstItem="itw-Rk-fmV" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="isD-w0-k2C"/>
+                <constraint firstAttribute="bottom" secondItem="itw-Rk-fmV" secondAttribute="bottom" id="jbW-98-2Fw"/>
+                <constraint firstItem="itw-Rk-fmV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="oDU-Po-ccp"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="petImageView" destination="itw-Rk-fmV" id="kQf-8E-8Cg"/>
+            </connections>
+        </view>
+    </objects>
+</document>

@@ -124,7 +124,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         cell.setPetData(petData: petData[indexPath.row])
         // セル内のボタンのアクションをソースコードで設定する
         cell.likeButton.addTarget(self, action:#selector(handleLikeButton(sender:event:)), for:  UIControlEvents.touchUpInside)
-
+        cell.toDetailButton.addTarget(self, action: #selector(handleToDetailButton(sender:event:)), for: UIControlEvents.touchUpInside)
         return cell
 
     }
@@ -156,13 +156,12 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
 
     // セル内のボタンがタップされた時に呼ばれるメソッド
     func handleLikeButton(sender: UIButton, event:UIEvent) {
-        print("DEBUG_PRINT: likeボタンがタップされました。")
+        print("DEBUG_PRINT: HomeViewController.handleLikeButton start")
         
         // タップされたセルのインデックスを求める
         let touch = event.allTouches?.first
         let point = touch!.location(in: self.collectionView)
         let indexPath = collectionView.indexPathForItem(at: point)
-        
         // 配列からタップされたインデックスのデータを取り出す
         let petData = self.petData[indexPath!.row]
         
@@ -189,5 +188,24 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             postRef.updateChildValues(likes)
             
         }
+        print("DEBUG_PRINT: HomeViewController.handleLikeButton end")
+    }
+    
+    func handleToDetailButton(sender: UIButton, event: UIEvent) {
+        print("DEBUG_PRINT: HomeViewController.handleToDetailButton start")
+
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.collectionView)
+        let indexPath = collectionView.indexPathForItem(at: point)
+        // 配列からタップされたインデックスのデータを取り出す
+        let petData = self.petData[indexPath!.row]
+        // PetDetailに画面遷移
+        let petDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "PetDetail") as! PetDetailViewController        
+        petDetailViewController.petData = petData
+        self.navigationController?.pushViewController(petDetailViewController, animated: true)
+        
+        
+        print("DEBUG_PRINT: HomeViewController.handleToDetailButton end")
     }
 }

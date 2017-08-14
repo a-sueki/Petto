@@ -10,6 +10,7 @@
 		14AE20106A61980E89F4EB7E /* Pods_Petto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */; };
 		84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */; };
 		84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */; };
+		840AB7F01F418475002EC329 /* PetDetailHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 840AB7EF1F418475002EC329 /* PetDetailHeader.xib */; };
 		841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ADB171F0CA18C00534A37 /* MessagesViewController.swift */; };
 		8420E0AD1F29C1300088E509 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8420E0AC1F29C1300088E509 /* UserViewController.swift */; };
 		8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */; };
@@ -30,6 +31,7 @@
 		84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */; };
 		84AC70E51F11B755001F7563 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AC70E41F11B755001F7563 /* SignUpViewController.swift */; };
 		84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AC70E61F11E43A001F7563 /* MessageData.swift */; };
+		84BB42201F413F1A007D867A /* PetDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BB421F1F413F1A007D867A /* PetDetailViewController.swift */; };
 		84BC45A41F2729FE0017AF53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84BC45A31F2729FE0017AF53 /* Assets.xcassets */; };
 		84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */; };
 		84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE00A1EFB791D0025B5D3 /* ViewController.swift */; };
@@ -81,6 +83,7 @@
 		4FFB37966AB2A2629803CA6C /* Pods_Petto.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Petto.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCollectionViewCell.xib; sourceTree = "<group>"; };
+		840AB7EF1F418475002EC329 /* PetDetailHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PetDetailHeader.xib; sourceTree = "<group>"; };
 		841ADB171F0CA18C00534A37 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		8420E0AC1F29C1300088E509 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserEditSectionHeader.xib; sourceTree = "<group>"; };
@@ -101,6 +104,7 @@
 		84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPetListTableViewCell.xib; sourceTree = "<group>"; };
 		84AC70E41F11B755001F7563 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		84AC70E61F11E43A001F7563 /* MessageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageData.swift; sourceTree = "<group>"; };
+		84BB421F1F413F1A007D867A /* PetDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetDetailViewController.swift; sourceTree = "<group>"; };
 		84BC45A31F2729FE0017AF53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84CCE0051EFB791D0025B5D3 /* Petto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Petto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -228,6 +232,8 @@
 				84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */,
 				8491640C1F288093007597F9 /* EditViewController.swift */,
 				8491640E1F2884B7007597F9 /* EditSectionHeader.xib */,
+				84BB421F1F413F1A007D867A /* PetDetailViewController.swift */,
+				840AB7EF1F418475002EC329 /* PetDetailHeader.xib */,
 			);
 			name = MyPet;
 			sourceTree = "<group>";
@@ -385,6 +391,7 @@
 				84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */,
 				84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */,
 				847CA5671F3AFFE500C68672 /* ConditionsCollectionViewCell.xib in Resources */,
+				840AB7F01F418475002EC329 /* PetDetailHeader.xib in Resources */,
 				8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,6 +475,7 @@
 				84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */,
 				84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */,
 				84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */,
+				84BB42201F413F1A007D867A /* PetDetailViewController.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,

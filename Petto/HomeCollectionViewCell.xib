@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -55,14 +55,21 @@
                         <rect key="frame" x="116" y="116" width="25" height="25"/>
                         <state key="normal" image="unlike"/>
                     </button>
+                    <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V3G-s4-nr8">
+                        <rect key="frame" x="0.0" y="0.0" width="149" height="219"/>
+                    </button>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstItem="V3G-s4-nr8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="C1h-4o-ucu"/>
                 <constraint firstItem="KQW-lg-eQn" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="EDL-Jw-DBc"/>
                 <constraint firstItem="qsA-3y-aN3" firstAttribute="centerY" secondItem="S8j-FD-jhy" secondAttribute="centerY" id="GoC-bh-cda"/>
                 <constraint firstAttribute="trailing" secondItem="KQW-lg-eQn" secondAttribute="trailing" id="HLT-MA-scT"/>
+                <constraint firstAttribute="bottom" secondItem="V3G-s4-nr8" secondAttribute="bottom" id="HRg-rP-Yak"/>
                 <constraint firstItem="qsA-3y-aN3" firstAttribute="centerY" secondItem="S8j-FD-jhy" secondAttribute="centerY" id="ILw-r9-Cdh"/>
                 <constraint firstItem="v1v-pB-o3E" firstAttribute="leading" secondItem="S8j-FD-jhy" secondAttribute="trailing" constant="5" id="XnE-ID-D7L"/>
+                <constraint firstAttribute="trailing" secondItem="V3G-s4-nr8" secondAttribute="trailing" id="dxz-0b-glX"/>
+                <constraint firstItem="V3G-s4-nr8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="eK7-Ga-cVz"/>
                 <constraint firstItem="HMb-mT-llA" firstAttribute="top" secondItem="KQW-lg-eQn" secondAttribute="bottom" constant="-33" id="iK3-uy-Zy0"/>
                 <constraint firstItem="v1v-pB-o3E" firstAttribute="centerY" secondItem="S8j-FD-jhy" secondAttribute="centerY" id="igb-DH-9bC"/>
                 <constraint firstItem="KQW-lg-eQn" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="ouh-rj-y4I"/>
@@ -81,6 +88,7 @@
                 <outlet property="petImageView" destination="KQW-lg-eQn" id="HAW-k0-hWh"/>
                 <outlet property="sexImageView" destination="v1v-pB-o3E" id="Iza-Zq-xWZ"/>
                 <outlet property="termLabel" destination="vb9-TX-jmf" id="sjd-uQ-4rm"/>
+                <outlet property="toDetailButton" destination="V3G-s4-nr8" id="h6N-FE-edv"/>
             </connections>
             <point key="canvasLocation" x="-24.5" y="-7.5"/>
         </collectionViewCell>

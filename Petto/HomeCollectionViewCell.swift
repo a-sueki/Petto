@@ -17,6 +17,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var termLabel: UILabel!
     
+    @IBOutlet weak var toDetailButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
