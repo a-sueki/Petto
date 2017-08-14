@@ -40,9 +40,8 @@
             <constraints>
                 <constraint firstItem="xIi-bj-kCl" firstAttribute="top" secondItem="YFQ-In-rB4" secondAttribute="bottom" id="5pF-s0-FkN"/>
                 <constraint firstItem="YFQ-In-rB4" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="UgU-c3-D1n"/>
-                <constraint firstItem="xIi-bj-kCl" firstAttribute="centerX" secondItem="YFQ-In-rB4" secondAttribute="centerX" id="Wqx-RE-njj"/>
                 <constraint firstItem="YFQ-In-rB4" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="eC4-fM-Ti0"/>
-                <constraint firstAttribute="bottom" secondItem="xIi-bj-kCl" secondAttribute="bottom" id="qHX-OH-MwU"/>
+                <constraint firstItem="xIi-bj-kCl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="yD9-8U-bJQ"/>
             </constraints>
             <size key="customSize" width="92" height="73"/>
             <connections>

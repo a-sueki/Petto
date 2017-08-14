@@ -14,9 +14,14 @@ struct Paths {
     static let MessagePath = "message"
 }
 
+let ngicon = "-red"
+
 struct Environment {
     static let codes = ["code01","code02","code03","code04"]
+    //TODO: ユーザープロフィール画面表示用も作成する
     static let strings = ["室内のみ","エアコンあり","２部屋以上","庭あり"]
+    static let icons = ["door","aircon","room","field"]
+    
     static func toString(_ code:String) -> String {
         switch code {
         case codes[0] : return strings[0]
@@ -35,6 +40,16 @@ struct Environment {
         default:  return "不明"
         }
     }
+    static func toIcon(_ code:String) -> String {
+        switch code {
+        case codes[0] : return icons[0]
+        case codes[1] : return icons[1]
+        case codes[2] : return icons[2]
+        case codes[3] : return icons[3]
+        default:  return "不明"
+        }
+    }
+    
     static func convertList(_ codeList: [String]) -> Set<String> {
         var nameList:Set<String> = []
         for code in codeList {
@@ -114,7 +129,7 @@ struct PetNGs {
 }
 struct UserNGs {
     static let codes = ["code01","code02","code03","code04"]
-    static let strings = ["吠え癖","噛み癖","生まれたて","持病あり"]
+    static let strings = ["吠え癖あり","噛み癖あり","生まれたて","持病あり"]
     
     static func toString(_ code:String) -> String {
         switch code {

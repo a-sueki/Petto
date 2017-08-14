@@ -23,6 +23,8 @@ class PetData: NSObject {
     var isVaccinated: Bool?
     var isCastrated: Bool?
     var wanted: Bool?
+    var userNgs = [String:Bool]()
+
     // おあずけ条件
     var isAvailable: Bool?
     var environments = [String:Bool]()
@@ -63,6 +65,9 @@ class PetData: NSObject {
         self.isVaccinated = valueDictionary["isVaccinated"] as? Bool
         self.isCastrated = valueDictionary["isCastrated"] as? Bool
         self.wanted = valueDictionary["wanted"] as? Bool
+        if let userNgs = valueDictionary["userNgs"] as? [String:Bool] {
+            self.userNgs = userNgs
+        }
         
         // おあずけ条件
         self.isAvailable = valueDictionary["isAvailable"] as? Bool

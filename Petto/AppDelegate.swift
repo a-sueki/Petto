@@ -36,11 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //self.window?.backgroundColor = UIColor.red
         self.window?.rootViewController = slideMenuController
         self.window?.makeKeyAndVisible()
-        
-        //TODO: 一括でLabelのフォントを変更
-        UILabel.appearance().font = UIFont.init(name: "Gill Sans", size: 18)
-        UITextView.appearance().font = UIFont.init(name: "Gill Sans", size: 18)
-        
+               
         return true
     }
 

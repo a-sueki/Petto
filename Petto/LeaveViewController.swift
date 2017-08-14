@@ -15,7 +15,7 @@ import SVProgressHUD
 class LeaveViewController: FormViewController,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
 
     var petData: PetData?
-    var conditionsString: String = ""
+    
     @IBOutlet weak var petImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var ageLabel: UILabel!
@@ -37,7 +37,6 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
     var btn4: UIBarButtonItem!
     var btn5: UIBarButtonItem!
 
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,7 +85,7 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellSize:CGFloat = self.view.frame.size.width/2-2
         // 正方形で返すためにwidth,heightを同じにする
-        return CGSize(width: cellSize, height: cellSize*1.4141)
+        return CGSize(width: cellSize, height: cellSize)
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -100,7 +99,7 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
     }
     
     // セル内のボタンがタップされた時に呼ばれるメソッド
-    func handleLikeButton(sender: UIButton, event:UIEvent) {
+/*    func handleLikeButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: likeボタンがタップされました。")
         
         // タップされたセルのインデックスを求める
@@ -112,7 +111,7 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
         //let petData = self.petData[indexPath!.row]
         
         // Firebaseに保存するデータの準備
-/*        if let uid = FIRAuth.auth()?.currentUser?.uid {
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
             if petData.isLiked {
                 // すでにいいねをしていた場合はいいねを解除するためIDを取り除く
                 var index = -1
@@ -133,8 +132,28 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
             let likes = ["likes": petData.likes]
             postRef.updateChildValues(likes)
         }
-         */
+ 
 
+    }
+    */
+    func onClick1() {
+        self.slideMenuController()?.openLeft()
+    }
+    func onClick2() {
+        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        self.navigationController?.pushViewController(viewController2, animated: true)
+    }
+    func onClick3() {
+        let viewController3 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        self.navigationController?.pushViewController(viewController3, animated: true)
+    }
+    func onClick4() {
+        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+        self.navigationController?.pushViewController(viewController4, animated: true)
+    }
+    func onClick5() {
+        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
+        self.navigationController?.pushViewController(viewController5, animated: true)
     }
 }
 

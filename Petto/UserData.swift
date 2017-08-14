@@ -33,6 +33,8 @@ class UserData: NSObject {
     var tel: String?
     var hasAnotherPet: Bool?        // 他にペットを飼っている
     var isExperienced: Bool?        // ペット飼育経験あり
+    var ngs = [String:Bool]()
+    
     //あずかり情報
     var expectTo: Bool?             // ペットあずかりを希望する
     var userEnvironments = [String:Bool]()
@@ -90,6 +92,10 @@ class UserData: NSObject {
         self.tel = valueDictionary["tel"] as? String
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
         self.isExperienced = valueDictionary["isExperienced"] as? Bool
+        if let ngs = valueDictionary["ngs"] as? [String:Bool] {
+            self.ngs = ngs
+        }
+
         //あずかり情報
         self.expectTo = valueDictionary["expectTo"] as? Bool
         if let userEnvironments = valueDictionary["userEnvironments"] as? [String:Bool] {

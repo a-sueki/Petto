@@ -22,6 +22,7 @@ class EditViewController: FormViewController {
     var inputData2 = [String : Any]() //environments
     var inputData3 = [String : Any]() //tools
     var inputData4 = [String : Any]() //ngs
+    var inputData5 = [String : Any]() //userNgs
     
     // NavigationBarボタンを用意
     var btn1: UIBarButtonItem!
@@ -206,6 +207,20 @@ class EditViewController: FormViewController {
                 $0.title = "里親募集中"
                 $0.value = self.petData?.wanted ?? false
             }
+            <<< MultipleSelectorRow<String>("userNgs") {
+                $0.title = "注意事項"
+                $0.options = UserNGs.strings
+                if let data = self.petData , data.userNgs.count > 0 {
+                    let codes = Array(data.userNgs.keys)
+                    $0.value = UserNGs.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+
             
             +++ Section()
             <<< SwitchRow("isAvailable"){
@@ -431,6 +446,17 @@ class EditViewController: FormViewController {
                         }
                     }
                     inputData["ngs"] = inputData4
+                case "userNgs" :
+                    for itemValue in [String] (Array(fmap)){
+                        switch itemValue {
+                        case UserNGs.strings[0]: inputData5[UserNGs.codes[0]] = true
+                        case UserNGs.strings[1]: inputData5[UserNGs.codes[1]] = true
+                        case UserNGs.strings[2]: inputData5[UserNGs.codes[2]] = true
+                        case UserNGs.strings[3]: inputData5[UserNGs.codes[3]] = true
+                        default: break
+                        }
+                    }
+                    inputData["userNgs"] = inputData5
                 default: break
                 }
             }
@@ -454,7 +480,11 @@ class EditViewController: FormViewController {
             self.inputData["createBy"] = uid!
             // insert
             ref.child(Paths.PetPath).child(key).setValue(inputData)
+            //ユーザのmyPetsIdを追加
+            ref.child(Paths.UserPath).child(uid!).updateChildValues(["myPetsId":key])
         }
+        
+        
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: "投稿しました")

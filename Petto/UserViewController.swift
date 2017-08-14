@@ -23,6 +23,7 @@ class UserViewController: FormViewController {
     var inputData2 = [String : Any]() //userEnvironments
     var inputData3 = [String : Any]() //userTools
     var inputData4 = [String : Any]() //userNgs
+    var inputData5 = [String : Any]() //ngs
     
     // NavigationBarボタンを用意
     var btn1: UIBarButtonItem!
@@ -37,7 +38,7 @@ class UserViewController: FormViewController {
         print("DEBUG_PRINT: UserViewController.viewDidLoad start")
 
         //TODO: Firebaseから登録済みデータを取得 -> Formの表示が先に行われてしまうのはなぜか？
-        if FIRAuth.auth()?.currentUser != nil {
+/*        if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
                 // 要素が追加されたら再表示
                 let postsRef = FIRDatabase.database().reference().child(Paths.UserPath)
@@ -62,7 +63,7 @@ class UserViewController: FormViewController {
             }
         }
         print(self.userData?.area)
-        
+*/
         // NavigationBar
         btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(BaseViewController.onClick1))
         btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(BaseViewController.onClick2))
@@ -135,6 +136,7 @@ class UserViewController: FormViewController {
                         }
                     }
             }
+            //TODO:必須入力じゃダメ。入力項目から削除？
             <<< PasswordRow("password") {
                 $0.title = "パスワード"
                 $0.value = self.userData?.password ?? nil
@@ -386,6 +388,21 @@ class UserViewController: FormViewController {
                 $0.title = "過去、ペットを飼った経験がある"
                 $0.value = self.userData?.isExperienced ?? false
             }
+            //TODO: 「Bad評価1つ以上」は非表示。システムで判断する。
+            <<< MultipleSelectorRow<String>("ngs") {
+                $0.title = "注意事項"
+                $0.options = PetNGs.strings
+                if let data = self.userData , data.ngs.count > 0 {
+                    let codes = Array(data.ngs.keys)
+                    $0.value = PetNGs.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+
             
             +++ Section()
             <<< SwitchRow("expectTo"){
@@ -589,6 +606,18 @@ class UserViewController: FormViewController {
                         }
                     }
                     self.inputData["userNgs"] = inputData4
+                case "ngs" :
+                    for itemValue in [String] (Array(fmap)){
+                        switch itemValue {
+                        case PetNGs.strings[0]: inputData5[PetNGs.codes[0]] = true
+                        case PetNGs.strings[1]: inputData5[PetNGs.codes[1]] = true
+                        case PetNGs.strings[2]: inputData5[PetNGs.codes[2]] = true
+                        case PetNGs.strings[3]: inputData5[PetNGs.codes[3]] = true
+                        case PetNGs.strings[4]: inputData5[PetNGs.codes[4]] = true
+                        default: break
+                        }
+                    }
+                    self.inputData["ngs"] = inputData5
                 default: break
                 }
             }

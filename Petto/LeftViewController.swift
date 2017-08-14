@@ -25,13 +25,13 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     
-    var menus = ["Home", "My pet list","Message","User","Message list","Edit"]
-    var homeViewController: UIViewController!
+    var menus = ["UserProfile", "MyPetList","MessageList","Leave","Edit"]
+/*    var homeViewController: UIViewController!
     var postViewController: UIViewController!
     var messagesViewController: UIViewController!
     var detailViewController: UIViewController!
     var messageListViewController: UIViewController!
-    
+*/
     //    var imageHeaderView: ImageHeaderView!
     
     override func viewDidLoad() {
@@ -66,29 +66,26 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         switch indexPath.row {
         case 0:
-            let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-            let navigationController = UINavigationController(rootViewController: homeViewController)
+            let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
+            let navigationController = UINavigationController(rootViewController: userViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 1:
             let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "MyPetList") as! MyPetListViewController
             let navigationController = UINavigationController(rootViewController: postViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 2:
-            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-            let navigationController = UINavigationController(rootViewController: messagesViewController)
-            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 3:
-            let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
-            let navigationController = UINavigationController(rootViewController: userViewController)
-            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 4:
             let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
             let navigationController = UINavigationController(rootViewController: messageListViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 5:
+        case 3:
+            let leaveViewController = self.storyboard?.instantiateViewController(withIdentifier: "Leave") as! LeaveViewController
+            let navigationController = UINavigationController(rootViewController: leaveViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+        case 4:
             let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
             let navigationController = UINavigationController(rootViewController: editViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            
         default:
             break
         }
