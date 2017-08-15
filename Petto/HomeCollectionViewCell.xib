@@ -19,6 +19,9 @@
                 <rect key="frame" x="0.0" y="0.0" width="149" height="219"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
+                    <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V3G-s4-nr8">
+                        <rect key="frame" x="0.0" y="0.0" width="149" height="219"/>
+                    </button>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KQW-lg-eQn">
                         <rect key="frame" x="0.0" y="0.0" width="149" height="149"/>
                         <constraints>
@@ -55,21 +58,18 @@
                         <rect key="frame" x="116" y="116" width="25" height="25"/>
                         <state key="normal" image="unlike"/>
                     </button>
-                    <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V3G-s4-nr8">
-                        <rect key="frame" x="0.0" y="0.0" width="149" height="219"/>
-                    </button>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="V3G-s4-nr8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="C1h-4o-ucu"/>
+                <constraint firstItem="V3G-s4-nr8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="4KB-gt-L6I"/>
+                <constraint firstAttribute="trailing" secondItem="V3G-s4-nr8" secondAttribute="trailing" id="DwF-FX-0x8"/>
                 <constraint firstItem="KQW-lg-eQn" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="EDL-Jw-DBc"/>
                 <constraint firstItem="qsA-3y-aN3" firstAttribute="centerY" secondItem="S8j-FD-jhy" secondAttribute="centerY" id="GoC-bh-cda"/>
                 <constraint firstAttribute="trailing" secondItem="KQW-lg-eQn" secondAttribute="trailing" id="HLT-MA-scT"/>
-                <constraint firstAttribute="bottom" secondItem="V3G-s4-nr8" secondAttribute="bottom" id="HRg-rP-Yak"/>
                 <constraint firstItem="qsA-3y-aN3" firstAttribute="centerY" secondItem="S8j-FD-jhy" secondAttribute="centerY" id="ILw-r9-Cdh"/>
                 <constraint firstItem="v1v-pB-o3E" firstAttribute="leading" secondItem="S8j-FD-jhy" secondAttribute="trailing" constant="5" id="XnE-ID-D7L"/>
-                <constraint firstAttribute="trailing" secondItem="V3G-s4-nr8" secondAttribute="trailing" id="dxz-0b-glX"/>
-                <constraint firstItem="V3G-s4-nr8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="eK7-Ga-cVz"/>
+                <constraint firstItem="V3G-s4-nr8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="bqN-ip-g4J"/>
+                <constraint firstAttribute="bottom" secondItem="V3G-s4-nr8" secondAttribute="bottom" id="cBi-vE-IoY"/>
                 <constraint firstItem="HMb-mT-llA" firstAttribute="top" secondItem="KQW-lg-eQn" secondAttribute="bottom" constant="-33" id="iK3-uy-Zy0"/>
                 <constraint firstItem="v1v-pB-o3E" firstAttribute="centerY" secondItem="S8j-FD-jhy" secondAttribute="centerY" id="igb-DH-9bC"/>
                 <constraint firstItem="KQW-lg-eQn" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="ouh-rj-y4I"/>

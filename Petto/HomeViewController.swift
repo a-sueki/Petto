@@ -14,6 +14,9 @@ import FirebaseDatabase
 class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    
+    @IBOutlet weak var registerButton: UIButton!
+    
     var petData: [PetData] = []
     
     // FIRDatabaseのobserveEventの登録状態を表す
@@ -22,6 +25,11 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //ペット登録ボタンを丸くする
+        registerButton.layer.cornerRadius = 75.0
+        registerButton.layer.masksToBounds = true
+        
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -208,4 +216,13 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         print("DEBUG_PRINT: HomeViewController.handleToDetailButton end")
     }
+    
+    @IBAction func registerButton(_ sender: Any) {
+        print("DEBUG_PRINT: HomeViewController.registerButton start")
+        // マイペット登録に画面遷移
+        let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
+        self.navigationController?.pushViewController(editViewController, animated: true)
+        print("DEBUG_PRINT: HomeViewController.registerButton end")
+    }
+
 }
