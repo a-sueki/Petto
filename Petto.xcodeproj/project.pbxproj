@@ -14,6 +14,8 @@
 		841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ADB171F0CA18C00534A37 /* MessagesViewController.swift */; };
 		8420E0AD1F29C1300088E509 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8420E0AC1F29C1300088E509 /* UserViewController.swift */; };
 		8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */; };
+		845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */; };
+		845F2E401F42C41100526C1F /* UserDetailHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 845F2E3F1F42C41100526C1F /* UserDetailHeader.xib */; };
 		846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */; };
 		846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */; };
 		846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */; };
@@ -87,6 +89,8 @@
 		841ADB171F0CA18C00534A37 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		8420E0AC1F29C1300088E509 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserEditSectionHeader.xib; sourceTree = "<group>"; };
+		845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
+		845F2E3F1F42C41100526C1F /* UserDetailHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDetailHeader.xib; sourceTree = "<group>"; };
 		846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListViewController.swift; sourceTree = "<group>"; };
 		846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewCell.swift; sourceTree = "<group>"; };
@@ -189,6 +193,8 @@
 			children = (
 				8420E0AC1F29C1300088E509 /* UserViewController.swift */,
 				8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */,
+				845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */,
+				845F2E3F1F42C41100526C1F /* UserDetailHeader.xib */,
 			);
 			name = User;
 			sourceTree = "<group>";
@@ -390,6 +396,7 @@
 				84BC45A41F2729FE0017AF53 /* Assets.xcassets in Resources */,
 				84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */,
 				84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */,
+				845F2E401F42C41100526C1F /* UserDetailHeader.xib in Resources */,
 				847CA5671F3AFFE500C68672 /* ConditionsCollectionViewCell.xib in Resources */,
 				840AB7F01F418475002EC329 /* PetDetailHeader.xib in Resources */,
 				8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */,
@@ -478,6 +485,7 @@
 				84BB42201F413F1A007D867A /* PetDetailViewController.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
+				845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
 				84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */,
 				847CA5661F3AFFE500C68672 /* ConditionsCollectionViewCell.swift in Sources */,

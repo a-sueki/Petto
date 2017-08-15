@@ -100,6 +100,10 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
         return 1//TODO: conditionArray.count
     }
 
+    
+    //TODO: 対面チェックリストで、連絡先、住所の交換を推奨する
+    
+    
     func onClick1() {
         self.slideMenuController()?.openLeft()
     }

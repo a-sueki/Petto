@@ -25,7 +25,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var tableView: UITableView!
     
-    var menus = ["UserProfile", "MyPetList","MessageList","Leave","Edit"]
+    var menus = ["UserProfile", "MyPetList","MessageList","Leave","UserDetail"]
 /*    var homeViewController: UIViewController!
     var postViewController: UIViewController!
     var messagesViewController: UIViewController!
@@ -81,9 +81,9 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let leaveViewController = self.storyboard?.instantiateViewController(withIdentifier: "Leave") as! LeaveViewController
             let navigationController = UINavigationController(rootViewController: leaveViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 4:
-            let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
-            let navigationController = UINavigationController(rootViewController: editViewController)
+        case 4://確認用
+            let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
+            let navigationController = UINavigationController(rootViewController: userDetailViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             
         default:

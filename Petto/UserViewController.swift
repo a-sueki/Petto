@@ -419,6 +419,10 @@ class UserViewController: FormViewController {
             <<< MultipleSelectorRow<String>("userEnvironments") {
                 $0.title = "飼養環境"
                 //TODO:アイコン表示
+                $0.hidden = .function(["expectTo"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
+                    return row.value ?? false == false
+                })
                 $0.options = Environment.strings
                 if let data = self.userData , data.userEnvironments.count > 0 {
                     let codes = Array(data.userEnvironments.keys)

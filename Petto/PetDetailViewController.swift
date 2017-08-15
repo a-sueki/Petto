@@ -70,8 +70,6 @@ class PetDetailViewController: FormViewController {
                         })
                     }
                     $0.header = header
-                }else {
-                    $0.header = HeaderFooterView<PetDetailErrorView>(.class)
                 }
             }
             <<< NameRow("name") {
@@ -334,31 +332,6 @@ class PetDetailViewNib: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
-        print("DEBUG_PRINT: PetDetailViewNib.required init")
-    }
-    
-}
-
-class PetDetailErrorView: UIView {
-    
-    override init(frame: CGRect) {
-        print("DEBUG_PRINT: PetDetailErrorView.init start")
-
-        super.init(frame: frame)
-        let imageView = UIImageView(image: UIImage(named: "catProfile"))
-        imageView.frame = CGRect(x: 0, y: 10, width: 320, height: 100)
-        imageView.autoresizingMask = .flexibleWidth
-        self.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
-        imageView.contentMode = .scaleAspectFit
-        addSubview(imageView)
-
-        print("DEBUG_PRINT: PetDetailErrorView.init end")
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        print("DEBUG_PRINT: PetDetailErrorView.required init ")
-        fatalError("init(coder:) has not been implemented")
     }
 }
 
