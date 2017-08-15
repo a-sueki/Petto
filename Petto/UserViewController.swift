@@ -36,34 +36,31 @@ class UserViewController: FormViewController {
         super.viewDidLoad()
         
         print("DEBUG_PRINT: UserViewController.viewDidLoad start")
-
-        //TODO: Firebaseから登録済みデータを取得 -> Formの表示が先に行われてしまうのはなぜか？
-/*        if FIRAuth.auth()?.currentUser != nil {
-            if self.observing == false {
-                // 要素が追加されたら再表示
-                let postsRef = FIRDatabase.database().reference().child(Paths.UserPath)
-                postsRef.observe(.childAdded, with: { snapshot in
-                    print("DEBUG_PRINT１: UserViewController.viewDidLoad あたいせっと start")
-                    // userDataクラスを生成して受け取ったデータを設定する
-                    if let uid = FIRAuth.auth()?.currentUser?.uid {
-                        
-                        self.userData = UserData(snapshot: snapshot, myId: uid)
-                        print(self.userData?.birthday)
-                    }
-                    //Firebaseからアカウント情報取得
-                    let user = FIRAuth.auth()?.currentUser
-                    print(user?.email)
-                    self.userData?.mail = user?.email
-                    self.userData?.displayName = user?.displayName
-                    print(self.userData?.displayName)
-                })
-                // FIRDatabaseのobserveEventが上記コードにより登録されたため
-                // trueとする
-                observing = true
-            }
+        
+        // Firebaseから登録済みデータを取得
+        if FIRAuth.auth()?.currentUser != nil {
+            // 要素が追加されたら再表示
+            let postsRef = FIRDatabase.database().reference().child(Paths.UserPath)
+            postsRef.observe(.childAdded, with: { snapshot in
+                print("DEBUG_PRINT: UserViewController.viewDidLoad .childAddedイベントが発生しました。")
+                
+                // self.userDataクラスを生成して受け取ったデータを設定する
+                if let uid = FIRAuth.auth()?.currentUser?.uid {
+                    self.userData = UserData(snapshot: snapshot, myId: uid)
+                }
+                //Firebaseからアカウント情報取得
+                let user = FIRAuth.auth()?.currentUser
+                self.userData?.mail = user?.email
+                self.userData?.displayName = user?.displayName
+                
+                // Formを表示
+                self.updateUserData()
+            })
+            // FIRDatabaseのobserveEventが上記コードにより登録されたため
+            // trueとする
+            observing = true
         }
-        print(self.userData?.area)
-*/
+
         // NavigationBar
         btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(BaseViewController.onClick1))
         btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(BaseViewController.onClick2))
@@ -77,6 +74,11 @@ class UserViewController: FormViewController {
         self.navigationItem.leftBarButtonItems = leftBtns
         self.navigationItem.rightBarButtonItems = rightBtns
         
+        print("DEBUG_PRINT: UserViewController.viewDidLoad end")
+    }
+    
+    func updateUserData() {
+        print("DEBUG_PRINT: UserViewController.updateUserData start")
         
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
@@ -110,10 +112,9 @@ class UserViewController: FormViewController {
                     $0.header = HeaderFooterView<UserEntryView>(.class)
                 }
             }
-
+            
             <<< EmailRow("mail") {
                 $0.title = "メールアドレス"
-                print("DEBUG_PRINT: UserViewController.viewDidLoad メールアドレス")
                 $0.value = self.userData?.mail ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
@@ -186,7 +187,7 @@ class UserViewController: FormViewController {
                         }
                     }
             }
-
+            
             
             //TODO: コミットメント＆小さなバッチ（メダル）
             +++ Section("プロフィール")
@@ -347,7 +348,7 @@ class UserViewController: FormViewController {
                     }
             }
             //TODO: 住所2入力欄
-
+            
             <<< TextRow("area") {
                 $0.title = "エリア"
                 $0.value = self.userData?.area ?? nil
@@ -402,7 +403,7 @@ class UserViewController: FormViewController {
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
-
+            
             
             +++ Section()
             <<< SwitchRow("expectTo"){
@@ -474,11 +475,10 @@ class UserViewController: FormViewController {
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "OK"
                 }.onCellSelection { [weak self] (cell, row) in
-                    print("---UserViewController.viewDidLoad 3")
                     row.section?.form?.validate()
                     self?.executePost()
         }
-        print("DEBUG_PRINT: UserViewController.viewDidLoad end")
+        print("DEBUG_PRINT: UserViewController.updateUserData end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
@@ -546,7 +546,7 @@ class UserViewController: FormViewController {
                 }
             }
         }
-
+        
         // その他ユーザ情報
         for (key,value) in form.values() {
             if value == nil {
@@ -554,10 +554,10 @@ class UserViewController: FormViewController {
                 //break
                 // String
             }else if case let itemValue as String = value {
-                    self.inputData["\(key)"] = itemValue
+                self.inputData["\(key)"] = itemValue
                 // UIImage
             }else if case let itemValue as UIImage = value {
-               let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
+                let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
                 let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
                 self.inputData["imageString"] = imageString
                 // Bool
@@ -565,10 +565,10 @@ class UserViewController: FormViewController {
                 self.inputData["\(key)"] = true
                 // Date
             }else if case let itemValue as Date = value {
-               self.inputData["\(key)"] = itemValue.description
+                self.inputData["\(key)"] = itemValue.description
                 // Int
             }else if case let itemValue as Int = value {
-               self.inputData["\(key)"] = itemValue
+                self.inputData["\(key)"] = itemValue
                 // List
                 // TODO: コード化。もっとスマートにできないか。
             }else {
@@ -627,7 +627,6 @@ class UserViewController: FormViewController {
             }
         }
         
-        print("---UserViewController.executePost  8")
         print(self.inputData)
         
         // inputDataに必要な情報を取得しておく
