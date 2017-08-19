@@ -11,7 +11,6 @@ import Eureka
 import Firebase
 import FirebaseDatabase
 import SVProgressHUD
-import CoreLocation
 
 
 class UserDetailViewController: FormViewController {

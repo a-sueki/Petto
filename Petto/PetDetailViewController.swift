@@ -295,7 +295,7 @@ class PetDetailViewController: FormViewController {
     @IBAction func toMessages() {
         // Messageに画面遷移
         let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-        //TODO: ペットID、UserIDを取得し、Messagesに渡す
+        messagesViewController.petData = self.petData
         self.navigationController?.pushViewController(messagesViewController, animated: true)
     }
     

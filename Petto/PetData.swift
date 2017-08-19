@@ -38,6 +38,9 @@ class PetData: NSObject {
     var endDate: String?
     var minDays: Int?
     var maxDays: Int?
+
+    // メッセージ情報
+    var messageId: [String] = []
     
     // システム項目
     var createAt: NSDate?
@@ -89,6 +92,11 @@ class PetData: NSObject {
         self.minDays = valueDictionary["minDays"] as? Int
         self.maxDays = valueDictionary["maxDays"] as? Int
         
+        // メッセージ情報
+        if let messageId = valueDictionary["messageId"] as? [String] {
+            self.messageId = messageId
+        }
+
         // システム項目
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)

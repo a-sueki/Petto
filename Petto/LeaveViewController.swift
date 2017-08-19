@@ -12,18 +12,18 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 
-// ブリーダーが「マイペットおあずけ」を実行
 class LeaveViewController: FormViewController,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
 
+    
     var petData: PetData?
     var userData: UserData?
     var conditionArray = [String : Bool]()
 
     @IBOutlet weak var petImageView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var ageLabel: UILabel!
-    @IBOutlet weak var feedingLabel: UILabel!
-    @IBOutlet weak var walkingLabel: UILabel!
+    @IBOutlet weak var userImageView: UIImageView!
+    @IBOutlet weak var petNameLabel: UILabel!
+    @IBOutlet weak var userNameLabel: UILabel!
+    
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var endDateLabel: UILabel!
     @IBOutlet weak var conditionsCollectionView: UICollectionView!
@@ -63,8 +63,34 @@ class LeaveViewController: FormViewController,UICollectionViewDataSource, UIColl
         let nib = UINib(nibName: "ConditionsCollectionViewCell", bundle: nil)
         conditionsCollectionView.register(nib, forCellWithReuseIdentifier: "ConditionsCell")
         
+        // pet情報を取得
+        // user情報を取得
+        
         
     }
+    
+    @IBAction func toPetDetailButton(_ sender: Any) {
+        print("DEBUG_PRINT: LeaveViewController.toPetDetailButton start")
+        
+        // PetDetailに画面遷移
+        let petDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "PetDetail") as! PetDetailViewController
+        petDetailViewController.petData = self.petData
+        self.navigationController?.pushViewController(petDetailViewController, animated: true)
+        
+        print("DEBUG_PRINT: LeaveViewController.toPetDetailButton end")
+    }
+    
+    @IBAction func toUserDetailButton(_ sender: Any) {
+        print("DEBUG_PRINT: LeaveViewController.toUserDetailButton start")
+        
+        // UserDetailに画面遷移
+        let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
+        userDetailViewController.userData = self.userData
+        self.navigationController?.pushViewController(userDetailViewController, animated: true)
+        
+        print("DEBUG_PRINT: LeaveViewController.toUserDetailButton end")
+    }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

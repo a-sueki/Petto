@@ -43,6 +43,8 @@ class UserData: NSObject {
     var historyId: String?      // Petto利用履歴
     // マイペット情報
     var myPetsId: [String] = []
+    // メッセージ情報
+    var messageId: [String] = []
     // システム項目
     var createAt: NSDate?
     var createBy: String?
@@ -112,6 +114,10 @@ class UserData: NSObject {
         // マイペット情報
         if let myPetsId = valueDictionary["myPetsId"] as? [String] {
             self.myPetsId = myPetsId
+        }
+        // メッセージ情報
+        if let messageId = valueDictionary["messageId"] as? [String] {
+            self.messageId = messageId
         }
         // システム項目
         let createAt = valueDictionary["createAt"] as? String
