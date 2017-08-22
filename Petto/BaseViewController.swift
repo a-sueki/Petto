@@ -13,6 +13,9 @@ import FirebaseDatabase
 
 class BaseViewController: UIViewController {
 
+    // UserDefaults のインスタンス
+    let userDefaults = UserDefaults.standard
+
     // NavigationBarボタンを用意
     var btn1: UIBarButtonItem!
     var btn2: UIBarButtonItem!
@@ -34,6 +37,9 @@ class BaseViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItems = leftBtns
         self.navigationItem.rightBarButtonItems = rightBtns
+        
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print(userDefaults.string(forKey: DefaultString.Mail) ?? "nilですけど")
 
     }
 

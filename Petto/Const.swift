@@ -11,7 +11,17 @@ import Foundation
 struct Paths {
     static let PetPath = "pet"
     static let UserPath = "user"
+    static let RoomPath = "room"
+    static let MemberPath = "member"
     static let MessagePath = "message"
+}
+
+struct DefaultString {
+    static let Uid = "uid"
+    static let Mail = "mail"
+    static let Password = "password"
+    static let DisplayName = "displayName"
+    static let Phote = "phote"
 }
 
 let ngicon = "-red"

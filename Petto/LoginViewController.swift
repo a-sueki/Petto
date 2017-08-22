@@ -13,6 +13,8 @@ import SVProgressHUD
 
 class LoginViewController: UIViewController {
     
+    // UserDefaults のインスタンス
+    let userDefaults = UserDefaults.standard
     
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -79,10 +81,17 @@ class LoginViewController: UIViewController {
             let key = uid
             inputData["mail"] = address
             inputData["password"] = password
+            inputData["displayName"] = displayName
             inputData["createAt"] = String(time)
             inputData["createBy"] = uid!
             // insert
             ref.child(Paths.UserPath).child(key!).setValue(inputData)
+            
+            // デフォルト値
+            userDefaults.set(uid! , forKey: DefaultString.Uid)
+            userDefaults.set(address , forKey: DefaultString.Mail)
+            userDefaults.set(password , forKey: DefaultString.Password)
+            userDefaults.set(displayName , forKey: DefaultString.DisplayName)
             
             //TODO:確認メール送信
             //FIRAuth.auth()?.currentUser?.sendEmailVerification(completion: { (error) in

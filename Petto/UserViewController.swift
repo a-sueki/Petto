@@ -15,6 +15,7 @@ import CoreLocation
 
 class UserViewController: FormViewController {
     
+    let userDefaults = UserDefaults.standard
     var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -649,6 +650,13 @@ class UserViewController: FormViewController {
             // insert
             ref.child(Paths.UserPath).child(key!).setValue(self.inputData)
         }
+        
+        // UserDefaultsを更新
+        userDefaults.set(uid , forKey: DefaultString.Uid)
+        userDefaults.set(self.inputData["mail"] , forKey: DefaultString.Mail)
+        userDefaults.set(self.inputData["password"] , forKey: DefaultString.Password)
+        userDefaults.set(self.inputData["displayName"] , forKey: DefaultString.DisplayName)
+        userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: "投稿しました")

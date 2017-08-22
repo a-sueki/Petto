@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var myNavigationController: UINavigationController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        print("DEBUG_PRINT: AppDelegate.application start ")
         
         FIRApp.configure()
         
@@ -36,7 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //self.window?.backgroundColor = UIColor.red
         self.window?.rootViewController = slideMenuController
         self.window?.makeKeyAndVisible()
-               
+                    
+        print("DEBUG_PRINT: AppDelegate.application end ")
         return true
     }
 

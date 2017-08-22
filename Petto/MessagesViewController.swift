@@ -13,14 +13,22 @@ import FirebaseDatabase
 import JSQMessagesViewController
 
 class MessagesViewController: JSQMessagesViewController {
+    
+    let userDefaults = UserDefaults.standard
 
     var petData: PetData?
-    var userData: UserData?
-    var messageList: [MessageData]?
+    var roomData: RoomData?
+    var memberData: MemberData?
+    var messageData: MessageData?
+
+//        var userData: UserData?
+//        var messageList: [MessageData]?
+
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     var inputData = [String : Any]()  //message
-
+    var userToPetFlag = false
+    
     private var messages: [JSQMessage] = []
     private var incomingBubble: JSQMessagesBubbleImage!
     private var outgoingBubble: JSQMessagesBubbleImage!
@@ -38,8 +46,64 @@ class MessagesViewController: JSQMessagesViewController {
         self.senderId = "testID"
         self.senderDisplayName = "testName"
 
+        let ref = FIRDatabase.database().reference()
+        //roomIdをセット
+        print(userDefaults.string(forKey: DefaultString.Uid)! + (self.petData?.id)!)
+        let uid = userDefaults.string(forKey: DefaultString.Uid)!
+        let roomId = uid + (self.petData?.id)!
+        
+        // 初期設定
+        self.initialSettings()
+        
+        // 過去のmessageデータを取得
+        self.getMessages()
+        
+        self.finishReceivingMessage()
+
+        
+        /*
+        // Roomの取得
+        ref.child(Paths.RoomPath).child(roomId).observeSingleEvent(of: .value, with: { (snapshot) in
+            print("DEBUG_PRINT: MessagesViewController.viewDidLoad room.observeSingleEventイベントが発生しました。")
+
+            self.roomData = RoomData(snapshot: snapshot, myId: roomId)
+            print(self.roomData)
+        
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        
+        // Memberの取得
+        ref.child(Paths.MemberPath).child(roomId).observeSingleEvent(of: .value, with: { (snapshot) in
+            print("DEBUG_PRINT: MessagesViewController.viewDidLoad member.observeSingleEventイベントが発生しました。")
+            
+            self.memberData = MemberData(snapshot: snapshot, myId: roomId)
+            print(self.memberData)
+            
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        
+        // 自分がuserの場合、userToPetFlagをtrueにする
+        if uid == self.memberData?.userId {
+            userToPetFlag = true
+        }
+        // Messageの取得
+        ref.child(Paths.MessagePath).child(roomId).observeSingleEvent(of: .value, with: { (snapshot) in
+            print("DEBUG_PRINT: MessagesViewController.viewDidLoad message.observeSingleEventイベントが発生しました。")
+                self.messageData = MessageData(snapshot: snapshot, myId: roomId)
+                print(self.messageData)
+            
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+         */
+        
+
+        
+        
         // Firebaseから登録済みUserデータを取得
-        if FIRAuth.auth()?.currentUser != nil {
+/*        if FIRAuth.auth()?.currentUser != nil {
             // 要素が追加されたら再表示
             let useRef = FIRDatabase.database().reference().child(Paths.UserPath)
             useRef.observe(.childAdded, with: { (snapshot) in
@@ -52,27 +116,44 @@ class MessagesViewController: JSQMessagesViewController {
                 //Firebaseからアカウント情報取得
                 let user = FIRAuth.auth()?.currentUser
                 self.userData?.displayName = user?.displayName
-                
+
                 // 過去のmessageデータを取得
-                self.getMessages()
+                //self.getMessages()
                 // 初期設定
                 self.initialSettings()
+                
+                self.finishReceivingMessage()
+
             })
             
             // FIRDatabaseのobserveEventが上記コードにより登録されたため
             // trueとする
             observing = true
         }
-        
+*/
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad end")
 
     }
     
     private func initialSettings() {
         print("DEBUG_PRINT: MessagesViewController.initialSettings start")
+
+        var userImage = UIImage(named: "user")
+        if let userImageString = userDefaults.string(forKey: DefaultString.Phote) {
+            userImage = UIImage(data: NSData(base64Encoded: userImageString, options: .ignoreUnknownCharacters)! as Data)
+        }
         
+        self.senderId = userDefaults.string(forKey: DefaultString.Uid)!
+        self.senderDisplayName = userDefaults.string(forKey: DefaultString.DisplayName)!
+        // 自分のアバター画像設定
+        self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: userImage, diameter: 64)
+        // 相手のアバター画像設定
+        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.petData?.image, diameter: 64)
+
+        
+/*
         // 自分=userの場合
-        if self.userData?.id == FIRAuth.auth()?.currentUser?.uid {
+        if  self.userData?.id == FIRAuth.auth()?.currentUser?.uid {
             print("DEBUG_PRINT: MessagesViewController.initialSettings 私はUSER\(self.userData?.id)です。")
             self.senderId = self.userData?.id
             self.senderDisplayName = self.userData?.displayName
@@ -81,7 +162,7 @@ class MessagesViewController: JSQMessagesViewController {
             // 自分のアバター画像設定
             self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.userData?.image, diameter: 64)
         }else{
-        // 自分=petの場合
+            // 自分=petの場合
             print("DEBUG_PRINT: MessagesViewController.initialSettings 私はPET\(self.petData?.id)です。")
             self.senderId = self.petData?.id
             self.senderDisplayName = self.petData?.name ?? "名無しペット" + "の飼い主さん"
@@ -90,7 +171,8 @@ class MessagesViewController: JSQMessagesViewController {
             // 自分のアバター画像設定
             self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.petData?.image, diameter: 64)
         }
-        
+ */
+
         // 吹き出しの色設定
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
@@ -102,35 +184,30 @@ class MessagesViewController: JSQMessagesViewController {
     func getMessages() {
         print("DEBUG_PRINT: MessagesViewController.getMessages start")
         //TODO:Firebaseから登録済みmessageデータを取得
-        if let uid = self.userData?.id, let pid = self.petData?.id {
+        if let uid = userDefaults.string(forKey: DefaultString.Uid), let pid = self.petData?.id {
             print("DEBUG_PRINT: MessagesViewController.getMessages 1")
             // keyを取得
-            let key = uid + pid
-            print(key)
-            let messageRef = FIRDatabase.database().reference().child(Paths.MessagePath).child(key)
-            messageRef.observe(.childAdded, with: { (snapshot) in
+            let roomId = uid + pid
+            print(roomId)
+            let messageRef = FIRDatabase.database().reference().child(Paths.MessagePath).child(roomId)
+            messageRef.queryLimited(toLast: 100).observe(.childAdded, with: { (snapshot) in
+                
                 print("DEBUG_PRINT: MessagesViewController.getMessages message.childAddedイベントが発生しました。")
-                
-                /*                guard let dic = snapshot.value as? Dictionary<String, AnyObject> else {
-                 return
-                 }
-                 guard let posts = dic["messages"] as? Dictionary<String, Dictionary<String, AnyObject>> else {
-                 return
-                 }
-                 */
-                
-                let messageData = MessageData(snapshot: snapshot, myId: key)
-                let senderId = messageData.senderId ?? "a"//messageData["senderId"] ?? "" as AnyObject
-                let text = messageData.text ?? "b" //["text"] ?? "" as AnyObject
-                let displayName = messageData.senderDisplayName ?? "c"//["senderDisplayName"] ?? "" as AnyObject
-                let imageString = messageData.imageString ?? "d"
+                print(snapshot)
+
+                let messageData = MessageData(snapshot: snapshot, myId: roomId)
+                let senderId = messageData.senderId ?? "a"
+                let senderDisplayName = messageData.senderDisplayName ?? "c"
+//                let data = messageData.timestamp
+
                 print("DEBUG_PRINT: MessagesViewController.getMessages 2")
                 print(senderId)
-                if imageString != nil {
+                if let imageString = messageData.imageString {
                     print("しゃしんをせっとー")
-//                    self.messages.append(JSQMessage(senderId: senderId,  displayName: displayName, media: ))
-                }else{
-                    self.messages.append(JSQMessage(senderId: senderId,  displayName: displayName, text: text))
+                    //JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: <#T##Date!#>, media: <#T##JSQMessageMediaData!#>)
+                    //                    self.messages.append(JSQMessage(senderId: senderId,  displayName: displayName, media: ))
+                }else if let text = messageData.text {
+                    self.messages.append(JSQMessage(senderId: senderId,  displayName: senderDisplayName, text: text))
                 }
                 self.collectionView.reloadData()
                 
@@ -155,23 +232,33 @@ class MessagesViewController: JSQMessagesViewController {
         finishSendingMessage(animated: true)
         
         // NSDate型 "date" をUNIX時間 "dateUnix" に変換
-        let dateUnix: TimeInterval? = date?.timeIntervalSince1970
+        //let dateUnix: TimeInterval? = date?.timeIntervalSince1970
+
+//        print(dateUnix)
+//        print(String(describing: dateUnix))
+
+        let time = NSDate.timeIntervalSinceReferenceDate
 
         // Firebase連携
         self.inputData["senderId"] = senderId
         self.inputData["senderDisplayName"] = senderDisplayName
         self.inputData["text"] = text
-        self.inputData["timestamp"] = dateUnix
+        self.inputData["timestamp"] = String(time)
 
         // insert
         let ref = FIRDatabase.database().reference()
-        let key = (self.userData?.id)! + (self.petData?.id)!
-        let mid = ref.child(Paths.MessagePath).child(key).child("messages").childByAutoId().key
-        ref.child(Paths.MessagePath).child(key).child("messages").child(mid).setValue(inputData)
+        let roomId = userDefaults.string(forKey: DefaultString.Uid)! + (self.petData?.id)!
+        let key = ref.child(Paths.MessagePath).child(roomId).childByAutoId().key
+//        self.inputData["id"] = key
+        ref.child(Paths.MessagePath).child(roomId).child(key).setValue(inputData)
 
         // update
-        ref.child(Paths.UserPath).child(self.userData!.id!).child("messages").updateChildValues(["messageId":key])
-        ref.child(Paths.PetPath).child(self.petData!.id!).child("messages").updateChildValues(["messageId":key])
+        ref.child(Paths.UserPath).child(userDefaults.string(forKey: DefaultString.Uid)!).child("messages").updateChildValues([roomId : true])
+        ref.child(Paths.PetPath).child(self.petData!.id!).child("messages").updateChildValues([roomId : true])
+        //ref.child(Paths.UserPath).child(data.id!).updateChildValues(self.inputData)
+//        ref.child(Paths.UserPath).child(self.userData!.id!).child("messages").child("roomId").updateChildValues([key : true])
+//        ref.child(Paths.PetPath).child(self.petData!.id!).child("messages").child(roomId).child("messageId").updateChildValues([key : true])
+        
         sendAutoMessage()
 
         print("DEBUG_PRINT: MessagesViewController.didPressSend end")
@@ -314,7 +401,7 @@ class MessagesViewController: JSQMessagesViewController {
         self.inputData["timestamp"] = dateUnix
         
         // insert
-        let ref = FIRDatabase.database().reference()
+/*        let ref = FIRDatabase.database().reference()
         let key = (self.userData?.id)! + (self.petData?.id)!
         let mid = ref.child(Paths.MessagePath).child(key).child("messages").childByAutoId().key
         ref.child(Paths.MessagePath).child(key).child("messages").child(mid).setValue(inputData)
@@ -322,7 +409,7 @@ class MessagesViewController: JSQMessagesViewController {
         // update
         ref.child(Paths.UserPath).child(self.userData!.id!).child("messages").updateChildValues(["messageId":key])
         ref.child(Paths.PetPath).child(self.petData!.id!).child("messages").updateChildValues(["messageId":key])
-
+*/
         sendAutoMessage()
         
         print("DEBUG_PRINT: MessagesViewController.sendImageMessage end")

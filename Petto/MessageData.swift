@@ -6,7 +6,6 @@
 //  Copyright © 2017年 aoi.sueki. All rights reserved.
 //
 
-import UIKit
 import Firebase
 import FirebaseDatabase
 
@@ -22,17 +21,24 @@ class MessageData: NSObject {
     var timestamp: NSDate?
     
     init(snapshot: FIRDataSnapshot, myId: String) {
+        print("DEBUG_PRINT: MessageData.init start")
+        print(snapshot)
+
         self.id = snapshot.key
-        
         let valueDictionary = snapshot.value as! [String: AnyObject]
         
         self.senderId = valueDictionary["senderId"] as? String
         self.senderDisplayName = valueDictionary["senderDisplayName"] as? String
-        self.text = valueDictionary["text"] as? String
-        imageString = valueDictionary["imageString"] as? String
-        self.image = UIImage(data: NSData(base64Encoded: imageString!, options: .ignoreUnknownCharacters)! as Data)
+        if let text = valueDictionary["text"] as? String {
+            self.text = text
+        } else if let imageString = valueDictionary["imageString"] as? String  {
+            self.image = UIImage(data: NSData(base64Encoded: imageString, options: .ignoreUnknownCharacters)! as Data)
+        }
+        
         let timestamp = valueDictionary["timestamp"] as? String
+        print(timestamp)
         self.timestamp = NSDate(timeIntervalSinceReferenceDate: TimeInterval(timestamp!)!)
 
+        print("DEBUG_PRINT: MessageData.init end")
     }
 }
