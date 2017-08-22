@@ -11,8 +11,6 @@ import Foundation
 struct Paths {
     static let PetPath = "pet"
     static let UserPath = "user"
-    static let RoomPath = "room"
-    static let MemberPath = "member"
     static let MessagePath = "message"
 }
 

@@ -16,6 +16,7 @@ import SVProgressHUD
 
 class PetDetailViewController: FormViewController {
     
+    let userDefaults = UserDefaults.standard
     var petData: PetData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -295,7 +296,12 @@ class PetDetailViewController: FormViewController {
     @IBAction func toMessages() {
         // Messageに画面遷移
         let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-        messagesViewController.petData = self.petData
+        
+        messagesViewController.uid = userDefaults.string(forKey: DefaultString.Uid)!
+        messagesViewController.userImageString = userDefaults.string(forKey: DefaultString.Phote)!
+        messagesViewController.pid = (self.petData?.id)!
+        messagesViewController.petImageString = (self.petData?.imageString)!
+        //messagesViewController.petData = self.petData
         self.navigationController?.pushViewController(messagesViewController, animated: true)
     }
     
