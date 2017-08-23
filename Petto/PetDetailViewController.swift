@@ -87,13 +87,13 @@ class PetDetailViewController: FormViewController {
             +++ Section("プロフィール")
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
-                $0.options = ["♂", "♀"]
+                $0.options = Sex.strings
                 $0.value = self.petData?.sex ?? nil
                 $0.disabled = true
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
-                $0.options = ["イヌ", "ネコ"]
+                $0.options = Kind.strings
                 $0.value = self.petData?.kind ?? nil
                 $0.disabled = true
             }

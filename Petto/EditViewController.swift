@@ -115,14 +115,14 @@ class EditViewController: FormViewController {
             }
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
-                $0.options = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
+                $0.options = Area.strings
                 $0.value = self.petData?.area ?? $0.options.first
             }
             
             +++ Section("プロフィール")
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
-                $0.options = ["♂", "♀"]
+                $0.options = Sex.strings
                 $0.value = self.petData?.sex ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
@@ -147,7 +147,7 @@ class EditViewController: FormViewController {
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
-                $0.options = ["イヌ", "ネコ"]
+                $0.options = Kind.strings
                 $0.value = self.petData?.kind ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
@@ -174,23 +174,23 @@ class EditViewController: FormViewController {
                 $0.title = "品種"
                 $0.hidden = .function(["kind"], { form -> Bool in
                     let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? "イヌ" == "ネコ"
+                    return row.value ?? Kind.dog == Kind.cat
                 })
-                $0.options = ["雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
+                $0.options = CategoryDog.strings
                 $0.value = self.petData?.category ?? $0.options.first
             }
             <<< PickerInputRow<String>("categoryCat"){
                 $0.title = "品種"
                 $0.hidden = .function(["kind"], { form -> Bool in
                     let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? "イヌ" == "イヌ"
+                    return row.value ?? Kind.dog == Kind.dog
                 })
-                $0.options = ["雑種","アビシニアン","アメリカンカール","アメリカンショートヘア","エキゾチックショートヘア","サイベリアン","シャム","シャルトリュー","シンガプーラ","スコティッシュフォールド","スフィンクス","ソマリ","ノルウェージャンフォレストキャット","ヒマラヤン","ブリティッシュショートヘア","ペルシャ","ベンガル","マンチカン","メインクーン","ラグドール","ロシアンブルー","不明"]
+                $0.options = CategoryCat.strings
                 $0.value = self.petData?.category ?? $0.options.first
             }
             <<< PickerInputRow<String>("age"){
                 $0.title = "年齢"
-                $0.options = ["8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
+                $0.options = Age.strings
                 $0.value = self.petData?.age ?? $0.options.first
             }
             

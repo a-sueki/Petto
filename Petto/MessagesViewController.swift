@@ -95,7 +95,7 @@ class MessagesViewController: JSQMessagesViewController {
         if observing == false {
             let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child(roomId!)
             // Messageの取得
-            //ref.childByAutoId().queryLimited(toLast: 100).observeSingleEvent(of: .value, with: { (snapshot) in
+            //ref.queryLimited(toLast: 100).observeSingleEvent(of: .value, with: { (snapshot) in
             ref.queryLimited(toLast: 100).observe(.childAdded, with: { (snapshot) in
                 
                 print("DEBUG_PRINT: MessagesViewController.getMessages message.childAddedイベントが発生しました。")

@@ -771,6 +771,39 @@
             </objects>
             <point key="canvasLocation" x="783.75" y="2784.5070422535214"/>
         </scene>
+        <!--Search View Controller-->
+        <scene sceneID="c4f-TP-eoM">
+            <objects>
+                <viewController storyboardIdentifier="Search" id="zlg-2G-FSm" customClass="SearchViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OIv-Pd-Kyt"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ida-pf-w79"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="YWQ-fw-V9g">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fWC-yZ-tj3">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ida-pf-w79" firstAttribute="top" secondItem="fWC-yZ-tj3" secondAttribute="bottom" id="FOH-YP-Mg1"/>
+                            <constraint firstItem="fWC-yZ-tj3" firstAttribute="top" secondItem="YWQ-fw-V9g" secondAttribute="top" id="V6P-Xb-FWN"/>
+                            <constraint firstAttribute="trailing" secondItem="fWC-yZ-tj3" secondAttribute="trailing" id="dVY-13-bMx"/>
+                            <constraint firstItem="fWC-yZ-tj3" firstAttribute="leading" secondItem="YWQ-fw-V9g" secondAttribute="leading" id="ged-da-srj"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="fWC-yZ-tj3" id="Gch-iE-bsW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="smI-jd-Atd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="783.75" y="3458.4507042253522"/>
+        </scene>
         <!--Reserve View Controller-->
         <scene sceneID="EpB-E4-5NN">
             <objects>
@@ -794,7 +827,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K3a-GI-ho1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="786" y="3466"/>
+            <point key="canvasLocation" x="-1208" y="2811"/>
         </scene>
         <!--User Detail View Controller-->
         <scene sceneID="zBJ-8f-KKo">
@@ -821,6 +854,9 @@
                             <constraint firstItem="ZhY-uU-7yF" firstAttribute="leading" secondItem="s5e-DE-szP" secondAttribute="leading" id="mVG-Ai-68n"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="ZhY-uU-7yF" id="uSj-LF-chL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gNq-gj-VI0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1096,7 +1132,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nvc-UU-8wB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="786" y="4171"/>
+            <point key="canvasLocation" x="-1864" y="2811"/>
         </scene>
         <!--Pet Detail View Controller-->
         <scene sceneID="Kfu-GU-wq0">

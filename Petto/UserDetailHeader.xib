@@ -11,11 +11,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="UserDetailViewNib">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="UserDetailViewNib" customModule="Petto" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="130"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0ax-BN-1Ee">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0ax-BN-1Ee">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="130"/>
                 </imageView>
             </subviews>
@@ -28,7 +28,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="userImageView" destination="0ax-BN-1Ee" id="yhk-Fd-dMQ"/>
+                <outlet property="userImageView" destination="0ax-BN-1Ee" id="2lJ-jb-auU"/>
             </connections>
         </view>
     </objects>

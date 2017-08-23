@@ -11,6 +11,7 @@
 		84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */; };
 		84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */; };
 		840AB7F01F418475002EC329 /* PetDetailHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 840AB7EF1F418475002EC329 /* PetDetailHeader.xib */; };
+		840EE9551F4C7864004E9AF8 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840EE9541F4C7864004E9AF8 /* SearchViewController.swift */; };
 		841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ADB171F0CA18C00534A37 /* MessagesViewController.swift */; };
 		8420E0AD1F29C1300088E509 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8420E0AC1F29C1300088E509 /* UserViewController.swift */; };
 		8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */; };
@@ -87,6 +88,7 @@
 		84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCollectionViewCell.xib; sourceTree = "<group>"; };
 		840AB7EF1F418475002EC329 /* PetDetailHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PetDetailHeader.xib; sourceTree = "<group>"; };
+		840EE9541F4C7864004E9AF8 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		841ADB171F0CA18C00534A37 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
 		8420E0AC1F29C1300088E509 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserEditSectionHeader.xib; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 		846705DF1F0F7B2300FFEA8D /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				840EE9541F4C7864004E9AF8 /* SearchViewController.swift */,
 				84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */,
 				84067B521F0B6C9600F01905 /* HomeCollectionViewCell.swift */,
 				84067B531F0B6C9600F01905 /* HomeCollectionViewCell.xib */,
@@ -489,6 +492,7 @@
 				846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */,
 				84A544911F443E4D00CD5617 /* ReserveViewController.swift in Sources */,
 				84D6CD351F18F828000CA101 /* FloatLabelTextField.swift in Sources */,
+				840EE9551F4C7864004E9AF8 /* SearchViewController.swift in Sources */,
 				846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */,
 				84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */,
 				84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */,

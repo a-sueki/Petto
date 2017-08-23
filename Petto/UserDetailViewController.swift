@@ -15,6 +15,7 @@ import SVProgressHUD
 
 class UserDetailViewController: FormViewController {
     
+    var uid: String?
     var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -28,8 +29,27 @@ class UserDetailViewController: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         print("DEBUG_PRINT: UserDetailViewController.viewDidLoad start")
+        
+        //TODO: 確認用。遷移元でセットする
+        uid = "hVx17GxjTIVYg7f91U1THgZ5l4L2"
+        
+        // Firebaseから登録済みデータを取得
+        if uid != nil {
+            // 要素が追加されたら再表示
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid!)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: UserDetailViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
+                
+                self.userData = UserData(snapshot: snapshot, myId: self.uid!)
+                
+                // Formを表示
+                self.updateUserData()
+            })
+            // FIRDatabaseのobserveEventが上記コードにより登録されたため
+            // trueとする
+            observing = true
+        }
         
         // NavigationBar
         btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(BaseViewController.onClick1))
@@ -44,6 +64,11 @@ class UserDetailViewController: FormViewController {
         self.navigationItem.leftBarButtonItems = leftBtns
         self.navigationItem.rightBarButtonItems = rightBtns
         
+        print("DEBUG_PRINT: UserDetailViewController.viewDidLoad end")
+    }
+    
+    func updateUserData() {
+        print("DEBUG_PRINT: UserDetailViewController.updateUserData start")
         //DateFormatter
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
@@ -52,8 +77,8 @@ class UserDetailViewController: FormViewController {
         form +++
             Section() {
                 if let _ = self.userData {
-                   var header = HeaderFooterView<UserDetailViewNib>(.nibFile(name: "PetDetailHeader", bundle: nil))
-                     header.onSetupView = { (view, section) -> () in
+                    var header = HeaderFooterView<UserDetailViewNib>(.nibFile(name: "UserDetailHeader", bundle: nil))
+                    header.onSetupView = { (view, section) -> () in
                         view.userImageView.image = self.userData!.image
                         
                         view.userImageView.alpha = 0;
@@ -68,7 +93,7 @@ class UserDetailViewController: FormViewController {
                     $0.header = header
                 }
             }
-
+            
             //TODO: コミットメント＆小さなバッチ（メダル）
             
             <<< AccountRow("displayName") {
@@ -177,8 +202,8 @@ class UserDetailViewController: FormViewController {
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            //TODO:Petto利用履歴
+        }
+        //TODO:Petto利用履歴
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
