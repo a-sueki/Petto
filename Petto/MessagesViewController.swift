@@ -80,7 +80,6 @@ class MessagesViewController: JSQMessagesViewController {
             self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
             self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
             
-            //TODO: 二通がmessagesにappendされてしまう件、、、
             // 過去のmessageデータを取得
             self.getMessages()
         }
@@ -92,34 +91,36 @@ class MessagesViewController: JSQMessagesViewController {
     func getMessages() {
         print("DEBUG_PRINT: MessagesViewController.getMessages start")
         
-        if observing == false {
-            let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child(roomId!)
-            // Messageの取得
-            //ref.queryLimited(toLast: 100).observeSingleEvent(of: .value, with: { (snapshot) in
-            ref.queryLimited(toLast: 100).observe(.childAdded, with: { (snapshot) in
+        let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child(roomId!)
+        // Messageの取得
+        ref.queryLimited(toLast: 100).observe(.value, with: { (snapshot) in
+            
+            print("DEBUG_PRINT: MessagesViewController.getMessages .observeイベントが発生しました。")
+            
+            if self.observing == false {
                 
-                print("DEBUG_PRINT: MessagesViewController.getMessages message.childAddedイベントが発生しました。")
-                
-                if let _ = snapshot.value as? NSDictionary {
-                    
-                    let messageData = MessageData(snapshot: snapshot, myId: self.roomId!)
-                    let senderId = messageData.senderId
-                    let senderDisplayName = messageData.senderDisplayName
-                    let date = messageData.timestamp! as Date
-                    if let image = messageData.image {
-                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: image))
-                        self.messages.append(message!)
-                    }else if let text = messageData.text {
-                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
-                        self.messages.append(message!)
+                for v in snapshot.children {
+                    if v is FIRDataSnapshot {
+                        
+                        let messageData = MessageData(snapshot: snapshot, myId: self.roomId!)
+                        let senderId = messageData.senderId
+                        let senderDisplayName = messageData.senderDisplayName
+                        let date = messageData.timestamp! as Date
+                        if let image = messageData.image {
+                            let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: image))
+                            self.messages.append(message!)
+                        }else if let text = messageData.text {
+                            let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
+                            self.messages.append(message!)
+                        }
+                        self.collectionView.reloadData()
                     }
-                    self.collectionView.reloadData()
                 }
-                
-            }) { (error) in
-                print(error.localizedDescription)
             }
             self.observing = true
+            
+        }) { (error) in
+            print(error.localizedDescription)
         }
         print("DEBUG_PRINT: MessagesViewController.getMessages end")
         
@@ -130,8 +131,8 @@ class MessagesViewController: JSQMessagesViewController {
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         print("DEBUG_PRINT: MessagesViewController.didPressSend start")
         
-        //let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
-        //messages.append(message!)
+        let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
+        messages.append(message!)
         
         let time = NSDate.timeIntervalSinceReferenceDate
 
@@ -273,8 +274,8 @@ class MessagesViewController: JSQMessagesViewController {
     func sendImageMessage(image: UIImage) {
         print("DEBUG_PRINT: MessagesViewController.sendImageMessage start")
         
-        //let imageMessage = JSQMessage(senderId: senderId, displayName: senderDisplayName, media: JSQPhotoMediaItem(image: image))
-        //messages.append(imageMessage!)
+        let imageMessage = JSQMessage(senderId: senderId, displayName: senderDisplayName, media: JSQPhotoMediaItem(image: image))
+        messages.append(imageMessage!)
         
         let imageData = UIImageJPEGRepresentation(image , 0.5)
         let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
