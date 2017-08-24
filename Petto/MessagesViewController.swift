@@ -107,14 +107,12 @@ class MessagesViewController: JSQMessagesViewController {
                     let senderDisplayName = messageData.senderDisplayName
                     let date = messageData.timestamp! as Date
                     if let image = messageData.image {
-                        print("しゃしんをせっとー")
                         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: image))
                         self.messages.append(message!)
                     }else if let text = messageData.text {
                         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
                         self.messages.append(message!)
                     }
-                    print("DEBUG_PRINT: MessagesViewController.getMessages リロードするぞよ。")
                     self.collectionView.reloadData()
                 }
                 
@@ -132,8 +130,8 @@ class MessagesViewController: JSQMessagesViewController {
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         print("DEBUG_PRINT: MessagesViewController.didPressSend start")
         
-        let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
-        messages.append(message!)
+        //let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
+        //messages.append(message!)
         
         let time = NSDate.timeIntervalSinceReferenceDate
 
@@ -275,8 +273,8 @@ class MessagesViewController: JSQMessagesViewController {
     func sendImageMessage(image: UIImage) {
         print("DEBUG_PRINT: MessagesViewController.sendImageMessage start")
         
-        let imageMessage = JSQMessage(senderId: senderId, displayName: senderDisplayName, media: JSQPhotoMediaItem(image: image))
-        messages.append(imageMessage!)
+        //let imageMessage = JSQMessage(senderId: senderId, displayName: senderDisplayName, media: JSQPhotoMediaItem(image: image))
+        //messages.append(imageMessage!)
         
         let imageData = UIImageJPEGRepresentation(image , 0.5)
         let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)

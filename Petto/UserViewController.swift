@@ -39,20 +39,15 @@ class UserViewController: FormViewController {
         print("DEBUG_PRINT: UserViewController.viewDidLoad start")
         
         // Firebaseから登録済みデータを取得
-        if FIRAuth.auth()?.currentUser != nil {
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
             // 要素が追加されたら再表示
-            let postsRef = FIRDatabase.database().reference().child(Paths.UserPath)
-            postsRef.observe(.childAdded, with: { snapshot in
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: UserViewController.viewDidLoad .childAddedイベントが発生しました。")
-                
-                // self.userDataクラスを生成して受け取ったデータを設定する
-                if let uid = FIRAuth.auth()?.currentUser?.uid {
-                    self.userData = UserData(snapshot: snapshot, myId: uid)
-                }
-                //Firebaseからアカウント情報取得
-                let user = FIRAuth.auth()?.currentUser
-                self.userData?.mail = user?.email
-                self.userData?.displayName = user?.displayName
+                self.userData = UserData(snapshot: snapshot, myId: uid)
+
+                self.userData?.mail = self.userDefaults.string(forKey: DefaultString.Mail)
+                self.userData?.displayName = self.userDefaults.string(forKey: DefaultString.DisplayName)
                 
                 // Formを表示
                 self.updateUserData()
@@ -657,6 +652,7 @@ class UserViewController: FormViewController {
         userDefaults.set(self.inputData["password"] , forKey: DefaultString.Password)
         userDefaults.set(self.inputData["displayName"] , forKey: DefaultString.DisplayName)
         userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
+        userDefaults.set(self.inputData["area"] , forKey: DefaultString.Area)
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: "投稿しました")

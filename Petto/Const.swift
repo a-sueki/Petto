@@ -12,6 +12,7 @@ struct Paths {
     static let PetPath = "pet"
     static let UserPath = "user"
     static let MessagePath = "message"
+    static let SearchPath = "search"
 }
 
 struct DefaultString {
@@ -20,6 +21,7 @@ struct DefaultString {
     static let Password = "password"
     static let DisplayName = "displayName"
     static let Phote = "phote"
+    static let Area = "area"
 }
 
 let ngicon = "-red"

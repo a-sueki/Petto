@@ -38,9 +38,6 @@ class BaseViewController: UIViewController {
         self.navigationItem.leftBarButtonItems = leftBtns
         self.navigationItem.rightBarButtonItems = rightBtns
         
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        print(userDefaults.string(forKey: DefaultString.Mail) ?? "nilですけど")
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,7 +62,7 @@ class BaseViewController: UIViewController {
         self.navigationController?.pushViewController(viewController4, animated: true)
     }
     func onClick5() {
-        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
+        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Search") as! SearchViewController
         self.navigationController?.pushViewController(viewController5, animated: true)
     }
 
