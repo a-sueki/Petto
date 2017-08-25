@@ -16,5 +16,5 @@ target 'Petto' do
   pod 'JSQMessagesViewController'
   pod 'SwiftyJSON'
   pod 'Eureka'
-  
+  pod 'RKNotificationHub'
 end
