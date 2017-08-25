@@ -68,11 +68,6 @@ class EditViewController: FormViewController {
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
-
-        //DateFormatter
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-
         
         // フォーム
         form +++
@@ -320,7 +315,7 @@ class EditViewController: FormViewController {
             }
             <<< DateRow("startDate") {
                 if let dateString = self.petData?.startDate {
-                    $0.value = dateFormatter.date(from: dateString)
+                    $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = Date()
                 }
@@ -329,7 +324,7 @@ class EditViewController: FormViewController {
             //TODO: 開始日付以降のチェック
             <<< DateRow("endDate") {
                 if let dateString = self.petData?.endDate {
-                    $0.value = dateFormatter.date(from: dateString)
+                    $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }

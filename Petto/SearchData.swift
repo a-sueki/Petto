@@ -48,6 +48,7 @@ class SearchData: NSObject {
     var isLiked: Bool = false
     
     init(snapshot: FIRDataSnapshot, myId: String) {
+        print("DEBUG_PRINT: SearchData.init start")
         self.id = snapshot.key
         
         let valueDictionary = snapshot.value as! [String: AnyObject]
@@ -104,6 +105,7 @@ class SearchData: NSObject {
                 break
             }
         }
-        
+        print("DEBUG_PRINT: SearchData.init end")
+       
     }
 }

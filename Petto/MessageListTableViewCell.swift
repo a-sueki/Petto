@@ -52,7 +52,6 @@ class MessageListTableViewCell: UITableViewCell {
         
         let formatter = DateFormatter()
         formatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale!
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
         let dateString:String = formatter.string(from: messageData.timestamp! as Date)
         self.sendTimeLabel.text = dateString
         self.messageLabel.text = messageData.text

@@ -43,7 +43,7 @@ class UserViewController: FormViewController {
             // 要素が追加されたら再表示
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: UserViewController.viewDidLoad .childAddedイベントが発生しました。")
+                print("DEBUG_PRINT: UserViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
                 self.userData = UserData(snapshot: snapshot, myId: uid)
 
                 self.userData?.mail = self.userDefaults.string(forKey: DefaultString.Mail)
@@ -95,9 +95,6 @@ class UserViewController: FormViewController {
             cell.accessoryView?.layer.cornerRadius = 17
             cell.accessoryView?.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
         }
-        //DateFormatter
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
         // フォーム
         form +++
@@ -261,9 +258,9 @@ class UserViewController: FormViewController {
             }
             <<< DateRow("birthday") {
                 if let dateString = self.userData?.birthday {
-                    $0.value = dateFormatter.date(from: dateString)
+                    $0.value = DateCommon.stringToDate(dateString)
                 }else{
-                    $0.value = dateFormatter.date(from: "1980-01-01 00:00:00 +000")
+                    $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000")
                 }
                 $0.title = "生年月日"
             }
@@ -482,8 +479,7 @@ class UserViewController: FormViewController {
     }
     
     @IBAction func executePost() {
-        print("---UserViewController.executePost  1")
-        print(form.values())
+        print("---UserViewController.executePost start")
         
         // アカウント情報の修正
         //TODO:ユーザーを再認証する
@@ -623,7 +619,6 @@ class UserViewController: FormViewController {
             }
         }
         
-        print(self.inputData)
         
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate

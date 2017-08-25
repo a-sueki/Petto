@@ -33,6 +33,7 @@ class SearchViewController: FormViewController {
     var btn5: UIBarButtonItem!
     
     override func viewDidLoad() {
+        print("DEBUG_PRINT: SearchViewController.viewDidLoad start")
         super.viewDidLoad()
         
         // Firebaseから登録済みデータを取得
@@ -45,21 +46,19 @@ class SearchViewController: FormViewController {
                     
                     self.searchData = SearchData(snapshot: snapshot, myId: uid)
 
-                    print(self.searchData)
+                    print(self.searchData?.id)
                     
                     // Formを表示
-                    self.updateUserData()
+                    self.updateSearchData()
                 }
             }) { (error) in
                 print(error.localizedDescription)
             }
             observing = true
+        }else{
+            self.updateSearchData()
         }
         
-        print(self.searchData)
-        // Formを表示
-        self.updateUserData()
-       
         // NavigationBar
         btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(BaseViewController.onClick1))
         btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(BaseViewController.onClick2))
@@ -72,25 +71,22 @@ class SearchViewController: FormViewController {
         
         self.navigationItem.leftBarButtonItems = leftBtns
         self.navigationItem.rightBarButtonItems = rightBtns
+
         print("DEBUG_PRINT: SearchViewController.viewDidLoad end")
     }
 
-    func updateUserData() {
-        print("DEBUG_PRINT: SearchViewController.updateUserData start")
+    func updateSearchData() {
+        print("DEBUG_PRINT: SearchViewController.updateSearchData start")
     
         // Cell初期設定
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
-        
-        //DateFormatter
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
         // フォーム
         form +++
             Section("絞り込み条件") {
                 $0.header = HeaderFooterView<SearchView>(.class)
             }
-            +++ Section("プロフィール")
+            +++ Section("ほほほ")
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
@@ -109,7 +105,7 @@ class SearchViewController: FormViewController {
                     return row.value ?? Kind.dog == Kind.cat
                 })
                 $0.options = CategoryDog.strings
-                $0.value = self.searchData?.category ?? nil
+                $0.value = self.searchData?.category ?? $0.options.last
             }
             <<< PickerInputRow<String>("categoryCat"){
                 $0.title = "品種"
@@ -118,27 +114,27 @@ class SearchViewController: FormViewController {
                     return row.value ?? Kind.dog == Kind.dog
                 })
                 $0.options = CategoryCat.strings
-                $0.value = self.searchData?.category ?? nil
+                $0.value = self.searchData?.category ?? $0.options.last
             }
             <<< PickerInputRow<String>("age"){
                 $0.title = "年齢"
                 $0.options = Age.strings
-                $0.value = self.searchData?.age ?? nil
+                $0.value = self.searchData?.age ?? $0.options.last
             }
             
             +++ Section("状態")
             //TODO: チェックボックスを表示
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
-                $0.value = self.searchData?.isVaccinated ?? nil
+                $0.value = self.searchData?.isVaccinated ?? false
             }
             <<< CheckRow("isCastrated") {
                 $0.title = "去勢/避妊手術済み"
-                $0.value = self.searchData?.isCastrated ?? nil
+                $0.value = self.searchData?.isCastrated ?? false
             }
             <<< CheckRow("wanted") {
                 $0.title = "里親を募集中"
-                $0.value = self.searchData?.wanted ?? nil
+                $0.value = self.searchData?.wanted ?? false
             }
 
             +++ Section("条件")
@@ -192,7 +188,7 @@ class SearchViewController: FormViewController {
             }
             <<< DateRow("startDate") {
                 if let dateString = self.searchData?.startDate {
-                    $0.value = dateFormatter.date(from: dateString)
+                    $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = Date()
                 }
@@ -201,7 +197,7 @@ class SearchViewController: FormViewController {
             //TODO: 開始日付以降のチェック
             <<< DateRow("endDate") {
                 if let dateString = self.searchData?.endDate {
-                    $0.value = dateFormatter.date(from: dateString)
+                    $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
@@ -240,11 +236,12 @@ class SearchViewController: FormViewController {
                     row.section?.form?.validate()
                     self?.executePost()
         }
-        print("DEBUG_PRINT: SearchViewController.updateUserData end")
+        print("DEBUG_PRINT: SearchViewController.updateSearchData end")
     }
 
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+        print("DEBUG_PRINT: SearchViewController.updateSearchData 7")
     }
 
     
@@ -361,15 +358,37 @@ class SearchViewController: FormViewController {
         
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        //viewController2.searchData = inputData
         self.navigationController?.pushViewController(viewController2, animated: true)
 
         print("DEBUG_PRINT: SearchViewController.executePost end")
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func onClick1() {
+        self.slideMenuController()?.openLeft()
+    }
+    func onClick2() {
+        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        self.navigationController?.pushViewController(viewController2, animated: true)
+    }
+    func onClick3() {
+        let viewController3 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        self.navigationController?.pushViewController(viewController3, animated: true)
+    }
+    func onClick4() {
+        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+        self.navigationController?.pushViewController(viewController4, animated: true)
+    }
+    func onClick5() {
+        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
+        self.navigationController?.pushViewController(viewController5, animated: true)
+    }
+    
 }
 class SearchView: UIView {
     

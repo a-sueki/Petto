@@ -69,9 +69,6 @@ class UserDetailViewController: FormViewController {
     
     func updateUserData() {
         print("DEBUG_PRINT: UserDetailViewController.updateUserData start")
-        //DateFormatter
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
         // フォーム
         form +++
