@@ -412,7 +412,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="xRq-m0-zeu">
-                                <rect key="frame" x="0.0" y="120" width="320" height="448"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="2" id="B5z-wq-Aa8">
                                     <size key="itemSize" width="150" height="211"/>
@@ -450,9 +450,9 @@
                             <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="aEY-md-RnE" secondAttribute="bottom" constant="-30" id="8SX-Tk-POL"/>
                             <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="wXX-oz-N9w" secondAttribute="bottom" constant="90" id="Oc5-Pq-f8E"/>
                             <constraint firstAttribute="trailing" secondItem="aEY-md-RnE" secondAttribute="trailing" constant="-30" id="T0K-DF-fEA"/>
-                            <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="xRq-m0-zeu" secondAttribute="bottom" id="YIo-G4-tiZ"/>
+                            <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="xRq-m0-zeu" secondAttribute="bottom" id="bjw-pV-bay"/>
                             <constraint firstItem="wXX-oz-N9w" firstAttribute="centerX" secondItem="aEY-md-RnE" secondAttribute="centerX" id="e7k-Rh-yl6"/>
-                            <constraint firstItem="xRq-m0-zeu" firstAttribute="top" secondItem="A6k-lU-pZq" secondAttribute="bottom" constant="100" id="h3P-KO-cMx"/>
+                            <constraint firstItem="xRq-m0-zeu" firstAttribute="top" secondItem="hha-2o-qo5" secondAttribute="top" id="hUp-cB-eEp"/>
                             <constraint firstItem="xRq-m0-zeu" firstAttribute="leading" secondItem="hha-2o-qo5" secondAttribute="leading" id="vMm-6e-7Ws"/>
                         </constraints>
                     </view>
