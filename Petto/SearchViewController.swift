@@ -46,8 +46,6 @@ class SearchViewController: FormViewController {
                     
                     self.searchData = SearchData(snapshot: snapshot, myId: uid)
 
-                    print(self.searchData?.id)
-                    
                     // Formを表示
                     self.updateSearchData()
                 }
@@ -82,6 +80,7 @@ class SearchViewController: FormViewController {
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
         // フォーム
+        //TODO: 「指定しない」を選択できるようにする
         form +++
             Section("絞り込み条件") {
                 $0.header = HeaderFooterView<SearchView>(.class)
