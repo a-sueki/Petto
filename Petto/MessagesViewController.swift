@@ -150,8 +150,8 @@ class MessagesViewController: JSQMessagesViewController {
         ref.child(Paths.MessagePath).child(roomId!).child(key).setValue(inputData)
         
         // update
-        ref.child(Paths.UserPath).child(uid!).child("messages").updateChildValues([roomId! : true])
-        ref.child(Paths.PetPath).child(pid!).child("messages").updateChildValues([roomId! : true])
+        ref.child(Paths.UserPath).child(uid!).child("myMessages").updateChildValues([roomId! : true])
+        ref.child(Paths.PetPath).child(pid!).child("myMessages").updateChildValues([roomId! : true])
         
         // 更新
         finishSendingMessage(animated: true)
@@ -295,8 +295,8 @@ class MessagesViewController: JSQMessagesViewController {
         let key = ref.child(Paths.MessagePath).child(roomId!).childByAutoId().key
         ref.child(Paths.MessagePath).child(roomId!).child(key).setValue(inputData)
         // update
-        ref.child(Paths.UserPath).child(uid!).child("messages").updateChildValues([roomId! : true])
-        ref.child(Paths.PetPath).child(pid!).child("messages").updateChildValues([roomId! : true])
+        ref.child(Paths.UserPath).child(uid!).child("myMessages").updateChildValues([roomId! : true])
+        ref.child(Paths.PetPath).child(pid!).child("myMessages").updateChildValues([roomId! : true])
 
         finishSendingMessage(animated: true)
         sendAutoMessage()

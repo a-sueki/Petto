@@ -18,29 +18,24 @@ enum LeftMenu: Int {
 }
 
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
-
+    
     var mainViewController: UINavigationController!
+    var menus = ["UserProfile", "MyPetList","MessageList","Leave","UserDetail","Logout"]
     
     @IBOutlet weak var tableView: UITableView!
-    
-    var menus = ["UserProfile", "MyPetList","MessageList","Leave","UserDetail"]
-/*    var homeViewController: UIViewController!
-    var postViewController: UIViewController!
-    var messagesViewController: UIViewController!
-    var detailViewController: UIViewController!
-    var messageListViewController: UIViewController!
-*/
-    //    var imageHeaderView: ImageHeaderView!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("DEBUG_PRINT: LeftViewController.viewDidLoad start")
         
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 0.5)
         
+        print("DEBUG_PRINT: LeftViewController.viewDidLoad end")
     }
     
     // データの数（＝セルの数）を返すメソッド
@@ -50,19 +45,21 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // 各セルの内容を返すメソッド
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("DEBUG_PRINT: LeftViewController.cellForRowAt start")
+
         // 再利用可能な cell を得る
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath)
-        
         // Cellに値を設定する.
         let menu = menus[indexPath.row]
         cell.textLabel?.text = menu
         
-        return cell
+        print("DEBUG_PRINT: LeftViewController.cellForRowAt end")
+        return cell        
     }
     
     // 各セルを選択した時に実行されるメソッド
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+        print("DEBUG_PRINT: LeftViewController.didSelectRowAt start")
         
         switch indexPath.row {
         case 0:
@@ -85,11 +82,14 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
             let navigationController = UINavigationController(rootViewController: userDetailViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-            
+        case 5:
+            logout()
         default:
             break
         }
         self.slideMenuController()?.closeLeft()
+
+        print("DEBUG_PRINT: LeftViewController.didSelectRowAt end")
     }
     
     // セルが削除が可能なことを伝えるメソッド
@@ -114,6 +114,24 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.view.layoutIfNeeded()
     }
     
+    func logout() {
+        print("DEBUG_PRINT: LeftViewController.logout start")
 
+        do {
+            // ログアウト
+            try FIRAuth.auth()?.signOut()
+            
+            // ログインしていないときの処理
+            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+            DispatchQueue.main.async {
+                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+                self.present(loginViewController!, animated: true, completion: nil)
+            }
+        }catch let error as NSError {
+            print("\(error.localizedDescription)")
+        }
+
+        print("DEBUG_PRINT: LeftViewController.logout end")
+    }
 }
 

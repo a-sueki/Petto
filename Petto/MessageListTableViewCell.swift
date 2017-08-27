@@ -7,9 +7,6 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseAuth
-import FirebaseDatabase
 
 class MessageListTableViewCell: UITableViewCell {
 
@@ -25,6 +22,7 @@ class MessageListTableViewCell: UITableViewCell {
     @IBOutlet weak var petImageView: UIImageView!
     @IBOutlet weak var petNameLabel: UILabel!
     
+    @IBOutlet weak var messageLabelButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -38,27 +36,24 @@ class MessageListTableViewCell: UITableViewCell {
     }
     
     
-    //TODO: 表示される時の値をセット
-    func setData(petData: PetData, userData: UserData, messageData: MessageData) {
-        print("MessageListTableViewCell.setData:一覧表示中！！！！")
+    // 表示される時の値をセット
+    func setData(userData: UserData, petData: PetData, messageData: MessageData) {
+        print("MessageListTableViewCell.setData start")
         
-/*        self.userImageView.image = userData.image
-        self.userNameLabel.text = userData.firstname
-        let goodNumber = userData.goods.count
-        self.goodIntLabel.text = "\(goodNumber)"
-        let badNumber = userData.bads.count
-        self.badIntLabel.text = "\(badNumber)"
+        self.userImageView.image = userData.image
+        self.userNameLabel.text = userData.displayName
+        //TODO: 評価カウントをセット
+        //self.goodIntLabel.text = String(userData.goods.count)
+        //self.badIntLabel.text = String(userData.bads.count)
         self.userAreaLabel.text = userData.area
-        
-        let formatter = DateFormatter()
-        formatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale!
-        let dateString:String = formatter.string(from: messageData.timestamp! as Date)
-        self.sendTimeLabel.text = dateString
+        self.petImageView.image = petData.image
+        self.petNameLabel.text = petData.name ?? "名無し"
+        self.sendTimeLabel.text = DateCommon.dateToString(messageData.timestamp! as Date)
         self.messageLabel.text = messageData.text
-
-        self.petImageView.image = petInfoData.image
-        self.petNameLabel.text = petInfoData.name
-*/
+        
+        print("MessageListTableViewCell.setData end")
     }
+    
+    
 
 }

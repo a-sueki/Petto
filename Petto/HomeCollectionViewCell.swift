@@ -40,8 +40,9 @@ class HomeCollectionViewCell: UICollectionViewCell {
         } else {
             self.sexImageView.image = UIImage(named: "female-lightgray")
         }
-        self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))days"
-
+        if petData.isAvailable! {
+            self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))days"
+        }
         if petData.isLiked {
             let buttonImage = UIImage(named: "like-red")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)

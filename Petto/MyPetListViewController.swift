@@ -40,6 +40,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: viewWillAppear")
         
+        //TODO: BaseViewControllerにまとめる
         // currentUserがnilならログインしていない
         if FIRAuth.auth()?.currentUser == nil {
             

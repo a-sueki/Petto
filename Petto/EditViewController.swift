@@ -12,7 +12,7 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 
-class EditViewController: FormViewController {
+class EditViewController: BaseFormViewController {
 
     var petData: PetData?
     // FIRDatabaseのobserveEventの登録状態を表す
@@ -24,29 +24,8 @@ class EditViewController: FormViewController {
     var inputData4 = [String : Any]() //ngs
     var inputData5 = [String : Any]() //userNgs
     
-    // NavigationBarボタンを用意
-    var btn1: UIBarButtonItem!
-    var btn2: UIBarButtonItem!
-    var btn3: UIBarButtonItem!
-    var btn4: UIBarButtonItem!
-    var btn5: UIBarButtonItem!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // NavigationBar
-        btn1 = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(BaseViewController.onClick1))
-        btn2 = UIBarButtonItem(image: UIImage(named: "logo"), style: .plain, target: self, action: #selector(BaseViewController.onClick2))
-        btn3 = UIBarButtonItem(image: UIImage(named: "todolist"), style: .plain, target: self, action: #selector(BaseViewController.onClick3))
-        btn4 = UIBarButtonItem(image: UIImage(named: "mail"), style: .plain, target: self, action: #selector(BaseViewController.onClick4))
-        btn5 = UIBarButtonItem(image: UIImage(named: "search"), style: .plain, target: self, action: #selector(BaseViewController.onClick5))
-        
-        let leftBtns: [UIBarButtonItem] = [btn1,btn2]
-        let rightBtns: [UIBarButtonItem] = [btn3,btn4,btn5]
-        
-        self.navigationItem.leftBarButtonItems = leftBtns
-        self.navigationItem.rightBarButtonItems = rightBtns
-        
         
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
@@ -476,7 +455,7 @@ class EditViewController: FormViewController {
             // insert
             ref.child(Paths.PetPath).child(key).setValue(inputData)
             //ユーザのmyPetsIdを追加
-            ref.child(Paths.UserPath).child(uid!).updateChildValues(["myPetsId":key])
+            ref.child(Paths.UserPath).child(uid!).child("myPets").updateChildValues([key: true])
         }
         
         
@@ -496,28 +475,7 @@ class EditViewController: FormViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func onClick1() {
-        self.slideMenuController()?.openLeft()
-    }
-    func onClick2() {
-        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-        self.navigationController?.pushViewController(viewController2, animated: true)
-    }
-    func onClick3() {
-        let viewController3 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
-        self.navigationController?.pushViewController(viewController3, animated: true)
-    }
-    func onClick4() {
-        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-        self.navigationController?.pushViewController(viewController4, animated: true)
-    }
-    func onClick5() {
-        let viewController5 = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
-        self.navigationController?.pushViewController(viewController5, animated: true)
-    }
-    
+    }  
 }
 
 class EditViewNib: UIView {

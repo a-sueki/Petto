@@ -42,9 +42,9 @@ class UserData: NSObject {
     var userNgs = [String:Bool]()
     var historyId: String?      // Petto利用履歴
     // マイペット情報
-    var myPetsId: [String] = []
+    var myPets = [String:Bool]()
     // メッセージ情報
-    var messageId: [String] = []
+    var myMessages = [String:Bool]()
     // システム項目
     var createAt: NSDate?
     var createBy: String?
@@ -112,12 +112,12 @@ class UserData: NSObject {
         self.historyId = valueDictionary["historyId"] as? String
 
         // マイペット情報
-        if let myPetsId = valueDictionary["myPetsId"] as? [String] {
-            self.myPetsId = myPetsId
+        if let myPets = valueDictionary["myPets"] as? [String:Bool] {
+            self.myPets = myPets
         }
         // メッセージ情報
-        if let messageId = valueDictionary["messageId"] as? [String] {
-            self.messageId = messageId
+        if let myMessages = valueDictionary["myMessages"] as? [String:Bool] {
+            self.myMessages = myMessages
         }
         // システム項目
         let createAt = valueDictionary["createAt"] as? String

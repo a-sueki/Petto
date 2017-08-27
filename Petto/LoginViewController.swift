@@ -27,6 +27,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         mailAddressTextField.delegate = self
         passwordTextField.delegate = self
         
+        if let mail = self.userDefaults.string(forKey: DefaultString.Mail) {
+            mailAddressTextField.text = mail
+        }
+        if let pass = self.userDefaults.string(forKey: DefaultString.Password) {
+            passwordTextField.text = pass
+        }
+        
         print("DEBUG_PRINT: LoginViewController.viewDidLoad end")
     }
     
@@ -93,7 +100,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 if let error = error {
                     // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
                     print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton " + error.localizedDescription)
-                    SVProgressHUD.showError(withStatus: "メールアドレスかパスワードが無効です")
+                    if error.localizedDescription == "The email address is already in use by another account." {
+                        SVProgressHUD.showError(withStatus: "そのアカウントは既に存在します")
+                    } else {
+                        SVProgressHUD.showError(withStatus: "メールアドレスかパスワードが無効です")
+                    }
                     return
                 }
 

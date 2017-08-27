@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     var window: UIWindow?
     var myNavigationController: UINavigationController?
+    let userDefaults = UserDefaults.standard
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print("DEBUG_PRINT: AppDelegate.application start ")
@@ -24,6 +25,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         // Adobeの管理画面で登録したアプリの API key と Client secret の文字列を設定する
         AdobeUXAuthManager.shared().setAuthenticationParametersWithClientID("2643141de91c492087357e553e904699", withClientSecret: "efb2a972-e7a0-4d97-bc5c-084d2e3ddc96")
+        
+        FIRAuth.auth()?.addStateDidChangeListener { auth, user in
+            print("DEBUG_PRINT: AppDelegate.application .addStateDidChangeListenerイベントが発生しました")
+            if let user = user {
+                print("DEBUG_PRINT: AppDelegate.application ユーザ「\(user.uid)」がログイン中")
+                self.userDefaults.set(user.uid, forKey: DefaultString.Uid)
+                self.userDefaults.set(user.email, forKey: DefaultString.Mail)
+                self.userDefaults.set(user.displayName, forKey: DefaultString.DisplayName)
+            } else {
+                print("DEBUG_PRINT: AppDelegate.application ユーザはログインしていません")
+            }
+        }
         
         // SlideMenu設定
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
