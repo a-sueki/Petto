@@ -44,6 +44,16 @@ class MessagesViewController: JSQMessagesViewController {
         self.senderId = "testID"
         self.senderDisplayName = "testName"
         
+        // おあずけボタンを追加
+        let leaveButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+        leaveButton.setImage(UIImage(named: "btn"), for: .normal)
+        //leaveButton.setTitle("おあずけ", for: .normal)
+//        leaveButton.addTarget(self, action: #selector(onClick4), for: .touchUpInside)
+        //配置場所
+        leaveButton.layer.position = CGPoint(x: self.view.frame.width/2, y:100)
+        //viewにボタンを追加する
+        self.view.addSubview(leaveButton)
+        
         // 初期設定
         self.initialSettings()
         
@@ -100,9 +110,9 @@ class MessagesViewController: JSQMessagesViewController {
             if self.observing == false {
                 
                 for v in snapshot.children {
-                    if v is FIRDataSnapshot {
+                    if let _v = v as? FIRDataSnapshot {
                         
-                        let messageData = MessageData(snapshot: snapshot, myId: self.roomId!)
+                        let messageData = MessageData(snapshot: _v, myId: self.roomId!)
                         let senderId = messageData.senderId
                         let senderDisplayName = messageData.senderDisplayName
                         let date = messageData.timestamp! as Date

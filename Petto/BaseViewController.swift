@@ -10,7 +10,7 @@ import Eureka
 import RKNotificationHub
 import UIKit
 
-class ViewControllerHelper: NSObject {
+class NavigationBarHandler: NSObject {
     // RKNotificationHubのインスタンス
     let hub = RKNotificationHub()
     
@@ -68,7 +68,7 @@ class ViewControllerHelper: NSObject {
 }
 
 class BaseFormViewController: FormViewController {
-    let helper = ViewControllerHelper()
+    let helper = NavigationBarHandler()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +83,7 @@ class BaseFormViewController: FormViewController {
 }
 
 class BaseViewController: UIViewController {
-    let helper = ViewControllerHelper()
+    let helper = NavigationBarHandler()
     
     override func viewDidLoad() {
         super.viewDidLoad()
