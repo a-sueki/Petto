@@ -37,19 +37,19 @@ class MessageListTableViewCell: UITableViewCell {
     
     
     // 表示される時の値をセット
-    func setData(userData: UserData, petData: PetData, messageData: MessageData) {
+    func setData(userData: UserData, roomData: RoomData) {
         print("MessageListTableViewCell.setData start")
         
         self.userImageView.image = userData.image
         self.userNameLabel.text = userData.displayName
         //TODO: 評価カウントをセット
-        //self.goodIntLabel.text = String(userData.goods.count)
-        //self.badIntLabel.text = String(userData.bads.count)
+        self.goodIntLabel.text = "10" //String(userData.goods.count)
+        self.badIntLabel.text = "3" //String(userData.bads.count)
         self.userAreaLabel.text = userData.area
-        self.petImageView.image = petData.image
-        self.petNameLabel.text = petData.name ?? "名無し"
-        self.sendTimeLabel.text = DateCommon.dateToString(messageData.timestamp! as Date)
-        self.messageLabel.text = messageData.text
+        self.petImageView.image = roomData.petImage
+        self.petNameLabel.text = roomData.petName
+        self.sendTimeLabel.text = DateCommon.dateToString(roomData.updateAt! as Date)
+        self.messageLabel.text = roomData.lastMessage
         
         print("MessageListTableViewCell.setData end")
     }

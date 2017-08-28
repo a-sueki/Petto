@@ -108,9 +108,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     return
                 }
 
-                // inputDataに必要な情報を取得しておく
-                let time = NSDate.timeIntervalSinceReferenceDate
                 let uid = FIRAuth.auth()?.currentUser?.uid
+                /*// inputDataに必要な情報を取得しておく
+                let time = NSDate.timeIntervalSinceReferenceDate
                 // 辞書を作成
                 let ref = FIRDatabase.database().reference()
                 //Firebase(user)に保存
@@ -123,12 +123,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 inputData["createBy"] = uid!
                 // insert
                 ref.child(Paths.UserPath).child(key!).setValue(inputData)
-                
+                */
                 // デフォルト値
                 self.userDefaults.set(uid! , forKey: DefaultString.Uid)
                 self.userDefaults.set(address , forKey: DefaultString.Mail)
                 self.userDefaults.set(password , forKey: DefaultString.Password)
                 self.userDefaults.set("ゲストさん" , forKey: DefaultString.DisplayName)
+                let imageData = UIImageJPEGRepresentation(UIImage(named: "user")! , 0.5)
+                let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+                self.userDefaults.set(imageString , forKey: DefaultString.Phote)
                 
                 //TODO:確認メール送信
                 //FIRAuth.auth()?.currentUser?.sendEmailVerification(completion: { (error) in

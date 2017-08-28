@@ -37,10 +37,12 @@ class UserViewController: BaseFormViewController  {
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: UserViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
-                self.userData = UserData(snapshot: snapshot, myId: uid)
+                if let _ = snapshot.value as? NSDictionary {
+                    self.userData = UserData(snapshot: snapshot, myId: uid)
+                }
 
                 self.userData?.mail = self.userDefaults.string(forKey: DefaultString.Mail)
-                self.userData?.displayName = self.userDefaults.string(forKey: DefaultString.DisplayName)
+//                self.userData?.displayName = self.userDefaults.string(forKey: DefaultString.DisplayName)
                 
                 // Formを表示
                 self.updateUserData()
@@ -87,7 +89,7 @@ class UserViewController: BaseFormViewController  {
             
             <<< EmailRow("mail") {
                 $0.title = "メールアドレス"
-                $0.value = self.userData?.mail ?? nil
+                $0.value = self.userData?.mail ?? userDefaults.string(forKey: DefaultString.Mail)
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in

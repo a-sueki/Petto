@@ -23,6 +23,7 @@ class PetDetailViewController: BaseFormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
         
         // Cell初期設定
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
@@ -57,7 +58,7 @@ class PetDetailViewController: BaseFormViewController {
                 $0.value = self.petData?.area ?? nil
                 $0.disabled = true
             }
-
+            
             +++ Section("プロフィール")
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
@@ -261,22 +262,69 @@ class PetDetailViewController: BaseFormViewController {
                     row.section?.form?.validate()
                     self?.toMessages()
         }
+        print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
     
+    // Messageに画面遷移
     @IBAction func toMessages() {
-        // Messageに画面遷移
-        let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+        print("DEBUG_PRINT: PetDetailViewController.toMessages start")
         
-        messagesViewController.uid = userDefaults.string(forKey: DefaultString.Uid)!
-        messagesViewController.userImageString = userDefaults.string(forKey: DefaultString.Phote)!
-        messagesViewController.pid = (self.petData?.id)!
-        messagesViewController.petImageString = (self.petData?.imageString)!
-        //messagesViewController.petData = self.petData
-        self.navigationController?.pushViewController(messagesViewController, animated: true)
+        let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessagesContainer") as! MessagesContainerViewController
+        
+        // roomIdを取得
+        let uid = userDefaults.string(forKey: DefaultString.Uid)!
+        let pid = (self.petData?.id)!
+        let roomId = uid + pid
+        
+        // roomDataの取得
+        let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+        roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。")
+            if let _ = snapshot.value as? NSDictionary {
+                print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを取得")
+                // roomDataをセットして画面遷移
+                messagesContainerViewController.roomData = RoomData(snapshot: snapshot, myId: roomId)
+                self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+            }else{
+                print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを新規作成")
+                var inputData = [String : Any]()
+                let time = NSDate.timeIntervalSinceReferenceDate
+                
+                inputData["userId"] = uid
+                inputData["userName"] = self.userDefaults.string(forKey: DefaultString.DisplayName)
+                inputData["userImageString"] = self.userDefaults.string(forKey: DefaultString.Phote)
+                inputData["petId"] = pid
+                inputData["petName"] = self.petData?.name
+                inputData["petImageString"] = self.petData?.imageString
+                
+                inputData["createAt"] = String(time)
+                inputData["updateAt"] = String(time)
+                
+                // insert
+                let ref = FIRDatabase.database().reference()
+                ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
+                // update
+                ref.child(Paths.UserPath).child(uid).child("myMessages").updateChildValues([roomId : true])
+                ref.child(Paths.PetPath).child(pid).child("myMessages").updateChildValues([roomId : true])
+
+                // roomDataの取得
+                roomRef.observeSingleEvent(of: .value, with: { (snapshot2) in
+                    print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。（２）")
+                    if let _ = snapshot2.value as? NSDictionary {
+                        // roomDataをセットして画面遷移
+                        messagesContainerViewController.roomData = RoomData(snapshot: snapshot2, myId: roomId)
+                        self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+                    }
+                })
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        print("DEBUG_PRINT: PetDetailViewController.toMessages end")
     }
     
     override func didReceiveMemoryWarning() {

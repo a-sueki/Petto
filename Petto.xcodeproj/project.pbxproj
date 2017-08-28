@@ -52,6 +52,9 @@
 		84D6CD301F18817E000CA101 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */; };
 		84D6CD331F18F7E3000CA101 /* CustomCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD321F18F7E3000CA101 /* CustomCells.swift */; };
 		84D6CD351F18F828000CA101 /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */; };
+		84DB3BFA1F540A490067A680 /* BookingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BF91F540A490067A680 /* BookingViewController.swift */; };
+		84DB3BFC1F543D5B0067A680 /* MessagesContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */; };
+		84DB3BFE1F5453410067A680 /* RoomData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BFD1F5453410067A680 /* RoomData.swift */; };
 		84F244191EFCE01400938F35 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84F244181EFCE01400938F35 /* GoogleService-Info.plist */; };
 		84F6ACA81EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; };
 		84F6ACA91EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -133,6 +136,9 @@
 		84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		84D6CD321F18F7E3000CA101 /* CustomCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCells.swift; sourceTree = "<group>"; };
 		84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
+		84DB3BF91F540A490067A680 /* BookingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookingViewController.swift; sourceTree = "<group>"; };
+		84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesContainerViewController.swift; sourceTree = "<group>"; };
+		84DB3BFD1F5453410067A680 /* RoomData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomData.swift; sourceTree = "<group>"; };
 		84F244181EFCE01400938F35 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
 		84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKImage.framework; sourceTree = "<group>"; };
@@ -221,10 +227,13 @@
 		846705E11F0F7BAA00FFEA8D /* Messages */ = {
 			isa = PBXGroup;
 			children = (
+				84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */,
 				841ADB171F0CA18C00534A37 /* MessagesViewController.swift */,
+				84DB3BF91F540A490067A680 /* BookingViewController.swift */,
 				846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */,
 				846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */,
 				846705E51F0F81E400FFEA8D /* MessageListTableViewCell.xib */,
+				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -262,6 +271,7 @@
 				840EE9571F4D616C004E9AF8 /* SearchData.swift */,
 				8470FD7D1F10C613002F4690 /* UserData.swift */,
 				84AC70E61F11E43A001F7563 /* MessageData.swift */,
+				84DB3BFD1F5453410067A680 /* RoomData.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -307,7 +317,6 @@
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
 				849ED1E31F1CF912003AD9F5 /* Model */,
-				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 				84D253071F0217D700D877A9 /* LeftViewController.swift */,
 				84CCE0221EFB8C460025B5D3 /* SettingViewController.swift */,
 				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
@@ -503,11 +512,13 @@
 				846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */,
 				84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */,
 				84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */,
+				84DB3BFE1F5453410067A680 /* RoomData.swift in Sources */,
 				84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */,
 				84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */,
 				84BB42201F413F1A007D867A /* PetDetailViewController.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
+				84DB3BFC1F543D5B0067A680 /* MessagesContainerViewController.swift in Sources */,
 				845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
 				84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */,
@@ -519,6 +530,7 @@
 				84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */,
 				846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */,
 				84CCE01D1EFB8C040025B5D3 /* HomeViewController.swift in Sources */,
+				84DB3BFA1F540A490067A680 /* BookingViewController.swift in Sources */,
 				840EE9581F4D616C004E9AF8 /* SearchData.swift in Sources */,
 				847CA55E1F3ACD4E00C68672 /* LeaveViewController.swift in Sources */,
 				849ED1E21F1CEE47003AD9F5 /* PetData.swift in Sources */,

@@ -13,6 +13,7 @@ class MessageData: NSObject {
     
     var id: String?
 
+    // チャット用
     var senderId: String?
     var senderDisplayName: String?
     var text: String?
@@ -26,7 +27,8 @@ class MessageData: NSObject {
 
         self.id = snapshot.key
         let valueDictionary = snapshot.value as! [String: AnyObject]
-        
+ 
+        // チャット用
         self.senderId = valueDictionary["senderId"] as? String
         self.senderDisplayName = valueDictionary["senderDisplayName"] as? String
         if let text = valueDictionary["text"] as? String {

@@ -13,16 +13,17 @@ import FirebaseDatabase
 import JSQMessagesViewController
 
 class MessagesViewController: JSQMessagesViewController {
-    
-    let userDefaults = UserDefaults.standard
-//    var messageData: MessageData?
-    
+        
+    let userDefaults = UserDefaults.standard    
+    var roomData: RoomData?
+    var messageData: MessageData?
+
     var roomId: String?
     var uid: String?
     var userImageString: String?
     var pid: String?
     var petImageString: String?
-    
+
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     //    var userToPetFlag = false
@@ -40,79 +41,55 @@ class MessagesViewController: JSQMessagesViewController {
         super.viewDidLoad()
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad start")
-        
-        self.senderId = "testID"
-        self.senderDisplayName = "testName"
-        
-        // おあずけボタンを追加
-        let leaveButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
-        leaveButton.setImage(UIImage(named: "btn"), for: .normal)
-        //leaveButton.setTitle("おあずけ", for: .normal)
-//        leaveButton.addTarget(self, action: #selector(onClick4), for: .touchUpInside)
-        //配置場所
-        leaveButton.layer.position = CGPoint(x: self.view.frame.width/2, y:100)
-        //viewにボタンを追加する
-        self.view.addSubview(leaveButton)
-        
+
         // 初期設定
-        self.initialSettings()
+        self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "incomingCell")
+        self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "outgoingCell")
+        // 吹き出しの色設定
+        let bubbleFactory = JSQMessagesBubbleImageFactory()
+        self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
+        self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
+
+        self.senderId = userDefaults.string(forKey: DefaultString.Uid)
+        self.senderDisplayName = userDefaults.string(forKey: DefaultString.DisplayName)!
+
+        if self.roomData == nil {
+//            var userImage = UIImage(named: "user")
+//            var petImage = UIImage(named: "catProfile")
+            // 自分のアバター画像設定
+            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "user"), diameter: 64)
+            // 相手のアバター画像設定
+            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "catProfile"), diameter: 64)
+        }else{
+//            userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
+//            petImage = UIImage(data: NSData(base64Encoded: petImageString!, options: .ignoreUnknownCharacters)! as Data)
+            
+            // 自分のアバター画像設定
+            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: roomData?.userImage, diameter: 64)
+            // 相手のアバター画像設定
+            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: roomData?.petImage, diameter: 64)
+
+            // roomDataからメッセージを取得
+            getMessages()
+        }
         
         self.finishReceivingMessage()
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad end")
-        
     }
-    
-    private func initialSettings() {
-        print("DEBUG_PRINT: MessagesViewController.initialSettings start")
-        
-        if let uid = uid, let pid = pid {
-            roomId = uid + pid
-            
-            var userImage = UIImage(named: "user")
-            if userImageString != nil {
-                userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
-            }
-            var petImage = UIImage(named: "catProfile")
-            if petImageString != nil {
-                petImage = UIImage(data: NSData(base64Encoded: petImageString!, options: .ignoreUnknownCharacters)! as Data)
-            }
-            
-            self.senderId = uid
-            self.senderDisplayName = userDefaults.string(forKey: DefaultString.DisplayName)!
-            // 自分のアバター画像設定
-            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: userImage, diameter: 64)
-            // 相手のアバター画像設定
-            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: petImage, diameter: 64)
-            
-            // 吹き出しの色設定
-            let bubbleFactory = JSQMessagesBubbleImageFactory()
-            self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
-            self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
-            
-            // 過去のmessageデータを取得
-            self.getMessages()
-        }
-        
-        print("DEBUG_PRINT: MessagesViewController.initialSettings end")
-    }
-    
     
     func getMessages() {
         print("DEBUG_PRINT: MessagesViewController.getMessages start")
         
-        let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child(roomId!)
+        let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
         // Messageの取得
-        ref.queryLimited(toLast: 100).observe(.value, with: { (snapshot) in
-            
+        ref.queryLimited(toLast: 10).observe(.value, with: { (snapshot) in
             print("DEBUG_PRINT: MessagesViewController.getMessages .observeイベントが発生しました。")
             
             if self.observing == false {
-                
                 for v in snapshot.children {
                     if let _v = v as? FIRDataSnapshot {
-                        
-                        let messageData = MessageData(snapshot: _v, myId: self.roomId!)
+                        let messageData = MessageData(snapshot: _v, myId: (self.roomData?.id)!)
                         let senderId = messageData.senderId
                         let senderDisplayName = messageData.senderDisplayName
                         let date = messageData.timestamp! as Date
@@ -156,12 +133,14 @@ class MessagesViewController: JSQMessagesViewController {
         
         // insert
         let ref = FIRDatabase.database().reference()
-        let key = ref.child(Paths.MessagePath).child(roomId!).childByAutoId().key
-        ref.child(Paths.MessagePath).child(roomId!).child(key).setValue(inputData)
+        let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
+        ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
         
         // update
-        ref.child(Paths.UserPath).child(uid!).child("myMessages").updateChildValues([roomId! : true])
-        ref.child(Paths.PetPath).child(pid!).child("myMessages").updateChildValues([roomId! : true])
+        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : text])
+        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : String(time)])
+        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
+        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
         
         // 更新
         finishSendingMessage(animated: true)
@@ -302,11 +281,12 @@ class MessagesViewController: JSQMessagesViewController {
         
         // insert
         let ref = FIRDatabase.database().reference()
-        let key = ref.child(Paths.MessagePath).child(roomId!).childByAutoId().key
-        ref.child(Paths.MessagePath).child(roomId!).child(key).setValue(inputData)
+        let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
+        ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
+        
         // update
-        ref.child(Paths.UserPath).child(uid!).child("myMessages").updateChildValues([roomId! : true])
-        ref.child(Paths.PetPath).child(pid!).child("myMessages").updateChildValues([roomId! : true])
+        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
+        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
 
         finishSendingMessage(animated: true)
         sendAutoMessage()

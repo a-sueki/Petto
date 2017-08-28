@@ -12,6 +12,7 @@ struct Paths {
     static let PetPath = "pet"
     static let UserPath = "user"
     static let MessagePath = "message"
+    static let RoomPath = "room"
     static let SearchPath = "search"
 }
 

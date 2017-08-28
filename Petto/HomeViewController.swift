@@ -32,19 +32,12 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         registerButton.layer.cornerRadius = 75.0
         registerButton.layer.masksToBounds = true
         
-        
         collectionView.delegate = self
         collectionView.dataSource = self
         
         let nib = UINib(nibName: "HomeCollectionViewCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "homeCell")
-/*
-        let leftBtns: [UIBarButtonItem] = [btn1,btn2]
-        let rightBtns: [UIBarButtonItem] = [btn3,btn4,btn5]
-        
-        self.navigationItem.leftBarButtonItems = leftBtns
-        self.navigationItem.rightBarButtonItems = rightBtns
-*/        
+      
         print("DEBUG_PRINT: HomeViewController.viewDidLoad end")
     }
     

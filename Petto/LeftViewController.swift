@@ -23,7 +23,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     var observing = false
     
     var mainViewController: UINavigationController!
-    var menus = ["UserProfile", "MyPetList","MessageList","Leave","UserDetail","Logout"]
+    var menus = ["UserProfile", "MyPetList","MessageList","Leave","MessagesContainer","Logout"]
     
     @IBOutlet weak var tableView: UITableView!
         
@@ -79,8 +79,8 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let navigationController = UINavigationController(rootViewController: leaveViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 4://確認用
-            let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
-            let navigationController = UINavigationController(rootViewController: userDetailViewController)
+            let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessagesContainer") as! MessagesContainerViewController
+            let navigationController = UINavigationController(rootViewController: messagesContainerViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 5:
             logout()
