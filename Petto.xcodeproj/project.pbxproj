@@ -51,6 +51,7 @@
 		84D6CD301F18817E000CA101 /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */; };
 		84D6CD331F18F7E3000CA101 /* CustomCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD321F18F7E3000CA101 /* CustomCells.swift */; };
 		84D6CD351F18F828000CA101 /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */; };
+		84D926801F559A5A008E419E /* PasswordResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D9267F1F559A5A008E419E /* PasswordResetViewController.swift */; };
 		84DB3BFA1F540A490067A680 /* BookingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BF91F540A490067A680 /* BookingViewController.swift */; };
 		84DB3BFC1F543D5B0067A680 /* MessagesContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */; };
 		84DB3BFE1F5453410067A680 /* RoomData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BFD1F5453410067A680 /* RoomData.swift */; };
@@ -134,6 +135,7 @@
 		84D6CD2F1F18817E000CA101 /* ImagePickerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		84D6CD321F18F7E3000CA101 /* CustomCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCells.swift; sourceTree = "<group>"; };
 		84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
+		84D9267F1F559A5A008E419E /* PasswordResetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordResetViewController.swift; sourceTree = "<group>"; };
 		84DB3BF91F540A490067A680 /* BookingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookingViewController.swift; sourceTree = "<group>"; };
 		84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesContainerViewController.swift; sourceTree = "<group>"; };
 		84DB3BFD1F5453410067A680 /* RoomData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomData.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				849ED1E31F1CF912003AD9F5 /* Model */,
 				84D253071F0217D700D877A9 /* LeftViewController.swift */,
 				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
+				84D9267F1F559A5A008E419E /* PasswordResetViewController.swift */,
 				8457462F1F2FF73300CE5470 /* User */,
 				846705DF1F0F7B2300FFEA8D /* Home */,
 				846705E11F0F7BAA00FFEA8D /* Messages */,
@@ -516,6 +519,7 @@
 				842810A51F5526ED001A59D9 /* AccountViewController.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
+				84D926801F559A5A008E419E /* PasswordResetViewController.swift in Sources */,
 				84DB3BFC1F543D5B0067A680 /* MessagesContainerViewController.swift in Sources */,
 				845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,

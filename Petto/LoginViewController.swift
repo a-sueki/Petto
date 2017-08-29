@@ -73,12 +73,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print("DEBUG_PRINT: ログインに成功しました")
                     // HUDを消す
                     SVProgressHUD.dismiss()
-                    // 画面を閉じる
-                    self.dismiss(animated: true, completion: nil)
                     // Homeに画面遷移
-                    let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-                    self.navigationController?.pushViewController(homeViewController, animated: true)
-                    
+                    DispatchQueue.main.async {
+                        let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+                        //self.navigationController?.pushViewController(homeViewController, animated: true)
+                        self.present(homeViewController, animated: true, completion: nil)
+                    }
+                    // 画面を閉じる
+                    //self.dismiss(animated: true, completion: nil)
                 }
             }
         }
@@ -112,8 +114,26 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     return
                 }
                 
+                // 確認メール送信
+                if let user = FIRAuth.auth()?.currentUser {
+                    if !user.isEmailVerified{
+                        let alertVC = UIAlertController(title: "仮登録が成功しました！", message: "上記アドレスに確認メールを送信しました。メール内のURLをクリックし、登録を完了してください。", preferredStyle: .alert)
+                        let alertActionOkay = UIAlertAction(title: "はい", style: .default) {
+                            (_) in
+                            user.sendEmailVerification(completion: nil)
+                        }
+                        let alertActionCancel = UIAlertAction(title: "いいえ", style: .default, handler: nil)
+                        alertVC.addAction(alertActionOkay)
+                        alertVC.addAction(alertActionCancel)
+                        self.present(alertVC, animated: true, completion: nil)
+                    } else {
+                        // HUDで送信完了を表示する
+                        SVProgressHUD.showSuccess(withStatus: "アカウントを作成しました。")
+                    }
+                }
+                
                 let uid = FIRAuth.auth()?.currentUser?.uid
-                // デフォルト値
+                // ユーザーデフォルト設定
                 self.userDefaults.set(uid! , forKey: DefaultString.Uid)
                 self.userDefaults.set(address , forKey: DefaultString.Mail)
                 self.userDefaults.set(password , forKey: DefaultString.Password)
@@ -121,16 +141,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 let imageData = UIImageJPEGRepresentation(UIImage(named: "user")! , 0.5)
                 let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
                 self.userDefaults.set(imageString , forKey: DefaultString.Phote)
-                
-                //TODO:確認メール送信
-                //FIRAuth.auth()?.currentUser?.sendEmailVerification(completion: { (error) in
-                // ...
-                //})
-                
-                //TODO:パスワードの再設定メール送信
-                //FIRAuth.auth()?.sendPasswordReset(withEmail: userInput) { (error) in
-                // ...
-                //})
                 
                 // 表示名を設定する
                 let user = FIRAuth.auth()?.currentUser
@@ -146,13 +156,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         
                         // HUDを消す
                         SVProgressHUD.dismiss()
-                        // 画面を閉じてViewControllerに戻る
-                        self.dismiss(animated: true, completion: nil)
-                        
                         // Homeに画面遷移
-                        let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-                        self.navigationController?.pushViewController(homeViewController, animated: true)
-                        
+                        DispatchQueue.main.async {
+                            let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+                            self.present(homeViewController, animated: true, completion: nil)
+                            //self.navigationController?.pushViewController(homeViewController, animated: true)
+                        }
+                        // 画面を閉じてViewControllerに戻る
+                        //self.dismiss(animated: true, completion: nil)
                     }
                 } else {
                     print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton displayNameの設定に失敗しました。")
@@ -161,5 +172,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
         }
         print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton end")
+    }
+    
+    @IBAction func handlePasswordResetButton(_ sender: Any) {
+        print("DEBUG_PRINT: LoginViewController.handlePasswordResetButton start")
+
+        // PasswordResetに画面遷移
+        let passwordResetViewController = self.storyboard?.instantiateViewController(withIdentifier: "PasswordReset") as! PasswordResetViewController
+        present(passwordResetViewController, animated: true, completion: nil)
+        
+        print("DEBUG_PRINT: LoginViewController.handlePasswordResetButton end")
     }
 }
