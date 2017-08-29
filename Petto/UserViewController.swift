@@ -40,15 +40,10 @@ class UserViewController: BaseFormViewController  {
                 if let _ = snapshot.value as? NSDictionary {
                     self.userData = UserData(snapshot: snapshot, myId: uid)
                 }
-
-                self.userData?.mail = self.userDefaults.string(forKey: DefaultString.Mail)
-//                self.userData?.displayName = self.userDefaults.string(forKey: DefaultString.DisplayName)
-                
                 // Formを表示
                 self.updateUserData()
             })
-            // FIRDatabaseのobserveEventが上記コードにより登録されたため
-            // trueとする
+            // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
             observing = true
         }
         print("DEBUG_PRINT: UserViewController.viewDidLoad end")
@@ -79,92 +74,8 @@ class UserViewController: BaseFormViewController  {
         
         // フォーム
         form +++
-            Section("Account") {
-                if let _ = self.userData {
-                    $0.header = HeaderFooterView<UserEditView>(.class)
-                }else {
-                    $0.header = HeaderFooterView<UserEntryView>(.class)
-                }
-            }
-            
-            <<< EmailRow("mail") {
-                $0.title = "メールアドレス"
-                $0.value = self.userData?.mail ?? userDefaults.string(forKey: DefaultString.Mail)
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
-            }
-            //TODO:必須入力じゃダメ。入力項目から削除？
-            <<< PasswordRow("password") {
-                $0.title = "パスワード"
-                $0.value = self.userData?.password ?? nil
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
-            }
-            <<< AccountRow("displayName") {
-                $0.title = "ニックネーム"
-                $0.placeholder = "Placeholder"
-                $0.value = self.userData?.displayName ?? nil
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
-            }
-            
-            
             //TODO: コミットメント＆小さなバッチ（メダル）
-            +++ Section("プロフィール")
+            Section("プロフィール")
             <<< ImageRow("image"){
                 $0.title = "写真"
                 $0.baseValue = self.userData?.image ?? nil
@@ -246,10 +157,11 @@ class UserViewController: BaseFormViewController  {
                 $0.title = "生年月日"
             }
             
-            +++ Section("じゅうしょ")
+            +++ Section("エリア")
             //TODO:入力中に赤字になる
             <<< ZipCodeRow("zipCode") {
                 $0.title = "郵便番号"
+                $0.value = self.userData?.zipCode ?? nil
                 $0.placeholder = "1234567"
                 $0.add(rule: RuleMinLength(minLength: 7))
                 $0.add(rule: RuleMaxLength(maxLength: 7))
@@ -322,7 +234,6 @@ class UserViewController: BaseFormViewController  {
                     }
             }
             //TODO: 住所2入力欄
-            
             <<< TextRow("area") {
                 $0.title = "エリア"
                 $0.value = self.userData?.area ?? nil
@@ -460,67 +371,9 @@ class UserViewController: BaseFormViewController  {
     }
     
     @IBAction func executePost() {
-        print("---UserViewController.executePost start")
+        print("DEBUG_PRINT: UserViewController.executePost start")
         
-        // アカウント情報の修正
-        //TODO:ユーザーを再認証する
-        
-        for (key,value) in form.values() {
-            if value == nil {
-                print("ALERT::: key値「\(key)」がnilです。")
-            }else if case let itemValue as String = value {
-                // 表示名を設定する
-                if key == "displayName" {
-                    let user = FIRAuth.auth()?.currentUser
-                    if let user = user {
-                        let changeRequest = user.profileChangeRequest()
-                        changeRequest.displayName = itemValue
-                        changeRequest.commitChanges { error in
-                            if let error = error {
-                                print("DEBUG_PRINT: " + error.localizedDescription)
-                            }
-                            print("DEBUG_PRINT: [displayName = \(user.displayName!)]の設定に成功しました。")
-                            // HUDで完了を知らせる
-                            SVProgressHUD.showSuccess(withStatus: "表示名を変更しました")
-                        }
-                    } else {
-                        print("DEBUG_PRINT: 表示名の設定に失敗しました。")
-                    }
-                    // メールアドレスを設定する
-                }else if key == "mail" {
-                    let user = FIRAuth.auth()?.currentUser
-                    if let user = user {
-                        user.updateEmail(itemValue, completion: { error in
-                            if let error = error {
-                                print("DEBUG_PRINT: " + error.localizedDescription)
-                            }
-                            print("DEBUG_PRINT: [email = \(user.email!)]の設定に成功しました。")
-                            // HUDで完了を知らせる
-                            SVProgressHUD.showSuccess(withStatus: "メールアドレスを変更しました")
-                        })
-                    } else {
-                        print("DEBUG_PRINT: メールアドレスの設定に失敗しました。")
-                    }
-                    // メールアドレスを設定する
-                }else if key == "password" {
-                    let user = FIRAuth.auth()?.currentUser
-                    if let user = user {
-                        user.updatePassword(itemValue, completion: { error in
-                            if let error = error {
-                                print("DEBUG_PRINT: " + error.localizedDescription)
-                            }
-                            print("DEBUG_PRINT: passwordの設定に成功しました。")
-                            // HUDで完了を知らせる
-                            SVProgressHUD.showSuccess(withStatus: "パスワードを変更しました")
-                        })
-                    } else {
-                        print("DEBUG_PRINT: パスワードの設定に失敗しました。")
-                    }
-                }
-            }
-        }
-        
-        // その他ユーザ情報
+        // ユーザ情報
         for (key,value) in form.values() {
             if value == nil {
                 print("ALERT::: key値「\(key)」がnilです。")
@@ -623,15 +476,11 @@ class UserViewController: BaseFormViewController  {
         }
         
         // UserDefaultsを更新
-        userDefaults.set(uid , forKey: DefaultString.Uid)
-        userDefaults.set(self.inputData["mail"] , forKey: DefaultString.Mail)
-        userDefaults.set(self.inputData["password"] , forKey: DefaultString.Password)
-        userDefaults.set(self.inputData["displayName"] , forKey: DefaultString.DisplayName)
         userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
         userDefaults.set(self.inputData["area"] , forKey: DefaultString.Area)
         
         // HUDで投稿完了を表示する
-        SVProgressHUD.showSuccess(withStatus: "投稿しました")
+        SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)

@@ -10,6 +10,7 @@ import UIKit
 
 class MessageListTableViewCell: UITableViewCell {
 
+    let userDefaults = UserDefaults.standard
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var userNameLabel: UILabel!
     
@@ -41,7 +42,8 @@ class MessageListTableViewCell: UITableViewCell {
         print("MessageListTableViewCell.setData start")
         
         self.userImageView.image = userData.image
-        self.userNameLabel.text = userData.displayName
+        self.userNameLabel.text = self.userDefaults.string(forKey: DefaultString.DisplayName)
+
         //TODO: 評価カウントをセット
         self.goodIntLabel.text = "10" //String(userData.goods.count)
         self.badIntLabel.text = "3" //String(userData.bads.count)

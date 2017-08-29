@@ -114,7 +114,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageListCell", for: indexPath) as! MessageListTableViewCell
         
         // roomDataリスト取得（非同期）の完了前のテーブル表示エラー防止のため
-        if self.roomDataArray.count == indexPath.count {
+        if self.roomIdList.count == self.roomDataArray.count {
             cell.setData(userData: self.userData!, roomData: self.roomDataArray[indexPath.row])
             
             // セル内のボタンのアクションをソースコードで設定する

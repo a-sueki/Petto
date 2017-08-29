@@ -17,10 +17,6 @@ class UserData: NSObject {
     var isGooded: Bool = false
     var bads: [String] = []
     var isBaded: Bool = false
-    // ログイン情報
-    var mail: String?
-    var password: String?
-    var displayName: String?
     // 個人情報
     var image: UIImage?
     var imageString: String?
@@ -77,10 +73,6 @@ class UserData: NSObject {
                 break
             }
         }
-        // ログイン情報
-        self.mail = valueDictionary["mail"] as? String
-        self.password = valueDictionary["password"] as? String
-        self.displayName = valueDictionary["displayName"] as? String
 
         // 個人情報
         imageString = valueDictionary["imageString"] as? String

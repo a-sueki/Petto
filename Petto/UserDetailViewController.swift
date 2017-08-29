@@ -24,9 +24,6 @@ class UserDetailViewController: BaseFormViewController {
         super.viewDidLoad()
         print("DEBUG_PRINT: UserDetailViewController.viewDidLoad start")
         
-        //TODO: 確認用。遷移元でセットする
-        uid = "hVx17GxjTIVYg7f91U1THgZ5l4L2"
-        
         // Firebaseから登録済みデータを取得
         if uid != nil {
             // 要素が追加されたら再表示
@@ -71,12 +68,6 @@ class UserDetailViewController: BaseFormViewController {
             }
             
             //TODO: コミットメント＆小さなバッチ（メダル）
-            
-            <<< AccountRow("displayName") {
-                $0.title = "ニックネーム"
-                $0.value = self.userData?.displayName ?? nil
-                $0.disabled = true
-            }
             <<< TextRow("area") {
                 $0.title = "エリア"
                 $0.value = self.userData?.area ?? nil

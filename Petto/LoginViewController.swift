@@ -109,21 +109,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 }
 
                 let uid = FIRAuth.auth()?.currentUser?.uid
-                /*// inputDataに必要な情報を取得しておく
-                let time = NSDate.timeIntervalSinceReferenceDate
-                // 辞書を作成
-                let ref = FIRDatabase.database().reference()
-                //Firebase(user)に保存
-                var inputData = [String : Any]()
-                let key = uid
-                inputData["mail"] = address
-                inputData["password"] = password
-                inputData["displayName"] = "ゲストさん"
-                inputData["createAt"] = String(time)
-                inputData["createBy"] = uid!
-                // insert
-                ref.child(Paths.UserPath).child(key!).setValue(inputData)
-                */
                 // デフォルト値
                 self.userDefaults.set(uid! , forKey: DefaultString.Uid)
                 self.userDefaults.set(address , forKey: DefaultString.Mail)

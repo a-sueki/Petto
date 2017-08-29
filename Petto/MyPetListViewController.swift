@@ -14,18 +14,17 @@ import FirebaseDatabase
 class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource  {
 
     @IBOutlet weak var tableView: UITableView!
+    var petIdList: [String] = []
+    var userData: UserData?
     var petDataArray: [PetData] = []
 
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
 
-    // test用
-    var petphotos = ["dog1", "dog2","dog3"]
-    var petname = ["豆助1", "豆助2","豆助3"]
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print("DEBUG_PRINT: MyPetListViewController.viewDidLoad start")
+        
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
@@ -34,89 +33,67 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         tableView.register(nib, forCellReuseIdentifier: "myPetListCell")
         tableView.rowHeight = UITableViewAutomaticDimension
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print("DEBUG_PRINT: viewWillAppear")
-        
-        //TODO: BaseViewControllerにまとめる
-        // currentUserがnilならログインしていない
-        if FIRAuth.auth()?.currentUser == nil {
-            
+        // userのマイペットリストを取得
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: MyPetListViewController.viewDidLoad user.observeSingleEventイベントが発生しました。")
+                self.userData = UserData(snapshot: snapshot, myId: uid)
+                if self.userData?.myPets.count != 0 {
+                    // user,petデータを取得
+                    for (key, _) in (self.userData?.myPets)! {
+                        self.petIdList.append(key)
+                        self.getData(petId: key)
+                    }
+                    // tableViewを再表示する
+                    self.tableView.reloadData()
+                }
+                
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+            self.observing = true
+        }else{
+            print("DEBUG_PRINT: MyPetListViewController.viewDidLoad ユーザがログインしていません。")
+            // ログインしていない場合
             if observing == true {
                 // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
-                // テーブルをクリアする
-                petDataArray = []
-                tableView.reloadData()
+                petIdList = []
+                self.tableView.reloadData()
                 // オブザーバーを削除する
                 FIRDatabase.database().reference().removeAllObservers()
-                
-                // FIRDatabaseのobserveEventが上記コードにより解除されたため
-                // falseとする
+                // FIRDatabaseのobserveEventが上記コードにより解除されたためfalseとする
                 observing = false
             }
             
-            // ログインしていないときの処理
-            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+            // ログイン画面に遷移
             DispatchQueue.main.async {
                 let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
                 self.present(loginViewController!, animated: true, completion: nil)
             }
         }
-        
-        if FIRAuth.auth()?.currentUser != nil {
-            if self.observing == false {
-                // 要素が追加されたらpostArrayに追加してTableViewを再表示する
-                let postsRef = FIRDatabase.database().reference().child(Paths.PetPath)
-                postsRef.observe(.childAdded, with: { snapshot in
-                    print("DEBUG_PRINT: .childAddedイベントが発生しました。")
-                    
-                    // petDataクラスを生成して受け取ったデータを設定する
-                    if let uid = FIRAuth.auth()?.currentUser?.uid {
-                        let petData = PetData(snapshot: snapshot, myId: uid)
-                        self.petDataArray.insert(petData, at: 0)
-                        
-                        // tableViewを再表示する
-                        self.tableView.reloadData()
-                    }
-                })
-                // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
-                postsRef.observe(.childChanged, with: { snapshot in
-                    print("DEBUG_PRINT: .childChangedイベントが発生しました。")
-                    
-                    if let uid = FIRAuth.auth()?.currentUser?.uid {
-                        // petDataクラスを生成して受け取ったデータを設定する
-                        let petData = PetData(snapshot: snapshot, myId: uid)
-                        
-                        // 保持している配列からidが同じものを探す
-                        var index: Int = 0
-                        for petInfo in self.petDataArray {
-                            if petInfo.id == petData.id {
-                                index = self.petDataArray.index(of: petInfo)!
-                                break
-                            }
-                        }
-                        
-                        // 差し替えるため一度削除する
-                        self.petDataArray.remove(at: index)
-                        
-                        // 削除したところに更新済みのでデータを追加する
-                        self.petDataArray.insert(petData, at: index)
-                        
-                        // TableViewの現在表示されているセルを更新する
-                        self.tableView.reloadData()
-                    }
-                })
-                
-                // FIRDatabaseのobserveEventが上記コードにより登録されたため
-                // trueとする
-                observing = true
-            }
-        }
+        print("DEBUG_PRINT: MyPetListViewController.viewDidLoad end")
     }
-
-    
+        
+        func getData(petId: String) {
+            print("DEBUG_PRINT: MyPetListViewController.getData start")
+            
+            // petDataリストの取得
+            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: MyPetListViewController.getData pet.observeSingleEventイベントが発生しました。")
+                if let _ = snapshot.value as? NSDictionary {
+                    let petData = PetData(snapshot: snapshot, myId: petId)
+                     self.petDataArray.append(petData)
+                    // tableViewを再表示する
+                    self.tableView.reloadData()
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+            
+            print("DEBUG_PRINT: MyPetListViewController.getData end")
+        }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -126,30 +103,22 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
 
     // データの数（＝セルの数）を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return petDataArray.count
+        return self.petIdList.count
     }
     
     // 各セルの内容を返すメソッド
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-/*        // 再利用可能な cell を得る
-        let testCell = tableView.dequeueReusableCell(withIdentifier: "myPetListCell", for: indexPath)
+        print("DEBUG_PRINT: MyPetListViewController.cellForRowAt start")
         
-        // Tag番号を使ってImageViewのインスタンス生成
-        let userImageView = testCell.contentView.viewWithTag(1) as? UIImageView
-        userImageView?.image = UIImage(named: petphotos[(indexPath as NSIndexPath).row])
-        // Tag番号を使ってLabelのインスタンス生成
-        let userNameLabel = testCell.contentView.viewWithTag(2) as? UILabel
-        userNameLabel?.text = petname[(indexPath as NSIndexPath).row]
-        return testCell
- */
         let cell = tableView.dequeueReusableCell(withIdentifier: "myPetListCell", for: indexPath) as! MyPetListTableViewCell
-        cell.setData(petData: petDataArray[indexPath.row])
+        if self.petIdList.count == self.petDataArray.count {
+            cell.setData(petData: petDataArray[indexPath.row])
+            // セル内のボタンのアクションをソースコードで設定する
+            cell.photoImageButton.addTarget(self, action:#selector(handleImageView(sender:event:)), for:  UIControlEvents.touchUpInside)
+        }
         
-        // セル内のボタンのアクションをソースコードで設定する
-        cell.photoImageButton.addTarget(self, action:#selector(handleImageView(sender:event:)), for:  UIControlEvents.touchUpInside)
-        
+        print("DEBUG_PRINT: MyPetListViewController.cellForRowAt end")
         return cell
-
     }
     
     // 各セルを選択した時に実行されるメソッド
@@ -170,7 +139,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
     
     // ペットの写真がタップされたら編集画面に遷移
     func handleImageView(sender: UIButton, event:UIEvent) {
-        print("DEBUG_PRINT: likeボタンがタップされました。")
+        print("DEBUG_PRINT: MyPetListViewController.handleImageView start")
         
         // タップされたセルのインデックスを求める
         let touch = event.allTouches?.first
@@ -183,6 +152,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
         editViewController.petData = petData
         self.navigationController?.pushViewController(editViewController, animated: true)
-    
+
+        print("DEBUG_PRINT: MyPetListViewController.handleImageView end")
     }
 }

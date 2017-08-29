@@ -54,16 +54,11 @@ class MessagesViewController: JSQMessagesViewController {
         self.senderDisplayName = userDefaults.string(forKey: DefaultString.DisplayName)!
 
         if self.roomData == nil {
-//            var userImage = UIImage(named: "user")
-//            var petImage = UIImage(named: "catProfile")
             // 自分のアバター画像設定
             self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "user"), diameter: 64)
             // 相手のアバター画像設定
             self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "catProfile"), diameter: 64)
-        }else{
-//            userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
-//            petImage = UIImage(data: NSData(base64Encoded: petImageString!, options: .ignoreUnknownCharacters)! as Data)
-            
+        }else{            
             // 自分のアバター画像設定
             self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: roomData?.userImage, diameter: 64)
             // 相手のアバター画像設定
