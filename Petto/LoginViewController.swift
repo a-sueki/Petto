@@ -42,7 +42,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         // キーボードを閉じる
         textField.resignFirstResponder()
-
+        
         print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn end")
         return true
     }
@@ -51,7 +51,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     
     @IBAction func handleLoginButton(_ sender: Any) {
         print("DEBUG_PRINT: LoginViewController.handleLoginButton start")
@@ -65,7 +65,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
             
             FIRAuth.auth()?.signIn(withEmail: address, password: password) { user, error in
-            if let error = error {
+                if let error = error {
                     print("DEBUG_PRINT: " + error.localizedDescription)
                     SVProgressHUD.showError(withStatus: "ログインに失敗しました")
                     return
@@ -75,6 +75,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     SVProgressHUD.dismiss()
                     // 画面を閉じる
                     self.dismiss(animated: true, completion: nil)
+                    // Homeに画面遷移
+                    let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+                    self.navigationController?.pushViewController(homeViewController, animated: true)
+                    
                 }
             }
         }
@@ -84,7 +88,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func handleCreateAcountButton(_ sender: Any) {
         print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton start")
-
+        
         if let address = mailAddressTextField.text, let password = passwordTextField.text {
             
             // アドレスとパスワードのいずれかでも入力されていない時は何もしない
@@ -107,7 +111,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     }
                     return
                 }
-
+                
                 let uid = FIRAuth.auth()?.currentUser?.uid
                 // デフォルト値
                 self.userDefaults.set(uid! , forKey: DefaultString.Uid)
@@ -144,11 +148,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         SVProgressHUD.dismiss()
                         // 画面を閉じてViewControllerに戻る
                         self.dismiss(animated: true, completion: nil)
+                        
+                        // Homeに画面遷移
+                        let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+                        self.navigationController?.pushViewController(homeViewController, animated: true)
+                        
                     }
                 } else {
                     print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton displayNameの設定に失敗しました。")
                 }
-
+                
             }
         }
         print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton end")

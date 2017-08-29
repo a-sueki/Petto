@@ -19,10 +19,17 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     var roomDataArray: [RoomData] = []
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
+    var guruguruView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: MessageListViewController.viewDidLoad start")
+
+        // インジケーター
+        guruguruView.center = view.center
+        view.addSubview(guruguruView)
+        // 動かす
+        guruguruView.startAnimating()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -115,6 +122,9 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         // roomDataリスト取得（非同期）の完了前のテーブル表示エラー防止のため
         if self.roomIdList.count == self.roomDataArray.count {
+            // 止める
+            guruguruView.stopAnimating()
+            
             cell.setData(userData: self.userData!, roomData: self.roomDataArray[indexPath.row])
             
             // セル内のボタンのアクションをソースコードで設定する
