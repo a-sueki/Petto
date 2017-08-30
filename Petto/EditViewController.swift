@@ -27,7 +27,7 @@ class EditViewController: BaseFormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: EditViewController.viewDidLoad start")
-       
+        
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
             cell.contentView.backgroundColor = .red
@@ -309,25 +309,14 @@ class EditViewController: BaseFormViewController {
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }
-                .onRowValidationChanged { [weak self] cell, row in
-                //.onChange { [weak self] row in
+                .onChange { [weak self] row in
                     let endRow: DateRow! = self?.form.rowBy(tag: "endDate")
                     if row.value?.compare(endRow.value!) == .orderedDescending {
                         endRow.value = Date(timeInterval: 60*60*24, since: row.value!)
                         endRow.cell!.backgroundColor = .white
                         endRow.updateCell()
                     }
-                }/*
-                .onExpandInlineRow {cell, row, inlineRow in
-                    inlineRow.cellUpdate() { cell, row in
-                        cell.datePicker.datePickerMode = .date
-                    }
-                    let color = cell.detailTextLabel?.textColor
-                    row.onCollapseInlineRow { cell, _, _ in
-                        cell.detailTextLabel?.textColor = color
-                    }
-                    cell.detailTextLabel?.textColor = cell.tintColor
-                }*/
+                }
                 .onRowValidationChanged { cell, row in
                     let rowIndex = row.indexPath!.row
                     while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
@@ -343,7 +332,7 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
-
+            
             <<< DateRow("endDate") {
                 $0.title = "終了日付"
                 if let dateString = self.petData?.endDate {
@@ -358,29 +347,59 @@ class EditViewController: BaseFormViewController {
                 formatter.dateStyle = .long
                 $0.dateFormatter = formatter
                 $0.add(rule: RuleRequired())
+                var ruleSet = RuleSet<Date>()
+                ruleSet.add(rule: RuleRequired())
+                ruleSet.add(rule: RuleClosure { [weak self] row -> ValidationError? in
+                    let startRow: DateRow! = self!.form.rowBy(tag: "startDate")
+                    let endRow: DateRow! = self!.form.rowBy(tag: "endDate")
+                    if startRow.value?.compare(endRow.value!) == .orderedDescending {
+                        return ValidationError(msg: ErrorMsgString.RuleEndDate)
+                    }
+                    return nil
+                })
+                $0.add(ruleSet: ruleSet)
+                $0.validationOptions = .validatesOnChange
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+            }
+            
+            +++
+            Section("連続おあずけ日数"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+            }
+            <<< PickerInputRow<Int>("minDays"){
+                $0.title = "最短"
+                $0.options = []
+                for i in 1...30{
+                    $0.options.append(i)
+                }
+                $0.value = self.petData?.minDays ?? $0.options.first
+                $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }
                 .onChange { [weak self] row in
-                //.onRowValidationChanged { [weak self] cell, row in
-                    let startRow: DateRow! = self?.form.rowBy(tag: "startDate")
-                    if row.value?.compare(startRow.value!) == .orderedAscending {
-                        row.cell!.backgroundColor = .red
+                    let maxRow: PickerInputRow<Int>! = self?.form.rowBy(tag: "maxDays")
+                    if let min = row.value, let max = maxRow?.value, min > max {
+                        maxRow.value = row.value! + 1
+                        maxRow.cell!.backgroundColor = .white
+                        maxRow.updateCell()
                     }
-                    else{
-                        row.cell!.backgroundColor = .white
-                    }
-                    row.updateCell()
                 }
-                /*.onExpandInlineRow { cell, row, inlineRow in
-                    inlineRow.cellUpdate { cell, dateRow in
-                        cell.datePicker.datePickerMode = .date
-                    }
-                    let color = cell.detailTextLabel?.textColor
-                    row.onCollapseInlineRow { cell, _, _ in
-                        cell.detailTextLabel?.textColor = color
-                    }
-                    cell.detailTextLabel?.textColor = cell.tintColor
-                }*/
                 .onRowValidationChanged { cell, row in
                     let rowIndex = row.indexPath!.row
                     while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
@@ -396,22 +415,6 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
-    
-            +++
-            Section("連続おあずけ日数"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
-            <<< PickerInputRow<Int>("minDays"){
-                $0.title = "最短"
-                $0.options = []
-                for i in 1...30{
-                    $0.options.append(i)
-                }
-                $0.value = self.petData?.minDays ?? $0.options.first
-            }
             <<< PickerInputRow<Int>("maxDays"){
                 $0.title = "最長"
                 $0.options = []
@@ -419,6 +422,34 @@ class EditViewController: BaseFormViewController {
                     $0.options.append(i)
                 }
                 $0.value = self.petData?.maxDays ?? $0.options.last
+                $0.add(rule: RuleRequired())
+                var ruleSet = RuleSet<Int>()
+                ruleSet.add(rule: RuleRequired())
+                ruleSet.add(rule: RuleClosure { [weak self] row -> ValidationError? in
+                    let minRow: PickerInputRow<Int>! = self!.form.rowBy(tag: "minDays")
+                    let maxRow: PickerInputRow<Int>! = self!.form.rowBy(tag: "maxDays")
+                    if let min = minRow?.value, let max = maxRow?.value, min > max {
+                        return ValidationError(msg: ErrorMsgString.RuleMaxDate)
+                    }
+                    return nil
+                })
+ 
+                $0.add(ruleSet: ruleSet)
+                $0.validationOptions = .validatesOnChange
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
             //TODO: その他、特記事項入力フォーム
             
@@ -428,7 +459,7 @@ class EditViewController: BaseFormViewController {
                 row.title = "投稿する"
                 }.onCellSelection { [weak self] (cell, row) in
                     if let error = row.section?.form?.validate() {
-                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        SVProgressHUD.showError(withStatus: "\(error.count)件の入力エラーがあります")
                         print("DEBUG_PRINT: EditViewController.viewDidLoad \(error)")
                     }else{
                         self?.executePost()
@@ -446,7 +477,7 @@ class EditViewController: BaseFormViewController {
         
         // HUDで処理中を表示
         SVProgressHUD.show()
-
+        
         for (key,value) in form.values() {
             if value == nil {
                 //break
@@ -558,10 +589,10 @@ class EditViewController: BaseFormViewController {
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-
+        
         // HUDを消す
         SVProgressHUD.dismiss()
-
+        
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)

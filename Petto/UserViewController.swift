@@ -193,8 +193,8 @@ class UserViewController: BaseFormViewController  {
                 $0.title = "郵便番号"
                 $0.value = self.userData?.zipCode ?? nil
                 $0.placeholder = "1234567"
-                $0.add(rule: RuleMinLength(minLength: 7))
-                $0.add(rule: RuleMaxLength(maxLength: 7))
+                $0.add(rule: RuleMinLength(minLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
+                $0.add(rule: RuleMaxLength(maxLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
                 $0.validationOptions = .validatesOnChangeAfterBlurred
                 }.cellUpdate { cell, row in
                     if !row.isValid {
@@ -516,9 +516,12 @@ class UserViewController: BaseFormViewController  {
             SVProgressHUD.showSuccess(withStatus: "プロフィールを作成しました")
         }
         
+        print(userDefaults)
         // UserDefaultsを更新
         userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
         userDefaults.set(self.inputData["area"] , forKey: DefaultString.Area)
+        
+        print(userDefaults)
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)

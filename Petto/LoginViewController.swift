@@ -62,8 +62,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             if address.characters.isEmpty || password.characters.isEmpty {
                 SVProgressHUD.showError(withStatus: "ログイン情報を入力して下さい")
                 return
-            }else if password.characters.count < 6, password.characters.count > 12 {
+            }else if isValidEmailAddress(emailAddressString: address) == false {
+                SVProgressHUD.showError(withStatus: "メールアドレスが無効です")
+                return
+            }else if password.characters.count < 6 || password.characters.count > 12 {
                 SVProgressHUD.showError(withStatus: "パスワードは6〜12文字にして下さい")
+                return
             }
             
             FIRAuth.auth()?.signIn(withEmail: address, password: password) { user, error in
@@ -78,11 +82,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     // Homeに画面遷移
                     DispatchQueue.main.async {
                         let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-                        //self.navigationController?.pushViewController(homeViewController, animated: true)
-                        self.present(homeViewController, animated: true, completion: nil)
+                        let navigationController = UINavigationController(rootViewController: homeViewController)
+                        self.present(navigationController, animated: true, completion: nil)
                     }
-                    // 画面を閉じる
-                    //self.dismiss(animated: true, completion: nil)
                 }
             }
         }
@@ -95,9 +97,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         if let address = mailAddressTextField.text, let password = passwordTextField.text {
             
-            // アドレスとパスワードのいずれかでも入力されていない時は何もしない
+            // アドレスとパスワード名のいずれかでも入力されていない時は何もしない
             if address.characters.isEmpty || password.characters.isEmpty {
-                SVProgressHUD.showError(withStatus: "メールアドレスとパスワードを入力して下さい")
+                SVProgressHUD.showError(withStatus: "ログイン情報を入力して下さい")
+                return
+            }else if isValidEmailAddress(emailAddressString: address) == false {
+                SVProgressHUD.showError(withStatus: "メールアドレスが無効です")
+                return
+            }else if password.characters.count < 6 || password.characters.count > 12 {
+                SVProgressHUD.showError(withStatus: "パスワードは6〜12文字にして下さい")
                 return
             }
             // HUDで処理中を表示
@@ -158,14 +166,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         
                         // HUDを消す
                         SVProgressHUD.dismiss()
-                        // Homeに画面遷移
-                        DispatchQueue.main.async {
-                            let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-                            self.present(homeViewController, animated: true, completion: nil)
-                            //self.navigationController?.pushViewController(homeViewController, animated: true)
-                        }
-                        // 画面を閉じてViewControllerに戻る
-                        //self.dismiss(animated: true, completion: nil)
                     }
                 } else {
                     print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton displayNameの設定に失敗しました。")
@@ -174,6 +174,29 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
         }
         print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton end")
+    }
+    
+    func isValidEmailAddress(emailAddressString: String) -> Bool {
+        
+        var returnValue = true
+        let emailRegEx = "[A-Z0-9a-z.-_]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}"
+        
+        do {
+            let regex = try NSRegularExpression(pattern: emailRegEx)
+            let nsString = emailAddressString as NSString
+            let results = regex.matches(in: emailAddressString, range: NSRange(location: 0, length: nsString.length))
+            
+            if results.count == 0
+            {
+                returnValue = false
+            }
+            
+        } catch let error as NSError {
+            print("invalid regex: \(error.localizedDescription)")
+            returnValue = false
+        }
+        
+        return  returnValue
     }
     
     @IBAction func handlePasswordResetButton(_ sender: Any) {

@@ -67,7 +67,7 @@ class SearchViewController: BaseFormViewController {
             Section("絞り込み条件") {
                 $0.header = HeaderFooterView<SearchView>(.class)
             }
-            +++ Section("ほほほ")
+            +++ Section("ペットのプロフィール")
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
@@ -103,7 +103,7 @@ class SearchViewController: BaseFormViewController {
                 $0.value = self.searchData?.age ?? $0.options.last
             }
             
-            +++ Section("状態")
+            +++ Section("ペットの状態")
             //TODO: チェックボックスを表示
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
@@ -118,7 +118,7 @@ class SearchViewController: BaseFormViewController {
                 $0.value = self.searchData?.wanted ?? false
             }
 
-            +++ Section("条件")
+            +++ Section("おあずけ条件")
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集中"
                 $0.value = self.searchData?.isAvailable ?? true
@@ -168,22 +168,85 @@ class SearchViewController: BaseFormViewController {
                 })
             }
             <<< DateRow("startDate") {
+                $0.title = "開始日付"
                 if let dateString = self.searchData?.startDate {
                     $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = Date()
                 }
-                $0.title = "開始日付"
+                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                let formatter = DateFormatter()
+                formatter.locale = .current
+                formatter.dateStyle = .long
+                $0.dateFormatter = formatter
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }
+                .onChange { [weak self] row in
+                    let endRow: DateRow! = self?.form.rowBy(tag: "endDate")
+                    if row.value?.compare(endRow.value!) == .orderedDescending {
+                        endRow.value = Date(timeInterval: 60*60*24, since: row.value!)
+                        endRow.cell!.backgroundColor = .white
+                        endRow.updateCell()
+                    }
+                }
+                .onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
-            //TODO: 開始日付以降のチェック
+            
             <<< DateRow("endDate") {
+                $0.title = "終了日付"
                 if let dateString = self.searchData?.endDate {
                     $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
-                $0.title = "終了日付"
+                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                let formatter = DateFormatter()
+                formatter.locale = .current
+                formatter.dateStyle = .long
+                $0.dateFormatter = formatter
+                $0.add(rule: RuleRequired())
+                var ruleSet = RuleSet<Date>()
+                ruleSet.add(rule: RuleRequired())
+                ruleSet.add(rule: RuleClosure { [weak self] row -> ValidationError? in
+                    let startRow: DateRow! = self!.form.rowBy(tag: "startDate")
+                    let endRow: DateRow! = self!.form.rowBy(tag: "endDate")
+                    if startRow.value?.compare(endRow.value!) == .orderedDescending {
+                        return ValidationError(msg: ErrorMsgString.RuleEndDate)
+                    }
+                    return nil
+                })
+                $0.add(ruleSet: ruleSet)
+                $0.validationOptions = .validatesOnChange
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
+            
             +++
             Section("連続おあずけ日数"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
@@ -198,6 +261,31 @@ class SearchViewController: BaseFormViewController {
                     $0.options.append(i)
                 }
                 $0.value = self.searchData?.minDays ?? $0.options.first
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }
+                .onChange { [weak self] row in
+                    let maxRow: PickerInputRow<Int>! = self?.form.rowBy(tag: "maxDays")
+                    if let min = row.value, let max = maxRow?.value, min > max {
+                        maxRow.value = row.value! + 1
+                        maxRow.cell!.backgroundColor = .white
+                        maxRow.updateCell()
+                    }
+                }
+                .onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
             <<< PickerInputRow<Int>("maxDays"){
                 $0.title = "最長"
@@ -206,6 +294,34 @@ class SearchViewController: BaseFormViewController {
                     $0.options.append(i)
                 }
                 $0.value = self.searchData?.maxDays ?? $0.options.last
+                $0.add(rule: RuleRequired())
+                var ruleSet = RuleSet<Int>()
+                ruleSet.add(rule: RuleRequired())
+                ruleSet.add(rule: RuleClosure { [weak self] row -> ValidationError? in
+                    let minRow: PickerInputRow<Int>! = self!.form.rowBy(tag: "minDays")
+                    let maxRow: PickerInputRow<Int>! = self!.form.rowBy(tag: "maxDays")
+                    if let min = minRow?.value, let max = maxRow?.value, min > max {
+                        return ValidationError(msg: ErrorMsgString.RuleMaxDate)
+                    }
+                    return nil
+                })
+                
+                $0.add(ruleSet: ruleSet)
+                $0.validationOptions = .validatesOnChange
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
             //TODO: 並び順
             
