@@ -330,7 +330,7 @@ class SearchViewController: BaseFormViewController {
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "この条件で絞り込む"
                 }.onCellSelection { [weak self] (cell, row) in
-                    if let error = row.section?.form?.validate() {
+                    if let error = row.section?.form?.validate() , error.count != 0{
                         SVProgressHUD.showError(withStatus: "入力を修正してください")
                         print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
                     }else{

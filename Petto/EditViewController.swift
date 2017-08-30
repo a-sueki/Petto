@@ -458,7 +458,7 @@ class EditViewController: BaseFormViewController {
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "投稿する"
                 }.onCellSelection { [weak self] (cell, row) in
-                    if let error = row.section?.form?.validate() {
+                    if let error = row.section?.form?.validate(), error.count != 0 {
                         SVProgressHUD.showError(withStatus: "\(error.count)件の入力エラーがあります")
                         print("DEBUG_PRINT: EditViewController.viewDidLoad \(error)")
                     }else{

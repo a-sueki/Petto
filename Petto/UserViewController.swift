@@ -31,6 +31,9 @@ class UserViewController: BaseFormViewController  {
         
         print("DEBUG_PRINT: UserViewController.viewDidLoad start")
         
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             // 要素が追加されたら再表示
@@ -46,6 +49,10 @@ class UserViewController: BaseFormViewController  {
             // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
             observing = true
         }
+        
+        // HUDを消す
+        SVProgressHUD.dismiss()
+
         print("DEBUG_PRINT: UserViewController.viewDidLoad end")
     }
     
@@ -390,7 +397,7 @@ class UserViewController: BaseFormViewController  {
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "OK"
                 }.onCellSelection { [weak self] (cell, row) in
-                    if let error = row.section?.form?.validate() {
+                    if let error = row.section?.form?.validate(), error.count != 0 {
                         SVProgressHUD.showError(withStatus: "入力を修正してください")
                         print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
                     }else{
@@ -406,9 +413,6 @@ class UserViewController: BaseFormViewController  {
     
     @IBAction func executePost() {
         print("DEBUG_PRINT: UserViewController.executePost start")
-        
-        // HUDで処理中を表示
-        SVProgressHUD.show()
         
         // ユーザ情報
         for (key,value) in form.values() {
@@ -490,6 +494,31 @@ class UserViewController: BaseFormViewController  {
             }
         }
         
+        // 表示名（ニックネーム）を名前で更新
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+        let user = FIRAuth.auth()?.currentUser
+        if let newName = self.inputData["firstname"] as? String, newName != userDefaults.string(forKey: DefaultString.DisplayName) {
+            if let user = user {
+                let changeRequest = user.profileChangeRequest()
+                changeRequest.displayName = newName
+                changeRequest.commitChanges { error in
+                    if let error = error {
+                        print("DEBUG_PRINT: " + error.localizedDescription)
+                        // HUDで投稿完了を表示する
+                        SVProgressHUD.showError(withStatus: "表示の設定に失敗しました。")
+                    }
+                    print("DEBUG_PRINT: [displayName = \(newName)]の設定に成功しました。")
+                    // HUDで投稿完了を表示する
+                    SVProgressHUD.showSuccess(withStatus: "表示名を変更しました")
+                }
+            } else {
+                print("DEBUG_PRINT: ニックネーム変更なし")
+            }
+        }
+
+        // HUDで処理中を表示
+        SVProgressHUD.show()
         
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
@@ -507,7 +536,7 @@ class UserViewController: BaseFormViewController  {
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")
         }else{
-            let key = uid//ref.child(Paths.UserPath).childByAutoId().key
+            let key = uid
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert
@@ -516,12 +545,11 @@ class UserViewController: BaseFormViewController  {
             SVProgressHUD.showSuccess(withStatus: "プロフィールを作成しました")
         }
         
-        print(userDefaults)
+        
         // UserDefaultsを更新
         userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
         userDefaults.set(self.inputData["area"] , forKey: DefaultString.Area)
-        
-        print(userDefaults)
+        userDefaults.set(self.inputData["firstname"] , forKey: DefaultString.DisplayName)
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)

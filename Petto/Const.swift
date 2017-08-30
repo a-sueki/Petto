@@ -37,6 +37,7 @@ struct ErrorMsgString {
     static let RuleZipcodeLength = "郵便番号は7文字で入力して下さい"
     static let RuleEndDate = "開始日より未来の日付を入力して下さい"
     static let RuleMaxDate = "最短日数以下の値を入力して下さい"
+    static let RulePassword = "パスワードは6~12文字で設定して下さい"
 }
 
 struct Area {
