@@ -25,7 +25,7 @@ class UserViewController: BaseFormViewController  {
     var inputData3 = [String : Any]() //userTools
     var inputData4 = [String : Any]() //userNgs
     var inputData5 = [String : Any]() //ngs
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -149,23 +149,53 @@ class UserViewController: BaseFormViewController  {
                     }
             }
             <<< DateRow("birthday") {
+                $0.title = "生年月日"
                 if let dateString = self.userData?.birthday {
                     $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000")
                 }
-                $0.title = "生年月日"
+                $0.maximumDate = Date()
+                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                let formatter = DateFormatter()
+                formatter.locale = .current
+                formatter.dateStyle = .long
+                $0.dateFormatter = formatter
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { [weak self] (cell, row) in
+                    //if let birthDate: RowOf<String> = self?.form.rowBy(tag: "birthday"){
+                    
+                    let calendar = Calendar(identifier: .gregorian)
+                    let bYear = calendar.component(.year, from: row.baseValue as! Date)
+                    let bMonth = calendar.component(.month, from: row.baseValue as! Date)
+                    let bDate = calendar.component(.day, from: row.baseValue as! Date)
+                    let birthDate = DateComponents(calendar: calendar, year: bYear, month: bMonth, day: bDate).date!
+                    let nYear = calendar.component(.year, from: Date())
+                    let nMonth = calendar.component(.month, from: Date())
+                    let nDate = calendar.component(.day, from: Date())
+                    let now = DateComponents(calendar: calendar, year: nYear, month: nMonth, day: nDate).date!
+                    let age = calendar.dateComponents([.year], from: birthDate, to: now).year!
+                    // 年齢ROW更新
+                    self?.form.rowBy(tag: "age")?.baseValue = age.description
+                    self?.form.rowBy(tag: "age")?.updateCell()
+                    //}
+            }
+
+            <<< TextRow("age") {
+                $0.title = "年齢"
+                $0.value = self.userData?.age ?? nil
+                $0.disabled = true
             }
             
             +++ Section("エリア")
-            //TODO:入力中に赤字になる
             <<< ZipCodeRow("zipCode") {
                 $0.title = "郵便番号"
                 $0.value = self.userData?.zipCode ?? nil
                 $0.placeholder = "1234567"
                 $0.add(rule: RuleMinLength(minLength: 7))
                 $0.add(rule: RuleMaxLength(maxLength: 7))
-                $0.validationOptions = .validatesOnChange
+                $0.validationOptions = .validatesOnChangeAfterBlurred
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
@@ -186,10 +216,9 @@ class UserViewController: BaseFormViewController  {
                     }
             }
             <<< ButtonRow("search") { (row: ButtonRow) -> Void in
-                row.title = "住所検索"
+                row.title = "エリア検索"
                 }.onCellSelection { [weak self] (cell, row) in
                     if let code: RowOf<String> = self?.form.rowBy(tag: "zipCode"){
-                        //TODO: 日本語対応＋市区町村まで。
                         let geocoder = CLGeocoder()
                         geocoder.geocodeAddressString(code.value!, completionHandler: {(placemarks, error) -> Void in
                             if((error) != nil){
@@ -200,8 +229,9 @@ class UserViewController: BaseFormViewController  {
                                 print("City:        \(placemark.locality!)")
                                 print("SubLocality: \(placemark.subLocality!)")
                                 // 住所ROW更新
-                                self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
-                                self?.form.rowBy(tag: "address")?.updateCell()
+                                //self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
+                                //self?.form.rowBy(tag: "address")?.updateCell()
+                                // エリアROW更新
                                 self?.form.rowBy(tag: "area")?.baseValue = placemark.administrativeArea!
                                 self?.form.rowBy(tag: "area")?.updateCell()
                             }
@@ -209,62 +239,62 @@ class UserViewController: BaseFormViewController  {
                     }
             }
             
-            <<< TextRow("address") {
-                $0.title = "住所"
-                $0.value = self.userData?.address ?? nil
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
-            }
-            //TODO: 住所2入力欄
+            /*            <<< TextRow("address") {
+             $0.title = "住所"
+             $0.value = self.userData?.address ?? nil
+             $0.add(rule: RuleRequired())
+             $0.validationOptions = .validatesOnChange
+             }.cellUpdate { cell, row in
+             if !row.isValid {
+             cell.titleLabel?.textColor = .red
+             }
+             }.onRowValidationChanged { cell, row in
+             let rowIndex = row.indexPath!.row
+             while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+             row.section?.remove(at: rowIndex + 1)
+             }
+             if !row.isValid {
+             for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+             let labelRow = LabelRow() {
+             $0.title = validationMsg
+             $0.cell.height = { 30 }
+             }
+             row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+             }
+             }
+             }
+             */
             <<< TextRow("area") {
                 $0.title = "エリア"
                 $0.value = self.userData?.area ?? nil
                 $0.disabled = true
             }
-            <<< PhoneRow("tel") {
-                $0.title = "Tel"
-                $0.value = self.userData?.tel ?? nil
-                $0.placeholder = "09012345678"
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
-            }
-            
+            /*            <<< PhoneRow("tel") {
+             $0.title = "Tel"
+             $0.value = self.userData?.tel ?? nil
+             $0.placeholder = "09012345678"
+             $0.add(rule: RuleRequired())
+             $0.validationOptions = .validatesOnChange
+             }.cellUpdate { cell, row in
+             if !row.isValid {
+             cell.titleLabel?.textColor = .red
+             }
+             }.onRowValidationChanged { cell, row in
+             let rowIndex = row.indexPath!.row
+             while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+             row.section?.remove(at: rowIndex + 1)
+             }
+             if !row.isValid {
+             for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+             let labelRow = LabelRow() {
+             $0.title = validationMsg
+             $0.cell.height = { 30 }
+             }
+             row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+             }
+             }
+             }
+             */
             +++ Section("あなたのペット経験")
             <<< CheckRow("hasAnotherPet") {
                 $0.title = "現在、他にペットを飼っている"
@@ -360,8 +390,12 @@ class UserViewController: BaseFormViewController  {
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "OK"
                 }.onCellSelection { [weak self] (cell, row) in
-                    row.section?.form?.validate()
-                    self?.executePost()
+                    if let error = row.section?.form?.validate() {
+                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
+                    }else{
+                        self?.executePost()
+                    }
         }
         print("DEBUG_PRINT: UserViewController.updateUserData end")
     }
@@ -372,6 +406,9 @@ class UserViewController: BaseFormViewController  {
     
     @IBAction func executePost() {
         print("DEBUG_PRINT: UserViewController.executePost start")
+        
+        // HUDで処理中を表示
+        SVProgressHUD.show()
         
         // ユーザ情報
         for (key,value) in form.values() {
@@ -467,24 +504,28 @@ class UserViewController: BaseFormViewController  {
             self.inputData["updateBy"] = uid!
             // update
             ref.child(Paths.UserPath).child(data.id!).updateChildValues(self.inputData)
+            // HUDで投稿完了を表示する
+            SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")
         }else{
             let key = uid//ref.child(Paths.UserPath).childByAutoId().key
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert
             ref.child(Paths.UserPath).child(key!).setValue(self.inputData)
+            // HUDで投稿完了を表示する
+            SVProgressHUD.showSuccess(withStatus: "プロフィールを作成しました")
         }
         
         // UserDefaultsを更新
         userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
         userDefaults.set(self.inputData["area"] , forKey: DefaultString.Area)
         
-        // HUDで投稿完了を表示する
-        SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")
-        
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         
+        // HUDを消す
+        SVProgressHUD.dismiss()
+
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)

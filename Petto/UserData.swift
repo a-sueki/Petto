@@ -23,10 +23,11 @@ class UserData: NSObject {
     var firstname: String?
     var lastname: String?
     var birthday: String?
+    var age: String?
     var zipCode: String?
-    var address: String?
+//    var address: String?
     var area: String?
-    var tel: String?
+//    var tel: String?
     var hasAnotherPet: Bool?        // 他にペットを飼っている
     var isExperienced: Bool?        // ペット飼育経験あり
     var ngs = [String:Bool]()
@@ -80,10 +81,11 @@ class UserData: NSObject {
         self.firstname = valueDictionary["firstname"] as? String
         self.lastname = valueDictionary["lastname"] as? String
         self.birthday = valueDictionary["birthday"] as? String
+        self.age = valueDictionary["age"] as? String
         self.zipCode = valueDictionary["zipCode"] as? String
-        self.address = valueDictionary["address"] as? String
+//        self.address = valueDictionary["address"] as? String
         self.area = valueDictionary["area"] as? String
-        self.tel = valueDictionary["tel"] as? String
+//        self.tel = valueDictionary["tel"] as? String
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
         self.isExperienced = valueDictionary["isExperienced"] as? Bool
         if let ngs = valueDictionary["ngs"] as? [String:Bool] {

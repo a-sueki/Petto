@@ -68,7 +68,11 @@ class AccountViewController: BaseFormViewController {
                 $0.title = "メールアドレス" 
                 $0.value = userDefaults.string(forKey: DefaultString.Mail)
                 $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
+                var ruleSet = RuleSet<String>()
+                ruleSet.add(rule: RuleRequired())
+                ruleSet.add(rule: RuleEmail())
+                $0.add(ruleSet: ruleSet)
+                $0.validationOptions = .validatesOnChangeAfterBlurred
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
@@ -93,7 +97,9 @@ class AccountViewController: BaseFormViewController {
                 $0.title = "パスワード"
                 $0.value = userDefaults.string(forKey: DefaultString.Password)
                 $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
+                $0.add(rule: RuleMinLength(minLength: 6))
+                $0.add(rule: RuleMaxLength(maxLength: 12))
+                $0.validationOptions = .validatesOnChangeAfterBlurred
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
@@ -143,8 +149,12 @@ class AccountViewController: BaseFormViewController {
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "OK"
                 }.onCellSelection { [weak self] (cell, row) in
-                    row.section?.form?.validate()
-                    self?.executePost()
+                    if let error = row.section?.form?.validate() {
+                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
+                    }else{
+                        self?.executePost()
+                    }
         }
         print("DEBUG_PRINT: AccountViewController.updateUserData end")
     }
@@ -156,6 +166,9 @@ class AccountViewController: BaseFormViewController {
     @IBAction func executePost() {
         print("DEBUG_PRINT: AccountViewController.executePost start")
         
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+
         // アカウント情報の修正
         //TODO:ユーザーを再認証する
         for (key,value) in form.values() {
@@ -223,7 +236,9 @@ class AccountViewController: BaseFormViewController {
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-        
+        // HUDを消す
+        SVProgressHUD.dismiss()
+
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)

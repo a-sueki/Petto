@@ -273,6 +273,9 @@ class PetDetailViewController: BaseFormViewController {
     @IBAction func toMessages() {
         print("DEBUG_PRINT: PetDetailViewController.toMessages start")
         
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+
         let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessagesContainer") as! MessagesContainerViewController
         
         // roomIdを取得
@@ -324,6 +327,10 @@ class PetDetailViewController: BaseFormViewController {
         }) { (error) in
             print(error.localizedDescription)
         }
+        
+        // HUDを消す
+        SVProgressHUD.dismiss()
+
         print("DEBUG_PRINT: PetDetailViewController.toMessages end")
     }
     

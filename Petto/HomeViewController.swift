@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import SVProgressHUD
 
 class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
@@ -278,9 +279,34 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     @IBAction func registerButton(_ sender: Any) {
         print("DEBUG_PRINT: HomeViewController.registerButton start")
-        // マイペット登録に画面遷移
-        let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
-        self.navigationController?.pushViewController(editViewController, animated: true)
+
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+
+        // ユーザープロフィールが存在しない場合はクリック不可
+        // Firebaseから登録済みデータを取得
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            // 要素が追加されたら再表示
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            ref.observe(.value, with: { (snapshot) in
+                print("DEBUG_PRINT: HomeViewController.registerButton .observeイベントが発生しました。")
+                if let _ = snapshot.value as? NSDictionary {
+                    
+                    // マイペット登録に画面遷移
+                    let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
+                    self.navigationController?.pushViewController(editViewController, animated: true)
+                    
+                }else{
+                    SVProgressHUD.showError(withStatus: "ペット登録にはプロフィール作成が必要です。")
+                }
+            })
+            // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
+            observing = true
+        }
+
+        // HUDを消す
+        SVProgressHUD.dismiss()
+        
         print("DEBUG_PRINT: HomeViewController.registerButton end")
     }
     

@@ -62,6 +62,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             if address.characters.isEmpty || password.characters.isEmpty {
                 SVProgressHUD.showError(withStatus: "ログイン情報を入力して下さい")
                 return
+            }else if password.characters.count < 6, password.characters.count > 12 {
+                SVProgressHUD.showError(withStatus: "パスワードは6〜12文字にして下さい")
             }
             
             FIRAuth.auth()?.signIn(withEmail: address, password: password) { user, error in

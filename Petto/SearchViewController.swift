@@ -214,21 +214,27 @@ class SearchViewController: BaseFormViewController {
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "この条件で絞り込む"
                 }.onCellSelection { [weak self] (cell, row) in
-                    row.section?.form?.validate()
-                    self?.executePost()
+                    if let error = row.section?.form?.validate() {
+                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
+                    }else{
+                        self?.executePost()
+                    }
         }
         print("DEBUG_PRINT: SearchViewController.updateSearchData end")
     }
 
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
-        print("DEBUG_PRINT: SearchViewController.updateSearchData 7")
     }
 
     
     @IBAction func executePost() {
         print("DEBUG_PRINT: SearchViewController.executePost start")
         
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+
         for (key,value) in form.values() {
             if value == nil {
                 //break
@@ -324,19 +330,23 @@ class SearchViewController: BaseFormViewController {
             self.inputData["updateBy"] = uid!
             // update
             ref.child(Paths.SearchPath).child(data.id!).updateChildValues(inputData)
+            // HUDで投稿完了を表示する
+            SVProgressHUD.showSuccess(withStatus: "絞り込み条件を更新しました")
         }else{
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert
             ref.child(Paths.SearchPath).child(uid!).setValue(inputData)
+            // HUDで投稿完了を表示する
+            SVProgressHUD.showSuccess(withStatus: "絞り込み条件を保存しました")
          }
-        
-        // HUDで投稿完了を表示する
-        SVProgressHUD.showSuccess(withStatus: "絞り込み条件を保存しました。")
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         
+        // HUDを消す
+        SVProgressHUD.dismiss()
+
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         //viewController2.searchData = inputData

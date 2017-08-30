@@ -13,7 +13,7 @@ import FirebaseDatabase
 import SVProgressHUD
 
 class EditViewController: BaseFormViewController {
-
+    
     var petData: PetData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -26,7 +26,8 @@ class EditViewController: BaseFormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("DEBUG_PRINT: EditViewController.viewDidLoad start")
+       
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
             cell.contentView.backgroundColor = .red
@@ -194,7 +195,7 @@ class EditViewController: BaseFormViewController {
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
-
+            
             
             +++ Section()
             <<< SwitchRow("isAvailable"){
@@ -273,7 +274,7 @@ class EditViewController: BaseFormViewController {
                 $0.title =  "ごはんの回数/日"
                 $0.options = ["1回","2回","3回"]
                 $0.value = self.petData?.feeding ?? nil
-
+                
             }
             <<< SegmentedRow<String>("dentifrice") {
                 $0.title = "歯磨きの回数/日"
@@ -293,22 +294,109 @@ class EditViewController: BaseFormViewController {
                 })
             }
             <<< DateRow("startDate") {
+                $0.title = "開始日付"
                 if let dateString = self.petData?.startDate {
                     $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = Date()
                 }
-                $0.title = "開始日付"
+                $0.minimumDate = Date()
+                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                let formatter = DateFormatter()
+                formatter.locale = .current
+                formatter.dateStyle = .long
+                $0.dateFormatter = formatter
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }
+                .onRowValidationChanged { [weak self] cell, row in
+                //.onChange { [weak self] row in
+                    let endRow: DateRow! = self?.form.rowBy(tag: "endDate")
+                    if row.value?.compare(endRow.value!) == .orderedDescending {
+                        endRow.value = Date(timeInterval: 60*60*24, since: row.value!)
+                        endRow.cell!.backgroundColor = .white
+                        endRow.updateCell()
+                    }
+                }/*
+                .onExpandInlineRow {cell, row, inlineRow in
+                    inlineRow.cellUpdate() { cell, row in
+                        cell.datePicker.datePickerMode = .date
+                    }
+                    let color = cell.detailTextLabel?.textColor
+                    row.onCollapseInlineRow { cell, _, _ in
+                        cell.detailTextLabel?.textColor = color
+                    }
+                    cell.detailTextLabel?.textColor = cell.tintColor
+                }*/
+                .onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
-            //TODO: 開始日付以降のチェック
+
             <<< DateRow("endDate") {
+                $0.title = "終了日付"
                 if let dateString = self.petData?.endDate {
                     $0.value = DateCommon.stringToDate(dateString)
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
-                $0.title = "終了日付"
+                $0.minimumDate = Date()
+                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                let formatter = DateFormatter()
+                formatter.locale = .current
+                formatter.dateStyle = .long
+                $0.dateFormatter = formatter
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }
+                .onChange { [weak self] row in
+                //.onRowValidationChanged { [weak self] cell, row in
+                    let startRow: DateRow! = self?.form.rowBy(tag: "startDate")
+                    if row.value?.compare(startRow.value!) == .orderedAscending {
+                        row.cell!.backgroundColor = .red
+                    }
+                    else{
+                        row.cell!.backgroundColor = .white
+                    }
+                    row.updateCell()
+                }
+                /*.onExpandInlineRow { cell, row, inlineRow in
+                    inlineRow.cellUpdate { cell, dateRow in
+                        cell.datePicker.datePickerMode = .date
+                    }
+                    let color = cell.detailTextLabel?.textColor
+                    row.onCollapseInlineRow { cell, _, _ in
+                        cell.detailTextLabel?.textColor = color
+                    }
+                    cell.detailTextLabel?.textColor = cell.tintColor
+                }*/
+                .onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
+    
             +++
             Section("連続おあずけ日数"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
@@ -333,17 +421,20 @@ class EditViewController: BaseFormViewController {
                 $0.value = self.petData?.maxDays ?? $0.options.last
             }
             //TODO: その他、特記事項入力フォーム
-
+            
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "投稿する"
                 }.onCellSelection { [weak self] (cell, row) in
-                    print("---EntryViewController.viewDidLoad 3")
-                    row.section?.form?.validate()
-                    self?.executePost()
+                    if let error = row.section?.form?.validate() {
+                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        print("DEBUG_PRINT: EditViewController.viewDidLoad \(error)")
+                    }else{
+                        self?.executePost()
+                    }
         }
-        
+        print("DEBUG_PRINT: EditViewController.viewDidLoad end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
@@ -351,8 +442,11 @@ class EditViewController: BaseFormViewController {
     }
     
     @IBAction func executePost() {
-        print("---EntryViewController.executePost")
+        print("DEBUG_PRINT: EditViewController.executePost start")
         
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+
         for (key,value) in form.values() {
             if value == nil {
                 //break
@@ -441,13 +535,15 @@ class EditViewController: BaseFormViewController {
         let uid = FIRAuth.auth()?.currentUser?.uid
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
-
+        
         //Firebaseに保存
         if let data = self.petData {
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // update
             ref.child(Paths.PetPath).child(data.id!).updateChildValues(inputData)
+            // HUDで投稿完了を表示する
+            SVProgressHUD.showSuccess(withStatus: "ペット情報を更新しました")
         }else{
             let key = ref.child(Paths.PetPath).childByAutoId().key
             self.inputData["createAt"] = String(time)
@@ -456,26 +552,27 @@ class EditViewController: BaseFormViewController {
             ref.child(Paths.PetPath).child(key).setValue(inputData)
             //ユーザのmyPetsIdを追加
             ref.child(Paths.UserPath).child(uid!).child("myPets").updateChildValues([key: true])
+            // HUDで投稿完了を表示する
+            SVProgressHUD.showSuccess(withStatus: "ペット情報を投稿しました")
         }
-        
-        
-        
-        // HUDで投稿完了を表示する
-        SVProgressHUD.showSuccess(withStatus: "投稿しました")
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-        
+
+        // HUDを消す
+        SVProgressHUD.dismiss()
+
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)
         
+        print("DEBUG_PRINT: EditViewController.executePost end")
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }  
+    }
 }
 
 class EditViewNib: UIView {
