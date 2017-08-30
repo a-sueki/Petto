@@ -17,4 +17,5 @@ target 'Petto' do
   pod 'SwiftyJSON'
   pod 'Eureka'
   pod 'RKNotificationHub'
+  pod 'Firebase/Messaging'
 end
