@@ -21,11 +21,11 @@ class UserViewController: BaseFormViewController  {
     var observing = false
     
     var inputData = [String : Any]()
-    var inputData2 = [String : Any]() //userEnvironments
-    var inputData3 = [String : Any]() //userTools
-    var inputData4 = [String : Any]() //userNgs
-    var inputData5 = [String : Any]() //ngs
-    
+    var codeArray = [String : Bool]()
+    /*     var inputData3 = [String : Any]() //userTools
+     var inputData4 = [String : Any]() //userNgs
+     var inputData5 = [String : Any]() //ngs
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,7 +33,7 @@ class UserViewController: BaseFormViewController  {
         
         // HUDで処理中を表示
         SVProgressHUD.show()
-
+        
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             // 要素が追加されたら再表示
@@ -52,7 +52,7 @@ class UserViewController: BaseFormViewController  {
         
         // HUDを消す
         SVProgressHUD.dismiss()
-
+        
         print("DEBUG_PRINT: UserViewController.viewDidLoad end")
     }
     
@@ -155,57 +155,15 @@ class UserViewController: BaseFormViewController  {
                         }
                     }
             }
-            <<< DateRow("birthday") {
-                $0.title = "生年月日"
-                if let dateString = self.userData?.birthday {
-                    $0.value = DateCommon.stringToDate(dateString)
-                }else{
-                    $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000")
-                }
-                $0.maximumDate = Date()
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
+            <<< PickerInputRow<String>("area"){
+                $0.title = "エリア"
+                $0.options = Area.strings
+                $0.value = self.userData?.area ?? $0.options.first
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
-                }.cellUpdate { [weak self] (cell, row) in
-                    //if let birthDate: RowOf<String> = self?.form.rowBy(tag: "birthday"){
-                    
-                    let calendar = Calendar(identifier: .gregorian)
-                    let bYear = calendar.component(.year, from: row.baseValue as! Date)
-                    let bMonth = calendar.component(.month, from: row.baseValue as! Date)
-                    let bDate = calendar.component(.day, from: row.baseValue as! Date)
-                    let birthDate = DateComponents(calendar: calendar, year: bYear, month: bMonth, day: bDate).date!
-                    let nYear = calendar.component(.year, from: Date())
-                    let nMonth = calendar.component(.month, from: Date())
-                    let nDate = calendar.component(.day, from: Date())
-                    let now = DateComponents(calendar: calendar, year: nYear, month: nMonth, day: nDate).date!
-                    let age = calendar.dateComponents([.year], from: birthDate, to: now).year!
-                    // 年齢ROW更新
-                    self?.form.rowBy(tag: "age")?.baseValue = age.description
-                    self?.form.rowBy(tag: "age")?.updateCell()
-                    //}
-            }
-
-            <<< TextRow("age") {
-                $0.title = "年齢"
-                $0.value = self.userData?.age ?? nil
-                $0.disabled = true
-            }
-            
-            +++ Section("エリア")
-            <<< ZipCodeRow("zipCode") {
-                $0.title = "郵便番号"
-                $0.value = self.userData?.zipCode ?? nil
-                $0.placeholder = "1234567"
-                $0.add(rule: RuleMinLength(minLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
-                $0.add(rule: RuleMaxLength(maxLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
-                $0.validationOptions = .validatesOnChangeAfterBlurred
                 }.cellUpdate { cell, row in
                     if !row.isValid {
-                        cell.titleLabel?.textColor = .red
+                        cell.textLabel?.textColor = .red
                     }
                 }.onRowValidationChanged { cell, row in
                     let rowIndex = row.indexPath!.row
@@ -222,31 +180,97 @@ class UserViewController: BaseFormViewController  {
                         }
                     }
             }
-            <<< ButtonRow("search") { (row: ButtonRow) -> Void in
-                row.title = "エリア検索"
-                }.onCellSelection { [weak self] (cell, row) in
-                    if let code: RowOf<String> = self?.form.rowBy(tag: "zipCode"){
-                        let geocoder = CLGeocoder()
-                        geocoder.geocodeAddressString(code.value!, completionHandler: {(placemarks, error) -> Void in
-                            if((error) != nil){
-                                print("Error", error ?? "unknown...")
-                            }
-                            if let placemark = placemarks?.first {
-                                print("State:       \(placemark.administrativeArea!)")
-                                print("City:        \(placemark.locality!)")
-                                print("SubLocality: \(placemark.subLocality!)")
-                                // 住所ROW更新
-                                //self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
-                                //self?.form.rowBy(tag: "address")?.updateCell()
-                                // エリアROW更新
-                                self?.form.rowBy(tag: "area")?.baseValue = placemark.administrativeArea!
-                                self?.form.rowBy(tag: "area")?.updateCell()
-                            }
-                        })
-                    }
+            
+            <<< DateRow("birthday") {
+                $0.title = "生年月日"
+                if let dateString = self.userData?.birthday {
+                    $0.value = DateCommon.stringToDate(dateString)
+                }else{
+                    $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000")
+                }
+                $0.maximumDate = Date()
+                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                let formatter = DateFormatter()
+                formatter.locale = .current
+                formatter.dateStyle = .long
+                $0.dateFormatter = formatter
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { [weak self] (cell, row) in
+                    let calendar = Calendar(identifier: .gregorian)
+                    let bYear = calendar.component(.year, from: row.baseValue as! Date)
+                    let bMonth = calendar.component(.month, from: row.baseValue as! Date)
+                    let bDate = calendar.component(.day, from: row.baseValue as! Date)
+                    let birthDate = DateComponents(calendar: calendar, year: bYear, month: bMonth, day: bDate).date!
+                    let nYear = calendar.component(.year, from: Date())
+                    let nMonth = calendar.component(.month, from: Date())
+                    let nDate = calendar.component(.day, from: Date())
+                    let now = DateComponents(calendar: calendar, year: nYear, month: nMonth, day: nDate).date!
+                    let age = calendar.dateComponents([.year], from: birthDate, to: now).year!
+                    // 年齢ROW更新
+                    self?.form.rowBy(tag: "age")?.baseValue = age.description
+                    self?.form.rowBy(tag: "age")?.updateCell()
             }
             
-            /*            <<< TextRow("address") {
+            <<< TextRow("age") {
+                $0.title = "年齢"
+                $0.value = self.userData?.age ?? nil
+                $0.disabled = true
+            }
+            
+            /*+++ Section("エリア")
+             <<< ZipCodeRow("zipCode") {
+             $0.title = "郵便番号"
+             $0.value = self.userData?.zipCode ?? nil
+             $0.placeholder = "1234567"
+             $0.add(rule: RuleMinLength(minLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
+             $0.add(rule: RuleMaxLength(maxLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
+             $0.validationOptions = .validatesOnChangeAfterBlurred
+             }.cellUpdate { cell, row in
+             if !row.isValid {
+             cell.titleLabel?.textColor = .red
+             }
+             }.onRowValidationChanged { cell, row in
+             let rowIndex = row.indexPath!.row
+             while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+             row.section?.remove(at: rowIndex + 1)
+             }
+             if !row.isValid {
+             for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+             let labelRow = LabelRow() {
+             $0.title = validationMsg
+             $0.cell.height = { 30 }
+             }
+             row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+             }
+             }
+             }
+             //TODO:日本語に変換
+             <<< ButtonRow("search") { (row: ButtonRow) -> Void in
+             row.title = "エリア検索"
+             }.onCellSelection { [weak self] (cell, row) in
+             if let code: RowOf<String> = self?.form.rowBy(tag: "zipCode"){
+             let geocoder = CLGeocoder()
+             geocoder.geocodeAddressString(code.value!, completionHandler: {(placemarks, error) -> Void in
+             if((error) != nil){
+             print("Error", error ?? "unknown...")
+             }
+             if let placemark = placemarks?.first {
+             print("State:       \(placemark.administrativeArea!)")
+             print("City:        \(placemark.locality!)")
+             print("SubLocality: \(placemark.subLocality!)")
+             // 住所ROW更新
+             //self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
+             //self?.form.rowBy(tag: "address")?.updateCell()
+             // エリアROW更新
+             self?.form.rowBy(tag: "area")?.baseValue = placemark.administrativeArea!
+             self?.form.rowBy(tag: "area")?.updateCell()
+             }
+             })
+             }
+             }
+             
+             <<< TextRow("address") {
              $0.title = "住所"
              $0.value = self.userData?.address ?? nil
              $0.add(rule: RuleRequired())
@@ -270,13 +294,12 @@ class UserViewController: BaseFormViewController  {
              }
              }
              }
-             */
-            <<< TextRow("area") {
-                $0.title = "エリア"
-                $0.value = self.userData?.area ?? nil
-                $0.disabled = true
-            }
-            /*            <<< PhoneRow("tel") {
+             <<< TextRow("area") {
+             $0.title = "エリア"
+             $0.value = self.userData?.area ?? nil
+             $0.disabled = true
+             }
+             <<< PhoneRow("tel") {
              $0.title = "Tel"
              $0.value = self.userData?.tel ?? nil
              $0.placeholder = "09012345678"
@@ -313,10 +336,15 @@ class UserViewController: BaseFormViewController  {
             }
             //TODO: 「Bad評価1つ以上」は非表示。システムで判断する。
             <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "注意事項"
+                $0.title = "飼い主さんへの留意事項"
                 $0.options = PetNGs.strings
                 if let data = self.userData , data.ngs.count > 0 {
-                    let codes = Array(data.ngs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.ngs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = PetNGs.convertList(codes)
                 }else{
                     $0.value = []
@@ -348,7 +376,12 @@ class UserViewController: BaseFormViewController  {
                 })
                 $0.options = Environment.strings
                 if let data = self.userData , data.userEnvironments.count > 0 {
-                    let codes = Array(data.userEnvironments.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userEnvironments {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Environment.convertList(codes)
                 }else{
                     $0.value = []
@@ -365,7 +398,12 @@ class UserViewController: BaseFormViewController  {
                 })
                 $0.options = Tool.strings
                 if let data = self.userData , data.userTools.count > 0 {
-                    let codes = Array(data.userTools.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userTools {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Tool.convertList(codes)
                 }else{
                     $0.value = []
@@ -382,7 +420,12 @@ class UserViewController: BaseFormViewController  {
                 })
                 $0.options = UserNGs.strings
                 if let data = self.userData , data.userNgs.count > 0 {
-                    let codes = Array(data.userNgs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userNgs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = UserNGs.convertList(codes)
                 }else{
                     $0.value = []
@@ -428,8 +471,8 @@ class UserViewController: BaseFormViewController  {
                 let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
                 self.inputData["imageString"] = imageString
                 // Bool
-            }else if case _ as Bool = value {
-                self.inputData["\(key)"] = true
+            }else if case let v as Bool = value {
+                self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.expectTo)
                 // Date
             }else if case let itemValue as Date = value {
                 self.inputData["\(key)"] = itemValue.description
@@ -437,58 +480,29 @@ class UserViewController: BaseFormViewController  {
             }else if case let itemValue as Int = value {
                 self.inputData["\(key)"] = itemValue
                 // List
-                // TODO: コード化。もっとスマートにできないか。
             }else {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
                 case "userEnvironments" :
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case Environment.strings[0]: inputData2[Environment.codes[0]] = true
-                        case Environment.strings[1]: inputData2[Environment.codes[1]] = true
-                        case Environment.strings[2]: inputData2[Environment.codes[2]] = true
-                        case Environment.strings[3]: inputData2[Environment.codes[3]] = true
-                        default: break
-                        }
+                        self.codeArray[Environment.toCode(itemValue)] = true
                     }
-                    self.inputData["userEnvironments"] = inputData2
+                    self.inputData["userEnvironments"] = codeSet(codes: Environment.codes, new: self.codeArray, old: userData?.userEnvironments)
                 case "userTools" :
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case Tool.strings[0]: inputData3[Tool.codes[0]] = true
-                        case Tool.strings[1]: inputData3[Tool.codes[1]] = true
-                        case Tool.strings[2]: inputData3[Tool.codes[2]] = true
-                        case Tool.strings[3]: inputData3[Tool.codes[3]] = true
-                        case Tool.strings[4]: inputData3[Tool.codes[4]] = true
-                        case Tool.strings[5]: inputData3[Tool.codes[5]] = true
-                        case Tool.strings[6]: inputData3[Tool.codes[6]] = true
-                        default: break
-                        }
+                        self.codeArray[Tool.toCode(itemValue)] = true
                     }
-                    self.inputData["userTools"] = inputData3
+                    self.inputData["userTools"] = codeSet(codes: Tool.codes, new: self.codeArray, old: userData?.userTools)
                 case "userNgs" :
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case UserNGs.strings[0]: inputData4[UserNGs.codes[0]] = true
-                        case UserNGs.strings[1]: inputData4[UserNGs.codes[1]] = true
-                        case UserNGs.strings[2]: inputData4[UserNGs.codes[2]] = true
-                        case UserNGs.strings[3]: inputData4[UserNGs.codes[3]] = true
-                        default: break
-                        }
+                        self.codeArray[UserNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["userNgs"] = inputData4
+                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: self.codeArray, old: self.userData?.userNgs)
                 case "ngs" :
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case PetNGs.strings[0]: inputData5[PetNGs.codes[0]] = true
-                        case PetNGs.strings[1]: inputData5[PetNGs.codes[1]] = true
-                        case PetNGs.strings[2]: inputData5[PetNGs.codes[2]] = true
-                        case PetNGs.strings[3]: inputData5[PetNGs.codes[3]] = true
-                        case PetNGs.strings[4]: inputData5[PetNGs.codes[4]] = true
-                        default: break
-                        }
+                        self.codeArray[PetNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["ngs"] = inputData5
+                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: self.codeArray, old: userData?.ngs)
                 default: break
                 }
             }
@@ -516,7 +530,7 @@ class UserViewController: BaseFormViewController  {
                 print("DEBUG_PRINT: ニックネーム変更なし")
             }
         }
-
+        
         // HUDで処理中を表示
         SVProgressHUD.show()
         
@@ -556,7 +570,7 @@ class UserViewController: BaseFormViewController  {
         
         // HUDを消す
         SVProgressHUD.dismiss()
-
+        
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)
@@ -566,6 +580,46 @@ class UserViewController: BaseFormViewController  {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func boolSet(new: Bool, old: Bool?) -> Bool {
+        var result = false
+        if old == nil {
+            if new == true {
+                result = true
+            }else{
+                result = false
+            }
+        }else{
+            result = new
+        }
+        return result
+    }
+    
+    func codeSet(codes: [String], new: [String:Bool], old: [String:Bool]?) -> [String:Bool] {
+        var result = [String:Bool]()
+        if old == nil {
+            for code in codes {
+                if new[code] == true {
+                    result[code] = true
+                }else{
+                    result[code] = false
+                }
+            }
+        }else{
+            for code in codes {
+                if old?[code] == true, new[code] == nil {
+                    result[code] = false
+                }else if old?[code] == true, new[code] == true {
+                    result[code] = true
+                }else if old?[code] == false, new[code] == nil {
+                    result[code] = false
+                }else if old?[code] == false, new[code] == true {
+                    result[code] = true
+                }
+            }
+        }
+        return result
     }
 }
 

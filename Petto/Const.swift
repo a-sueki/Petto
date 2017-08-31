@@ -65,9 +65,19 @@ struct Age {
     static let strings = ["8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
 }
 
+struct Codes {
+    static let C1 = "code01"
+    static let C2 = "code02"
+    static let C3 = "code03"
+    static let C4 = "code04"
+    static let C5 = "code05"
+    static let C6 = "code06"
+    static let C7 = "code07"
+    static let C8 = "code08"
+}
 
 struct Environment {
-    static let codes = ["code01","code02","code03","code04"]
+    static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4]
     //TODO: ユーザープロフィール画面表示用も作成する
     static let strings = ["室内のみ","エアコンあり","２部屋以上","庭あり"]
     static let icons = ["door","aircon","room","field"]
@@ -110,7 +120,7 @@ struct Environment {
 }
 
 struct Tool {
-    static let codes = ["code01","code02","code03","code04","code05","code06","code07"]
+    static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4,Codes.C5,Codes.C6,Codes.C7,Codes.C8]
     static let strings = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
     
     static func toString(_ code:String) -> String {
@@ -122,6 +132,7 @@ struct Tool {
         case codes[4] : return strings[4]
         case codes[5] : return strings[5]
         case codes[6] : return strings[6]
+        case codes[7] : return strings[7]
         default:  return "不明"
         }
     }
@@ -134,6 +145,7 @@ struct Tool {
         case strings[4] : return codes[4]
         case strings[5] : return codes[5]
         case strings[6] : return codes[6]
+        case strings[7] : return codes[7]
         default:  return "不明"
         }
     }
@@ -146,7 +158,7 @@ struct Tool {
     }
 }
 struct PetNGs {
-    static let codes = ["code01","code02","code03","code04","code05"]
+    static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4,Codes.C5]
     static let strings = ["Bad評価1つ以上","定時帰宅できない","一人暮らし","小児あり世帯","高齢者のみ世帯"]
     
     static func toString(_ code:String) -> String {
@@ -178,7 +190,7 @@ struct PetNGs {
     }
 }
 struct UserNGs {
-    static let codes = ["code01","code02","code03","code04"]
+    static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4]
     static let strings = ["吠え癖あり","噛み癖あり","生まれたて","持病あり"]
     
     static func toString(_ code:String) -> String {

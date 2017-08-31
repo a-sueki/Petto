@@ -92,6 +92,26 @@ class EditViewController: BaseFormViewController {
                 $0.title = "エリア"
                 $0.options = Area.strings
                 $0.value = self.petData?.area ?? $0.options.first
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.textLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
             }
             
             +++ Section("プロフィール")
