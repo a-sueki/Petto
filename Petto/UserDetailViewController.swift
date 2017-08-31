@@ -90,7 +90,12 @@ class UserDetailViewController: BaseFormViewController {
                 $0.title = "注意事項"
                 $0.options = PetNGs.strings
                 if let data = self.userData , data.ngs.count > 0 {
-                    let codes = Array(data.ngs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.ngs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = PetNGs.convertList(codes)
                 }else{
                     $0.value = []
@@ -121,10 +126,14 @@ class UserDetailViewController: BaseFormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
                     return row.value ?? false == false
                 })
-                //TODO:アイコン表示
                 $0.options = Environment.strings
                 if let data = self.userData , data.userEnvironments.count > 0 {
-                    let codes = Array(data.userEnvironments.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userEnvironments {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Environment.convertList(codes)
                 }else{
                     $0.value = []
@@ -142,7 +151,12 @@ class UserDetailViewController: BaseFormViewController {
                 })
                 $0.options = Tool.strings
                 if let data = self.userData , data.userTools.count > 0 {
-                    let codes = Array(data.userTools.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userTools {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Tool.convertList(codes)
                 }else{
                     $0.value = []
@@ -160,7 +174,12 @@ class UserDetailViewController: BaseFormViewController {
                 })
                 $0.options = UserNGs.strings
                 if let data = self.userData , data.userNgs.count > 0 {
-                    let codes = Array(data.userNgs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userNgs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = UserNGs.convertList(codes)
                 }else{
                     $0.value = []

@@ -19,10 +19,6 @@ class EditViewController: BaseFormViewController {
     var observing = false
     
     var inputData = [String : Any]()
-    var inputData2 = [String : Any]() //environments
-    var inputData3 = [String : Any]() //tools
-    var inputData4 = [String : Any]() //ngs
-    var inputData5 = [String : Any]() //userNgs
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -203,10 +199,15 @@ class EditViewController: BaseFormViewController {
                 $0.value = self.petData?.wanted ?? false
             }
             <<< MultipleSelectorRow<String>("userNgs") {
-                $0.title = "注意事項"
+                $0.title = "あずかり人への留意事項"
                 $0.options = UserNGs.strings
                 if let data = self.petData , data.userNgs.count > 0 {
-                    let codes = Array(data.userNgs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userNgs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = UserNGs.convertList(codes)
                 }else{
                     $0.value = []
@@ -237,7 +238,12 @@ class EditViewController: BaseFormViewController {
                 })
                 $0.options = Environment.strings
                 if let data = self.petData , data.environments.count > 0 {
-                    let codes = Array(data.environments.keys)
+                    var codes = [String]()
+                    for (key,val) in data.environments {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Environment.convertList(codes)
                 }else{
                     $0.value = []
@@ -253,10 +259,14 @@ class EditViewController: BaseFormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
-                //TODO:アイコン表示
                 $0.options = Tool.strings
                 if let data = self.petData , data.tools.count > 0 {
-                    let codes = Array(data.tools.keys)
+                    var codes = [String]()
+                    for (key,val) in data.tools {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Tool.convertList(codes)
                 }else{
                     $0.value = []
@@ -266,14 +276,19 @@ class EditViewController: BaseFormViewController {
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
             <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "NGユーザ"
+                $0.title = "おあずけNGユーザ"
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
                 $0.options = PetNGs.strings
                 if let data = self.petData , data.ngs.count > 0 {
-                    let codes = Array(data.ngs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.ngs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = PetNGs.convertList(codes)
                 }else{
                     $0.value = []
@@ -453,7 +468,7 @@ class EditViewController: BaseFormViewController {
                     }
                     return nil
                 })
- 
+                
                 $0.add(ruleSet: ruleSet)
                 $0.validationOptions = .validatesOnChange
                 }.onRowValidationChanged { cell, row in
@@ -515,8 +530,14 @@ class EditViewController: BaseFormViewController {
                 let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
                 self.inputData["imageString"] = imageString
                 // Bool
-            }else if case _ as Bool = value {
-                self.inputData["\(key)"] = true
+            }else if case let v as Bool = value {
+                switch key {
+                case "isVaccinated": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.isVaccinated)
+                case "isCastrated": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.isCastrated)
+                case "wanted": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.wanted)
+                case "isAvailable": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.isAvailable)
+                default: break
+                }
                 // Date
             }else if case let itemValue as Date = value {
                 self.inputData["\(key)"] = itemValue.description
@@ -529,53 +550,29 @@ class EditViewController: BaseFormViewController {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
                 case "environments" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case Environment.strings[0]: inputData2[Environment.codes[0]] = true
-                        case Environment.strings[1]: inputData2[Environment.codes[1]] = true
-                        case Environment.strings[2]: inputData2[Environment.codes[2]] = true
-                        case Environment.strings[3]: inputData2[Environment.codes[3]] = true
-                        default: break
-                        }
+                        codeArray[Environment.toCode(itemValue)] = true
                     }
-                    inputData["environments"] = inputData2
+                    self.inputData["environments"] = codeSet(codes: Environment.codes, new: codeArray, old: petData?.environments)
                 case "tools" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case Tool.strings[0]: inputData3[Tool.codes[0]] = true
-                        case Tool.strings[1]: inputData3[Tool.codes[1]] = true
-                        case Tool.strings[2]: inputData3[Tool.codes[2]] = true
-                        case Tool.strings[3]: inputData3[Tool.codes[3]] = true
-                        case Tool.strings[4]: inputData3[Tool.codes[4]] = true
-                        case Tool.strings[5]: inputData3[Tool.codes[5]] = true
-                        case Tool.strings[6]: inputData3[Tool.codes[6]] = true
-                        default: break
-                        }
+                        codeArray[Tool.toCode(itemValue)] = true
                     }
-                    inputData["tools"] = inputData3
+                    self.inputData["tools"] = codeSet(codes: Tool.codes, new: codeArray, old: petData?.tools)
                 case "ngs" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case PetNGs.strings[0]: inputData4[PetNGs.codes[0]] = true
-                        case PetNGs.strings[1]: inputData4[PetNGs.codes[1]] = true
-                        case PetNGs.strings[2]: inputData4[PetNGs.codes[2]] = true
-                        case PetNGs.strings[3]: inputData4[PetNGs.codes[3]] = true
-                        case PetNGs.strings[4]: inputData4[PetNGs.codes[4]] = true
-                        default: break
-                        }
+                        codeArray[PetNGs.toCode(itemValue)] = true
                     }
-                    inputData["ngs"] = inputData4
+                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: codeArray, old: self.petData?.ngs)
                 case "userNgs" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        switch itemValue {
-                        case UserNGs.strings[0]: inputData5[UserNGs.codes[0]] = true
-                        case UserNGs.strings[1]: inputData5[UserNGs.codes[1]] = true
-                        case UserNGs.strings[2]: inputData5[UserNGs.codes[2]] = true
-                        case UserNGs.strings[3]: inputData5[UserNGs.codes[3]] = true
-                        default: break
-                        }
+                        codeArray[UserNGs.toCode(itemValue)] = true
                     }
-                    inputData["userNgs"] = inputData5
+                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: codeArray, old: petData?.userNgs)
                 default: break
                 }
             }
@@ -624,6 +621,47 @@ class EditViewController: BaseFormViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func boolSet(new: Bool, old: Bool?) -> Bool {
+        var result = false
+        if old == nil {
+            if new == true {
+                result = true
+            }else{
+                result = false
+            }
+        }else{
+            result = new
+        }
+        return result
+    }
+    
+    func codeSet(codes: [String], new: [String:Bool]?, old: [String:Bool]?) -> [String:Bool] {
+        var result = [String:Bool]()
+        if old == nil {
+            for code in codes {
+                if new?[code] == true {
+                    result[code] = true
+                }else{
+                    result[code] = false
+                }
+            }
+        }else{
+            for code in codes {
+                if old?[code] == true, new?[code] == nil {
+                    result[code] = false
+                }else if old?[code] == true, new?[code] == true {
+                    result[code] = true
+                }else if old?[code] == false, new?[code] == nil {
+                    result[code] = false
+                }else if old?[code] == false, new?[code] == true {
+                    result[code] = true
+                }
+            }
+        }
+        return result
+    }
+    
 }
 
 class EditViewNib: UIView {

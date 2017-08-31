@@ -100,10 +100,15 @@ class PetDetailViewController: BaseFormViewController {
                 $0.disabled = true
             }
             <<< MultipleSelectorRow<String>("userNgs") {
-                $0.title = "注意事項"
+                $0.title = "あずかり人への留意事項"
                 $0.options = UserNGs.strings
                 if let data = self.petData , data.userNgs.count > 0 {
-                    let codes = Array(data.userNgs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.userNgs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = UserNGs.convertList(codes)
                 }else{
                     $0.value = []
@@ -136,7 +141,12 @@ class PetDetailViewController: BaseFormViewController {
                 })
                 $0.options = Environment.strings
                 if let data = self.petData , data.environments.count > 0 {
-                    let codes = Array(data.environments.keys)
+                    var codes = [String]()
+                    for (key,val) in data.environments {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Environment.convertList(codes)
                 }else{
                     $0.value = []
@@ -153,10 +163,14 @@ class PetDetailViewController: BaseFormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
-                //TODO:アイコン表示
                 $0.options = Tool.strings
                 if let data = self.petData , data.tools.count > 0 {
-                    let codes = Array(data.tools.keys)
+                    var codes = [String]()
+                    for (key,val) in data.tools {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = Tool.convertList(codes)
                 }else{
                     $0.value = []
@@ -167,14 +181,19 @@ class PetDetailViewController: BaseFormViewController {
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
             <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "NGユーザ"
+                $0.title = "おあずけNGユーザ"
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
                 $0.options = PetNGs.strings
                 if let data = self.petData , data.ngs.count > 0 {
-                    let codes = Array(data.ngs.keys)
+                    var codes = [String]()
+                    for (key,val) in data.ngs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
                     $0.value = PetNGs.convertList(codes)
                 }else{
                     $0.value = []

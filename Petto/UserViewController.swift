@@ -21,11 +21,7 @@ class UserViewController: BaseFormViewController  {
     var observing = false
     
     var inputData = [String : Any]()
-    var codeArray = [String : Bool]()
-    /*     var inputData3 = [String : Any]() //userTools
-     var inputData4 = [String : Any]() //userNgs
-     var inputData5 = [String : Any]() //ngs
-     */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -367,9 +363,9 @@ class UserViewController: BaseFormViewController  {
                     return row.value ?? false == false
                 })
             }
+            //TODO:アイコン表示
             <<< MultipleSelectorRow<String>("userEnvironments") {
                 $0.title = "飼養環境"
-                //TODO:アイコン表示
                 $0.hidden = .function(["expectTo"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
                     return row.value ?? false == false
@@ -472,7 +468,12 @@ class UserViewController: BaseFormViewController  {
                 self.inputData["imageString"] = imageString
                 // Bool
             }else if case let v as Bool = value {
-                self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.expectTo)
+                switch key {
+                case "expectTo": self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.expectTo)
+                case "hasAnotherPet": self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.hasAnotherPet)
+                case "isExperienced": self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.isExperienced)
+                default: break
+                }
                 // Date
             }else if case let itemValue as Date = value {
                 self.inputData["\(key)"] = itemValue.description
@@ -484,25 +485,29 @@ class UserViewController: BaseFormViewController  {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
                 case "userEnvironments" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        self.codeArray[Environment.toCode(itemValue)] = true
+                        codeArray[Environment.toCode(itemValue)] = true
                     }
-                    self.inputData["userEnvironments"] = codeSet(codes: Environment.codes, new: self.codeArray, old: userData?.userEnvironments)
+                    self.inputData["userEnvironments"] = codeSet(codes: Environment.codes, new: codeArray, old: userData?.userEnvironments)
                 case "userTools" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        self.codeArray[Tool.toCode(itemValue)] = true
+                        codeArray[Tool.toCode(itemValue)] = true
                     }
-                    self.inputData["userTools"] = codeSet(codes: Tool.codes, new: self.codeArray, old: userData?.userTools)
+                    self.inputData["userTools"] = codeSet(codes: Tool.codes, new: codeArray, old: userData?.userTools)
                 case "userNgs" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        self.codeArray[UserNGs.toCode(itemValue)] = true
+                        codeArray[UserNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: self.codeArray, old: self.userData?.userNgs)
+                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: codeArray, old: self.userData?.userNgs)
                 case "ngs" :
+                    var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        self.codeArray[PetNGs.toCode(itemValue)] = true
+                        codeArray[PetNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: self.codeArray, old: userData?.ngs)
+                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: codeArray, old: userData?.ngs)
                 default: break
                 }
             }
@@ -596,11 +601,11 @@ class UserViewController: BaseFormViewController  {
         return result
     }
     
-    func codeSet(codes: [String], new: [String:Bool], old: [String:Bool]?) -> [String:Bool] {
+    func codeSet(codes: [String], new: [String:Bool]?, old: [String:Bool]?) -> [String:Bool] {
         var result = [String:Bool]()
         if old == nil {
             for code in codes {
-                if new[code] == true {
+                if new?[code] == true {
                     result[code] = true
                 }else{
                     result[code] = false
@@ -608,13 +613,13 @@ class UserViewController: BaseFormViewController  {
             }
         }else{
             for code in codes {
-                if old?[code] == true, new[code] == nil {
+                if old?[code] == true, new?[code] == nil {
                     result[code] = false
-                }else if old?[code] == true, new[code] == true {
+                }else if old?[code] == true, new?[code] == true {
                     result[code] = true
-                }else if old?[code] == false, new[code] == nil {
+                }else if old?[code] == false, new?[code] == nil {
                     result[code] = false
-                }else if old?[code] == false, new[code] == true {
+                }else if old?[code] == false, new?[code] == true {
                     result[code] = true
                 }
             }
