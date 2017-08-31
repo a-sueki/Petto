@@ -288,11 +288,11 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             // 要素が追加されたら再表示
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-            ref.observe(.value, with: { (snapshot) in
-                print("DEBUG_PRINT: HomeViewController.registerButton .observeイベントが発生しました。")
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: HomeViewController.registerButton .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
                     
-                    // マイペット登録に画面遷移
+                    // ペット登録に画面遷移
                     let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
                     self.navigationController?.pushViewController(editViewController, animated: true)
                     

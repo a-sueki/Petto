@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import SlideMenuControllerSwift
 import SVProgressHUD
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
@@ -81,9 +82,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     SVProgressHUD.dismiss()
                     // Homeに画面遷移
                     DispatchQueue.main.async {
+                        
+                        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                        let leftViewController = self.storyboard?.instantiateViewController(withIdentifier: "Left") as! LeftViewController
                         let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-                        let navigationController = UINavigationController(rootViewController: homeViewController)
-                        self.present(navigationController, animated: true, completion: nil)
+                        
+                        let nvc: UINavigationController = UINavigationController(rootViewController: homeViewController)
+                        leftViewController.mainViewController = nvc
+                        
+                        let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
+                        
+                        appDelegate.window?.rootViewController = slideMenuController
+                        appDelegate.window?.makeKeyAndVisible()
+                        UIView.transition(with: appDelegate.window!,
+                                          duration: 0.6,
+                                          options: UIViewAnimationOptions.transitionFlipFromLeft,
+                                          animations: {},
+                                          completion: {(b) in })
                     }
                 }
             }
