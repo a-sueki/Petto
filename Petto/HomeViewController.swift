@@ -311,7 +311,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: HomeViewController.registerButton end")
     }
     
-    func registerPushNotification() {
+/*    func registerPushNotification() {
         let application = UIApplication.shared
         
         if #available(iOS 10.0, *) {
@@ -341,6 +341,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             }
         }
     }
-
+*/
     
 }

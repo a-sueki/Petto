@@ -12,7 +12,7 @@ import SlideMenuControllerSwift
 import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterDelegate{
 
     var window: UIWindow?
     var myNavigationController: UINavigationController?
@@ -21,16 +21,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print("DEBUG_PRINT: AppDelegate.application start ")
 
-        // UNUserNotificationCenter delegate
+        // FireBase setup
+        FIRApp.configure()
+        
+        // Register APNs
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current()
+                .requestAuthorization(options: authOptions,
+                                      completionHandler: {_, _ in })
         }
-        // Firebase setting
-        configureFirebase()
-        addRefreshFcmTokenNotificationObserver()
+        else {
+            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound],
+                                                      categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        application.registerForRemoteNotifications()
         
         
-/*        if FIRApp.defaultApp() == nil {
+        /*        if FIRApp.defaultApp() == nil {
             FIRApp.configure()
         }
 */
@@ -80,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        completionHandler([.sound, .alert])
 //    }
     
-    func applicationDidEnterBackground(_ application: UIApplication) {
+/*    func applicationDidEnterBackground(_ application: UIApplication) {
         FIRMessaging.messaging().disconnect()
     }
     
@@ -111,8 +122,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FIRMessaging.messaging().appDidReceiveMessage(userInfo)
         }
     }
+ */
 }
-
+/*
 // MARK: - UNUserNotificationCenterDelegate
 @available(iOS 10.0, *)
 extension AppDelegate: UNUserNotificationCenterDelegate {
@@ -166,4 +178,5 @@ extension AppDelegate {
         }
     }
 }
+ */
 
