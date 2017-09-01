@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseAuth
-
+import SVProgressHUD
 
 enum LeftMenu: Int {
     case home = 0
@@ -18,7 +18,8 @@ enum LeftMenu: Int {
 }
 
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-
+    
+    var userDefaults : UserDefaults?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     
@@ -26,10 +27,29 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     var menus = ["アカウント","プロフィール", "マイペットリスト","メッセージリスト","ログアウト"]
     
     @IBOutlet weak var tableView: UITableView!
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: LeftViewController.viewDidLoad start")
+        
+        // ログイン中かチェック
+        if let _ = FIRAuth.auth()?.currentUser?.uid {
+            self.userDefaults = UserDefaults.standard
+            print(self.userDefaults?.string(forKey: DefaultString.Uid))
+            print(self.userDefaults?.string(forKey: DefaultString.Mail))
+            print(self.userDefaults?.string(forKey: DefaultString.Password))
+            print(self.userDefaults?.string(forKey: DefaultString.DisplayName))
+            print(self.userDefaults?.string(forKey: DefaultString.Age))
+            print(self.userDefaults?.string(forKey: DefaultString.Area))
+            print(self.userDefaults?.string(forKey: DefaultString.Good))
+        }else{
+            // ログインしていないときの処理
+            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+            DispatchQueue.main.async {
+                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+                self.present(loginViewController!, animated: true, completion: nil)
+            }
+        }
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -46,7 +66,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     // 各セルの内容を返すメソッド
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("DEBUG_PRINT: LeftViewController.cellForRowAt start")
-
+        
         // 再利用可能な cell を得る
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath)
         // Cellに値を設定する.
@@ -54,13 +74,16 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.textLabel?.text = menu
         
         print("DEBUG_PRINT: LeftViewController.cellForRowAt end")
-        return cell        
+        return cell
     }
     
     // 各セルを選択した時に実行されるメソッド
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("DEBUG_PRINT: LeftViewController.didSelectRowAt start")
         
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+
         switch indexPath.row {
         case 0:
             let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
@@ -71,20 +94,37 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             let navigationController = UINavigationController(rootViewController: userViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 2:
-            let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "MyPetList") as! MyPetListViewController
-            let navigationController = UINavigationController(rootViewController: postViewController)
-            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            // ユーザープロフィールが未作成の場合
+            if self.userDefaults?.string(forKey: "area") == nil {
+                SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
+                print("aaaaaaaaa")
+            }else{
+                print("bbbbbbbbb")
+
+                let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "MyPetList") as! MyPetListViewController
+                let navigationController = UINavigationController(rootViewController: postViewController)
+                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            }
         case 3:
-            let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
-            let navigationController = UINavigationController(rootViewController: messageListViewController)
-            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            // ユーザープロフィールが未作成の場合
+            if self.userDefaults?.string(forKey: "area") == nil {
+                SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
+            }else{
+                let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
+                let navigationController = UINavigationController(rootViewController: messageListViewController)
+                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            }
         case 4:
             logout()
         default:
             break
         }
+        
+        // HUDを消す
+        SVProgressHUD.dismiss(withDelay: 3)
+        
         self.slideMenuController()?.closeLeft()
-
+        
         print("DEBUG_PRINT: LeftViewController.didSelectRowAt end")
     }
     
@@ -112,7 +152,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func logout() {
         print("DEBUG_PRINT: LeftViewController.logout start")
-
+        
         do {
             // ログアウト
             try FIRAuth.auth()?.signOut()
@@ -126,7 +166,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         }catch let error as NSError {
             print("\(error.localizedDescription)")
         }
-
+        
         print("DEBUG_PRINT: LeftViewController.logout end")
     }
 }

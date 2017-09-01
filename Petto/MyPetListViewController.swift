@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import SVProgressHUD
 
 class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource  {
 
@@ -35,6 +36,8 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         
         // userのマイペットリストを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
+            // HUDで処理中を表示
+            SVProgressHUD.show()
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: MyPetListViewController.viewDidLoad user.observeSingleEventイベントが発生しました。")
@@ -47,9 +50,13 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
                     }
                     // tableViewを再表示する
                     self.tableView.reloadData()
+                    // HUDを消す
+                    SVProgressHUD.dismiss()
                 }
                 
             }) { (error) in
+                // HUDを消す
+                SVProgressHUD.dismiss()
                 print(error.localizedDescription)
             }
             self.observing = true
@@ -78,6 +85,8 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         func getData(petId: String) {
             print("DEBUG_PRINT: MyPetListViewController.getData start")
             
+            // HUDで処理中を表示
+            SVProgressHUD.show()
             // petDataリストの取得
             let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -87,8 +96,12 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
                      self.petDataArray.append(petData)
                     // tableViewを再表示する
                     self.tableView.reloadData()
+                    // HUDを消す
+                    SVProgressHUD.dismiss()
                 }
             }) { (error) in
+                // HUDを消す
+                SVProgressHUD.dismiss()
                 print(error.localizedDescription)
             }
             

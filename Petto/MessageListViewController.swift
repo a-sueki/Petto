@@ -20,14 +20,10 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     var roomDataArray: [RoomData] = []
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
-//    var guruguruView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: MessageListViewController.viewDidLoad start")
-
-        // HUDで処理中を表示
-        SVProgressHUD.show()
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -39,6 +35,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         // userのmessages[]を取得　→roomIdList
         if let uid = FIRAuth.auth()?.currentUser?.uid {
+            // HUDで処理中を表示
+            SVProgressHUD.show()
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
             // Userのメッセージリスト（roomIdList）の取得
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -52,8 +50,13 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                     }
                     // tableViewを再表示する
                     self.tableView.reloadData()
+                    // HUDを消す
+                    SVProgressHUD.dismiss()
+
+                }else{
+                    //roomが0件の時は「メッセージ送受信はありません」を表示
+                    SVProgressHUD.showError(withStatus: "まだメッセージがありません")
                 }
-                
             }) { (error) in
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
@@ -79,9 +82,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 self.present(loginViewController!, animated: true, completion: nil)
             }
         }
-
-        // HUDを消す
-        SVProgressHUD.dismiss()
         
         print("DEBUG_PRINT: MessageListViewController.viewDidLoad end")
     }
@@ -108,9 +108,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             print(error.localizedDescription)
             SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
        }
-        // HUDを消す
-        SVProgressHUD.dismiss()
-        
         print("DEBUG_PRINT: MessageListViewController.getData end")
     }
     

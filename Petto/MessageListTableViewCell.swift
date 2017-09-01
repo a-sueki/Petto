@@ -41,6 +41,12 @@ class MessageListTableViewCell: UITableViewCell {
     func setData(userData: UserData, roomData: RoomData) {
         print("MessageListTableViewCell.setData start")
         
+        // 写真を丸くする
+        self.userImageView.layer.cornerRadius = 25.0
+        self.userImageView.layer.masksToBounds = true
+        self.petImageView.layer.cornerRadius = 25.0
+        self.petImageView.layer.masksToBounds = true
+       
         self.userImageView.image = userData.image
         self.userNameLabel.text = self.userDefaults.string(forKey: DefaultString.DisplayName)
 

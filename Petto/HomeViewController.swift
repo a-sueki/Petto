@@ -39,7 +39,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         let nib = UINib(nibName: "HomeCollectionViewCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "homeCell")
-      
+        
         print("DEBUG_PRINT: HomeViewController.viewDidLoad end")
     }
     
@@ -71,9 +71,12 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
+                // HUDで処理中を表示
+                SVProgressHUD.show()
+                
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
                 let postsRef = FIRDatabase.database().reference().child(Paths.PetPath)
-                postsRef.observe(.childAdded, with: { snapshot in
+                postsRef.queryLimited(toLast: 10).observe(.childAdded, with: { snapshot in
                     print("DEBUG_PRINT: HomeViewController.viewWillAppear .childAddedイベントが発生しました。")
                     
                     // petDataクラスを生成して受け取ったデータを設定する
@@ -83,11 +86,15 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                         
                         // collectionViewを再表示する
                         self.collectionView.reloadData()
+                        // HUDを消す
+                        SVProgressHUD.dismiss()
                     }
                 })
                 
+                // HUDで処理中を表示
+                SVProgressHUD.show()
                 // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
-                postsRef.observe(.childChanged, with: { snapshot in
+                postsRef.queryLimited(toLast: 10).observe(.childChanged, with: { snapshot in
                     print("DEBUG_PRINT: HomeViewController.viewWillAppear .childChangedイベントが発生しました。")
                     
                     if let uid = FIRAuth.auth()?.currentUser?.uid {
@@ -105,83 +112,91 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                         
                         // 差し替えるため一度削除する
                         self.petData.remove(at: index)
-                        
                         // 削除したところに更新済みのでデータを追加する
                         self.petData.insert(petData, at: index)
-                        
                         // TableViewの現在表示されているセルを更新する
                         self.collectionView.reloadData()
+                        // HUDを消す
+                        SVProgressHUD.dismiss()
                     }
                 })
                 
                 // 絞り込み条件を読み込む
                 if let uid = FIRAuth.auth()?.currentUser?.uid {
+                    // HUDで処理中を表示
+                    SVProgressHUD.show()
                     // 要素が追加されたら再表示
                     let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
-                    ref.observe(.value, with: { (snapshot) in
-                        print("DEBUG_PRINT: HomeViewController.viewWillAppear .observeイベントが発生しました。")
+                    ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                        print("DEBUG_PRINT: HomeViewController.viewWillAppear .observeSingleEventイベントが発生しました。")
                         if let _ = snapshot.value as? NSDictionary {
                             
                             self.searchData = SearchData(snapshot: snapshot, myId: uid)
-
-                            // 絞り込み条件でフィルタリング
-                                var index: Int = 0
-                                for petInfo in self.petData {
-                                    if let _ = self.searchData?.area ,petInfo.area != self.searchData?.area {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.kind ,petInfo.kind != self.searchData?.kind {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.category ,petInfo.category != self.searchData?.category {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.age ,petInfo.age != self.searchData?.age {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.isVaccinated ,petInfo.isVaccinated != self.searchData?.isVaccinated {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.isCastrated ,petInfo.isCastrated != self.searchData?.isCastrated {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.isAvailable ,petInfo.isAvailable != self.searchData?.isAvailable {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.environments ,petInfo.environments != (self.searchData?.environments)! {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.tools ,petInfo.tools != (self.searchData?.tools)! {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.startDate ,
-                                        DateCommon.stringToDate(petInfo.startDate!) >= DateCommon.stringToDate((self.searchData?.startDate)!) {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.endDate ,
-                                        DateCommon.stringToDate(petInfo.endDate!) <= DateCommon.stringToDate((self.searchData?.endDate)!) {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.minDays ,petInfo.minDays! >= (self.searchData?.minDays)! {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }else if let _ = self.searchData?.maxDays ,petInfo.maxDays! <= (self.searchData?.maxDays)! {
-                                        index = self.petData.index(of: petInfo)!
-                                        self.petData.remove(at: index)
-                                    }
-                                }
-                                // TableViewの現在表示されているセルを更新する
-                                self.collectionView.reloadData()
-                            }
                             
+                            // 絞り込み条件でフィルタリング
+                            var index: Int = 0
+                            for petInfo in self.petData {
+                                if let _ = self.searchData?.area ,petInfo.area != self.searchData?.area {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.kind ,petInfo.kind != self.searchData?.kind {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.category ,petInfo.category != self.searchData?.category {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.age ,petInfo.age != self.searchData?.age {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.isVaccinated ,petInfo.isVaccinated != self.searchData?.isVaccinated {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.isCastrated ,petInfo.isCastrated != self.searchData?.isCastrated {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.isAvailable ,petInfo.isAvailable != self.searchData?.isAvailable {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.environments ,petInfo.environments != (self.searchData?.environments)! {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.tools ,petInfo.tools != (self.searchData?.tools)! {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.startDate ,
+                                    DateCommon.stringToDate(petInfo.startDate!) >= DateCommon.stringToDate((self.searchData?.startDate)!) {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.endDate ,
+                                    DateCommon.stringToDate(petInfo.endDate!) <= DateCommon.stringToDate((self.searchData?.endDate)!) {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.minDays ,petInfo.minDays! >= (self.searchData?.minDays)! {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }else if let _ = self.searchData?.maxDays ,petInfo.maxDays! <= (self.searchData?.maxDays)! {
+                                    index = self.petData.index(of: petInfo)!
+                                    self.petData.remove(at: index)
+                                }
+                            }
+                            // TableViewの現在表示されているセルを更新する
+                            self.collectionView.reloadData()
+                            // HUDを消す
+                            SVProgressHUD.dismiss()
+                        }
+                        
                     }) { (error) in
+                        // HUDを消す
+                        SVProgressHUD.dismiss()
                         print(error.localizedDescription)
                     }
                 }
+                
                 // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
                 observing = true
             }
         }
+        
         print("DEBUG_PRINT: HomeViewController.viewWillAppear end")
     }
     
@@ -280,10 +295,10 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     @IBAction func registerButton(_ sender: Any) {
         print("DEBUG_PRINT: HomeViewController.registerButton start")
-
+        
         // HUDで処理中を表示
         SVProgressHUD.show()
-
+        
         // ユーザープロフィールが存在しない場合はクリック不可
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
@@ -298,49 +313,49 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                     self.navigationController?.pushViewController(editViewController, animated: true)
                     
                 }else{
-                    SVProgressHUD.showError(withStatus: "ペット登録にはプロフィール作成が必要です。")
+                    SVProgressHUD.showError(withStatus: "ペット投稿にはプロフィール作成が必要です")
                 }
             })
             // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
             observing = true
         }
-
+        
         // HUDを消す
-        SVProgressHUD.dismiss()
+        SVProgressHUD.dismiss(withDelay: 1)
         
         print("DEBUG_PRINT: HomeViewController.registerButton end")
     }
     
-/*    func registerPushNotification() {
-        let application = UIApplication.shared
-        
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: [.badge, .sound, .alert],
-                completionHandler: { (granted: Bool, error: Swift.Error?) in
-                    if let error = error {
-                        print(error)
-                        return
-                    }
-                    
-                    // PUSH通知許可
-                    if granted {
-                        application.registerForRemoteNotifications()
-                        return
-                    }
-                    // PUSH通知拒否
-                    print("PUSH通知拒否")
-            })
-        } else {
-            if application.responds(to: #selector(application.registerUserNotificationSettings(_:))) {
-                let settings = UIUserNotificationSettings(
-                    types: [.alert, .badge, .sound],
-                    categories: nil)
-                application.registerUserNotificationSettings(settings)
-                application.registerForRemoteNotifications()
-            }
-        }
-    }
-*/
+    /*    func registerPushNotification() {
+     let application = UIApplication.shared
+     
+     if #available(iOS 10.0, *) {
+     UNUserNotificationCenter.current().requestAuthorization(
+     options: [.badge, .sound, .alert],
+     completionHandler: { (granted: Bool, error: Swift.Error?) in
+     if let error = error {
+     print(error)
+     return
+     }
+     
+     // PUSH通知許可
+     if granted {
+     application.registerForRemoteNotifications()
+     return
+     }
+     // PUSH通知拒否
+     print("PUSH通知拒否")
+     })
+     } else {
+     if application.responds(to: #selector(application.registerUserNotificationSettings(_:))) {
+     let settings = UIUserNotificationSettings(
+     types: [.alert, .badge, .sound],
+     categories: nil)
+     application.registerUserNotificationSettings(settings)
+     application.registerForRemoteNotifications()
+     }
+     }
+     }
+     */
     
 }

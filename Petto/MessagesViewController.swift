@@ -78,8 +78,8 @@ class MessagesViewController: JSQMessagesViewController {
         
         let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
         // Messageの取得
-        ref.queryLimited(toLast: 10).observe(.value, with: { (snapshot) in
-            print("DEBUG_PRINT: MessagesViewController.getMessages .observeイベントが発生しました。")
+        ref.queryLimited(toLast: 10).observeSingleEvent(of: .value, with: { (snapshot) in
+            print("DEBUG_PRINT: MessagesViewController.getMessages .observeSingleEventイベントが発生しました。")
             
             if self.observing == false {
                 for v in snapshot.children {
