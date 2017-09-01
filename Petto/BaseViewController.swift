@@ -65,6 +65,7 @@ class NavigationBarHandler: NSObject {
         let viewController5 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "Search") as! SearchViewController
         self.viewController?.navigationController?.pushViewController(viewController5, animated: true)
     }
+    
 }
 
 class BaseFormViewController: FormViewController {

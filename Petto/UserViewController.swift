@@ -569,6 +569,7 @@ class UserViewController: BaseFormViewController  {
         userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
         userDefaults.set(self.inputData["area"] , forKey: DefaultString.Area)
         userDefaults.set(self.inputData["firstname"] , forKey: DefaultString.DisplayName)
+        userDefaults.set(self.inputData["age"], forKey: DefaultString.Age)
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)

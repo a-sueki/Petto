@@ -11,6 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import SVProgressHUD
+import UserNotifications
 
 class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
@@ -309,5 +310,37 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         print("DEBUG_PRINT: HomeViewController.registerButton end")
     }
+    
+    func registerPushNotification() {
+        let application = UIApplication.shared
+        
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: [.badge, .sound, .alert],
+                completionHandler: { (granted: Bool, error: Swift.Error?) in
+                    if let error = error {
+                        print(error)
+                        return
+                    }
+                    
+                    // PUSH通知許可
+                    if granted {
+                        application.registerForRemoteNotifications()
+                        return
+                    }
+                    // PUSH通知拒否
+                    print("PUSH通知拒否")
+            })
+        } else {
+            if application.responds(to: #selector(application.registerUserNotificationSettings(_:))) {
+                let settings = UIUserNotificationSettings(
+                    types: [.alert, .badge, .sound],
+                    categories: nil)
+                application.registerUserNotificationSettings(settings)
+                application.registerForRemoteNotifications()
+            }
+        }
+    }
+
     
 }

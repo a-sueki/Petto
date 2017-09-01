@@ -297,6 +297,23 @@ class MessagesViewController: JSQMessagesViewController {
             }
         }
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: MessagesViewController.viewWillDisappear start")
+        
+        if self.messages.count == 0 {
+            let ref = FIRDatabase.database().reference()
+            // Roomの削除
+            ref.child(Paths.RoomPath).child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.MessagePath).child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("myMessages").child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("myMessages").child((self.roomData?.id)!).removeValue()
+            print("DEBUG_PRINT: MessagesViewController.viewWillDisappear .removeValueイベントが発生しました。")
+            
+        }
+        print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
+    }
+
 }
 
 extension MessagesViewController: ImageSelectViewDelegate{

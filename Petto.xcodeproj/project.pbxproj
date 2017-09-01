@@ -18,7 +18,7 @@
 		8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */; };
 		842732831F4FFA2400C32367 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842732821F4FFA2400C32367 /* Common.swift */; };
 		842810A51F5526ED001A59D9 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842810A41F5526ED001A59D9 /* AccountViewController.swift */; };
-		842FDE301F57008200F0C75A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 842FDE2F1F57008200F0C75A /* GoogleService-Info.plist */; };
+		844577EE1F590F4A006AB5C6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */; };
 		845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */; };
 		845F2E401F42C41100526C1F /* UserDetailHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 845F2E3F1F42C41100526C1F /* UserDetailHeader.xib */; };
 		846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */; };
@@ -100,7 +100,7 @@
 		8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserEditSectionHeader.xib; sourceTree = "<group>"; };
 		842732821F4FFA2400C32367 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		842810A41F5526ED001A59D9 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
-		842FDE2F1F57008200F0C75A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		845F2E3F1F42C41100526C1F /* UserDetailHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDetailHeader.xib; sourceTree = "<group>"; };
 		846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -140,6 +140,7 @@
 		84DB3BF91F540A490067A680 /* BookingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookingViewController.swift; sourceTree = "<group>"; };
 		84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesContainerViewController.swift; sourceTree = "<group>"; };
 		84DB3BFD1F5453410067A680 /* RoomData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomData.swift; sourceTree = "<group>"; };
+		84F55FEF1F5886C200EAE4BE /* Petto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Petto.entitlements; sourceTree = "<group>"; };
 		84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
 		84F6ACA51EFD01D30086BBB9 /* AdobeCreativeSDKImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKImage.framework; sourceTree = "<group>"; };
 		84F6ACAD1EFD022C0086BBB9 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -306,6 +307,7 @@
 		84CCE0071EFB791D0025B5D3 /* Petto */ = {
 			isa = PBXGroup;
 			children = (
+				84F55FEF1F5886C200EAE4BE /* Petto.entitlements */,
 				84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */,
 				84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */,
 				84D6CD311F18819E000CA101 /* Eureka */,
@@ -315,7 +317,7 @@
 				846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */,
 				84D253071F0217D700D877A9 /* LeftViewController.swift */,
 				84CCE0141EFB791D0025B5D3 /* Info.plist */,
-				842FDE2F1F57008200F0C75A /* GoogleService-Info.plist */,
+				844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
 				849ED1E31F1CF912003AD9F5 /* Model */,
@@ -399,6 +401,14 @@
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = 52B62KUG6G;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -430,7 +440,7 @@
 				84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */,
 				846705E71F0F81E400FFEA8D /* MessageListTableViewCell.xib in Resources */,
 				84CCE0131EFB791D0025B5D3 /* LaunchScreen.storyboard in Resources */,
-				842FDE301F57008200F0C75A /* GoogleService-Info.plist in Resources */,
+				844577EE1F590F4A006AB5C6 /* GoogleService-Info.plist in Resources */,
 				84BC45A41F2729FE0017AF53 /* Assets.xcassets in Resources */,
 				84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */,
 				845F2E401F42C41100526C1F /* UserDetailHeader.xib in Resources */,
@@ -667,6 +677,7 @@
 			baseConfigurationReference = B81EF91AE6E4CACD52E5751F /* Pods-Petto.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Petto/Petto.entitlements;
 				DEVELOPMENT_TEAM = 52B62KUG6G;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -686,6 +697,7 @@
 			baseConfigurationReference = D1CF0AE273C1752201C0D265 /* Pods-Petto.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Petto/Petto.entitlements;
 				DEVELOPMENT_TEAM = 52B62KUG6G;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

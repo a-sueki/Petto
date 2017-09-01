@@ -13,10 +13,10 @@ class MessageListTableViewCell: UITableViewCell {
     let userDefaults = UserDefaults.standard
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var userNameLabel: UILabel!
+    @IBOutlet weak var userProfile: UILabel!
     
     @IBOutlet weak var goodIntLabel: UILabel!
     @IBOutlet weak var badIntLabel: UILabel!
-    @IBOutlet weak var userAreaLabel: UILabel!
     @IBOutlet weak var sendTimeLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     
@@ -47,7 +47,7 @@ class MessageListTableViewCell: UITableViewCell {
         //TODO: 評価カウントをセット
         self.goodIntLabel.text = "10" //String(userData.goods.count)
         self.badIntLabel.text = "3" //String(userData.bads.count)
-        self.userAreaLabel.text = userData.area
+        self.userProfile.text = userData.area! + " | " + userData.age! + "才"
         self.petImageView.image = roomData.petImage
         self.petNameLabel.text = roomData.petName
         self.sendTimeLabel.text = DateCommon.dateToString(roomData.updateAt! as Date)

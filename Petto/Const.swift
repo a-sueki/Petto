@@ -23,6 +23,9 @@ struct DefaultString {
     static let DisplayName = "displayName"
     static let Phote = "phote"
     static let Area = "area"
+    static let Age = "age"
+    static let Good = "good"
+    static let Bad = "bad"
 }
 struct ErrorMsgString {
     static let RuleRequired = "必須入力です"
