@@ -15,8 +15,9 @@ import CoreLocation
 
 class UserViewController: BaseFormViewController  {
     
-    let userDefaults = UserDefaults.standard
-    var userData: UserData?
+    
+//    let userDefaults = UserDefaults.standard
+//    var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     
@@ -26,9 +27,6 @@ class UserViewController: BaseFormViewController  {
         super.viewDidLoad()
         
         print("DEBUG_PRINT: UserViewController.viewDidLoad start")
-        
-        // HUDで処理中を表示
-        SVProgressHUD.show()
         
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
@@ -48,7 +46,7 @@ class UserViewController: BaseFormViewController  {
         
         // HUDを消す
         SVProgressHUD.dismiss()
-        
+
         print("DEBUG_PRINT: UserViewController.viewDidLoad end")
     }
     
@@ -517,7 +515,7 @@ class UserViewController: BaseFormViewController  {
         // HUDで処理中を表示
         SVProgressHUD.show()
         let user = FIRAuth.auth()?.currentUser
-        if let newName = self.inputData["firstname"] as? String, newName != userDefaults.string(forKey: DefaultString.DisplayName) {
+        if let newName = self.inputData["firstname"] as? String, newName != userDefaults?.string(forKey: DefaultString.DisplayName) {
             if let user = user {
                 let changeRequest = user.profileChangeRequest()
                 changeRequest.displayName = newName
@@ -566,10 +564,10 @@ class UserViewController: BaseFormViewController  {
         
         
         // UserDefaultsを更新
-        userDefaults.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
-        userDefaults.set(self.inputData["area"] , forKey: DefaultString.Area)
-        userDefaults.set(self.inputData["firstname"] , forKey: DefaultString.DisplayName)
-        userDefaults.set(self.inputData["age"], forKey: DefaultString.Age)
+        userDefaults?.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
+        userDefaults?.set(self.inputData["area"] , forKey: DefaultString.Area)
+        userDefaults?.set(self.inputData["firstname"] , forKey: DefaultString.DisplayName)
+        userDefaults?.set(self.inputData["age"], forKey: DefaultString.Age)
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)

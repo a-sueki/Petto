@@ -333,18 +333,18 @@ class MessagesViewController: JSQMessagesViewController {
             ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
             ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
             print("DEBUG_PRINT: MessagesViewController.viewWillDisappear .removeValueイベントが発生しました。")
+        } else {
+            // 既読にする
+            if checkSender() {
+                // 自分があずかり人の場合
+                ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["petOpenedFlg" : false])
+            }else{
+                // 自分がブリーダーの場合
+                ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
+                ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
+            }
         }
         
-        // TODO: メッセージ受信時に自分がルームにいる場合は既読フラグON
-        /*else{
-         if checkSender() {
-         // 自分があずかり人の場合
-         
-         }else{
-         
-         }
-         }
-         */
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
     }
     

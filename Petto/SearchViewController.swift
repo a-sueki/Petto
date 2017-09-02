@@ -14,7 +14,7 @@ import SVProgressHUD
 
 class SearchViewController: BaseFormViewController {
     
-    let userDefaults = UserDefaults.standard
+//    let userDefaults = UserDefaults.standard
     var searchData: SearchData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -67,7 +67,7 @@ class SearchViewController: BaseFormViewController {
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
-                $0.value = self.searchData?.area ?? userDefaults.string(forKey: DefaultString.Area)
+                $0.value = self.searchData?.area ?? userDefaults?.string(forKey: DefaultString.Area)
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"

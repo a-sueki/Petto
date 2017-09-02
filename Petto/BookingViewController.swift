@@ -14,7 +14,7 @@ import SVProgressHUD
 
 class BookingViewController: BaseFormViewController {
     
-    let userDefaults = UserDefaults.standard
+//    let userDefaults = UserDefaults.standard
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     var inputData = [String : Any]()

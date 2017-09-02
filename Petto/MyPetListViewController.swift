@@ -16,7 +16,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
 
     @IBOutlet weak var tableView: UITableView!
     var petIdList: [String] = []
-    var userData: UserData?
+//    var userData: UserData?
     var petDataArray: [PetData] = []
 
     // FIRDatabaseのobserveEventの登録状態を表す

@@ -15,8 +15,8 @@ import CoreLocation
 
 class AccountViewController: BaseFormViewController {
     
-    var userDefaults : UserDefaults?
-    var userData: UserData?
+//    var userDefaults : UserDefaults?
+//    var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     
@@ -32,7 +32,7 @@ class AccountViewController: BaseFormViewController {
         
         // ログイン中かチェック
         if let _ = FIRAuth.auth()?.currentUser?.uid {
-            self.userDefaults = UserDefaults.standard
+//            self.userDefaults = UserDefaults.standard
             // Formを表示
             self.updateUserData()
             // HUDを消す

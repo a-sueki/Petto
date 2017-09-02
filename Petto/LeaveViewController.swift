@@ -16,7 +16,7 @@ class LeaveViewController: BaseFormViewController,UICollectionViewDataSource, UI
 
     
     var petData: PetData?
-    var userData: UserData?
+//    var userData: UserData?
     var conditionArray = [String : Bool]()
 
     @IBOutlet weak var petImageView: UIImageView!

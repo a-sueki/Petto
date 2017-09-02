@@ -16,7 +16,7 @@ import SVProgressHUD
 
 class PetDetailViewController: BaseFormViewController {
     
-    let userDefaults = UserDefaults.standard
+//    let userDefaults = UserDefaults.standard
     var petData: PetData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
@@ -298,9 +298,9 @@ class PetDetailViewController: BaseFormViewController {
         let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessagesContainer") as! UserMessagesContainerViewController
         
         // roomIdを取得
-        let uid = userDefaults.string(forKey: DefaultString.Uid)!
+        let uid = userDefaults?.string(forKey: DefaultString.Uid)!
         let pid = (self.petData?.id)!
-        let roomId = uid + pid
+        let roomId = uid! + pid
         
         // roomDataの取得
         let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
@@ -317,8 +317,8 @@ class PetDetailViewController: BaseFormViewController {
                 let time = NSDate.timeIntervalSinceReferenceDate
                 
                 inputData["userId"] = uid
-                inputData["userName"] = self.userDefaults.string(forKey: DefaultString.DisplayName)
-                inputData["userImageString"] = self.userDefaults.string(forKey: DefaultString.Phote)
+                inputData["userName"] = self.userDefaults?.string(forKey: DefaultString.DisplayName)
+                inputData["userImageString"] = self.userDefaults?.string(forKey: DefaultString.Phote)
                 inputData["petId"] = pid
                 inputData["petName"] = self.petData?.name
                 inputData["petImageString"] = self.petData?.imageString
@@ -333,7 +333,7 @@ class PetDetailViewController: BaseFormViewController {
                 let ref = FIRDatabase.database().reference()
                 ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
                 // update
-                ref.child(Paths.UserPath).child(uid).child("roomIds").updateChildValues([roomId : true]) // あずかり人
+                ref.child(Paths.UserPath).child(uid!).child("roomIds").updateChildValues([roomId : true]) // あずかり人
                 ref.child(Paths.PetPath).child(pid).child("roomIds").updateChildValues([roomId : true])
                 ref.child(Paths.UserPath).child((self.petData?.createBy)!).child("roomIds").updateChildValues([roomId : true]) // ブリーダー
                 

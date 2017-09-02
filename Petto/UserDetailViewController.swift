@@ -16,7 +16,7 @@ import SVProgressHUD
 class UserDetailViewController: BaseFormViewController {
     
     var uid: String?
-    var userData: UserData?
+//    var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     
@@ -40,6 +40,7 @@ class UserDetailViewController: BaseFormViewController {
             // trueとする
             observing = true
         }
+        
         print("DEBUG_PRINT: UserDetailViewController.viewDidLoad end")
     }
     

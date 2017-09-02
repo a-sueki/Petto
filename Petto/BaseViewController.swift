@@ -10,13 +10,15 @@ import Eureka
 import RKNotificationHub
 import Firebase
 import FirebaseAuth
+import SVProgressHUD
 import UIKit
 
 class NavigationBarHandler: NSObject {
     
     var userDefaults: UserDefaults?
     var userData: UserData?
-    
+    // FIRDatabaseのobserveEventの登録状態を表す
+
     // RKNotificationHubのインスタンス
     let hub = RKNotificationHub()
     
@@ -53,24 +55,40 @@ class NavigationBarHandler: NSObject {
         
         if let uid = self.userDefaults?.string(forKey: DefaultString.Uid) {
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            // HUDで処理中を表示
+            SVProgressHUD.show()
             // Userの未読リストを取得
             ref.observe(.value, with: { (snapshot) in
                 print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .valueイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
                     self.userData = UserData(snapshot: snapshot, myId: uid)
-                    if self.userData?.unReadRoomIds.count != 0 {
+                    if let count = self.userData?.unReadRoomIds.count ,count != 0 {
+                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読あり")
                         // 通知バッチをセット
                         self.hub.setView(button4, andCount: Int32((self.userData?.unReadRoomIds.count)!))
                         // 設置するhubの背景色をredに文字色を白にする
                         self.hub.setCircleColor(UIColor.red, label: UIColor.white)
                         // バッチのサイズを変更
                         self.hub.scaleCircleSize(by: 0.8)
+                    }else{
+                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読なし")
+                        // 通知バッチを消す
+                        self.hub.setView(button4, andCount: -1)
+                        // 設置するhubの背景色をredに文字色を白にする
+                        self.hub.setCircleColor(UIColor.blue, label: UIColor.white)
+                        // バッチのサイズを変更
+                        self.hub.scaleCircleSize(by: 0.5)
                     }
+                    // HUDを消す
+                    SVProgressHUD.dismiss()
                 }
             }) { (error) in
                 print(error.localizedDescription)
+                // HUDを消す
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
         }
+        
         btn1 = UIBarButtonItem(customView: button1)
         btn2 = UIBarButtonItem(customView: button2)
         btn3 = UIBarButtonItem(customView: button3)
@@ -121,6 +139,8 @@ class NavigationBarHandler: NSObject {
 
 class BaseFormViewController: FormViewController {
     let helper = NavigationBarHandler()
+    var userDefaults: UserDefaults?
+    var userData: UserData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,21 +148,26 @@ class BaseFormViewController: FormViewController {
         
         helper.viewController = self
         helper.setupNavigationBar()
+        self.userData = helper.userData
+        self.userDefaults = helper.userDefaults
         
         print("DEBUG_PRINT: BaseFormViewController.viewDidLoad end")
     }
-    
 }
 
 class BaseViewController: UIViewController {
     let helper = NavigationBarHandler()
+    var userDefaults: UserDefaults?
+    var userData: UserData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: BaseViewController.viewDidLoad start")
-        
+
         helper.viewController = self
         helper.setupNavigationBar()
+        self.userData = helper.userData
+        self.userDefaults = helper.userDefaults
         
         print("DEBUG_PRINT: BaseViewController.viewDidLoad end")
     }
