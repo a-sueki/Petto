@@ -152,17 +152,13 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func logout() {
         print("DEBUG_PRINT: LeftViewController.logout start")
-        
+
+        // ログアウト
         do {
-            // ログアウト
             try FIRAuth.auth()?.signOut()
-            
-            // ログインしていないときの処理
-            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
-            }
+            let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+            self.present(loginViewController!, animated: true, completion: nil)
+
         }catch let error as NSError {
             print("\(error.localizedDescription)")
         }

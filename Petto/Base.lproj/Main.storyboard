@@ -376,10 +376,12 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6c-Am-dJs">
                                 <rect key="frame" x="10" y="180" width="300" height="40"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Pz0-am-k7w"/>
                                     <constraint firstAttribute="width" constant="300" id="cNy-cj-Gmb"/>
                                 </constraints>
-                                <state key="normal" title="キャンセル" backgroundImage="btn"/>
+                                <state key="normal" title="キャンセル"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="3"/>
@@ -431,7 +433,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4qd-LS-KgX">
-                                <rect key="frame" x="36" y="185" width="248" height="40"/>
+                                <rect key="frame" x="36" y="230" width="248" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="nBo-sx-OAZ"/>
                                 </constraints>
@@ -445,36 +447,59 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="handleLoginButton:" destination="Xa6-Eh-qpx" eventType="touchUpInside" id="m7I-sn-pop"/>
                                     <action selector="handleOkButton:" destination="IFk-qv-KVe" eventType="touchUpInside" id="TpG-iE-eYp"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F6D-fc-k7u">
-                                <rect key="frame" x="36" y="233" width="248" height="31.5"/>
+                                <rect key="frame" x="36" y="190" width="248" height="31.5"/>
                                 <string key="text">上記のメールアドレスに
 新しいパスワードを送信します</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1K-6Q-NiL">
+                                <rect key="frame" x="36" y="278" width="248" height="40"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="pxr-LK-ULe"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="キャンセル">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="handleCancelButton:" destination="IFk-qv-KVe" eventType="touchUpInside" id="5iL-5g-6ry"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="4qd-LS-KgX" secondAttribute="trailing" constant="20" id="2jf-ho-7W5"/>
                             <constraint firstItem="F6D-fc-k7u" firstAttribute="centerX" secondItem="gXN-ZW-42T" secondAttribute="centerX" id="BdT-gT-Atx"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vnK-Rz-k0R" secondAttribute="trailing" constant="20" id="D60-70-jtg"/>
+                            <constraint firstItem="F6D-fc-k7u" firstAttribute="top" secondItem="pQq-g1-IJZ" secondAttribute="bottom" constant="38" id="IQe-Qt-HoW"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="G1K-6Q-NiL" secondAttribute="trailing" constant="20" id="JhO-qK-GMa"/>
                             <constraint firstItem="F6D-fc-k7u" firstAttribute="leading" secondItem="gXN-ZW-42T" secondAttribute="leadingMargin" constant="20" id="NNT-Cp-4F1"/>
                             <constraint firstItem="pQq-g1-IJZ" firstAttribute="centerX" secondItem="gXN-ZW-42T" secondAttribute="centerX" id="PuM-hV-7KA"/>
-                            <constraint firstItem="F6D-fc-k7u" firstAttribute="top" secondItem="4qd-LS-KgX" secondAttribute="bottom" constant="8" id="Xjm-Fe-Qyp"/>
+                            <constraint firstItem="4qd-LS-KgX" firstAttribute="top" secondItem="F6D-fc-k7u" secondAttribute="bottom" constant="8.5" id="Qsr-Z7-UsY"/>
                             <constraint firstItem="vnK-Rz-k0R" firstAttribute="top" secondItem="xOv-jp-whs" secondAttribute="bottom" constant="73" id="Y5O-te-YgJ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="pQq-g1-IJZ" secondAttribute="trailing" constant="20" id="YzW-dP-o33"/>
                             <constraint firstItem="4qd-LS-KgX" firstAttribute="leading" secondItem="gXN-ZW-42T" secondAttribute="leadingMargin" constant="20" id="ZzP-oY-5zJ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="F6D-fc-k7u" secondAttribute="trailing" constant="20" id="dei-aL-iPA"/>
                             <constraint firstItem="vnK-Rz-k0R" firstAttribute="leading" secondItem="gXN-ZW-42T" secondAttribute="leadingMargin" constant="20" id="f7J-PZ-jVG"/>
+                            <constraint firstItem="G1K-6Q-NiL" firstAttribute="leading" secondItem="gXN-ZW-42T" secondAttribute="leadingMargin" constant="20" id="jTf-jj-yOM"/>
                             <constraint firstItem="pQq-g1-IJZ" firstAttribute="top" secondItem="vnK-Rz-k0R" secondAttribute="bottom" constant="8" id="ly4-VH-KBa"/>
-                            <constraint firstItem="4qd-LS-KgX" firstAttribute="top" secondItem="pQq-g1-IJZ" secondAttribute="bottom" constant="33" id="pFl-2W-nMi"/>
+                            <constraint firstItem="G1K-6Q-NiL" firstAttribute="top" secondItem="4qd-LS-KgX" secondAttribute="bottom" constant="8" id="qa5-ex-xa3"/>
                             <constraint firstItem="pQq-g1-IJZ" firstAttribute="leading" secondItem="gXN-ZW-42T" secondAttribute="leadingMargin" constant="20" id="w5s-wq-m5N"/>
                             <constraint firstItem="vnK-Rz-k0R" firstAttribute="centerX" secondItem="gXN-ZW-42T" secondAttribute="centerX" id="wae-Ga-qsl"/>
+                            <constraint firstItem="G1K-6Q-NiL" firstAttribute="centerX" secondItem="gXN-ZW-42T" secondAttribute="centerX" id="wlC-t5-TzX"/>
                             <constraint firstItem="4qd-LS-KgX" firstAttribute="centerX" secondItem="gXN-ZW-42T" secondAttribute="centerX" id="z0u-qG-9g7"/>
                         </constraints>
                     </view>

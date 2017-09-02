@@ -33,23 +33,33 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
         print("DEBUG_PRINT: PasswordResetViewController.viewDidLoad end")
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
-        print("DEBUG_PRINT: PasswordResetViewController.textFieldShouldReturn start")
-        
-        // キーボードを閉じる
-        textField.resignFirstResponder()
-        
-        print("DEBUG_PRINT: PasswordResetViewController.textFieldShouldReturn end")
-        return true
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    // Returnキーでキーボードを閉じる
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn start")
+        
+        textField.resignFirstResponder()
+        
+        print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn end")
+        return true
+    }
+    
+    // TextField以外の部分をタッチでキーボードを閉じる
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("DEBUG_PRINT: LoginViewController.touchesBegan start")
+        
+        self.view.endEditing(true)
+        
+        print("DEBUG_PRINT: LoginViewController.touchesBegan end")
+    }
+    
     @IBAction func handleOkButton(_ sender: Any) {
         print("DEBUG_PRINT: PasswordResetViewController.handleOkButtond start")
+
         if let address = mailAddressTextField.text {
             
             // アドレスとパスワードのいずれかでも入力されていない時は何もしない
@@ -103,6 +113,16 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
         }
         
         return  returnValue
+    }
+    
+    @IBAction func handleCancelButton(_ sender: Any) {
+        print("DEBUG_PRINT: PasswordResetViewController.handleCancelButton start")
+        
+        // ログイン画面に遷移
+        let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+        self.present(loginViewController!, animated: true, completion: nil)
+        
+        print("DEBUG_PRINT: PasswordResetViewController.handleCancelButton end")
     }
     
 }

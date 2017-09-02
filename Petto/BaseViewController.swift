@@ -18,7 +18,7 @@ class NavigationBarHandler: NSObject {
     var userDefaults: UserDefaults?
     var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
-
+    
     // RKNotificationHubのインスタンス
     let hub = RKNotificationHub()
     
@@ -53,15 +53,26 @@ class NavigationBarHandler: NSObject {
         // 未読メッセージリストをカウント
         self.userDefaults = UserDefaults.standard
         
-        if let uid = self.userDefaults?.string(forKey: DefaultString.Uid) {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+        
+        if let user = FIRAuth.auth()?.currentUser {
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(user.uid)
             // HUDで処理中を表示
             SVProgressHUD.show()
             // Userの未読リストを取得
             ref.observe(.value, with: { (snapshot) in
                 print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .valueイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
-                    self.userData = UserData(snapshot: snapshot, myId: uid)
+                    self.userData = UserData(snapshot: snapshot, myId: user.uid)
+                    
+                    // UserDefaultsを更新
+                    self.userDefaults?.set(self.userData?.id, forKey: DefaultString.Uid)
+                    self.userDefaults?.set(self.userData?.imageString , forKey: DefaultString.Phote)
+                    self.userDefaults?.set(self.userData?.area , forKey: DefaultString.Area)
+                    self.userDefaults?.set(self.userData?.firstname , forKey: DefaultString.DisplayName)
+                    self.userDefaults?.set(self.userData?.age, forKey: DefaultString.Age)
+                    //TODO: good,bad
+                    
+                    // 通知バッチの更新
                     if let count = self.userData?.unReadRoomIds.count ,count != 0 {
                         print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読あり")
                         // 通知バッチをセット
@@ -84,9 +95,9 @@ class NavigationBarHandler: NSObject {
                 }
             }) { (error) in
                 print(error.localizedDescription)
-                // HUDを消す
-                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
+        } else {
+            print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ユーザはログインしていません")
         }
         
         btn1 = UIBarButtonItem(customView: button1)
@@ -153,6 +164,7 @@ class BaseFormViewController: FormViewController {
         
         print("DEBUG_PRINT: BaseFormViewController.viewDidLoad end")
     }
+    
 }
 
 class BaseViewController: UIViewController {
@@ -163,7 +175,7 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: BaseViewController.viewDidLoad start")
-
+        
         helper.viewController = self
         helper.setupNavigationBar()
         self.userData = helper.userData

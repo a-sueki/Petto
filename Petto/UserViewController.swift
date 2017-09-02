@@ -527,7 +527,7 @@ class UserViewController: BaseFormViewController  {
                     }
                     print("DEBUG_PRINT: [displayName = \(newName)]の設定に成功しました。")
                     // HUDで投稿完了を表示する
-                    SVProgressHUD.showSuccess(withStatus: "表示名を変更しました")
+                    SVProgressHUD.showSuccess(withStatus: "表示名を\(newName)に変更しました")
                 }
             } else {
                 print("DEBUG_PRINT: ニックネーム変更なし")

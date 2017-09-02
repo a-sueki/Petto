@@ -38,14 +38,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         print("DEBUG_PRINT: LoginViewController.viewDidLoad end")
     }
     
+    // Returnキーでキーボードを閉じる
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn start")
         
-        // キーボードを閉じる
         textField.resignFirstResponder()
         
         print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn end")
         return true
+    }
+    
+    // TextField以外の部分をタッチでキーボードを閉じる
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("DEBUG_PRINT: LoginViewController.touchesBegan start")
+        
+        self.view.endEditing(true)
+        
+        print("DEBUG_PRINT: LoginViewController.touchesBegan end")
     }
     
     override func didReceiveMemoryWarning() {
@@ -80,6 +89,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print("DEBUG_PRINT: ログインに成功しました")
                     // HUDを消す
                     SVProgressHUD.dismiss()
+                    // ユーザーデフォルト設定
+                    self.userDefaults.set(user?.uid , forKey: DefaultString.Uid)
+                    self.userDefaults.set(address , forKey: DefaultString.Mail)
+                    self.userDefaults.set(password , forKey: DefaultString.Password)
+                    
                     // Homeに画面遷移
                     DispatchQueue.main.async {
                         

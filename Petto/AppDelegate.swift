@@ -41,10 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
         application.registerForRemoteNotifications()
         
         
-        /*        if FIRApp.defaultApp() == nil {
-            FIRApp.configure()
-        }
-*/
         // Adobeの管理画面で登録したアプリの API key と Client secret の文字列を設定する
         AdobeUXAuthManager.shared().setAuthenticationParametersWithClientID("2643141de91c492087357e553e904699", withClientSecret: "efb2a972-e7a0-4d97-bc5c-084d2e3ddc96")
         
