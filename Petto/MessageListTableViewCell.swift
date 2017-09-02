@@ -24,6 +24,7 @@ class MessageListTableViewCell: UITableViewCell {
     @IBOutlet weak var petNameLabel: UILabel!
     
     @IBOutlet weak var messageLabelButton: UIButton!
+    @IBOutlet weak var unReadLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -56,7 +57,8 @@ class MessageListTableViewCell: UITableViewCell {
         self.userProfile.text = userData.area! + " | " + userData.age! + "才"
         self.petImageView.image = roomData.petImage
         self.petNameLabel.text = roomData.petName
-        self.sendTimeLabel.text = DateCommon.dateToString(roomData.updateAt! as Date)
+        
+        self.sendTimeLabel.text = DateCommon.dateToString(roomData.updateAt! as Date, dateFormat: DateCommon.displayDateFormat)
         self.messageLabel.text = roomData.lastMessage
         
         print("MessageListTableViewCell.setData end")

@@ -74,6 +74,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
         self.window?.rootViewController = slideMenuController
         self.window?.makeKeyAndVisible()
         
+        UIView.transition(with: self.window!,
+                          duration: 0.6,
+                          options: UIViewAnimationOptions.transitionFlipFromLeft,
+                          animations: {},
+                          completion: {(b) in })
+
+        
+        
         // ユーザに通知の許可を求める
 //        let center = UNUserNotificationCenter.current()
 //        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in

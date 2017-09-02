@@ -52,6 +52,9 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
                     self.tableView.reloadData()
                     // HUDを消す
                     SVProgressHUD.dismiss()
+                }else{
+                    // HUDを消す
+                    SVProgressHUD.showError(withStatus: "まだペットを投稿していません")
                 }
                 
             }) { (error) in

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MessagesContainerViewController: UIViewController {
+class BreederMessagesContainerViewController: UIViewController {
     
     let userDefaults = UserDefaults.standard
     
@@ -28,7 +28,7 @@ class MessagesContainerViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if segue.identifier == "toMessages" {
+        if segue.identifier == "toBreederMessages" {
             let messagesViewController:MessagesViewController = segue.destination as! MessagesViewController
             messagesViewController.roomData = self.roomData
          }

@@ -19,6 +19,8 @@
 		842732831F4FFA2400C32367 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842732821F4FFA2400C32367 /* Common.swift */; };
 		842810A51F5526ED001A59D9 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842810A41F5526ED001A59D9 /* AccountViewController.swift */; };
 		844577EE1F590F4A006AB5C6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */; };
+		844577F01F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844577EF1F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift */; };
+		844577F21F59F4B2006AB5C6 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */; };
 		845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */; };
 		845F2E401F42C41100526C1F /* UserDetailHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 845F2E3F1F42C41100526C1F /* UserDetailHeader.xib */; };
 		846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */; };
@@ -54,7 +56,7 @@
 		84D6CD351F18F828000CA101 /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */; };
 		84D926801F559A5A008E419E /* PasswordResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D9267F1F559A5A008E419E /* PasswordResetViewController.swift */; };
 		84DB3BFA1F540A490067A680 /* BookingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BF91F540A490067A680 /* BookingViewController.swift */; };
-		84DB3BFC1F543D5B0067A680 /* MessagesContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */; };
+		84DB3BFC1F543D5B0067A680 /* BreederMessagesContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BFB1F543D5B0067A680 /* BreederMessagesContainerViewController.swift */; };
 		84DB3BFE1F5453410067A680 /* RoomData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DB3BFD1F5453410067A680 /* RoomData.swift */; };
 		84F6ACA81EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; };
 		84F6ACA91EFD01EE0086BBB9 /* AdobeCreativeSDKCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -101,6 +103,8 @@
 		842732821F4FFA2400C32367 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		842810A41F5526ED001A59D9 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		844577EF1F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserMessagesContainerViewController.swift; sourceTree = "<group>"; };
+		844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailViewController.swift; sourceTree = "<group>"; };
 		845F2E3F1F42C41100526C1F /* UserDetailHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserDetailHeader.xib; sourceTree = "<group>"; };
 		846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -138,7 +142,7 @@
 		84D6CD341F18F828000CA101 /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
 		84D9267F1F559A5A008E419E /* PasswordResetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordResetViewController.swift; sourceTree = "<group>"; };
 		84DB3BF91F540A490067A680 /* BookingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookingViewController.swift; sourceTree = "<group>"; };
-		84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesContainerViewController.swift; sourceTree = "<group>"; };
+		84DB3BFB1F543D5B0067A680 /* BreederMessagesContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreederMessagesContainerViewController.swift; sourceTree = "<group>"; };
 		84DB3BFD1F5453410067A680 /* RoomData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomData.swift; sourceTree = "<group>"; };
 		84F55FEF1F5886C200EAE4BE /* Petto.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Petto.entitlements; sourceTree = "<group>"; };
 		84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKCore.framework; sourceTree = "<group>"; };
@@ -229,9 +233,11 @@
 		846705E11F0F7BAA00FFEA8D /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				84DB3BFB1F543D5B0067A680 /* MessagesContainerViewController.swift */,
+				84DB3BFB1F543D5B0067A680 /* BreederMessagesContainerViewController.swift */,
+				844577EF1F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift */,
 				841ADB171F0CA18C00534A37 /* MessagesViewController.swift */,
 				84DB3BF91F540A490067A680 /* BookingViewController.swift */,
+				844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */,
 				846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */,
 				846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */,
 				846705E51F0F81E400FFEA8D /* MessageListTableViewCell.xib */,
@@ -525,6 +531,7 @@
 				842732831F4FFA2400C32367 /* Common.swift in Sources */,
 				846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */,
 				84A544911F443E4D00CD5617 /* ReserveViewController.swift in Sources */,
+				844577F21F59F4B2006AB5C6 /* ConsentViewController.swift in Sources */,
 				84D6CD351F18F828000CA101 /* FloatLabelTextField.swift in Sources */,
 				840EE9551F4C7864004E9AF8 /* SearchViewController.swift in Sources */,
 				846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */,
@@ -533,12 +540,13 @@
 				84DB3BFE1F5453410067A680 /* RoomData.swift in Sources */,
 				84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */,
 				84CCE0091EFB791D0025B5D3 /* AppDelegate.swift in Sources */,
+				844577F01F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift in Sources */,
 				84BB42201F413F1A007D867A /* PetDetailViewController.swift in Sources */,
 				842810A51F5526ED001A59D9 /* AccountViewController.swift in Sources */,
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
 				84D926801F559A5A008E419E /* PasswordResetViewController.swift in Sources */,
-				84DB3BFC1F543D5B0067A680 /* MessagesContainerViewController.swift in Sources */,
+				84DB3BFC1F543D5B0067A680 /* BreederMessagesContainerViewController.swift in Sources */,
 				845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
 				84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */,

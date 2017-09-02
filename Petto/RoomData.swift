@@ -21,13 +21,15 @@ class RoomData: NSObject {
     var petName: String?
     var petImage: UIImage?
     var petImageString: String?
+    var breederId: String?
     var lastMessage:String?
+    var userOpenedFlg :Bool?
+    var petOpenedFlg :Bool?
     var createAt:NSDate?
     var updateAt:NSDate?
     
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: RoomData.init start")
-        print(snapshot)
         
         self.id = snapshot.key
         let valueDictionary = snapshot.value as! [String: AnyObject]
@@ -41,7 +43,10 @@ class RoomData: NSObject {
         self.petName = valueDictionary["petName"] as? String
         petImageString = valueDictionary["petImageString"] as? String
         self.petImage = UIImage(data: NSData(base64Encoded: petImageString!, options: .ignoreUnknownCharacters)! as Data)
+        self.breederId = valueDictionary["breederId"] as? String
         self.lastMessage = valueDictionary["lastMessage"] as? String
+        self.userOpenedFlg = valueDictionary["userOpenedFlg"] as? Bool
+        self.petOpenedFlg = valueDictionary["petOpenedFlg"] as? Bool
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
         let updateAt = valueDictionary["updateAt"] as? String

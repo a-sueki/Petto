@@ -502,12 +502,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xez-vz-BpV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1487" y="2114"/>
+            <point key="canvasLocation" x="-188" y="2159"/>
         </scene>
-        <!--Messages Container View Controller-->
+        <!--Breeder Messages Container View Controller-->
         <scene sceneID="YRL-zP-PpB">
             <objects>
-                <viewController storyboardIdentifier="MessagesContainer" definesPresentationContext="YES" id="IXp-Zd-4gy" customClass="MessagesContainerViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BreederMessagesContainer" definesPresentationContext="YES" id="IXp-Zd-4gy" customClass="BreederMessagesContainerViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lxM-qf-Nab"/>
                         <viewControllerLayoutGuide type="bottom" id="daH-Iv-H63"/>
@@ -519,7 +519,7 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="504-en-YbV">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="418"/>
                                 <connections>
-                                    <segue destination="MKo-Z6-pNE" kind="embed" identifier="toMessages" id="bAN-dR-FO0"/>
+                                    <segue destination="MKo-Z6-pNE" kind="embed" identifier="toBreederMessages" id="bAN-dR-FO0"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VcQ-G0-TcQ">
@@ -535,10 +535,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="504-en-YbV" firstAttribute="leading" secondItem="IDt-rh-AEL" secondAttribute="leading" id="2Qz-zl-O5m"/>
+                            <constraint firstItem="504-en-YbV" firstAttribute="top" secondItem="IDt-rh-AEL" secondAttribute="top" id="2ah-dG-niX"/>
                             <constraint firstItem="VcQ-G0-TcQ" firstAttribute="top" secondItem="504-en-YbV" secondAttribute="bottom" id="5as-LA-iLz"/>
-                            <constraint firstItem="504-en-YbV" firstAttribute="top" secondItem="IDt-rh-AEL" secondAttribute="top" id="Hba-cv-ACP"/>
                             <constraint firstItem="daH-Iv-H63" firstAttribute="top" secondItem="VcQ-G0-TcQ" secondAttribute="bottom" id="OkN-Ge-ljz"/>
-                            <constraint firstAttribute="trailing" secondItem="504-en-YbV" secondAttribute="trailing" id="dUE-UJ-CYG"/>
+                            <constraint firstAttribute="trailing" secondItem="504-en-YbV" secondAttribute="trailing" id="Xdn-Di-9WX"/>
                             <constraint firstAttribute="trailing" secondItem="VcQ-G0-TcQ" secondAttribute="trailing" id="skW-4K-JEw"/>
                             <constraint firstItem="daH-Iv-H63" firstAttribute="top" secondItem="504-en-YbV" secondAttribute="bottom" constant="150" id="syS-6n-fTP"/>
                             <constraint firstItem="VcQ-G0-TcQ" firstAttribute="leading" secondItem="IDt-rh-AEL" secondAttribute="leading" id="wEd-QQ-DAM"/>
@@ -547,7 +547,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Y0-bR-uoT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2190" y="2120.0704225352115"/>
+            <point key="canvasLocation" x="1464" y="2114"/>
         </scene>
         <!--Message List View Controller-->
         <scene sceneID="mZd-9L-Dru">
@@ -1138,7 +1138,7 @@
         <!--Messages View Controller-->
         <scene sceneID="P0E-V7-0CO">
             <objects>
-                <viewController storyboardIdentifier="Messages2" id="MKo-Z6-pNE" customClass="MessagesViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BreederMessages" id="MKo-Z6-pNE" customClass="MessagesViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lvA-f7-bF0"/>
                         <viewControllerLayoutGuide type="bottom" id="W28-Gq-uZu"/>
@@ -1151,7 +1151,52 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W4Y-vZ-ZND" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2968" y="2064"/>
+            <point key="canvasLocation" x="2190" y="2035"/>
+        </scene>
+        <!--User Messages Container View Controller-->
+        <scene sceneID="iz0-Ls-fvi">
+            <objects>
+                <viewController storyboardIdentifier="UserMessagesContainer" id="Sdh-ql-wXz" customClass="UserMessagesContainerViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XKc-Y2-y3J"/>
+                        <viewControllerLayoutGuide type="bottom" id="pCp-Tz-svQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xWa-h2-FWN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WwY-cX-8fm">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="418"/>
+                                <connections>
+                                    <segue destination="ntY-MF-vyv" kind="embed" identifier="toUserMessages" id="Nmq-sP-7ci"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8r-Uj-hsb">
+                                <rect key="frame" x="0.0" y="418" width="320" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="ris-jT-zhA"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="DCS-cI-o43" kind="embed" identifier="toConsent" id="ddp-81-zIH"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="pCp-Tz-svQ" firstAttribute="top" secondItem="d8r-Uj-hsb" secondAttribute="bottom" id="Apk-e6-Gcj"/>
+                            <constraint firstItem="pCp-Tz-svQ" firstAttribute="top" secondItem="WwY-cX-8fm" secondAttribute="bottom" constant="150" id="DXN-gk-oQe"/>
+                            <constraint firstItem="WwY-cX-8fm" firstAttribute="top" secondItem="xWa-h2-FWN" secondAttribute="top" id="Hxw-tW-NTL"/>
+                            <constraint firstItem="d8r-Uj-hsb" firstAttribute="leading" secondItem="xWa-h2-FWN" secondAttribute="leading" id="Wvi-Qr-YS4"/>
+                            <constraint firstAttribute="trailing" secondItem="d8r-Uj-hsb" secondAttribute="trailing" id="cn5-8H-08V"/>
+                            <constraint firstItem="d8r-Uj-hsb" firstAttribute="top" secondItem="WwY-cX-8fm" secondAttribute="bottom" id="dwq-ES-NHj"/>
+                            <constraint firstItem="WwY-cX-8fm" firstAttribute="leading" secondItem="xWa-h2-FWN" secondAttribute="leading" id="guK-Ql-cXf"/>
+                            <constraint firstAttribute="trailing" secondItem="WwY-cX-8fm" secondAttribute="trailing" id="l2e-l0-VYZ"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j4I-rX-yFy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2882" y="2114"/>
         </scene>
         <!--Booking View Controller-->
         <scene sceneID="qCC-SQ-HkZ">
@@ -1181,7 +1226,58 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YGL-un-6hX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2964.375" y="2421.1267605633802"/>
+            <point key="canvasLocation" x="2190" y="2368"/>
+        </scene>
+        <!--Messages View Controller-->
+        <scene sceneID="7gZ-he-urP">
+            <objects>
+                <viewController storyboardIdentifier="UserMessages" id="ntY-MF-vyv" customClass="MessagesViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tPq-1f-dAN"/>
+                        <viewControllerLayoutGuide type="bottom" id="YXg-Ez-5YV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="VRO-KA-yRV">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="418"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="svz-4h-Xhk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3608" y="2035"/>
+        </scene>
+        <!--Consent View Controller-->
+        <scene sceneID="Mzn-Pz-lkb">
+            <objects>
+                <viewController storyboardIdentifier="Consent" id="DCS-cI-o43" customClass="ConsentViewController" customModule="Petto" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JB5-WS-H4x"/>
+                        <viewControllerLayoutGuide type="bottom" id="t9V-i0-904"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yau-dv-1xG">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="0MM-So-GcC">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="0MM-So-GcC" firstAttribute="leading" secondItem="yau-dv-1xG" secondAttribute="leading" id="FP3-op-iIc"/>
+                            <constraint firstAttribute="bottom" secondItem="0MM-So-GcC" secondAttribute="bottom" id="IUG-Hr-vMG"/>
+                            <constraint firstItem="0MM-So-GcC" firstAttribute="top" secondItem="yau-dv-1xG" secondAttribute="top" id="NZ4-VV-zx5"/>
+                            <constraint firstAttribute="trailing" secondItem="0MM-So-GcC" secondAttribute="trailing" id="anN-NB-aWM"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="0MM-So-GcC" id="7rg-k8-bxi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5yN-4E-kig" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3608" y="2367"/>
         </scene>
     </scenes>
     <resources>

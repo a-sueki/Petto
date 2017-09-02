@@ -29,7 +29,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
     func setPetData(petData: PetData) {
         
         self.petImageView.image = petData.image
-        self.areaLabel.text = petData.area ?? "未選択"
+        self.areaLabel.text = petData.area
         if petData.kind == "イヌ" {
             self.kindImageView.image = UIImage(named: "dog-lightgray")
         } else {
@@ -41,7 +41,14 @@ class HomeCollectionViewCell: UICollectionViewCell {
             self.sexImageView.image = UIImage(named: "female-lightgray")
         }
         if petData.isAvailable! {
-            self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))days"
+            if petData.minDays == petData.maxDays {
+                self.termLabel.text = "期間：\(String(petData.minDays!))日間"
+            }else{
+                self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))日間"
+            }
+        }else{
+            // TODO: 写真をグレーアウト
+            self.termLabel.text = "おあずけ期間外"
         }
         if petData.isLiked {
             let buttonImage = UIImage(named: "like-red")

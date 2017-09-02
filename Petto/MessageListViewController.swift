@@ -15,6 +15,7 @@ import SVProgressHUD
 class MessageListViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
+    var userDefaults: UserDefaults?
     var roomIdList: [String] = []
     var userData: UserData?
     var roomDataArray: [RoomData] = []
@@ -25,6 +26,10 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         print("DEBUG_PRINT: MessageListViewController.viewDidLoad start")
         
+        self.userDefaults = UserDefaults.standard
+
+        print("DEBUG_PRINT: MessageListViewController 1")
+        
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
@@ -32,28 +37,40 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let nib = UINib(nibName: "MessageListTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "messageListCell")
         tableView.rowHeight = UITableViewAutomaticDimension
+
+        print("DEBUG_PRINT: MessageListViewController.viewDidLoad end")
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        print("DEBUG_PRINT: MessageListViewController.viewWillAppear start")
+
+        print("DEBUG_PRINT: MessageListViewController 2")
+        
+        //TODO: BaseViewControllerでやる？
         
         // userのmessages[]を取得　→roomIdList
         if let uid = FIRAuth.auth()?.currentUser?.uid {
+            print("DEBUG_PRINT: MessageListViewController 3")
             // HUDで処理中を表示
             SVProgressHUD.show()
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
             // Userのメッセージリスト（roomIdList）の取得
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: MessageListViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
+                print("DEBUG_PRINT: MessageListViewController.viewWillAppear .observeSingleEventイベントが発生しました。")
                 self.userData = UserData(snapshot: snapshot, myId: uid)
-                if self.userData?.myMessages.count != 0 {
+                if self.userData?.roomIds.count != 0 {
                     // user,petデータを取得
-                    for (key, _) in (self.userData?.myMessages)! {
+                    for (key, _) in (self.userData?.roomIds)! {
                         self.roomIdList.append(key)
                         self.getData(roomId: key)
                     }
+                    print("DEBUG_PRINT: MessageListViewController 4")
                     // tableViewを再表示する
                     self.tableView.reloadData()
                     // HUDを消す
                     SVProgressHUD.dismiss()
-
                 }else{
+                    print("DEBUG_PRINT: MessageListViewController 5")
                     //roomが0件の時は「メッセージ送受信はありません」を表示
                     SVProgressHUD.showError(withStatus: "まだメッセージがありません")
                 }
@@ -61,9 +78,10 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
+            print("DEBUG_PRINT: MessageListViewController 6")
             self.observing = true
         }else{
-            print("DEBUG_PRINT: MessageListViewController.viewDidLoad ユーザがログインしていません。")
+            print("DEBUG_PRINT: MessageListViewController.viewWillAppear ユーザがログインしていません。")
             // ログインしていない場合
             if observing == true {
                 // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
@@ -82,8 +100,9 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 self.present(loginViewController!, animated: true, completion: nil)
             }
         }
+        print("DEBUG_PRINT: MessageListViewController 7")
         
-        print("DEBUG_PRINT: MessageListViewController.viewDidLoad end")
+        print("DEBUG_PRINT: MessageListViewController.viewWillAppear end")
     }
     
     func getData(roomId: String) {
@@ -91,6 +110,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         // HUDで処理中を表示
         SVProgressHUD.show()
+        print("DEBUG_PRINT: MessageListViewController 8")
 
         // roomDataリストの取得
         let ref = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
@@ -99,6 +119,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             if let _ = snapshot.value as? NSDictionary {
                 let roomData = RoomData(snapshot: snapshot, myId: roomId)
                 self.roomDataArray.append(roomData)
+                print("DEBUG_PRINT: MessageListViewController 9")
                 // tableViewを再表示する
                 self.tableView.reloadData()
                 // HUDを消す
@@ -108,6 +129,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             print(error.localizedDescription)
             SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
        }
+        print("DEBUG_PRINT: MessageListViewController 10")
+
         print("DEBUG_PRINT: MessageListViewController.getData end")
     }
     
@@ -126,16 +149,33 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("DEBUG_PRINT: MessageListViewController.cellForRowAt start")
         
+        print("DEBUG_PRINT: MessageListViewController 11")
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageListCell", for: indexPath) as! MessageListTableViewCell
         
         // roomDataリスト取得（非同期）の完了前のテーブル表示エラー防止のため
         if self.roomIdList.count == self.roomDataArray.count {
             
+            print("DEBUG_PRINT: MessageListViewController 12")
             cell.setData(userData: self.userData!, roomData: self.roomDataArray[indexPath.row])
-            
+
+            // 未読の場合、ハイライト
+            if self.userData?.unReadRoomIds.count != 0 {
+                print("DEBUG_PRINT: MessageListViewController 13")
+
+                for (rid,_) in (self.userData?.unReadRoomIds)! {
+                    print("DEBUG_PRINT: MessageListViewController 14")
+
+                    if rid == self.roomDataArray[indexPath.row].id {
+                        cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
+                    }else{
+                        cell.unReadLabel.isHidden = true
+                    }
+                }
+            }
             // セル内のボタンのアクションをソースコードで設定する
             cell.messageLabelButton.addTarget(self, action:#selector(handleMessageLabelButton(sender:event:)), for:  UIControlEvents.touchUpInside)
         }
+        print("DEBUG_PRINT: MessageListViewController 15")
         
         print("DEBUG_PRINT: MessageListViewController.cellForRowAt end")
         return cell
@@ -167,13 +207,31 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let point = touch!.location(in: self.tableView)
         let indexPath = tableView.indexPathForRow(at: point)
         
-        // roomDataをセットして画面遷移
-        let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessagesContainer") as! MessagesContainerViewController
-        messagesContainerViewController.roomData = self.roomDataArray[(indexPath?.row)!]
-        self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
-        
+        // 辞書を作成
+        let ref = FIRDatabase.database().reference()
+        // 自分のuidを取得
+        let uid = self.userDefaults?.string(forKey: DefaultString.Uid)!
+
+        // 既読フラグupdate
+        if let roomId = self.roomDataArray[(indexPath?.row)!].id {
+            if roomId.contains(uid!) {
+                // 自分があずかり人の場合
+                ref.child(Paths.RoomPath).child(roomId).updateChildValues(["userOpenedFlg" : true])
+                ref.child(Paths.UserPath).child(uid!).child("unReadRoomIds").child(roomId).removeValue()
+                // roomDataをセットして画面遷移
+                let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessagesContainer") as! UserMessagesContainerViewController
+                messagesContainerViewController.roomData = self.roomDataArray[(indexPath?.row)!]
+                self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+            }else{
+                // 自分がブリーダーの場合
+                ref.child(Paths.RoomPath).child(roomId).updateChildValues(["petOpenedFlg" : true])
+                ref.child(Paths.UserPath).child(uid!).child("unReadRoomIds").child(roomId).removeValue()
+                // roomDataをセットして画面遷移
+                let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "BreederMessagesContainer") as! BreederMessagesContainerViewController
+                messagesContainerViewController.roomData = self.roomDataArray[(indexPath?.row)!]
+                self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+            }
+        }
         print("DEBUG_PRINT: MessageListViewController.handleMessageLabelButton end")
     }
-    
-    
 }

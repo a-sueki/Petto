@@ -180,9 +180,9 @@ class UserViewController: BaseFormViewController  {
             <<< DateRow("birthday") {
                 $0.title = "生年月日"
                 if let dateString = self.userData?.birthday {
-                    $0.value = DateCommon.stringToDate(dateString)
+                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
-                    $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000")
+                    $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000", dateFormat: DateCommon.dateFormat)
                 }
                 $0.maximumDate = Date()
                 $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale

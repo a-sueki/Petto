@@ -331,7 +331,7 @@ class EditViewController: BaseFormViewController {
             <<< DateRow("startDate") {
                 $0.title = "開始日付"
                 if let dateString = self.petData?.startDate {
-                    $0.value = DateCommon.stringToDate(dateString)
+                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
                     $0.value = Date()
                 }
@@ -371,7 +371,7 @@ class EditViewController: BaseFormViewController {
             <<< DateRow("endDate") {
                 $0.title = "終了日付"
                 if let dateString = self.petData?.endDate {
-                    $0.value = DateCommon.stringToDate(dateString)
+                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }

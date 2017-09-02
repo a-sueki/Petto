@@ -238,7 +238,7 @@ class PetDetailViewController: BaseFormViewController {
             }
             <<< DateRow("startDate") {
                 if let dateString = self.petData?.startDate {
-                    $0.value = DateCommon.stringToDate(dateString)
+                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
                     $0.value = Date()
                 }
@@ -247,7 +247,7 @@ class PetDetailViewController: BaseFormViewController {
             }
             <<< DateRow("endDate") {
                 if let dateString = self.petData?.endDate {
-                    $0.value = DateCommon.stringToDate(dateString)
+                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
@@ -294,8 +294,8 @@ class PetDetailViewController: BaseFormViewController {
         
         // HUDで処理中を表示
         SVProgressHUD.show()
-
-        let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessagesContainer") as! MessagesContainerViewController
+        
+        let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessagesContainer") as! UserMessagesContainerViewController
         
         // roomIdを取得
         let uid = userDefaults.string(forKey: DefaultString.Uid)!
@@ -322,7 +322,10 @@ class PetDetailViewController: BaseFormViewController {
                 inputData["petId"] = pid
                 inputData["petName"] = self.petData?.name
                 inputData["petImageString"] = self.petData?.imageString
-                
+                inputData["petImageString"] = self.petData?.imageString
+                inputData["userOpenedFlg"] = true
+                inputData["petOpenedFlg"] = false
+                inputData["breederId"] = self.petData?.createBy
                 inputData["createAt"] = String(time)
                 inputData["updateAt"] = String(time)
                 
@@ -330,9 +333,10 @@ class PetDetailViewController: BaseFormViewController {
                 let ref = FIRDatabase.database().reference()
                 ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
                 // update
-                ref.child(Paths.UserPath).child(uid).child("myMessages").updateChildValues([roomId : true])
-                ref.child(Paths.PetPath).child(pid).child("myMessages").updateChildValues([roomId : true])
-
+                ref.child(Paths.UserPath).child(uid).child("roomIds").updateChildValues([roomId : true]) // あずかり人
+                ref.child(Paths.PetPath).child(pid).child("roomIds").updateChildValues([roomId : true])
+                ref.child(Paths.UserPath).child((self.petData?.createBy)!).child("roomIds").updateChildValues([roomId : true]) // ブリーダー
+                
                 // roomDataの取得
                 roomRef.observeSingleEvent(of: .value, with: { (snapshot2) in
                     print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。（２）")
@@ -349,7 +353,7 @@ class PetDetailViewController: BaseFormViewController {
         
         // HUDを消す
         SVProgressHUD.dismiss()
-
+        
         print("DEBUG_PRINT: PetDetailViewController.toMessages end")
     }
     

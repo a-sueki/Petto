@@ -41,14 +41,13 @@ class UserData: NSObject {
     // マイペット情報
     var myPets = [String:Bool]()
     // メッセージ情報
-    var myMessages = [String:Bool]()
+    var roomIds = [String:Bool]()
+    var unReadRoomIds = [String:Bool]()
     // システム項目
     var createAt: NSDate?
     var createBy: String?
     var updateAt: NSDate?
     var updateBy: String?
-
-    
     
     init(snapshot: FIRDataSnapshot, myId: String) {
         self.id = snapshot.key
@@ -110,8 +109,11 @@ class UserData: NSObject {
             self.myPets = myPets
         }
         // メッセージ情報
-        if let myMessages = valueDictionary["myMessages"] as? [String:Bool] {
-            self.myMessages = myMessages
+        if let roomIds = valueDictionary["roomIds"] as? [String:Bool] {
+            self.roomIds = roomIds
+        }
+        if let unReadRoomIds = valueDictionary["unReadRoomIds"] as? [String:Bool] {
+            self.unReadRoomIds = unReadRoomIds
         }
         // システム項目
         let createAt = valueDictionary["createAt"] as? String

@@ -13,17 +13,11 @@ import FirebaseDatabase
 import JSQMessagesViewController
 
 class MessagesViewController: JSQMessagesViewController {
-        
-    let userDefaults = UserDefaults.standard    
+    
+    var userDefaults: UserDefaults?
     var roomData: RoomData?
     var messageData: MessageData?
-
-    var roomId: String?
-    var uid: String?
-    var userImageString: String?
-    var pid: String?
-    var petImageString: String?
-
+    
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     //    var userToPetFlag = false
@@ -41,7 +35,8 @@ class MessagesViewController: JSQMessagesViewController {
         super.viewDidLoad()
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad start")
-
+        
+        self.userDefaults = UserDefaults.standard
         // 初期設定
         self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "incomingCell")
         self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "outgoingCell")
@@ -49,21 +44,21 @@ class MessagesViewController: JSQMessagesViewController {
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
         self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
-
-        self.senderId = userDefaults.string(forKey: DefaultString.Uid)
-        self.senderDisplayName = userDefaults.string(forKey: DefaultString.DisplayName)!
-
+        
+        self.senderId = self.userDefaults?.string(forKey: DefaultString.Uid)
+        self.senderDisplayName = self.userDefaults?.string(forKey: DefaultString.DisplayName)!
+        
         if self.roomData == nil {
             // 自分のアバター画像設定
             self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "user"), diameter: 64)
             // 相手のアバター画像設定
             self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "catProfile"), diameter: 64)
-        }else{            
+        }else{
             // 自分のアバター画像設定
             self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: roomData?.userImage, diameter: 64)
             // 相手のアバター画像設定
             self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: roomData?.petImage, diameter: 64)
-
+            
             // roomDataからメッセージを取得
             getMessages()
         }
@@ -117,7 +112,7 @@ class MessagesViewController: JSQMessagesViewController {
         messages.append(message!)
         
         let time = NSDate.timeIntervalSinceReferenceDate
-
+        
         var inputData = [String : Any]()  //message
         
         // Firebase連携用
@@ -134,12 +129,27 @@ class MessagesViewController: JSQMessagesViewController {
         // update
         ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : text])
         ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : String(time)])
-        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
-        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
+        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
+        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
+        
+        // 既読フラグupdate
+        if checkSender() {
+            print("わたしはあずかり人です")
+            // 自分があずかり人の場合
+            ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["petOpenedFlg" : false])
+            // ブリーダー（相手）の未読リストにroomIdを追加
+            ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
+        }else{
+            print("わたしはブリーダーです")
+            // 自分がブリーダーの場合
+            ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
+            // ブリーダー（あずかり人）の未読リストにroomIdを追加
+            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
+        }
         
         // 更新
         finishSendingMessage(animated: true)
-        sendAutoMessage()
+        //sendAutoMessage()
         
         print("DEBUG_PRINT: MessagesViewController.didPressSend end")
     }
@@ -254,7 +264,7 @@ class MessagesViewController: JSQMessagesViewController {
         picker.dismiss(animated: true, completion: nil)
         
     }
-
+    
     func sendImageMessage(image: UIImage) {
         print("DEBUG_PRINT: MessagesViewController.sendImageMessage start")
         
@@ -280,11 +290,24 @@ class MessagesViewController: JSQMessagesViewController {
         ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
         
         // update
-        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
-        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("myMessages").updateChildValues([(self.roomData?.id)! : true])
-
+        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : "[写真が届いています]"])
+        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : String(time)])
+        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
+        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
+        
+        // 既読フラグupdate
+        if checkSender() {
+            print("わたしはあずかり人です")
+            // 自分があずかり人の場合
+            ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["petOpenedFlg" : false])
+        }else{
+            print("わたしはブリーダーです")
+            // 自分がブリーダーの場合
+            ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
+        }
+        
         finishSendingMessage(animated: true)
-        sendAutoMessage()
+        //sendAutoMessage()
         
         print("DEBUG_PRINT: MessagesViewController.sendImageMessage end")
     }
@@ -301,19 +324,42 @@ class MessagesViewController: JSQMessagesViewController {
     override func viewWillDisappear(_ animated: Bool) {
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear start")
         
+        let ref = FIRDatabase.database().reference()
         if self.messages.count == 0 {
-            let ref = FIRDatabase.database().reference()
             // Roomの削除
             ref.child(Paths.RoomPath).child((self.roomData?.id)!).removeValue()
             ref.child(Paths.MessagePath).child((self.roomData?.id)!).removeValue()
-            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("myMessages").child((self.roomData?.id)!).removeValue()
-            ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("myMessages").child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
             print("DEBUG_PRINT: MessagesViewController.viewWillDisappear .removeValueイベントが発生しました。")
-            
         }
+        
+        // TODO: メッセージ受信時に自分がルームにいる場合は既読フラグON
+        /*else{
+         if checkSender() {
+         // 自分があずかり人の場合
+         
+         }else{
+         
+         }
+         }
+         */
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
     }
-
+    
+    func checkSender () -> Bool {
+        var result = false
+        // 自分のuidを取得
+        let uid = self.userDefaults?.string(forKey: DefaultString.Uid)!
+        if (self.roomData?.id)!.contains(uid!) {
+            // 自分があずかり人の場合
+            print("わたしはあずかり人です")
+            result = true
+        }
+        return result
+    }
+    
 }
 
 extension MessagesViewController: ImageSelectViewDelegate{

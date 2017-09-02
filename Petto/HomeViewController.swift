@@ -164,11 +164,11 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.startDate ,
-                                    DateCommon.stringToDate(petInfo.startDate!) >= DateCommon.stringToDate((self.searchData?.startDate)!) {
+                                    DateCommon.stringToDate(petInfo.startDate!, dateFormat: DateCommon.dateFormat) >= DateCommon.stringToDate((self.searchData?.startDate)!, dateFormat: DateCommon.dateFormat) {
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.endDate ,
-                                    DateCommon.stringToDate(petInfo.endDate!) <= DateCommon.stringToDate((self.searchData?.endDate)!) {
+                                    DateCommon.stringToDate(petInfo.endDate!, dateFormat: DateCommon.dateFormat) <= DateCommon.stringToDate((self.searchData?.endDate)!, dateFormat: DateCommon.dateFormat) {
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.minDays ,petInfo.minDays! >= (self.searchData?.minDays)! {
@@ -183,8 +183,9 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                             self.collectionView.reloadData()
                             // HUDを消す
                             SVProgressHUD.dismiss()
+                        }else{
+                            SVProgressHUD.dismiss()
                         }
-                        
                     }) { (error) in
                         // HUDを消す
                         SVProgressHUD.dismiss()
