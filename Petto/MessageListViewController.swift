@@ -170,6 +170,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 for (rid,_) in (self.userData?.unReadRoomIds)! {
                     if rid == self.roomDataArray[indexPath.row].id {
                         cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
+                        cell.unReadLabel.isHidden = false
+                        break
                     }else{
                         cell.backgroundColor = UIColor.white
                         cell.unReadLabel.isHidden = true
