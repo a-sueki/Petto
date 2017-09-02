@@ -36,14 +36,15 @@ class PetDetailViewController: BaseFormViewController {
                     header.onSetupView = { (view, section) -> () in
                         view.petImageView.image = self.petData!.image
                         
-                        view.petImageView.alpha = 0;
-                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
+                        view.petImageView.alpha = 1;
+/*                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
                             view?.petImageView.alpha = 1
                         })
                         view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
                         UIView.animate(withDuration: 1.0, animations: { [weak view] in
                             view?.layer.transform = CATransform3DIdentity
                         })
+ */
                     }
                     $0.header = header
                 }
@@ -113,10 +114,11 @@ class PetDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
             }
             
             
@@ -151,10 +153,11 @@ class PetDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
             }
             
             <<< MultipleSelectorRow<String>("tools") {
@@ -175,10 +178,11 @@ class PetDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
             }
             <<< MultipleSelectorRow<String>("ngs") {
                 $0.title = "おあずけNGユーザ"
@@ -198,10 +202,11 @@ class PetDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
             }
             
             
@@ -280,12 +285,26 @@ class PetDetailViewController: BaseFormViewController {
                 }.onCellSelection { [weak self] (cell, row) in
                     row.section?.form?.validate()
                     self?.toMessages()
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "もどる"
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.back()
         }
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction func back() {
+        print("DEBUG_PRINT: PetDetailViewController.back start")
+        
+        //前画面に戻る
+        self.navigationController?.popViewController(animated: true)
+        
+        print("DEBUG_PRINT: PetDetailViewController.back end")
     }
     
     // Messageに画面遷移

@@ -137,12 +137,21 @@
                             <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
                         </userDefinedRuntimeAttributes>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QC7-6A-8pP">
+                        <rect key="frame" x="0.0" y="0.0" width="370" height="76"/>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUM-R7-4dl">
+                        <rect key="frame" x="370" y="0.0" width="85" height="76"/>
+                    </button>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="QC7-6A-8pP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="0By-U9-gfU"/>
                     <constraint firstItem="fx8-QD-4oE" firstAttribute="leading" secondItem="J6O-oD-utm" secondAttribute="trailing" constant="10" id="2rx-h0-awy"/>
+                    <constraint firstItem="xUM-R7-4dl" firstAttribute="leading" secondItem="QC7-6A-8pP" secondAttribute="trailing" id="2ze-V6-FCR"/>
                     <constraint firstAttribute="topMargin" secondItem="VAo-H7-SKC" secondAttribute="top" id="6wA-cr-ufy"/>
                     <constraint firstAttribute="trailing" secondItem="17e-re-fkX" secondAttribute="trailing" id="7wQ-Z7-A68"/>
                     <constraint firstItem="SGc-ei-ZZE" firstAttribute="centerY" secondItem="VAo-H7-SKC" secondAttribute="centerY" id="9Cp-xe-eYo"/>
+                    <constraint firstItem="17e-re-fkX" firstAttribute="top" secondItem="xUM-R7-4dl" secondAttribute="bottom" id="EVY-FL-qZr"/>
                     <constraint firstItem="RiA-Yq-een" firstAttribute="bottom" secondItem="VAo-H7-SKC" secondAttribute="bottom" id="EVr-F0-zLa"/>
                     <constraint firstItem="ZBT-Gc-Ogl" firstAttribute="bottom" secondItem="VAo-H7-SKC" secondAttribute="bottom" id="Fh8-WD-3HU"/>
                     <constraint firstItem="SGc-ei-ZZE" firstAttribute="leading" secondItem="fx8-QD-4oE" secondAttribute="trailing" constant="7" id="I3e-Zp-Rfn"/>
@@ -150,12 +159,15 @@
                     <constraint firstAttribute="bottomMargin" secondItem="HzH-RI-RIw" secondAttribute="bottom" id="LSu-JS-nw0"/>
                     <constraint firstAttribute="leadingMargin" secondItem="VAo-H7-SKC" secondAttribute="leading" id="LYH-zd-gy8"/>
                     <constraint firstAttribute="leadingMargin" secondItem="TvR-pi-NUs" secondAttribute="leading" id="MW4-hZ-51Q"/>
+                    <constraint firstItem="xUM-R7-4dl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Nfd-Pt-Gac"/>
                     <constraint firstItem="HzH-RI-RIw" firstAttribute="bottom" secondItem="VUP-2i-ccW" secondAttribute="bottom" id="QJ9-Xl-Nyv"/>
                     <constraint firstItem="1nz-JN-p8r" firstAttribute="top" secondItem="SGc-ei-ZZE" secondAttribute="bottom" id="RFx-WW-LTF"/>
                     <constraint firstItem="RiA-Yq-een" firstAttribute="leading" secondItem="35J-1e-ccV" secondAttribute="trailing" constant="10" id="RRK-cj-gT6"/>
                     <constraint firstItem="Ztm-XW-S2e" firstAttribute="top" secondItem="VAo-H7-SKC" secondAttribute="bottom" id="UqS-vm-PFo"/>
+                    <constraint firstAttribute="trailing" secondItem="xUM-R7-4dl" secondAttribute="trailing" id="Utz-05-ZNc"/>
                     <constraint firstItem="Ztm-XW-S2e" firstAttribute="centerX" secondItem="VAo-H7-SKC" secondAttribute="centerX" id="Wlm-Uc-wCw"/>
                     <constraint firstItem="TvR-pi-NUs" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="aH3-pv-VTN"/>
+                    <constraint firstItem="17e-re-fkX" firstAttribute="top" secondItem="QC7-6A-8pP" secondAttribute="bottom" id="aPh-t8-kDq"/>
                     <constraint firstItem="ZBT-Gc-Ogl" firstAttribute="leading" secondItem="VAo-H7-SKC" secondAttribute="trailing" constant="8" id="cbg-1n-qNO"/>
                     <constraint firstAttribute="bottom" secondItem="17e-re-fkX" secondAttribute="bottom" id="dQ2-gx-Vph"/>
                     <constraint firstItem="17e-re-fkX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="dcV-oO-daq"/>
@@ -165,6 +177,7 @@
                     <constraint firstAttribute="topMargin" secondItem="J6O-oD-utm" secondAttribute="top" id="fp0-8P-n1D"/>
                     <constraint firstItem="35J-1e-ccV" firstAttribute="leading" secondItem="ZBT-Gc-Ogl" secondAttribute="trailing" constant="2" id="gNl-uV-1HR"/>
                     <constraint firstAttribute="trailingMargin" secondItem="HzH-RI-RIw" secondAttribute="trailing" id="hXc-dT-9f0"/>
+                    <constraint firstItem="fx8-QD-4oE" firstAttribute="leading" secondItem="QC7-6A-8pP" secondAttribute="trailing" id="j6O-PA-Lvu"/>
                     <constraint firstItem="35J-1e-ccV" firstAttribute="bottom" secondItem="VAo-H7-SKC" secondAttribute="bottom" id="lry-6v-kGb"/>
                     <constraint firstAttribute="trailingMargin" secondItem="SGc-ei-ZZE" secondAttribute="trailing" id="muT-ax-lWm"/>
                     <constraint firstItem="HzH-RI-RIw" firstAttribute="top" secondItem="TvR-pi-NUs" secondAttribute="bottom" constant="16" id="p8U-oQ-rsP"/>
@@ -173,6 +186,7 @@
                     <constraint firstItem="fx8-QD-4oE" firstAttribute="centerY" secondItem="VAo-H7-SKC" secondAttribute="centerY" id="xUK-Dn-HVw"/>
                     <constraint firstItem="TvR-pi-NUs" firstAttribute="top" secondItem="Ztm-XW-S2e" secondAttribute="bottom" constant="9" id="yO5-Jd-yiM"/>
                     <constraint firstItem="J6O-oD-utm" firstAttribute="leading" secondItem="VAo-H7-SKC" secondAttribute="trailing" constant="8" id="yRX-tY-poG"/>
+                    <constraint firstItem="QC7-6A-8pP" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="yfn-va-lJw"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -182,11 +196,13 @@
                 <outlet property="messageLabelButton" destination="17e-re-fkX" id="iiC-eG-8Ju"/>
                 <outlet property="petImageView" destination="SGc-ei-ZZE" id="8Ug-2l-yQQ"/>
                 <outlet property="petNameLabel" destination="1nz-JN-p8r" id="RQ0-p0-8Bu"/>
+                <outlet property="petProfileButton" destination="xUM-R7-4dl" id="OhN-0R-39Q"/>
                 <outlet property="sendTimeLabel" destination="HzH-RI-RIw" id="Ki9-Om-2zy"/>
                 <outlet property="unReadLabel" destination="VUP-2i-ccW" id="2Y5-zj-8OQ"/>
                 <outlet property="userImageView" destination="VAo-H7-SKC" id="mIo-hj-VhW"/>
                 <outlet property="userNameLabel" destination="Ztm-XW-S2e" id="QB4-Ig-N2n"/>
                 <outlet property="userProfile" destination="J6O-oD-utm" id="SZf-HH-4ym"/>
+                <outlet property="userProfileButton" destination="QC7-6A-8pP" id="hx0-Z2-3FW"/>
             </connections>
             <point key="canvasLocation" x="-33.5" y="8.5"/>
         </tableViewCell>

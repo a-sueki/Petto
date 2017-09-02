@@ -59,7 +59,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 }
             }) { (error) in
                 print(error.localizedDescription)
-                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
             self.observing = true
         }else{
@@ -111,8 +110,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 }
             }) { (error) in
                 print(error.localizedDescription)
-                // HUDを消す
-                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
         }
         
@@ -138,7 +135,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             }
         }) { (error) in
             print(error.localizedDescription)
-            SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
         }
         
         print("DEBUG_PRINT: MessageListViewController.getData end")
@@ -183,6 +179,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             }
             // セル内のボタンのアクションをソースコードで設定する
             cell.messageLabelButton.addTarget(self, action:#selector(handleMessageLabelButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+            cell.userProfileButton.addTarget(self, action:#selector(handleUserProfileButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+            cell.petProfileButton.addTarget(self, action:#selector(handlePetProfileButton(sender:event:)), for:  UIControlEvents.touchUpInside)
         }
         
         print("DEBUG_PRINT: MessageListViewController.cellForRowAt end")
@@ -242,4 +240,50 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         }
         print("DEBUG_PRINT: MessageListViewController.handleMessageLabelButton end")
     }
+
+    // ユーザープロフィールがタップされたらユーザー詳細画面に遷移
+    func handleUserProfileButton(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton start")
+        
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        
+        // 画面遷移
+        if let userId = self.roomDataArray[(indexPath?.row)!].userId {
+            let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
+            userDetailViewController.uid = userId
+            self.navigationController?.pushViewController(userDetailViewController, animated: true)
+        }
+        print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton end")
+    }
+    
+    // ペットプロフィールがタップされたらペット詳細画面に遷移
+    func handlePetProfileButton(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton start")
+        
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        
+        // 画面遷移
+        if let petId = self.roomDataArray[(indexPath?.row)!].petId {
+            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton .observeSingleEventイベントが発生しました。")
+                if let _ = snapshot.value as? NSDictionary {
+                    let petData = PetData(snapshot: snapshot, myId: petId)
+                    let petDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "PetDetail") as! PetDetailViewController
+                    petDetailViewController.petData = petData
+                    self.navigationController?.pushViewController(petDetailViewController, animated: true)
+                }
+            })
+        }
+        
+        print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton end")
+    }
+
+    
 }

@@ -34,19 +34,19 @@ class NavigationBarHandler: NSObject {
     func setupNavigationBar() {
         print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar start")
         
-        let button1 = UIButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        let button1 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
         button1.setImage(UIImage(named: "menu"), for: .normal)
         button1.addTarget(self, action: #selector(onClick1), for: .touchUpInside)
-        let button2 = UIButton(frame: CGRect(x: 0, y: 0, width: 63, height: 25))
+        let button2 = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 25))
         button2.setImage(UIImage(named: "logo"), for: .normal)
         button2.addTarget(self, action: #selector(onClick2), for: .touchUpInside)
-        let button3 = UIButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        let button3 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
         button3.setImage(UIImage(named: "todolist"), for: .normal)
         button3.addTarget(self, action: #selector(onClick3), for: .touchUpInside)
-        let button4 = UIButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        let button4 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
         button4.setImage(UIImage(named: "mail"), for: .normal)
         button4.addTarget(self, action: #selector(onClick4), for: .touchUpInside)
-        let button5 = UIButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        let button5 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
         button5.setImage(UIImage(named: "search"), for: .normal)
         button5.addTarget(self, action: #selector(onClick5), for: .touchUpInside)
         
@@ -133,11 +133,16 @@ class NavigationBarHandler: NSObject {
         self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
     }
     func onClick4() {
-        // アニメーション削除
-        self.viewController?.navigationController?.view.layer.removeAllAnimations()
-        
-        let viewController4 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-        self.viewController?.navigationController?.pushViewController(viewController4, animated: false)
+        // ユーザープロフィールが未作成の場合
+        if self.userDefaults?.string(forKey: "area") == nil {
+            SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
+        }else{
+            // アニメーション削除
+            self.viewController?.navigationController?.view.layer.removeAllAnimations()
+            
+            let viewController4 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
+            self.viewController?.navigationController?.pushViewController(viewController4, animated: false)
+        }
     }
     func onClick5() {
         // アニメーション削除

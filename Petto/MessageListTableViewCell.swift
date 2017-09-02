@@ -23,6 +23,8 @@ class MessageListTableViewCell: UITableViewCell {
     @IBOutlet weak var petImageView: UIImageView!
     @IBOutlet weak var petNameLabel: UILabel!
     
+    @IBOutlet weak var userProfileButton: UIButton!
+    @IBOutlet weak var petProfileButton: UIButton!
     @IBOutlet weak var messageLabelButton: UIButton!
     @IBOutlet weak var unReadLabel: UILabel!
     

@@ -75,8 +75,14 @@ class UserViewController: BaseFormViewController  {
         
         // フォーム
         form +++
+            Section() {
+                if let _ = self.userData {
+                    $0.header = HeaderFooterView<UserEditView>(.class)
+                }else {
+                    $0.header = HeaderFooterView<UserEntryView>(.class)
+                }
+            }
             //TODO: コミットメント＆小さなバッチ（メダル）
-            Section("プロフィール")
             <<< ImageRow("image"){
                 $0.title = "写真"
                 $0.baseValue = self.userData?.image ?? nil

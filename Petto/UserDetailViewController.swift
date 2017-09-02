@@ -16,7 +16,7 @@ import SVProgressHUD
 class UserDetailViewController: BaseFormViewController {
     
     var uid: String?
-//    var userData: UserData?
+    //    var userData: UserData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     
@@ -55,14 +55,15 @@ class UserDetailViewController: BaseFormViewController {
                     header.onSetupView = { (view, section) -> () in
                         view.userImageView.image = self.userData!.image
                         
-                        view.userImageView.alpha = 0;
-                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
+                        view.userImageView.alpha = 1;
+/*                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
                             view?.userImageView.alpha = 1
                         })
                         view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
                         UIView.animate(withDuration: 1.0, animations: { [weak view] in
                             view?.layer.transform = CATransform3DIdentity
                         })
+ */
                     }
                     $0.header = header
                 }
@@ -88,7 +89,7 @@ class UserDetailViewController: BaseFormViewController {
             }
             //TODO: 「Bad評価1つ以上」は非表示。システムで判断する。
             <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "注意事項"
+                $0.title = "飼い主さんへの留意事項"
                 $0.options = PetNGs.strings
                 if let data = self.userData , data.ngs.count > 0 {
                     var codes = [String]()
@@ -101,10 +102,11 @@ class UserDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
             }
             
             
@@ -139,10 +141,11 @@ class UserDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
             }
             <<< MultipleSelectorRow<String>("userTools") {
                 $0.title = "用意できる道具"
@@ -162,10 +165,11 @@ class UserDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
             }
             <<< MultipleSelectorRow<String>("userNgs") {
                 $0.title = "NGペット"
@@ -185,13 +189,31 @@ class UserDetailViewController: BaseFormViewController {
                 }else{
                     $0.value = []
                 }
-                $0.disabled = true
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
+            }
+            //TODO:Petto利用履歴
+            +++ Section()
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "もどる"
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.back()
         }
-        //TODO:Petto利用履歴
+        print("DEBUG_PRINT: UserDetailViewController.updateUserData end")
     }
+    
+    @IBAction func back() {
+        print("DEBUG_PRINT: UserDetailViewController.back start")
+        
+        //前画面に戻る
+        self.navigationController?.popViewController(animated: true)
+        
+        print("DEBUG_PRINT: UserDetailViewController.back end")
+    }
+    
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
