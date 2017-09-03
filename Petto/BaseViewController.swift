@@ -56,8 +56,6 @@ class NavigationBarHandler: NSObject {
         
         if let user = FIRAuth.auth()?.currentUser {
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(user.uid)
-            // HUDで処理中を表示
-            SVProgressHUD.show()
             // Userの未読リストを取得
             ref.observe(.value, with: { (snapshot) in
                 print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .valueイベントが発生しました。")
@@ -90,8 +88,6 @@ class NavigationBarHandler: NSObject {
                         // バッチのサイズを変更
                         self.hub.scaleCircleSize(by: 0.5)
                     }
-                    // HUDを消す
-                    SVProgressHUD.dismiss()
                 }
             }) { (error) in
                 print(error.localizedDescription)

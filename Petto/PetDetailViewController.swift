@@ -278,7 +278,11 @@ class PetDetailViewController: BaseFormViewController {
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "飼い主にメッセージを送る"
-                }.onCellSelection { [weak self] (cell, row) in
+                row.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+               }.onCellSelection { [weak self] (cell, row) in
                     row.section?.form?.validate()
                     self?.toMessages()
             }

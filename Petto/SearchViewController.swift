@@ -14,12 +14,13 @@ import SVProgressHUD
 
 class SearchViewController: BaseFormViewController {
     
-//    let userDefaults = UserDefaults.standard
+    //    let userDefaults = UserDefaults.standard
     var searchData: SearchData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     
     var inputData = [String : Any]()
+    var removeKeyList = [String]()
     
     override func viewDidLoad() {
         print("DEBUG_PRINT: SearchViewController.viewDidLoad start")
@@ -34,7 +35,7 @@ class SearchViewController: BaseFormViewController {
                 if let _ = snapshot.value as? NSDictionary {
                     
                     self.searchData = SearchData(snapshot: snapshot, myId: uid)
-
+                    
                     // Formを表示
                     self.updateSearchData()
                 }else{
@@ -50,10 +51,10 @@ class SearchViewController: BaseFormViewController {
         }
         print("DEBUG_PRINT: SearchViewController.viewDidLoad end")
     }
-
+    
     func updateSearchData() {
         print("DEBUG_PRINT: SearchViewController.updateSearchData start")
-    
+        
         // Cell初期設定
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
@@ -66,12 +67,12 @@ class SearchViewController: BaseFormViewController {
             +++ Section("ペットのプロフィール")
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
-                $0.options = Area.strings
+                $0.options = SearchArea.strings
                 $0.value = self.searchData?.area ?? userDefaults?.string(forKey: DefaultString.Area)
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
-                $0.options = Kind.strings
+                $0.options = SearchKind.strings
                 $0.value = self.searchData?.kind ?? nil
             }
             //TODO: もうちょい選択しやすいUIに変更
@@ -79,41 +80,49 @@ class SearchViewController: BaseFormViewController {
                 $0.title = "品種"
                 $0.hidden = .function(["kind"], { form -> Bool in
                     let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? Kind.dog == Kind.cat
+                    if row.value != nil ,row.value != "指定しない" {
+                        return row.value ?? Kind.dog == Kind.cat
+                    }else{
+                        return true
+                    }
                 })
-                $0.options = CategoryDog.strings
-                $0.value = self.searchData?.category ?? $0.options.last
+                $0.options = SearchCategoryDog.strings
+                $0.value = self.searchData?.category ?? $0.options.first
             }
             <<< PickerInputRow<String>("categoryCat"){
                 $0.title = "品種"
                 $0.hidden = .function(["kind"], { form -> Bool in
                     let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? Kind.dog == Kind.dog
+                    if row.value != nil ,row.value != "指定しない" {
+                        return row.value ?? Kind.dog == Kind.dog
+                    }else{
+                        return true
+                    }
                 })
-                $0.options = CategoryCat.strings
-                $0.value = self.searchData?.category ?? $0.options.last
+                $0.options = SearchCategoryCat.strings
+                $0.value = self.searchData?.category ?? $0.options.first
             }
             <<< PickerInputRow<String>("age"){
                 $0.title = "年齢"
-                $0.options = Age.strings
-                $0.value = self.searchData?.age ?? $0.options.last
+                $0.options = SearchAge.strings
+                $0.value = self.searchData?.age ?? $0.options.first
             }
             
             +++ Section("ペットの状態")
             //TODO: チェックボックスを表示
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
-                $0.value = self.searchData?.isVaccinated ?? false
+                $0.value = self.searchData?.isVaccinated ?? true
             }
             <<< CheckRow("isCastrated") {
                 $0.title = "去勢/避妊手術済み"
-                $0.value = self.searchData?.isCastrated ?? false
+                $0.value = self.searchData?.isCastrated ?? true
             }
             <<< CheckRow("wanted") {
                 $0.title = "里親を募集中"
-                $0.value = self.searchData?.wanted ?? false
+                $0.value = self.searchData?.wanted ?? true
             }
-
+            
             +++ Section("おあずけ条件")
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集中"
@@ -182,8 +191,8 @@ class SearchViewController: BaseFormViewController {
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
-
-
+            
+            
             +++
             Section("おあずけ可能期間"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
@@ -361,30 +370,58 @@ class SearchViewController: BaseFormViewController {
                         self?.executePost()
                     }
         }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "検索条件をクリア"
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.clear()
+        }
         print("DEBUG_PRINT: SearchViewController.updateSearchData end")
     }
-
+    
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
-
     
+    @IBAction func clear() {
+        print("DEBUG_PRINT: SearchViewController.clear start")
+    
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+        // 辞書を作成
+        let ref = FIRDatabase.database().reference()
+        ref.child(Paths.SearchPath).child(uid).removeValue()
+            SVProgressHUD.showSuccess(withStatus: "絞り込み条件をクリアしました")
+        } else{
+            SVProgressHUD.showError(withStatus: "更新に失敗しました。再度ログインしてから実行してください")
+        }
+        // HOMEに画面遷移
+        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        //viewController2.searchData = inputData
+        self.navigationController?.pushViewController(viewController2, animated: true)
+        
+        print("DEBUG_PRINT: SearchViewController.clear end")
+    }
+
     @IBAction func executePost() {
         print("DEBUG_PRINT: SearchViewController.executePost start")
         
         // HUDで処理中を表示
         SVProgressHUD.show()
-
+        
         for (key,value) in form.values() {
             if value == nil {
-                //break
-                print("ALERT::: key値「\(key)」がnilです。")
+                self.removeKeyList.append("\(key)")
                 // String
             }else if case let itemValue as String = value {
-                if key == "categoryDog" || key == "categoryCat" {
-                    self.inputData["category"] = itemValue
-                }else{
-                    self.inputData["\(key)"] = itemValue
+                if itemValue == SearchString.unspecified {
+                    self.removeKeyList.append("\(key)")
+                } else {
+                    print(key)
+                    print(itemValue)
+                    if key == "categoryDog" || key == "categoryCat" {
+                        self.inputData["category"] = itemValue
+                    }else{
+                        self.inputData["\(key)"] = itemValue
+                    }
                 }
                 // UIImage
             }else if case let itemValue as UIImage = value {
@@ -407,7 +444,6 @@ class SearchViewController: BaseFormViewController {
             }else if case let itemValue as Int = value {
                 self.inputData["\(key)"] = itemValue
                 // List
-                // TODO: コード化。もっとスマートにできないか。
             }else {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
@@ -446,6 +482,9 @@ class SearchViewController: BaseFormViewController {
             self.inputData["updateBy"] = uid!
             // update
             ref.child(Paths.SearchPath).child(data.id!).updateChildValues(inputData)
+            for key in removeKeyList {
+                ref.child(Paths.SearchPath).child(data.id!).child(key).removeValue()
+            }
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を更新しました")
         }else{
@@ -457,22 +496,22 @@ class SearchViewController: BaseFormViewController {
             ref.child(Paths.SearchPath).child(uid!).setValue(inputData)
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を保存しました")
-         }
+        }
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         
         // HUDを消す
         SVProgressHUD.dismiss()
-
+        
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         //viewController2.searchData = inputData
         self.navigationController?.pushViewController(viewController2, animated: true)
-
+        
         print("DEBUG_PRINT: SearchViewController.executePost end")
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -517,7 +556,7 @@ class SearchViewController: BaseFormViewController {
         }
         return result
     }
-
+    
 }
 class SearchView: UIView {
     

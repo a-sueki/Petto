@@ -137,58 +137,78 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                             var index: Int = 0
                             for petInfo in self.petData {
                                 if let _ = self.searchData?.area ,petInfo.area != self.searchData?.area {
+                                    print("1")
+                                    print(self.searchData?.area)
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.kind ,petInfo.kind != self.searchData?.kind {
+                                    print("2")
+                                    print(self.searchData?.kind)
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.category ,petInfo.category != self.searchData?.category {
+                                    print("3")
+                                    print(self.searchData?.category)
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.age ,petInfo.age != self.searchData?.age {
+                                    print("4")
+                                    print(self.searchData?.age)
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.isVaccinated ,petInfo.isVaccinated != self.searchData?.isVaccinated {
+                                    print("5")
+                                    print(self.searchData?.isVaccinated)
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.isCastrated ,petInfo.isCastrated != self.searchData?.isCastrated {
+                                    print("6")
+                                    print(self.searchData?.isCastrated)
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
                                 }else if let _ = self.searchData?.isAvailable ,petInfo.isAvailable != self.searchData?.isAvailable {
+                                    if self.searchData?.isAvailable == true {
+                                        if let _ = self.searchData?.environments ,petInfo.environments != (self.searchData?.environments)! {
+                                            index = self.petData.index(of: petInfo)!
+                                            self.petData.remove(at: index)
+                                        }else if let _ = self.searchData?.tools ,petInfo.tools != (self.searchData?.tools)! {
+                                            index = self.petData.index(of: petInfo)!
+                                            self.petData.remove(at: index)
+                                        }else if let _ = self.searchData?.startDate ,
+                                            DateCommon.stringToDate(petInfo.startDate!, dateFormat: DateCommon.dateFormat) >= DateCommon.stringToDate((self.searchData?.startDate)!, dateFormat: DateCommon.dateFormat) {
+                                            index = self.petData.index(of: petInfo)!
+                                            self.petData.remove(at: index)
+                                        }else if let _ = self.searchData?.endDate ,
+                                            DateCommon.stringToDate(petInfo.endDate!, dateFormat: DateCommon.dateFormat) <= DateCommon.stringToDate((self.searchData?.endDate)!, dateFormat: DateCommon.dateFormat) {
+                                            index = self.petData.index(of: petInfo)!
+                                            self.petData.remove(at: index)
+                                        }else if let _ = self.searchData?.minDays ,petInfo.minDays! >= (self.searchData?.minDays)! {
+                                            index = self.petData.index(of: petInfo)!
+                                            self.petData.remove(at: index)
+                                        }else if let _ = self.searchData?.maxDays ,petInfo.maxDays! <= (self.searchData?.maxDays)! {
+                                            index = self.petData.index(of: petInfo)!
+                                            self.petData.remove(at: index)
+                                        }
+                                    }else{
+                                    print("7")
+                                    print(self.searchData?.isAvailable)
                                     index = self.petData.index(of: petInfo)!
                                     self.petData.remove(at: index)
-                                }else if let _ = self.searchData?.environments ,petInfo.environments != (self.searchData?.environments)! {
-                                    index = self.petData.index(of: petInfo)!
-                                    self.petData.remove(at: index)
-                                }else if let _ = self.searchData?.tools ,petInfo.tools != (self.searchData?.tools)! {
-                                    index = self.petData.index(of: petInfo)!
-                                    self.petData.remove(at: index)
-                                }else if let _ = self.searchData?.startDate ,
-                                    DateCommon.stringToDate(petInfo.startDate!, dateFormat: DateCommon.dateFormat) >= DateCommon.stringToDate((self.searchData?.startDate)!, dateFormat: DateCommon.dateFormat) {
-                                    index = self.petData.index(of: petInfo)!
-                                    self.petData.remove(at: index)
-                                }else if let _ = self.searchData?.endDate ,
-                                    DateCommon.stringToDate(petInfo.endDate!, dateFormat: DateCommon.dateFormat) <= DateCommon.stringToDate((self.searchData?.endDate)!, dateFormat: DateCommon.dateFormat) {
-                                    index = self.petData.index(of: petInfo)!
-                                    self.petData.remove(at: index)
-                                }else if let _ = self.searchData?.minDays ,petInfo.minDays! >= (self.searchData?.minDays)! {
-                                    index = self.petData.index(of: petInfo)!
-                                    self.petData.remove(at: index)
-                                }else if let _ = self.searchData?.maxDays ,petInfo.maxDays! <= (self.searchData?.maxDays)! {
-                                    index = self.petData.index(of: petInfo)!
-                                    self.petData.remove(at: index)
+                                    }
                                 }
                             }
+                            
                             // TableViewの現在表示されているセルを更新する
                             self.collectionView.reloadData()
-                            // HUDを消す
-                            SVProgressHUD.dismiss()
+                            if self.petData.count == 0 {
+                                SVProgressHUD.showError(withStatus: "該当するペットがいません。検索条件を変更してください")
+                            }
                         }else{
-                            SVProgressHUD.dismiss()
+                            SVProgressHUD.dismiss(withDelay: 3)
                         }
                     }) { (error) in
                         // HUDを消す
-                        SVProgressHUD.dismiss()
+                        SVProgressHUD.dismiss(withDelay: 3)
                         print(error.localizedDescription)
                     }
                 }
@@ -308,28 +328,28 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             // ユーザープロフィールが存在しない場合はクリック不可
             SVProgressHUD.showError(withStatus: "ペット投稿にはプロフィール作成が必要です")
         }
-
-/*
-        // Firebaseから登録済みデータを取得
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            // 要素が追加されたら再表示
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: HomeViewController.registerButton .observeSingleEventイベントが発生しました。")
-                if let _ = snapshot.value as? NSDictionary {
-                    
-                    // ペット登録に画面遷移
-                    let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
-                    self.navigationController?.pushViewController(editViewController, animated: true)
-                    
-                }else{
-                    SVProgressHUD.showError(withStatus: "ペット投稿にはプロフィール作成が必要です")
-                }
-            })
-            // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
-            observing = true
-        }
- */
+        
+        /*
+         // Firebaseから登録済みデータを取得
+         if let uid = FIRAuth.auth()?.currentUser?.uid {
+         // 要素が追加されたら再表示
+         let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+         ref.observeSingleEvent(of: .value, with: { (snapshot) in
+         print("DEBUG_PRINT: HomeViewController.registerButton .observeSingleEventイベントが発生しました。")
+         if let _ = snapshot.value as? NSDictionary {
+         
+         // ペット登録に画面遷移
+         let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
+         self.navigationController?.pushViewController(editViewController, animated: true)
+         
+         }else{
+         SVProgressHUD.showError(withStatus: "ペット投稿にはプロフィール作成が必要です")
+         }
+         })
+         // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
+         observing = true
+         }
+         */
         
         // HUDを消す
         SVProgressHUD.dismiss(withDelay: 1)
