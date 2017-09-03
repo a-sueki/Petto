@@ -116,7 +116,6 @@ class PetDetailViewController: BaseFormViewController {
                 }
                 }
                 .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
                     let _ = to.view
                     to.tableView?.isUserInteractionEnabled = false
             }
@@ -155,7 +154,6 @@ class PetDetailViewController: BaseFormViewController {
                 }
                 }
                 .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
                     let _ = to.view
                     to.tableView?.isUserInteractionEnabled = false
             }
@@ -180,7 +178,6 @@ class PetDetailViewController: BaseFormViewController {
                 }
                 }
                 .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
                     let _ = to.view
                     to.tableView?.isUserInteractionEnabled = false
             }
@@ -204,7 +201,6 @@ class PetDetailViewController: BaseFormViewController {
                 }
                 }
                 .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
                     let _ = to.view
                     to.tableView?.isUserInteractionEnabled = false
             }
