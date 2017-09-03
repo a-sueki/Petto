@@ -1248,6 +1248,9 @@
                             <constraint firstAttribute="bottom" secondItem="sMa-AY-qu4" secondAttribute="bottom" id="vqD-Fy-Jqp"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="sMa-AY-qu4" id="QnH-yf-3Gz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YGL-un-6hX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

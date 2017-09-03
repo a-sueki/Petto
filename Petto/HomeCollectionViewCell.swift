@@ -48,6 +48,8 @@ class HomeCollectionViewCell: UICollectionViewCell {
                 self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))日間"
             }
         }else{
+            print("DEBUG_PRINT: HomeCollectionViewCell.setPetData XXXXXX")
+            print(petData.id)
             self.termLabel.text = "期間外"
             // 写真をグレーアウト
             let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")

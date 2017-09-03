@@ -14,6 +14,7 @@ struct Paths {
     static let MessagePath = "message"
     static let RoomPath = "room"
     static let SearchPath = "search"
+    static let LeavePath = "leave"
 }
 
 struct DefaultString {

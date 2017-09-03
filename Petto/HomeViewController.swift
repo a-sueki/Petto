@@ -317,10 +317,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     @IBAction func registerButton(_ sender: Any) {
         print("DEBUG_PRINT: HomeViewController.registerButton start")
         
-        // HUDで処理中を表示
-        SVProgressHUD.show()
-        
-        if self.userData != nil {
+        if self.userDefaults?.string(forKey: DefaultString.Area) != nil {
             // ペット登録に画面遷移
             let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
             self.navigationController?.pushViewController(editViewController, animated: true)

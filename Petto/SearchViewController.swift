@@ -14,7 +14,6 @@ import SVProgressHUD
 
 class SearchViewController: BaseFormViewController {
     
-    //    let userDefaults = UserDefaults.standard
     var searchData: SearchData?
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false

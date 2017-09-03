@@ -60,6 +60,7 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
     @IBAction func handleOkButton(_ sender: Any) {
         print("DEBUG_PRINT: PasswordResetViewController.handleOkButtond start")
 
+        self.view.endEditing(true)
         if let address = mailAddressTextField.text {
             
             // アドレスとパスワードのいずれかでも入力されていない時は何もしない
@@ -118,6 +119,7 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
     @IBAction func handleCancelButton(_ sender: Any) {
         print("DEBUG_PRINT: PasswordResetViewController.handleCancelButton start")
         
+        self.view.endEditing(true)
         // ログイン画面に遷移
         let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
         self.present(loginViewController!, animated: true, completion: nil)

@@ -11,6 +11,7 @@ import Foundation
 struct DateCommon {
     static let dateFormat = "yyyy-MM-dd HH:mm:ss Z"
     static let displayDateFormat = "yyyy-MM-dd HH:mm"
+    static let sendTextDateFormat = "yyyy/MM/dd"
     static let ngicon = "-red"
 
     static func dateToString(_ date:Date, dateFormat: String ) -> String {

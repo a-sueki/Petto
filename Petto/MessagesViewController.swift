@@ -300,10 +300,14 @@ class MessagesViewController: JSQMessagesViewController {
             print("わたしはあずかり人です")
             // 自分があずかり人の場合
             ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["petOpenedFlg" : false])
+            // ブリーダー（相手）の未読リストにroomIdを追加
+            ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
         }else{
             print("わたしはブリーダーです")
             // 自分がブリーダーの場合
             ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
+            // ブリーダー（あずかり人）の未読リストにroomIdを追加
+            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
         }
         
         finishSendingMessage(animated: true)

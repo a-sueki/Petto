@@ -50,10 +50,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                         self.roomIdList.append(key)
                         self.getData(roomId: key)
                     }
-                    // tableViewを再表示する
-                    //self.tableView.reloadData()
-                    // HUDを消す
-                    SVProgressHUD.dismiss()
                 }else{
                     //roomが0件の時は「メッセージ送受信はありません」を表示
                     SVProgressHUD.showError(withStatus: "まだメッセージがありません")
@@ -91,22 +87,15 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         // 既読の場合、表示更新
         if let uid = self.userDefaults?.string(forKey: DefaultString.Uid) {
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-            // HUDで処理中を表示
-            SVProgressHUD.show()
             // Userの未読リストを取得
             ref.observe(.value, with: { (snapshot) in
                 print("DEBUG_PRINT: MessageListViewController.viewWillAppear .valueイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
                     self.userData = UserData(snapshot: snapshot, myId: uid)
-                    // tableViewを再表示する
-                    //self.tableView.reloadData()
                     
                     super.helper.setupNavigationBar()
                     super.userData = super.helper.userData
                     super.userDefaults = super.helper.userDefaults
-                    
-                    // HUDを消す
-                    SVProgressHUD.dismiss()
                 }
             }) { (error) in
                 print(error.localizedDescription)
@@ -119,8 +108,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     func getData(roomId: String) {
         print("DEBUG_PRINT: MessageListViewController.getData start")
         
-        // HUDで処理中を表示
-        SVProgressHUD.show()
         // roomDataリストの取得
         let ref = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -132,11 +119,10 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 self.sortedRoomDataArray = self.roomDataArray.sorted(by: {
                     $0.updateAt?.compare($1.updateAt! as Date) == ComparisonResult.orderedDescending
                 })
-                
                 // tableViewを再表示する
                 self.tableView.reloadData()
                 // HUDを消す
-                SVProgressHUD.dismiss()
+                SVProgressHUD.dismiss(withDelay: 1)
             }
         }) { (error) in
             print(error.localizedDescription)
@@ -169,7 +155,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             // 未読の場合、ハイライト
             if self.userData?.unReadRoomIds.count != 0 {
                 for (rid,_) in (self.userData?.unReadRoomIds)! {
-                    if rid == self.roomDataArray[indexPath.row].id {
+                    if rid == self.sortedRoomDataArray[indexPath.row].id {
                         cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
                         cell.unReadLabel.isHidden = false
                         break
@@ -224,23 +210,29 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let uid = self.userDefaults?.string(forKey: DefaultString.Uid)!
         
         // 既読フラグupdate
-        if let roomId = self.roomDataArray[(indexPath?.row)!].id {
+        if let roomId = self.sortedRoomDataArray[(indexPath?.row)!].id {
             if roomId.contains(uid!) {
                 // 自分があずかり人の場合
                 ref.child(Paths.RoomPath).child(roomId).updateChildValues(["userOpenedFlg" : true])
                 ref.child(Paths.UserPath).child(uid!).child("unReadRoomIds").child(roomId).removeValue()
                 // roomDataをセットして画面遷移
-                let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessagesContainer") as! UserMessagesContainerViewController
-                messagesContainerViewController.roomData = self.roomDataArray[(indexPath?.row)!]
-                self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+                let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+                let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
+                let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
+                userMessagesContainerViewController.roomData = self.sortedRoomDataArray[(indexPath?.row)!]
+                self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
+                
             }else{
                 // 自分がブリーダーの場合
                 ref.child(Paths.RoomPath).child(roomId).updateChildValues(["petOpenedFlg" : true])
                 ref.child(Paths.UserPath).child(uid!).child("unReadRoomIds").child(roomId).removeValue()
                 // roomDataをセットして画面遷移
-                let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "BreederMessagesContainer") as! BreederMessagesContainerViewController
-                messagesContainerViewController.roomData = self.roomDataArray[(indexPath?.row)!]
-                self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+                let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+                let bookingViewController = self.storyboard?.instantiateViewController(withIdentifier: "Booking") as! BookingViewController
+                let breederMessagesContainerViewController = BreederMessagesContainerViewController(top: messagesViewController, under: bookingViewController)
+                breederMessagesContainerViewController.roomData = self.sortedRoomDataArray[(indexPath?.row)!]
+                self.navigationController?.pushViewController(breederMessagesContainerViewController, animated: true)
+ 
             }
         }
         print("DEBUG_PRINT: MessageListViewController.handleMessageLabelButton end")
@@ -256,7 +248,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let indexPath = tableView.indexPathForRow(at: point)
         
         // 画面遷移
-        if let userId = self.roomDataArray[(indexPath?.row)!].userId {
+        if let userId = self.sortedRoomDataArray[(indexPath?.row)!].userId {
             let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
             userDetailViewController.uid = userId
             self.navigationController?.pushViewController(userDetailViewController, animated: true)
@@ -274,7 +266,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let indexPath = tableView.indexPathForRow(at: point)
         
         // 画面遷移
-        if let petId = self.roomDataArray[(indexPath?.row)!].petId {
+        if let petId = self.sortedRoomDataArray[(indexPath?.row)!].petId {
             let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton .observeSingleEventイベントが発生しました。")

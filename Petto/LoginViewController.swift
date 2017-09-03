@@ -66,6 +66,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBAction func handleLoginButton(_ sender: Any) {
         print("DEBUG_PRINT: LoginViewController.handleLoginButton start")
         
+        self.view.endEditing(true)
         if let address = mailAddressTextField.text, let password = passwordTextField.text {
             
             // アドレスとパスワード名のいずれかでも入力されていない時は何もしない
@@ -124,6 +125,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBAction func handleCreateAcountButton(_ sender: Any) {
         print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton start")
         
+        self.view.endEditing(true)
         if let address = mailAddressTextField.text, let password = passwordTextField.text {
             
             // アドレスとパスワード名のいずれかでも入力されていない時は何もしない
@@ -231,6 +233,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBAction func handlePasswordResetButton(_ sender: Any) {
         print("DEBUG_PRINT: LoginViewController.handlePasswordResetButton start")
 
+        self.view.endEditing(true)
         // PasswordResetに画面遷移
         let passwordResetViewController = self.storyboard?.instantiateViewController(withIdentifier: "PasswordReset") as! PasswordResetViewController
         present(passwordResetViewController, animated: true, completion: nil)

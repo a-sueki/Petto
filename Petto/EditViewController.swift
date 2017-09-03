@@ -328,6 +328,7 @@ class EditViewController: BaseFormViewController {
                     return row.value ?? false == false
                 })
             }
+            //TODO: 注意書き「期間が終了すると、自動的に募集が終了します」
             <<< DateRow("startDate") {
                 $0.title = "開始日付"
                 if let dateString = self.petData?.startDate {
@@ -545,7 +546,6 @@ class EditViewController: BaseFormViewController {
             }else if case let itemValue as Int = value {
                 self.inputData["\(key)"] = itemValue
                 // List
-                // TODO: コード化。もっとスマートにできないか。
             }else {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
