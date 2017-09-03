@@ -594,6 +594,8 @@ class EditViewController: BaseFormViewController {
             SVProgressHUD.showSuccess(withStatus: "ペット情報を更新しました")
         }else{
             let key = ref.child(Paths.PetPath).childByAutoId().key
+            self.inputData["updateAt"] = String(time)
+            self.inputData["updateBy"] = uid!
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert

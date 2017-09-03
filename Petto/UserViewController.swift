@@ -560,6 +560,8 @@ class UserViewController: BaseFormViewController  {
             SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")
         }else{
             let key = uid
+            self.inputData["updateAt"] = String(time)
+            self.inputData["updateBy"] = uid!
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert

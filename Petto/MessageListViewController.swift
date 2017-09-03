@@ -17,6 +17,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var tableView: UITableView!
     var roomIdList: [String] = []
     var roomDataArray: [RoomData] = []
+    var sortedRoomDataArray: [RoomData] = []
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
     // RKNotificationHubのインスタンス
@@ -50,7 +51,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                         self.getData(roomId: key)
                     }
                     // tableViewを再表示する
-                    self.tableView.reloadData()
+                    //self.tableView.reloadData()
                     // HUDを消す
                     SVProgressHUD.dismiss()
                 }else{
@@ -98,9 +99,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 if let _ = snapshot.value as? NSDictionary {
                     self.userData = UserData(snapshot: snapshot, myId: uid)
                     // tableViewを再表示する
-                    self.tableView.reloadData()
+                    //self.tableView.reloadData()
                     
-                    //TODO: バッチ更新
                     super.helper.setupNavigationBar()
                     super.userData = super.helper.userData
                     super.userDefaults = super.helper.userDefaults
@@ -128,6 +128,11 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             if let _ = snapshot.value as? NSDictionary {
                 let roomData = RoomData(snapshot: snapshot, myId: roomId)
                 self.roomDataArray.append(roomData)
+                // 更新日で並び替え
+                self.sortedRoomDataArray = self.roomDataArray.sorted(by: {
+                    $0.updateAt?.compare($1.updateAt! as Date) == ComparisonResult.orderedDescending
+                })
+                
                 // tableViewを再表示する
                 self.tableView.reloadData()
                 // HUDを消す
@@ -158,8 +163,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageListCell", for: indexPath) as! MessageListTableViewCell
         
         // roomDataリスト取得（非同期）の完了前のテーブル表示エラー防止のため
-        if self.roomIdList.count == self.roomDataArray.count {
-            cell.setData(userData: self.userData!, roomData: self.roomDataArray[indexPath.row])
+        if self.roomIdList.count == self.sortedRoomDataArray.count {
+            cell.setData(userData: self.userData!, roomData: self.sortedRoomDataArray[indexPath.row])
             
             // 未読の場合、ハイライト
             if self.userData?.unReadRoomIds.count != 0 {
@@ -240,7 +245,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         }
         print("DEBUG_PRINT: MessageListViewController.handleMessageLabelButton end")
     }
-
+    
     // ユーザープロフィールがタップされたらユーザー詳細画面に遷移
     func handleUserProfileButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton start")
@@ -284,6 +289,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton end")
     }
-
+    
     
 }

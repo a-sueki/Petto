@@ -13,15 +13,16 @@ import FirebaseDatabase
 import SVProgressHUD
 
 class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource  {
-
+    
     @IBOutlet weak var tableView: UITableView!
     var petIdList: [String] = []
-//    var userData: UserData?
+    //    var userData: UserData?
     var petDataArray: [PetData] = []
-
+    var sortedPetDataArray: [PetData] = []
+    
     // FIRDatabaseのobserveEventの登録状態を表す
     var observing = false
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: MyPetListViewController.viewDidLoad start")
@@ -49,7 +50,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
                         self.getData(petId: key)
                     }
                     // tableViewを再表示する
-                    self.tableView.reloadData()
+                    //self.tableView.reloadData()
                     // HUDを消す
                     SVProgressHUD.dismiss()
                 }else{
@@ -84,39 +85,45 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         }
         print("DEBUG_PRINT: MyPetListViewController.viewDidLoad end")
     }
+    
+    func getData(petId: String) {
+        print("DEBUG_PRINT: MyPetListViewController.getData start")
         
-        func getData(petId: String) {
-            print("DEBUG_PRINT: MyPetListViewController.getData start")
-            
-            // HUDで処理中を表示
-            SVProgressHUD.show()
-            // petDataリストの取得
-            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: MyPetListViewController.getData pet.observeSingleEventイベントが発生しました。")
-                if let _ = snapshot.value as? NSDictionary {
-                    let petData = PetData(snapshot: snapshot, myId: petId)
-                     self.petDataArray.append(petData)
-                    // tableViewを再表示する
-                    self.tableView.reloadData()
-                    // HUDを消す
-                    SVProgressHUD.dismiss()
-                }
-            }) { (error) in
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+        // petDataリストの取得
+        let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            print("DEBUG_PRINT: MyPetListViewController.getData pet.observeSingleEventイベントが発生しました。")
+            if let _ = snapshot.value as? NSDictionary {
+                let petData = PetData(snapshot: snapshot, myId: petId)
+                self.petDataArray.append(petData)
+                
+                // 更新日で並び替え
+                self.sortedPetDataArray = self.petDataArray.sorted(by: {
+                    $0.updateAt?.compare($1.updateAt! as Date) == ComparisonResult.orderedDescending
+                })
+                
+                // tableViewを再表示する
+                self.tableView.reloadData()
                 // HUDを消す
                 SVProgressHUD.dismiss()
-                print(error.localizedDescription)
             }
-            
-            print("DEBUG_PRINT: MyPetListViewController.getData end")
+        }) { (error) in
+            // HUDを消す
+            SVProgressHUD.dismiss()
+            print(error.localizedDescription)
         }
-
+        
+        print("DEBUG_PRINT: MyPetListViewController.getData end")
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     // データの数（＝セルの数）を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.petIdList.count
@@ -127,8 +134,8 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         print("DEBUG_PRINT: MyPetListViewController.cellForRowAt start")
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "myPetListCell", for: indexPath) as! MyPetListTableViewCell
-        if self.petIdList.count == self.petDataArray.count {
-            cell.setData(petData: petDataArray[indexPath.row])
+        if self.petIdList.count == self.sortedPetDataArray.count {
+            cell.setData(petData: sortedPetDataArray[indexPath.row])
             // セル内のボタンのアクションをソースコードで設定する
             cell.photoImageButton.addTarget(self, action:#selector(handleImageView(sender:event:)), for:  UIControlEvents.touchUpInside)
         }
@@ -168,7 +175,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
         editViewController.petData = petData
         self.navigationController?.pushViewController(editViewController, animated: true)
-
+        
         print("DEBUG_PRINT: MyPetListViewController.handleImageView end")
     }
 }

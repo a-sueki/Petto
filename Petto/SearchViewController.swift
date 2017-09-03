@@ -449,6 +449,8 @@ class SearchViewController: BaseFormViewController {
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を更新しました")
         }else{
+            self.inputData["updateAt"] = String(time)
+            self.inputData["updateBy"] = uid!
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert
