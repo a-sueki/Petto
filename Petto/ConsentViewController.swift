@@ -16,21 +16,11 @@ class ConsentViewController: BaseFormViewController {
     
     var roomData: RoomData?
     var leaveData: LeaveData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
     var inputData = [String : Any]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: ConsentViewController.viewDidLoad start")
-        
-        self.showLeaveData()
-        
-        print("DEBUG_PRINT: ConsentViewController.viewDidLoad end")
-    }
-
-    func showLeaveData() {
-        print("DEBUG_PRINT: ConsentViewController.showLeaveData start")
         
         // フォーム
         form +++
@@ -80,8 +70,8 @@ class ConsentViewController: BaseFormViewController {
                 }
                 $0.disabled = true
         }
-        
-        print("DEBUG_PRINT: ConsentViewController.showLeaveData end")
+
+        print("DEBUG_PRINT: ConsentViewController.viewDidLoad end")
     }
 
     @IBAction func deny() {
@@ -94,14 +84,11 @@ class ConsentViewController: BaseFormViewController {
                 self.inputData["\(key)"] = DateCommon.dateToString(itemValue, dateFormat: DateCommon.dateFormat)
             }
         }
-        var start = String(describing: self.inputData["startDate"]!)
-        var end = String(describing: self.inputData["endDate"]!)
-        start = start.substring(to: start.index(start.startIndex, offsetBy: 10))
-        start = start.replacingOccurrences(of: "-", with: "/")
-        end = end.substring(to: end.index(end.startIndex, offsetBy: 10))
-        end = end.replacingOccurrences(of: "-", with: "/")
-
+ 
         self.inputData["suggestFlag"] = false
+        
+        let start = displayDate(stringDate: String(describing: self.inputData["startDate"]!))
+        let end = displayDate(stringDate: String(describing: self.inputData["endDate"]!))
         let showMessage = "\(self.roomData?.petName! ?? "ペット")の飼い主さんにおあずけ期間の否認を通知しました"
         let sendText = "[自動送信メッセージ]\n以下のおあずかり日程は、\(self.roomData?.userName ?? "あずかり人")さんに否認されました。\n\(start)~\(end)"
         self.updateFIR(showMessage: showMessage, sendText: sendText)
@@ -119,14 +106,11 @@ class ConsentViewController: BaseFormViewController {
                 self.inputData["\(key)"] = DateCommon.dateToString(itemValue, dateFormat: DateCommon.dateFormat)
             }
         }
-        var start = String(describing: self.inputData["startDate"]!)
-        var end = String(describing: self.inputData["endDate"]!)
-        start = start.substring(to: start.index(start.startIndex, offsetBy: 10))
-        start = start.replacingOccurrences(of: "-", with: "/")
-        end = end.substring(to: end.index(end.startIndex, offsetBy: 10))
-        end = end.replacingOccurrences(of: "-", with: "/")
-        
+
         self.inputData["acceptFlag"] = true
+
+        let start = displayDate(stringDate: String(describing: self.inputData["startDate"]!))
+        let end = displayDate(stringDate: String(describing: self.inputData["endDate"]!))
         let showMessage = "\(self.roomData?.petName! ?? "ペット")の飼い主さんにおあずけ期間の承諾を通知しました"
         let sendText = "[自動送信メッセージ]\n以下のおあずかり日程で、\(self.roomData?.userName ?? "あずかり人")さんが承諾しました。\nペットの受け渡し時間・場所、当日の持ち物などを確認して下さい。\n\(start)~\(end)"
         self.updateFIR(showMessage: showMessage, sendText: sendText)
@@ -134,6 +118,16 @@ class ConsentViewController: BaseFormViewController {
         print("DEBUG_PRINT: ConsentViewController.accept end")
     }
 
+    func displayDate(stringDate: String) -> String {
+        print("DEBUG_PRINT: ConsentViewController.displayDate end")
+        
+        var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 10))
+        result = stringDate.replacingOccurrences(of: "-", with: "/")
+        
+        print("DEBUG_PRINT: ConsentViewController.displayDate end")
+        return result
+    }
+    
     func updateFIR(showMessage: String, sendText: String) {
         print("DEBUG_PRINT: ConsentViewController.updateFIR start")
         
@@ -144,15 +138,15 @@ class ConsentViewController: BaseFormViewController {
         
         // Messageを更新
         // Firebase連携用
-        inputData["senderId"] = self.userDefaults?.string(forKey: DefaultString.Uid)
-        inputData["senderDisplayName"] =  self.userDefaults?.string(forKey: DefaultString.DisplayName)!
-        inputData["text"] = sendText
-        inputData["timestamp"] = String(time)
+        var inputDataMessage = [String : Any]()  //message
+        inputDataMessage["senderId"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
+        inputDataMessage["senderDisplayName"] =  UserDefaults.standard.string(forKey: DefaultString.DisplayName)
+        inputDataMessage["text"] = sendText
+        inputDataMessage["timestamp"] = String(time)
         
         // insert
         let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
-        ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
-        
+        ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputDataMessage)
         // update
         ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : sendText])
         ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : String(time)])

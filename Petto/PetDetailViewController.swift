@@ -16,10 +16,7 @@ import SVProgressHUD
 
 class PetDetailViewController: BaseFormViewController {
     
-    //    let userDefaults = UserDefaults.standard
     var petData: PetData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -316,7 +313,7 @@ class PetDetailViewController: BaseFormViewController {
         let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
 
         // roomIdを取得
-        let uid = userDefaults?.string(forKey: DefaultString.Uid)!
+        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
         let pid = (self.petData?.id)!
         let roomId = uid! + pid
         
@@ -342,10 +339,10 @@ class PetDetailViewController: BaseFormViewController {
                     let time = NSDate.timeIntervalSinceReferenceDate
                     
                     inputData["userId"] = uid
-                    inputData["userName"] = self.userDefaults?.string(forKey: DefaultString.DisplayName)
-                    inputData["userImageString"] = self.userDefaults?.string(forKey: DefaultString.Phote)
-                    inputData["userArea"] = self.userDefaults?.string(forKey: DefaultString.Area)
-                    inputData["userAge"] = self.userDefaults?.string(forKey: DefaultString.Age)
+                    inputData["userName"] = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
+                    inputData["userImageString"] = UserDefaults.standard.string(forKey: DefaultString.ImageString)
+                    inputData["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
+                    inputData["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
                     //TODO: 評価実装後、活性
 //                    inputData["userGoodInt"] = self.userDefaults?.string(forKey: DefaultString.Good)
 //                    inputData["userBadInt"] = self.userDefaults?.string(forKey: DefaultString.Bad)
@@ -370,6 +367,7 @@ class PetDetailViewController: BaseFormViewController {
                     roomRef.observeSingleEvent(of: .value, with: { (snapshot2) in
                         print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。（２）")
                         if let _ = snapshot2.value as? NSDictionary {
+                            
                             // roomDataをセットして画面遷移
                             userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot2, myId: roomId)
                             self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)

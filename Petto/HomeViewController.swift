@@ -18,7 +18,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var registerButton: UIButton!
-    //var searchData = [String : Any]()
     var searchData: SearchData?
     var petData: [PetData] = []
     
@@ -47,27 +46,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: HomeViewController.viewWillAppear start")
         
-        // currentUserがnilならログインしていない
-        if FIRAuth.auth()?.currentUser == nil {
-            if observing == true {
-                // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
-                // テーブルをクリアする
-                petData = []
-                collectionView.reloadData()
-                // オブザーバーを削除する
-                FIRDatabase.database().reference().removeAllObservers()
-                
-                // FIRDatabaseのobserveEventが上記コードにより解除されたためfalseとする
-                observing = false
-            }
-            
-            // ログインしていないときの処理
-            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
-            }
-        }
         
         if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
@@ -317,7 +295,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     @IBAction func registerButton(_ sender: Any) {
         print("DEBUG_PRINT: HomeViewController.registerButton start")
         
-        if self.userDefaults?.string(forKey: DefaultString.Area) != nil {
+        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
             // ペット登録に画面遷移
             let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
             self.navigationController?.pushViewController(editViewController, animated: true)
@@ -325,29 +303,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             // ユーザープロフィールが存在しない場合はクリック不可
             SVProgressHUD.showError(withStatus: "ペット投稿にはプロフィール作成が必要です")
         }
-        
-        /*
-         // Firebaseから登録済みデータを取得
-         if let uid = FIRAuth.auth()?.currentUser?.uid {
-         // 要素が追加されたら再表示
-         let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-         ref.observeSingleEvent(of: .value, with: { (snapshot) in
-         print("DEBUG_PRINT: HomeViewController.registerButton .observeSingleEventイベントが発生しました。")
-         if let _ = snapshot.value as? NSDictionary {
-         
-         // ペット登録に画面遷移
-         let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
-         self.navigationController?.pushViewController(editViewController, animated: true)
-         
-         }else{
-         SVProgressHUD.showError(withStatus: "ペット投稿にはプロフィール作成が必要です")
-         }
-         })
-         // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
-         observing = true
-         }
-         */
-        
         // HUDを消す
         SVProgressHUD.dismiss(withDelay: 1)
         

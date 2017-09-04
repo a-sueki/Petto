@@ -12,10 +12,7 @@ import FirebaseAuth
 import SVProgressHUD
 
 class PasswordResetViewController: UIViewController, UITextFieldDelegate {
-    
-    // UserDefaults のインスタンス
-    let userDefaults = UserDefaults.standard
-    
+        
     @IBOutlet weak var mailAddressTextField: UITextField!
     
     override func viewDidLoad() {
@@ -26,7 +23,7 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
         // textFiel の情報を受け取るための delegate を設定
         mailAddressTextField.delegate = self
         
-        if let mail = self.userDefaults.string(forKey: DefaultString.Mail) {
+        if let mail = UserDefaults.standard.string(forKey: DefaultString.Mail) {
             mailAddressTextField.text = mail
         }
         

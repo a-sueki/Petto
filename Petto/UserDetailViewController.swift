@@ -16,44 +16,20 @@ import SVProgressHUD
 class UserDetailViewController: BaseFormViewController {
     
     var uid: String?
-    //    var userData: UserData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: UserDetailViewController.viewDidLoad start")
         
-        // Firebaseから登録済みデータを取得
-        if uid != nil {
-            // 要素が追加されたら再表示
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid!)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: UserDetailViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
-                
-                self.userData = UserData(snapshot: snapshot, myId: self.uid!)
-                
-                // Formを表示
-                self.updateUserData()
-            })
-            // FIRDatabaseのobserveEventが上記コードにより登録されたため
-            // trueとする
-            observing = true
-        }
-        
-        print("DEBUG_PRINT: UserDetailViewController.viewDidLoad end")
-    }
-    
-    func updateUserData() {
-        print("DEBUG_PRINT: UserDetailViewController.updateUserData start")
-        
         // フォーム
         form +++
             Section() {
-                if let _ = self.userData {
+                if let _ = UserDefaults.standard.string(forKey: DefaultString.ImageString) {
                     var header = HeaderFooterView<UserDetailViewNib>(.nibFile(name: "UserDetailHeader", bundle: nil))
                     header.onSetupView = { (view, section) -> () in
-                        view.userImageView.image = self.userData!.image
+                        let imageString = UserDefaults.standard.string(forKey: DefaultString.ImageString)!
+                        let image = UIImage(data: NSData(base64Encoded: imageString, options: .ignoreUnknownCharacters)! as Data)!
+                        view.userImageView.image = image
                         
                         view.userImageView.alpha = 1;
 /*                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
@@ -72,29 +48,29 @@ class UserDetailViewController: BaseFormViewController {
             //TODO: コミットメント＆小さなバッチ（メダル）
             <<< TextRow("area") {
                 $0.title = "エリア"
-                $0.value = self.userData?.area ?? nil
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Area) ?? nil
                 $0.disabled = true
             }
             
             +++ Section("ペット経験")
             <<< CheckRow("hasAnotherPet") {
                 $0.title = "現在、他にペットを飼っている"
-                $0.value = self.userData?.hasAnotherPet ?? false
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet)
                 $0.disabled = true
             }
             <<< CheckRow("isExperienced") {
                 $0.title = "過去、ペットを飼った経験がある"
-                $0.value = self.userData?.isExperienced ?? false
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.IsExperienced)
                 $0.disabled = true
             }
             //TODO: 「Bad評価1つ以上」は非表示。システムで判断する。
             <<< MultipleSelectorRow<String>("ngs") {
                 $0.title = "飼い主さんへの留意事項"
                 $0.options = PetNGs.strings
-                if let data = self.userData , data.ngs.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.Ngs) != nil {
                     var codes = [String]()
-                    for (key,val) in data.ngs {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.Ngs)! {
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -112,7 +88,7 @@ class UserDetailViewController: BaseFormViewController {
             +++ Section()
             <<< SwitchRow("expectTo"){
                 $0.title = "ペットをあずかりたい"
-                $0.value = self.userData?.expectTo ?? false
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.ExpectTo)
                 $0.disabled = true
             }
             
@@ -129,10 +105,10 @@ class UserDetailViewController: BaseFormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = Environment.strings
-                if let data = self.userData , data.userEnvironments.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.UserEnvironments) != nil {
                     var codes = [String]()
-                    for (key,val) in data.userEnvironments {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserEnvironments)! {
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -152,10 +128,10 @@ class UserDetailViewController: BaseFormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = Tool.strings
-                if let data = self.userData , data.userTools.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.UserTools) != nil {
                     var codes = [String]()
-                    for (key,val) in data.userTools {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserTools)!{
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -175,10 +151,10 @@ class UserDetailViewController: BaseFormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = UserNGs.strings
-                if let data = self.userData , data.userNgs.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.UserNgs) != nil {
                     var codes = [String]()
-                    for (key,val) in data.userNgs {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserNgs)! {
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -198,7 +174,7 @@ class UserDetailViewController: BaseFormViewController {
                 }.onCellSelection { [weak self] (cell, row) in
                     self?.back()
         }
-        print("DEBUG_PRINT: UserDetailViewController.updateUserData end")
+        print("DEBUG_PRINT: UserDetailViewController.viewDidLoad end")
     }
     
     @IBAction func back() {

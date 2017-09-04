@@ -16,12 +16,8 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
     
     @IBOutlet weak var tableView: UITableView!
     var petIdList: [String] = []
-    //    var userData: UserData?
     var petDataArray: [PetData] = []
     var sortedPetDataArray: [PetData] = []
-    
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,88 +32,83 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         tableView.rowHeight = UITableViewAutomaticDimension
         
         // userのマイペットリストを取得
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            // HUDで処理中を表示
-            SVProgressHUD.show()
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: MyPetListViewController.viewDidLoad user.observeSingleEventイベントが発生しました。")
-                self.userData = UserData(snapshot: snapshot, myId: uid)
-                if self.userData?.myPets.count != 0 {
-                    // user,petデータを取得
-                    for (key, _) in (self.userData?.myPets)! {
-                        self.petIdList.append(key)
-                        self.getData(petId: key)
-                    }
-                    // tableViewを再表示する
-                    //self.tableView.reloadData()
-                    // HUDを消す
-                    SVProgressHUD.dismiss()
-                }else{
-                    // HUDを消す
-                    SVProgressHUD.showError(withStatus: "まだペットを投稿していません")
-                }
-                
-            }) { (error) in
-                // HUDを消す
-                SVProgressHUD.dismiss()
-                print(error.localizedDescription)
-            }
-            self.observing = true
-        }else{
-            print("DEBUG_PRINT: MyPetListViewController.viewDidLoad ユーザがログインしていません。")
-            // ログインしていない場合
-            if observing == true {
-                // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
-                petIdList = []
-                self.tableView.reloadData()
-                // オブザーバーを削除する
-                FIRDatabase.database().reference().removeAllObservers()
-                // FIRDatabaseのobserveEventが上記コードにより解除されたためfalseとする
-                observing = false
-            }
+        // userのmessages[]を取得　→roomIdList
+        if UserDefaults.standard.object(forKey: DefaultString.MyPets) != nil {
             
-            // ログイン画面に遷移
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
+            for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!{
+                self.petIdList.append(key)
+                self.getDataSingleEvent(petId: key)
             }
+        }else{
+            //roomが0件の時は「メッセージ送受信はありません」を表示
+            SVProgressHUD.showError(withStatus: "まだメッセージがありません")
         }
+        
         print("DEBUG_PRINT: MyPetListViewController.viewDidLoad end")
     }
     
-    func getData(petId: String) {
-        print("DEBUG_PRINT: MyPetListViewController.getData start")
+    override func viewWillAppear(_ animated: Bool) {
+        print("DEBUG_PRINT: MyPetListViewController.viewWillAppear start")
         
-        // HUDで処理中を表示
-        SVProgressHUD.show()
+        var petIdListAgain: [String] = []
+        
+        // userのmessages[]を取得　→roomIdList
+        if UserDefaults.standard.object(forKey: DefaultString.MyPets) != nil {
+            
+            for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!{
+                petIdListAgain.append(key)
+            }
+        }else{
+            //roomが0件の時は「メッセージ送受信はありません」を表示
+            SVProgressHUD.showError(withStatus: "まだペットを投稿していません")
+        }
+        
+        // 比較用にsort
+        let ascendingOldList : [String] = petIdList.sorted(by: {$0 < $1})
+        let ascendingNewList : [String] = petIdListAgain.sorted(by: {$0 < $1})
+        
+        // roomIdListの内容が変わっていた場合（削除・追加）
+        if ascendingOldList != ascendingNewList {
+            print("DEBUG_PRINT: MyPetListViewController.viewWillAppear petIdListの内容が変更されました")
+            // リストを初期化
+            self.petDataArray.removeAll()
+            self.sortedPetDataArray.removeAll()
+            // リストを再取得・テーブルreloadData
+            for key in ascendingNewList {
+                self.getDataSingleEvent(petId: key)
+            }
+        }
+        
+        print("DEBUG_PRINT: MyPetListViewController.viewWillAppear end")
+    }
+
+    func getDataSingleEvent(petId: String) {
+        print("DEBUG_PRINT: MyPetListViewController.getDataSingleEvent start")
+        
         // petDataリストの取得
         let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            print("DEBUG_PRINT: MyPetListViewController.getData pet.observeSingleEventイベントが発生しました。")
+            print("DEBUG_PRINT: MyPetListViewController.getDataSingleEvent .observeSingleEventイベントが発生しました。")
             if let _ = snapshot.value as? NSDictionary {
                 let petData = PetData(snapshot: snapshot, myId: petId)
                 self.petDataArray.append(petData)
-                
                 // 更新日で並び替え
                 self.sortedPetDataArray = self.petDataArray.sorted(by: {
-                    $0.updateAt?.compare($1.updateAt! as Date) == ComparisonResult.orderedDescending
+                    $0.createAt?.compare($1.createAt! as Date) == ComparisonResult.orderedDescending
                 })
-                
                 // tableViewを再表示する
                 self.tableView.reloadData()
                 // HUDを消す
-                SVProgressHUD.dismiss()
+                SVProgressHUD.dismiss(withDelay: 1)
             }
         }) { (error) in
-            // HUDを消す
-            SVProgressHUD.dismiss()
             print(error.localizedDescription)
         }
         
-        print("DEBUG_PRINT: MyPetListViewController.getData end")
+        print("DEBUG_PRINT: MyPetListViewController.getDataSingleEvent end")
     }
     
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -170,7 +161,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         let indexPath = tableView.indexPathForRow(at: point)
         
         // 配列からタップされたインデックスのデータを取り出す
-        let petData = petDataArray[indexPath!.row]
+        let petData = sortedPetDataArray[indexPath!.row]
         
         let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
         editViewController.petData = petData

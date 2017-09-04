@@ -64,7 +64,7 @@ class LeaveViewController: BaseFormViewController,UICollectionViewDataSource, UI
         
         // UserDetailに画面遷移
         let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
-        userDetailViewController.userData = self.userData
+//        userDetailViewController.userData = self.userData
         self.navigationController?.pushViewController(userDetailViewController, animated: true)
         
         print("DEBUG_PRINT: LeaveViewController.toUserDetailButton end")

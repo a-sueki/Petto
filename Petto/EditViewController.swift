@@ -15,9 +15,6 @@ import SVProgressHUD
 class EditViewController: BaseFormViewController {
     
     var petData: PetData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
-    
     var inputData = [String : Any]()
     
     override func viewDidLoad() {
@@ -511,9 +508,6 @@ class EditViewController: BaseFormViewController {
     @IBAction func executePost() {
         print("DEBUG_PRINT: EditViewController.executePost start")
         
-        // HUDで処理中を表示
-        SVProgressHUD.show()
-        
         for (key,value) in form.values() {
             if value == nil {
                 //break
@@ -578,9 +572,12 @@ class EditViewController: BaseFormViewController {
             }
         }
         
+        // HUDで処理中を表示
+        SVProgressHUD.show()
+        
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
-        let uid = FIRAuth.auth()?.currentUser?.uid
+        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
         

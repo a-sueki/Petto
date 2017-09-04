@@ -14,13 +14,8 @@ import JSQMessagesViewController
 
 class MessagesViewController: JSQMessagesViewController {
     
-    var userDefaults: UserDefaults?
     var roomData: RoomData?
     var messageData: MessageData?
-    
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
-    //    var userToPetFlag = false
     
     private var messages: [JSQMessage] = []
     private var incomingBubble: JSQMessagesBubbleImage!
@@ -36,7 +31,6 @@ class MessagesViewController: JSQMessagesViewController {
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad start")
         
-        self.userDefaults = UserDefaults.standard
         // 初期設定
         self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "incomingCell")
         self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "outgoingCell")
@@ -45,23 +39,23 @@ class MessagesViewController: JSQMessagesViewController {
         self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
         self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
         
-        self.senderId = self.userDefaults?.string(forKey: DefaultString.Uid)
-        self.senderDisplayName = self.userDefaults?.string(forKey: DefaultString.DisplayName)!
+        self.senderId = UserDefaults.standard.string(forKey: DefaultString.Uid)
+        self.senderDisplayName = UserDefaults.standard.string(forKey: DefaultString.DisplayName)!
         
-        if self.roomData == nil {
-            // 自分のアバター画像設定
-            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "user"), diameter: 64)
-            // 相手のアバター画像設定
-            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "catProfile"), diameter: 64)
-        }else{
-            // 自分のアバター画像設定
-            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: roomData?.userImage, diameter: 64)
-            // 相手のアバター画像設定
-            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: roomData?.petImage, diameter: 64)
-            
-            // roomDataからメッセージを取得
-            getMessages()
-        }
+        /*        if self.roomData == nil {
+         // 自分のアバター画像設定
+         self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "user"), diameter: 64)
+         // 相手のアバター画像設定
+         self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "catProfile"), diameter: 64)
+         }else{
+         */            // 自分のアバター画像設定
+        self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.roomData?.userImage, diameter: 64)
+        // 相手のアバター画像設定
+        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.roomData?.petImage, diameter: 64)
+        
+        // roomDataからメッセージを取得
+        getMessages()
+        //        }
         
         self.finishReceivingMessage()
         
@@ -76,26 +70,22 @@ class MessagesViewController: JSQMessagesViewController {
         ref.queryLimited(toLast: 10).observeSingleEvent(of: .value, with: { (snapshot) in
             print("DEBUG_PRINT: MessagesViewController.getMessages .observeSingleEventイベントが発生しました。")
             
-            if self.observing == false {
-                for v in snapshot.children {
-                    if let _v = v as? FIRDataSnapshot {
-                        let messageData = MessageData(snapshot: _v, myId: (self.roomData?.id)!)
-                        let senderId = messageData.senderId
-                        let senderDisplayName = messageData.senderDisplayName
-                        let date = messageData.timestamp! as Date
-                        if let image = messageData.image {
-                            let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: image))
-                            self.messages.append(message!)
-                        }else if let text = messageData.text {
-                            let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
-                            self.messages.append(message!)
-                        }
-                        self.collectionView.reloadData()
+            for v in snapshot.children {
+                if let _v = v as? FIRDataSnapshot {
+                    let messageData = MessageData(snapshot: _v, myId: (self.roomData?.id)!)
+                    let senderId = messageData.senderId
+                    let senderDisplayName = messageData.senderDisplayName
+                    let date = messageData.timestamp! as Date
+                    if let image = messageData.image {
+                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: image))
+                        self.messages.append(message!)
+                    }else if let text = messageData.text {
+                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
+                        self.messages.append(message!)
                     }
+                    self.collectionView.reloadData()
                 }
             }
-            self.observing = true
-            
         }) { (error) in
             print(error.localizedDescription)
         }
@@ -143,7 +133,7 @@ class MessagesViewController: JSQMessagesViewController {
             print("わたしはブリーダーです")
             // 自分がブリーダーの場合
             ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
-            // ブリーダー（あずかり人）の未読リストにroomIdを追加
+            // あずかり人（相手）の未読リストにroomIdを追加
             ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
         }
         
@@ -306,7 +296,7 @@ class MessagesViewController: JSQMessagesViewController {
             print("わたしはブリーダーです")
             // 自分がブリーダーの場合
             ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
-            // ブリーダー（あずかり人）の未読リストにroomIdを追加
+            // あずかり人（相手）の未読リストにroomIdを追加
             ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
         }
         
@@ -340,9 +330,12 @@ class MessagesViewController: JSQMessagesViewController {
         } else {
             // 既読にする
             if checkSender() {
+                print("DEBUG_PRINT: MessagesViewController.viewWillDisappear 1")
                 // 自分があずかり人の場合
                 ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["petOpenedFlg" : false])
+                ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
             }else{
+                print("DEBUG_PRINT: MessagesViewController.viewWillDisappear 2")
                 // 自分がブリーダーの場合
                 ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
                 ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
@@ -355,15 +348,14 @@ class MessagesViewController: JSQMessagesViewController {
     func checkSender () -> Bool {
         var result = false
         // 自分のuidを取得
-        let uid = self.userDefaults?.string(forKey: DefaultString.Uid)!
-        if (self.roomData?.id)!.contains(uid!) {
+        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)!
+        if self.roomData?.breederId != uid {
             // 自分があずかり人の場合
             print("わたしはあずかり人です")
             result = true
         }
         return result
     }
-    
 }
 
 extension MessagesViewController: ImageSelectViewDelegate{

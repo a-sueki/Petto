@@ -40,6 +40,7 @@ class RoomData: NSObject {
         self.id = snapshot.key
         let valueDictionary = snapshot.value as! [String: AnyObject]
         
+        self.id = myId
         self.userId = valueDictionary["userId"] as? String
         self.userName = valueDictionary["userName"] as? String
         userImageString = valueDictionary["userImageString"] as? String

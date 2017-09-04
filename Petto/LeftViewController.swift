@@ -19,10 +19,6 @@ enum LeftMenu: Int {
 
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
-    var userDefaults : UserDefaults?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
-    
     var mainViewController: UINavigationController!
     var menus = ["アカウント","プロフィール", "マイペットリスト","メッセージリスト","ログアウト"]
     
@@ -32,25 +28,17 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         print("DEBUG_PRINT: LeftViewController.viewDidLoad start")
         
-        // ログイン中かチェック
-        if let _ = FIRAuth.auth()?.currentUser?.uid {
-            self.userDefaults = UserDefaults.standard
-            print(self.userDefaults?.string(forKey: DefaultString.Uid))
-            print(self.userDefaults?.string(forKey: DefaultString.Mail))
-            print(self.userDefaults?.string(forKey: DefaultString.Password))
-            print(self.userDefaults?.string(forKey: DefaultString.DisplayName))
-            print(self.userDefaults?.string(forKey: DefaultString.Age))
-            print(self.userDefaults?.string(forKey: DefaultString.Area))
-            print(self.userDefaults?.string(forKey: DefaultString.Good))
-        }else{
-            // ログインしていないときの処理
-            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
-            }
-        }
-        
+/*        print(UserDefaults.standard.bool(forKey: DefaultString.GuestFlag))
+        print(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
+        print(UserDefaults.standard.string(forKey: DefaultString.Lastname)!)
+        print(UserDefaults.standard.string(forKey: DefaultString.Firstname)!)
+        print(UserDefaults.standard.string(forKey: DefaultString.Area)!)
+        print(UserDefaults.standard.string(forKey: DefaultString.Age)!)
+        print(UserDefaults.standard.bool(forKey: DefaultString.ExpectTo))
+        print(UserDefaults.standard.string(forKey: DefaultString.CreateAt)!)
+        print(UserDefaults.standard.string(forKey: DefaultString.UpdateAt)!)
+        print(UserDefaults.standard.dictionary(forKey: DefaultString.Ngs) ?? "nilだお")
+*/        
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 0.5)
@@ -95,19 +83,16 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 2:
             // ユーザープロフィールが未作成の場合
-            if self.userDefaults?.string(forKey: "area") == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
                 SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
-                print("aaaaaaaaa")
             }else{
-                print("bbbbbbbbb")
-
                 let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "MyPetList") as! MyPetListViewController
                 let navigationController = UINavigationController(rootViewController: postViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             }
         case 3:
             // ユーザープロフィールが未作成の場合
-            if self.userDefaults?.string(forKey: "area") == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
                 SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
             }else{
                 let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController

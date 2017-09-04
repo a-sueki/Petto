@@ -18,16 +18,38 @@ struct Paths {
 }
 
 struct DefaultString {
+    // アカウント項目
+    static let GuestFlag = "guestFlag"
     static let Uid = "uid"
     static let Mail = "mail"
     static let Password = "password"
     static let DisplayName = "displayName"
-    static let Phote = "phote"
+    // ユーザー項目（必須）
+    static let ImageString = "imageString"
+    static let Firstname = "firstname"
+    static let Lastname = "lastname"
+    static let Birthday = "birthday"
     static let Area = "area"
     static let Age = "age"
-    static let Good = "good"
-    static let Bad = "bad"
+    static let HasAnotherPet = "hasAnotherPet"
+    static let IsExperienced = "isExperienced"
+    static let ExpectTo = "expectTo"
+    static let CreateAt = "createAt"
+    static let CreateBy = "createBy"
+    static let UpdateAt = "updateAt"
+    static let UpdateBy = "updateBy"
+    // ユーザー項目（任意）
+    static let Ngs = "ngs"
+    static let UserEnvironments = "userEnvironments"
+    static let UserTools = "userTools"
+    static let UserNgs = "userNgs"
+    static let MyPets = "myPets"
+    static let RoomIds = "roomIds"
+    static let UnReadRoomIds = "unReadRoomIds"
+    static let Goods = "goods"
+    static let Bads = "bads"
 }
+
 struct ErrorMsgString {
     static let RuleRequired = "必須入力です"
     static let RuleEmail = "不正なメールアドレスです"

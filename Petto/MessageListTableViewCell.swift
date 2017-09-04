@@ -41,7 +41,7 @@ class MessageListTableViewCell: UITableViewCell {
     
     
     // 表示される時の値をセット
-    func setData(userData: UserData, roomData: RoomData) {
+    func setData(roomData: RoomData) {
         print("MessageListTableViewCell.setData start")
         
         // 写真を丸くする

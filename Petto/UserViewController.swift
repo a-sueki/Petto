@@ -15,43 +15,11 @@ import CoreLocation
 
 class UserViewController: BaseFormViewController  {
     
-    
-//    let userDefaults = UserDefaults.standard
-//    var userData: UserData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
-    
     var inputData = [String : Any]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         print("DEBUG_PRINT: UserViewController.viewDidLoad start")
-        
-        // Firebaseから登録済みデータを取得
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            // 要素が追加されたら再表示
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: UserViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
-                if let _ = snapshot.value as? NSDictionary {
-                    self.userData = UserData(snapshot: snapshot, myId: uid)
-                }
-                // Formを表示
-                self.updateUserData()
-            })
-            // FIRDatabaseのobserveEventが上記コードにより登録されたためtrueとする
-            observing = true
-        }
-        
-        // HUDを消す
-        SVProgressHUD.dismiss()
-
-        print("DEBUG_PRINT: UserViewController.viewDidLoad end")
-    }
-    
-    func updateUserData() {
-        print("DEBUG_PRINT: UserViewController.updateUserData start")
         
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
@@ -76,7 +44,7 @@ class UserViewController: BaseFormViewController  {
         // フォーム
         form +++
             Section() {
-                if let _ = self.userData {
+                if let _ = UserDefaults.standard.string(forKey: DefaultString.ImageString) {
                     $0.header = HeaderFooterView<UserEditView>(.class)
                 }else {
                     $0.header = HeaderFooterView<UserEntryView>(.class)
@@ -85,7 +53,9 @@ class UserViewController: BaseFormViewController  {
             //TODO: コミットメント＆小さなバッチ（メダル）
             <<< ImageRow("image"){
                 $0.title = "写真"
-                $0.baseValue = self.userData?.image ?? nil
+                let imageString = UserDefaults.standard.string(forKey: DefaultString.ImageString)!
+                let image = UIImage(data: NSData(base64Encoded: imageString, options: .ignoreUnknownCharacters)! as Data)!
+                $0.baseValue = image 
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -109,7 +79,7 @@ class UserViewController: BaseFormViewController  {
             }
             <<< NameRow("lastname") {
                 $0.title = "姓"
-                $0.value = self.userData?.lastname ?? nil
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Lastname) ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -133,7 +103,7 @@ class UserViewController: BaseFormViewController  {
             }
             <<< NameRow("firstname") {
                 $0.title = "名"
-                $0.value = self.userData?.firstname ?? nil
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Firstname) ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -158,7 +128,7 @@ class UserViewController: BaseFormViewController  {
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
-                $0.value = self.userData?.area ?? $0.options.first
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Area) ?? $0.options.first
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -183,7 +153,7 @@ class UserViewController: BaseFormViewController  {
             
             <<< DateRow("birthday") {
                 $0.title = "生年月日"
-                if let dateString = self.userData?.birthday {
+                if let dateString = UserDefaults.standard.string(forKey: DefaultString.Birthday) {
                     $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
                     $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000", dateFormat: DateCommon.dateFormat)
@@ -214,134 +184,27 @@ class UserViewController: BaseFormViewController  {
             
             <<< TextRow("age") {
                 $0.title = "年齢"
-                $0.value = self.userData?.age ?? nil
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Age) ?? nil
                 $0.disabled = true
             }
             
-            /*+++ Section("エリア")
-             <<< ZipCodeRow("zipCode") {
-             $0.title = "郵便番号"
-             $0.value = self.userData?.zipCode ?? nil
-             $0.placeholder = "1234567"
-             $0.add(rule: RuleMinLength(minLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
-             $0.add(rule: RuleMaxLength(maxLength: 7, msg: ErrorMsgString.RuleZipcodeLength))
-             $0.validationOptions = .validatesOnChangeAfterBlurred
-             }.cellUpdate { cell, row in
-             if !row.isValid {
-             cell.titleLabel?.textColor = .red
-             }
-             }.onRowValidationChanged { cell, row in
-             let rowIndex = row.indexPath!.row
-             while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-             row.section?.remove(at: rowIndex + 1)
-             }
-             if !row.isValid {
-             for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-             let labelRow = LabelRow() {
-             $0.title = validationMsg
-             $0.cell.height = { 30 }
-             }
-             row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-             }
-             }
-             }
-             //TODO:日本語に変換
-             <<< ButtonRow("search") { (row: ButtonRow) -> Void in
-             row.title = "エリア検索"
-             }.onCellSelection { [weak self] (cell, row) in
-             if let code: RowOf<String> = self?.form.rowBy(tag: "zipCode"){
-             let geocoder = CLGeocoder()
-             geocoder.geocodeAddressString(code.value!, completionHandler: {(placemarks, error) -> Void in
-             if((error) != nil){
-             print("Error", error ?? "unknown...")
-             }
-             if let placemark = placemarks?.first {
-             print("State:       \(placemark.administrativeArea!)")
-             print("City:        \(placemark.locality!)")
-             print("SubLocality: \(placemark.subLocality!)")
-             // 住所ROW更新
-             //self?.form.rowBy(tag: "address")?.baseValue = placemark.administrativeArea!
-             //self?.form.rowBy(tag: "address")?.updateCell()
-             // エリアROW更新
-             self?.form.rowBy(tag: "area")?.baseValue = placemark.administrativeArea!
-             self?.form.rowBy(tag: "area")?.updateCell()
-             }
-             })
-             }
-             }
-             
-             <<< TextRow("address") {
-             $0.title = "住所"
-             $0.value = self.userData?.address ?? nil
-             $0.add(rule: RuleRequired())
-             $0.validationOptions = .validatesOnChange
-             }.cellUpdate { cell, row in
-             if !row.isValid {
-             cell.titleLabel?.textColor = .red
-             }
-             }.onRowValidationChanged { cell, row in
-             let rowIndex = row.indexPath!.row
-             while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-             row.section?.remove(at: rowIndex + 1)
-             }
-             if !row.isValid {
-             for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-             let labelRow = LabelRow() {
-             $0.title = validationMsg
-             $0.cell.height = { 30 }
-             }
-             row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-             }
-             }
-             }
-             <<< TextRow("area") {
-             $0.title = "エリア"
-             $0.value = self.userData?.area ?? nil
-             $0.disabled = true
-             }
-             <<< PhoneRow("tel") {
-             $0.title = "Tel"
-             $0.value = self.userData?.tel ?? nil
-             $0.placeholder = "09012345678"
-             $0.add(rule: RuleRequired())
-             $0.validationOptions = .validatesOnChange
-             }.cellUpdate { cell, row in
-             if !row.isValid {
-             cell.titleLabel?.textColor = .red
-             }
-             }.onRowValidationChanged { cell, row in
-             let rowIndex = row.indexPath!.row
-             while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-             row.section?.remove(at: rowIndex + 1)
-             }
-             if !row.isValid {
-             for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-             let labelRow = LabelRow() {
-             $0.title = validationMsg
-             $0.cell.height = { 30 }
-             }
-             row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-             }
-             }
-             }
-             */
             +++ Section("あなたのペット経験")
             <<< CheckRow("hasAnotherPet") {
                 $0.title = "現在、他にペットを飼っている"
-                $0.value = self.userData?.hasAnotherPet ?? false
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet)
             }
             <<< CheckRow("isExperienced") {
-                $0.title = "過去、ペットを飼った経験がある"
-                $0.value = self.userData?.isExperienced ?? false
+                $0.title = "過去、ペットを飼ったことがある"
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.IsExperienced)
             }
             //TODO: 「Bad評価1つ以上」は非表示。システムで判断する。
             <<< MultipleSelectorRow<String>("ngs") {
                 $0.title = "飼い主さんへの留意事項"
                 $0.options = PetNGs.strings
-                if let data = self.userData , data.ngs.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.Ngs) != nil {
                     var codes = [String]()
-                    for (key,val) in data.ngs {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.Ngs)! {
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -358,7 +221,7 @@ class UserViewController: BaseFormViewController  {
             +++ Section()
             <<< SwitchRow("expectTo"){
                 $0.title = "ペットをあずかりたい"
-                $0.value = self.userData?.expectTo ?? false
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.ExpectTo)
             }
             
             +++ Section("おあずかり環境"){
@@ -375,10 +238,10 @@ class UserViewController: BaseFormViewController  {
                     return row.value ?? false == false
                 })
                 $0.options = Environment.strings
-                if let data = self.userData , data.userEnvironments.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.UserEnvironments) != nil {
                     var codes = [String]()
-                    for (key,val) in data.userEnvironments {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserEnvironments)! {
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -397,10 +260,10 @@ class UserViewController: BaseFormViewController  {
                     return row.value ?? false == false
                 })
                 $0.options = Tool.strings
-                if let data = self.userData , data.userTools.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.UserTools) != nil {
                     var codes = [String]()
-                    for (key,val) in data.userTools {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserTools)!{
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -419,10 +282,10 @@ class UserViewController: BaseFormViewController  {
                     return row.value ?? false == false
                 })
                 $0.options = UserNGs.strings
-                if let data = self.userData , data.userNgs.count > 0 {
+                if UserDefaults.standard.object(forKey: DefaultString.UserNgs) != nil {
                     var codes = [String]()
-                    for (key,val) in data.userNgs {
-                        if val == true {
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserNgs)! {
+                        if val as! Bool == true {
                             codes.append(key)
                         }
                     }
@@ -447,7 +310,8 @@ class UserViewController: BaseFormViewController  {
                         self?.executePost()
                     }
         }
-        print("DEBUG_PRINT: UserViewController.updateUserData end")
+        
+        print("DEBUG_PRINT: UserViewController.viewDidLoad end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
@@ -473,9 +337,9 @@ class UserViewController: BaseFormViewController  {
                 // Bool
             }else if case let v as Bool = value {
                 switch key {
-                case "expectTo": self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.expectTo)
-                case "hasAnotherPet": self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.hasAnotherPet)
-                case "isExperienced": self.inputData["\(key)"] = boolSet(new: v ,old: self.userData?.isExperienced)
+                case "expectTo": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.ExpectTo))
+                case "hasAnotherPet": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet))
+                case "isExperienced": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.IsExperienced))
                 default: break
                 }
                 // Date
@@ -493,25 +357,25 @@ class UserViewController: BaseFormViewController  {
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Environment.toCode(itemValue)] = true
                     }
-                    self.inputData["userEnvironments"] = codeSet(codes: Environment.codes, new: codeArray, old: userData?.userEnvironments)
+                    self.inputData["userEnvironments"] = codeSet(codes: Environment.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserEnvironments) as? [String : Bool])
                 case "userTools" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Tool.toCode(itemValue)] = true
                     }
-                    self.inputData["userTools"] = codeSet(codes: Tool.codes, new: codeArray, old: userData?.userTools)
+                    self.inputData["userTools"] = codeSet(codes: Tool.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserTools) as? [String : Bool])
                 case "userNgs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[UserNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: codeArray, old: self.userData?.userNgs)
+                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserNgs) as? [String : Bool])
                 case "ngs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[PetNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: codeArray, old: userData?.ngs)
+                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.Ngs) as? [String : Bool])
                 default: break
                 }
             }
@@ -521,7 +385,8 @@ class UserViewController: BaseFormViewController  {
         // HUDで処理中を表示
         SVProgressHUD.show()
         let user = FIRAuth.auth()?.currentUser
-        if let newName = self.inputData["firstname"] as? String, newName != userDefaults?.string(forKey: DefaultString.DisplayName) {
+        if let newName = self.inputData["firstname"] as? String,
+            newName != UserDefaults.standard.string(forKey: DefaultString.DisplayName){
             if let user = user {
                 let changeRequest = user.profileChangeRequest()
                 changeRequest.displayName = newName
@@ -532,6 +397,8 @@ class UserViewController: BaseFormViewController  {
                         SVProgressHUD.showError(withStatus: "表示の設定に失敗しました。")
                     }
                     print("DEBUG_PRINT: [displayName = \(newName)]の設定に成功しました。")
+                    // UserDefaultsを更新（アカウント項目）
+                    UserDefaults.standard.set(self.inputData["displayName"] , forKey: DefaultString.DisplayName)
                     // HUDで投稿完了を表示する
                     SVProgressHUD.showSuccess(withStatus: "表示名を\(newName)に変更しました")
                 }
@@ -551,11 +418,11 @@ class UserViewController: BaseFormViewController  {
         let ref = FIRDatabase.database().reference()
         
         //Firebaseに保存
-        if let data = self.userData {
+        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // update
-            ref.child(Paths.UserPath).child(data.id!).updateChildValues(self.inputData)
+            ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).updateChildValues(self.inputData)
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")
         }else{
@@ -570,13 +437,20 @@ class UserViewController: BaseFormViewController  {
             SVProgressHUD.showSuccess(withStatus: "プロフィールを作成しました")
         }
         
-        
-        // UserDefaultsを更新
-        userDefaults?.set(self.inputData["imageString"] , forKey: DefaultString.Phote)
-        userDefaults?.set(self.inputData["area"] , forKey: DefaultString.Area)
-        userDefaults?.set(self.inputData["firstname"] , forKey: DefaultString.DisplayName)
-        userDefaults?.set(self.inputData["age"], forKey: DefaultString.Age)
-        
+         // UserDefaultsを更新（ユーザー項目）
+         UserDefaults.standard.set(self.inputData["imageString"] , forKey: DefaultString.ImageString)
+         UserDefaults.standard.set(self.inputData["lastname"] , forKey: DefaultString.Lastname)
+         UserDefaults.standard.set(self.inputData["firstname"] , forKey: DefaultString.Firstname)
+         UserDefaults.standard.set(self.inputData["area"] , forKey: DefaultString.Area)
+         UserDefaults.standard.set(self.inputData["birthday"] , forKey: DefaultString.Birthday)
+         UserDefaults.standard.set(self.inputData["age"] , forKey: DefaultString.Age)
+         UserDefaults.standard.set(self.inputData["hasAnotherPet"] , forKey: DefaultString.HasAnotherPet)
+         UserDefaults.standard.set(self.inputData["isExperienced"] , forKey: DefaultString.IsExperienced)
+         UserDefaults.standard.set(self.inputData["ngs"] , forKey: DefaultString.Ngs)
+         UserDefaults.standard.set(self.inputData["expectTo"] , forKey: DefaultString.ExpectTo)
+         UserDefaults.standard.set(self.inputData["userEnvironments"] , forKey: DefaultString.UserEnvironments)
+         UserDefaults.standard.set(self.inputData["userTools"] , forKey: DefaultString.UserTools)
+         UserDefaults.standard.set(self.inputData["userNgs"] , forKey: DefaultString.UserNgs)
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         

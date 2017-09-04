@@ -14,9 +14,6 @@ import SVProgressHUD
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    // UserDefaults のインスタンス
-    let userDefaults = UserDefaults.standard
-    
     @IBOutlet weak var mailAddressTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
@@ -28,10 +25,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         mailAddressTextField.delegate = self
         passwordTextField.delegate = self
         
-        if let mail = self.userDefaults.string(forKey: DefaultString.Mail) {
+        if let mail = UserDefaults.standard.string(forKey: DefaultString.Mail) {
             mailAddressTextField.text = mail
         }
-        if let pass = self.userDefaults.string(forKey: DefaultString.Password) {
+        if let pass = UserDefaults.standard.string(forKey: DefaultString.Password) {
             passwordTextField.text = pass
         }
         
@@ -90,10 +87,70 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     print("DEBUG_PRINT: ログインに成功しました")
                     // HUDを消す
                     SVProgressHUD.dismiss()
-                    // ユーザーデフォルト設定
-                    self.userDefaults.set(user?.uid , forKey: DefaultString.Uid)
-                    self.userDefaults.set(address , forKey: DefaultString.Mail)
-                    self.userDefaults.set(password , forKey: DefaultString.Password)
+                    
+                    //TODO: UserDefaultsが消えてる場合、ユーザーデータを取得してセット
+                    // Firebaseから登録済みデータを取得
+                    if let uid = user?.uid {
+                        let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+                        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                            print("DEBUG_PRINT: LoginViewController.handleLoginButton .observeSingleEventイベントが発生しました。")
+                            if let _ = snapshot.value as? NSDictionary {
+                                let userData = UserData(snapshot: snapshot, myId: uid)
+                                
+                                UserDefaults.standard.set(false , forKey: DefaultString.GuestFlag)
+                                // ユーザーデフォルト設定（ユーザー項目（必須））
+                                UserDefaults.standard.set(userData.imageString , forKey: DefaultString.ImageString)
+                                UserDefaults.standard.set(userData.firstname , forKey: DefaultString.Firstname)
+                                UserDefaults.standard.set(userData.lastname , forKey: DefaultString.Lastname)
+                                UserDefaults.standard.set(userData.birthday , forKey: DefaultString.Birthday)
+                                UserDefaults.standard.set(userData.area , forKey: DefaultString.Area)
+                                UserDefaults.standard.set(userData.age , forKey: DefaultString.Age)
+                                UserDefaults.standard.set(userData.hasAnotherPet , forKey: DefaultString.HasAnotherPet)
+                                UserDefaults.standard.set(userData.isExperienced , forKey: DefaultString.IsExperienced)
+                                UserDefaults.standard.set(userData.expectTo , forKey: DefaultString.ExpectTo)
+                                UserDefaults.standard.set(userData.createAt , forKey: DefaultString.CreateAt)
+                                UserDefaults.standard.set(userData.createBy , forKey: DefaultString.CreateBy)
+                                UserDefaults.standard.set(userData.updateAt , forKey: DefaultString.UpdateAt)
+                                UserDefaults.standard.set(userData.updateBy , forKey: DefaultString.UpdateBy)
+                                // ユーザーデフォルト設定（ユーザー項目（任意））
+                                if !userData.ngs.isEmpty {
+                                    UserDefaults.standard.set(userData.ngs , forKey: DefaultString.Ngs)
+                                }
+                                if !userData.userEnvironments.isEmpty {
+                                UserDefaults.standard.set(userData.userEnvironments , forKey: DefaultString.UserEnvironments)
+                                }
+                                if !userData.userTools.isEmpty {
+                                UserDefaults.standard.set(userData.userTools , forKey: DefaultString.UserTools)
+                                }
+                                if !userData.userNgs.isEmpty {
+                                UserDefaults.standard.set(userData.userNgs , forKey: DefaultString.UserNgs)
+                                }
+                                if !userData.myPets.isEmpty {
+                                UserDefaults.standard.set(userData.myPets , forKey: DefaultString.MyPets)
+                                }
+                                if !userData.roomIds.isEmpty {
+                                UserDefaults.standard.set(userData.roomIds , forKey: DefaultString.RoomIds)
+                                }
+                                if !userData.unReadRoomIds.isEmpty {
+                                UserDefaults.standard.set(userData.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
+                                }
+                                if !userData.goods.isEmpty {
+                                UserDefaults.standard.set(userData.goods , forKey: DefaultString.Goods)
+                                }
+                                if !userData.bads.isEmpty {
+                                UserDefaults.standard.set(userData.bads , forKey: DefaultString.Bads)
+                                }
+                            }else{
+                                UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
+                            }
+                        })
+                    }
+                    
+                    // ユーザーデフォルト設定（アカウント項目）
+                    UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
+                    UserDefaults.standard.set(address , forKey: DefaultString.Mail)
+                    UserDefaults.standard.set(password , forKey: DefaultString.Password)
+                    UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
                     
                     // Homeに画面遷移
                     DispatchQueue.main.async {
@@ -157,31 +214,29 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 
                 // 確認メール送信
                 if let user = FIRAuth.auth()?.currentUser {
-                    if !user.isEmailVerified{
-                        let alertVC = UIAlertController(title: "仮登録が成功しました！", message: "上記アドレスに確認メールを送信しました。メール内のURLをクリックし、登録を完了してください。", preferredStyle: .alert)
-                        let alertActionOkay = UIAlertAction(title: "はい", style: .default) {
+                    if !user.isEmailVerified {
+                        let alertVC = UIAlertController(title: "仮登録が成功しました", message: "上記アドレスに確認メールを送信しました。\nメール内のURLをクリックし、登録を完了してください。", preferredStyle: .alert)
+                        let alertActionOkay = UIAlertAction(title: "OK", style: .default) {
                             (_) in
                             user.sendEmailVerification(completion: nil)
                         }
-                        let alertActionCancel = UIAlertAction(title: "いいえ", style: .default, handler: nil)
+                        let alertActionCancel = UIAlertAction(title: "キャンセル", style: .default, handler: nil)
                         alertVC.addAction(alertActionOkay)
                         alertVC.addAction(alertActionCancel)
                         self.present(alertVC, animated: true, completion: nil)
                     } else {
                         // HUDで送信完了を表示する
-                        SVProgressHUD.showSuccess(withStatus: "アカウントを作成しました。")
+                        SVProgressHUD.showSuccess(withStatus: "アカウントを作成しました")
                     }
                 }
                 
                 let uid = FIRAuth.auth()?.currentUser?.uid
-                // ユーザーデフォルト設定
-                self.userDefaults.set(uid! , forKey: DefaultString.Uid)
-                self.userDefaults.set(address , forKey: DefaultString.Mail)
-                self.userDefaults.set(password , forKey: DefaultString.Password)
-                self.userDefaults.set("ゲストさん" , forKey: DefaultString.DisplayName)
-                let imageData = UIImageJPEGRepresentation(UIImage(named: "user")! , 0.5)
-                let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                self.userDefaults.set(imageString , forKey: DefaultString.Phote)
+                // ユーザーデフォルト設定（アカウント項目）
+                UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
+                UserDefaults.standard.set(uid! , forKey: DefaultString.Uid)
+                UserDefaults.standard.set(address , forKey: DefaultString.Mail)
+                UserDefaults.standard.set(password , forKey: DefaultString.Password)
+                UserDefaults.standard.set("ゲストさん" , forKey: DefaultString.DisplayName)                
                 
                 // 表示名を設定する
                 let user = FIRAuth.auth()?.currentUser

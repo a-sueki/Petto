@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
 
     var window: UIWindow?
     var myNavigationController: UINavigationController?
-    let userDefaults = UserDefaults.standard
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print("DEBUG_PRINT: AppDelegate.application start ")
@@ -48,9 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
             print("DEBUG_PRINT: AppDelegate.application .addStateDidChangeListenerイベントが発生しました")
             if let user = user {
                 print("DEBUG_PRINT: AppDelegate.application ユーザ「\(user.uid)」がログイン中")
-                self.userDefaults.set(user.uid, forKey: DefaultString.Uid)
-                self.userDefaults.set(user.email, forKey: DefaultString.Mail)
-                self.userDefaults.set(user.displayName, forKey: DefaultString.DisplayName)
+                UserDefaults.standard.set(user.uid, forKey: DefaultString.Uid)
+                UserDefaults.standard.set(user.email, forKey: DefaultString.Mail)
+                UserDefaults.standard.set(user.displayName, forKey: DefaultString.DisplayName)
             } else {
                 print("DEBUG_PRINT: AppDelegate.application ユーザはログインしていません")
             }
@@ -66,7 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
         
         let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
 
-        //self.window?.backgroundColor = UIColor.red
         self.window?.rootViewController = slideMenuController
         self.window?.makeKeyAndVisible()
         

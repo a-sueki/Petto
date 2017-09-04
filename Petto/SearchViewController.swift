@@ -15,15 +15,12 @@ import SVProgressHUD
 class SearchViewController: BaseFormViewController {
     
     var searchData: SearchData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
-    
     var inputData = [String : Any]()
     var removeKeyList = [String]()
     
     override func viewDidLoad() {
-        print("DEBUG_PRINT: SearchViewController.viewDidLoad start")
         super.viewDidLoad()
+        print("DEBUG_PRINT: SearchViewController.viewDidLoad start")
         
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
@@ -32,9 +29,7 @@ class SearchViewController: BaseFormViewController {
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: SearchViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
-                    
                     self.searchData = SearchData(snapshot: snapshot, myId: uid)
-                    
                     // Formを表示
                     self.updateSearchData()
                 }else{
@@ -44,7 +39,6 @@ class SearchViewController: BaseFormViewController {
             }) { (error) in
                 print(error.localizedDescription)
             }
-            observing = true
         }else{
             self.updateSearchData()
         }
@@ -58,7 +52,6 @@ class SearchViewController: BaseFormViewController {
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
         // フォーム
-        //TODO: 「指定しない」を選択できるようにする
         form +++
             Section("絞り込み条件") {
                 $0.header = HeaderFooterView<SearchView>(.class)
@@ -67,7 +60,7 @@ class SearchViewController: BaseFormViewController {
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = SearchArea.strings
-                $0.value = self.searchData?.area ?? userDefaults?.string(forKey: DefaultString.Area)
+                $0.value = self.searchData?.area ?? UserDefaults.standard.string(forKey: DefaultString.Area)
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
@@ -394,7 +387,6 @@ class SearchViewController: BaseFormViewController {
         }
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-        //viewController2.searchData = inputData
         self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: SearchViewController.clear end")
@@ -402,9 +394,6 @@ class SearchViewController: BaseFormViewController {
 
     @IBAction func executePost() {
         print("DEBUG_PRINT: SearchViewController.executePost start")
-        
-        // HUDで処理中を表示
-        SVProgressHUD.show()
         
         for (key,value) in form.values() {
             if value == nil {
@@ -451,13 +440,13 @@ class SearchViewController: BaseFormViewController {
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Environment.toCode(itemValue)] = true
                     }
-                    self.inputData["environments"] = codeSet(codes: Environment.codes, new: codeArray, old: searchData?.environments)
+                    self.inputData["environments"] = codeSet(codes: Environment.codes, new: codeArray, old: self.searchData?.environments)
                 case "tools" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Tool.toCode(itemValue)] = true
                     }
-                    self.inputData["tools"] = codeSet(codes: Tool.codes, new: codeArray, old: searchData?.tools)
+                    self.inputData["tools"] = codeSet(codes: Tool.codes, new: codeArray, old: self.searchData?.tools)
                 case "ngs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
@@ -475,6 +464,7 @@ class SearchViewController: BaseFormViewController {
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
         
+        SVProgressHUD.show()
         //Firebaseに保存
         if let data = self.searchData {
             self.inputData["updateAt"] = String(time)
@@ -505,7 +495,6 @@ class SearchViewController: BaseFormViewController {
         
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-        //viewController2.searchData = inputData
         self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: SearchViewController.executePost end")

@@ -15,9 +15,7 @@ import UIKit
 
 class NavigationBarHandler: NSObject {
     
-    var userDefaults: UserDefaults?
     var userData: UserData?
-    // FIRDatabaseのobserveEventの登録状態を表す
     
     // RKNotificationHubのインスタンス
     let hub = RKNotificationHub()
@@ -50,44 +48,77 @@ class NavigationBarHandler: NSObject {
         button5.setImage(UIImage(named: "search"), for: .normal)
         button5.addTarget(self, action: #selector(onClick5), for: .touchUpInside)
         
-        // 未読メッセージリストをカウント
-        self.userDefaults = UserDefaults.standard
+        // ref作成
+        let ref = FIRDatabase.database().reference().child(Paths.UserPath)
         
-        
-        if let user = FIRAuth.auth()?.currentUser {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(user.uid)
-            // Userの未読リストを取得
-            ref.observe(.value, with: { (snapshot) in
-                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .valueイベントが発生しました。")
-                if let _ = snapshot.value as? NSDictionary {
-                    self.userData = UserData(snapshot: snapshot, myId: user.uid)
-                    
-                    // UserDefaultsを更新
-                    self.userDefaults?.set(self.userData?.id, forKey: DefaultString.Uid)
-                    self.userDefaults?.set(self.userData?.imageString , forKey: DefaultString.Phote)
-                    self.userDefaults?.set(self.userData?.area , forKey: DefaultString.Area)
-                    self.userDefaults?.set(self.userData?.firstname , forKey: DefaultString.DisplayName)
-                    self.userDefaults?.set(self.userData?.age, forKey: DefaultString.Age)
-                    //TODO: good,bad
-                    
+        // ユーザーデフォルト設定
+        if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+            // UnReadRoomIds取得
+            var unReadRoomIds = [String:Bool]()
+            ref.child(user.uid).child("unReadRoomIds").observe(.childAdded, with: { (snapshot) in
+                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar unReadRoomIds.childAddedイベントが発生しました。")
+                if case _ as Bool = snapshot.value {
+                    unReadRoomIds[snapshot.key] = true
+                    // ユーザーデフォルト設定
+                    UserDefaults.standard.set(unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
                     // 通知バッチの更新
-                    if let count = self.userData?.unReadRoomIds.count ,count != 0 {
-                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読あり")
+                    if unReadRoomIds.count != 0 {
+                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読あり\(unReadRoomIds.count)")
                         // 通知バッチをセット
-                        self.hub.setView(button4, andCount: Int32((self.userData?.unReadRoomIds.count)!))
+                        self.hub.setView(button4, andCount: Int32(unReadRoomIds.count))
                         // 設置するhubの背景色をredに文字色を白にする
                         self.hub.setCircleColor(UIColor.red, label: UIColor.white)
                         // バッチのサイズを変更
                         self.hub.scaleCircleSize(by: 0.8)
-                    }else{
-                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読なし")
-                        // 通知バッチを消す
-                        self.hub.setView(button4, andCount: -1)
-                        // 設置するhubの背景色をredに文字色を白にする
-                        self.hub.setCircleColor(UIColor.blue, label: UIColor.white)
-                        // バッチのサイズを変更
-                        self.hub.scaleCircleSize(by: 0.5)
                     }
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+            // myPets取得
+            var myPets = [String:Bool]()
+            ref.child(user.uid).child("myPets").observe(.childAdded, with: { (snapshot) in
+                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar myPets.childAddedイベントが発生しました。")
+                if case _ as Bool = snapshot.value {
+                    myPets[snapshot.key] = true
+                    // ユーザーデフォルト設定
+                    UserDefaults.standard.set(myPets , forKey: DefaultString.MyPets)
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+            // roomIds取得
+            var roomIds = [String:Bool]()
+            ref.child(user.uid).child("roomIds").observe(.childAdded, with: { (snapshot) in
+                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar roomIds.childAddedイベントが発生しました。")
+                if case _ as Bool = snapshot.value {
+                    roomIds[snapshot.key] = true
+                    // ユーザーデフォルト設定
+                    UserDefaults.standard.set(roomIds , forKey: DefaultString.RoomIds)
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+            // goods取得
+            var goods = [String:Bool]()
+            ref.child(user.uid).child("goods").observe(.childAdded, with: { (snapshot) in
+                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar goods.childAddedイベントが発生しました。")
+                if case _ as Bool = snapshot.value {
+                    goods[snapshot.key] = true
+                    // ユーザーデフォルト設定
+                    UserDefaults.standard.set(goods , forKey: DefaultString.Goods)
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+            // bads取得
+            var bads = [String:Bool]()
+            ref.child(user.uid).child("bads").observe(.childAdded, with: { (snapshot) in
+                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar bads.childAddedイベントが発生しました。")
+                if case _ as Bool = snapshot.value {
+                    bads[snapshot.key] = true
+                    // ユーザーデフォルト設定
+                    UserDefaults.standard.set(bads , forKey: DefaultString.Bads)
                 }
             }) { (error) in
                 print(error.localizedDescription)
@@ -109,6 +140,7 @@ class NavigationBarHandler: NSObject {
         self.viewController?.navigationItem.rightBarButtonItems = rightBtns
         
         print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar end")
+        
     }
     
     func onClick1() {
@@ -130,7 +162,7 @@ class NavigationBarHandler: NSObject {
     }
     func onClick4() {
         // ユーザープロフィールが未作成の場合
-        if self.userDefaults?.string(forKey: "area") == nil {
+        if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
             SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
         }else{
             // アニメーション削除
@@ -151,38 +183,60 @@ class NavigationBarHandler: NSObject {
 
 class BaseFormViewController: FormViewController {
     let helper = NavigationBarHandler()
-    var userDefaults: UserDefaults?
-    var userData: UserData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("DEBUG_PRINT: BaseFormViewController.viewDidLoad start")
-        
-        helper.viewController = self
-        helper.setupNavigationBar()
-        self.userData = helper.userData
-        self.userDefaults = helper.userDefaults
-        
-        print("DEBUG_PRINT: BaseFormViewController.viewDidLoad end")
+        print("DEBUG_PRINT: BaseFormViewController.viewDidLoad")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        print("DEBUG_PRINT: BaseFormViewController.viewDidAppear start")
+        
+        // ログインしてないか、ユーザーデフォルトが消えてる場合
+        if UserDefaults.standard.object(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
+            // オブザーバーを削除する
+            FIRDatabase.database().reference().removeAllObservers()
+            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+            DispatchQueue.main.async {
+                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+                self.present(loginViewController!, animated: true, completion: nil)
+            }
+        }else{
+            // ナビゲーションバーを表示
+            helper.viewController = self
+            helper.setupNavigationBar()
+        }
+        print("DEBUG_PRINT: BaseFormViewController.viewDidAppear end")
+    }
 }
 
 class BaseViewController: UIViewController {
     let helper = NavigationBarHandler()
-    var userDefaults: UserDefaults?
-    var userData: UserData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("DEBUG_PRINT: BaseViewController.viewDidLoad start")
+        print("DEBUG_PRINT: BaseViewController.viewDidLoad")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("DEBUG_PRINT: BaseViewController.viewDidAppear start")
         
-        helper.viewController = self
-        helper.setupNavigationBar()
-        self.userData = helper.userData
-        self.userDefaults = helper.userDefaults
+        // ログインしてないか、ユーザーデフォルトが消えてる場合
+        if UserDefaults.standard.object(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
+            // オブザーバーを削除する
+            FIRDatabase.database().reference().removeAllObservers()
+            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+            DispatchQueue.main.async {
+                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+                self.present(loginViewController!, animated: true, completion: nil)
+            }
+        }else{
+            // ナビゲーションバーを表示
+            helper.viewController = self
+            helper.setupNavigationBar()
+        }
         
-        print("DEBUG_PRINT: BaseViewController.viewDidLoad end")
+        print("DEBUG_PRINT: BaseViewController.viewDidAppear end")
     }
 }
 

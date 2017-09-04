@@ -16,8 +16,6 @@ class BookingViewController: BaseFormViewController {
     
     var roomData: RoomData?
     var leaveData: LeaveData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
     var inputData = [String : Any]()
     
     override func viewDidLoad() {
@@ -214,25 +212,28 @@ class BookingViewController: BaseFormViewController {
         start = start.replacingOccurrences(of: "-", with: "/")
         end = end.substring(to: end.index(end.startIndex, offsetBy: 10))
         end = end.replacingOccurrences(of: "-", with: "/")
+
         // Messageを更新
         let text = "[自動送信メッセージ]\n以下の日程で、\(self.roomData?.petName ?? "ペット")の飼い主さんがおあずけ期間を提案しました。\n\(self.roomData?.userName ?? "あずかり人")さんは\"承認\"もしくは\"否認\"をタップして下さい。\n\(start)~\(end)"
         // Firebase連携用
-        inputData["senderId"] = self.userDefaults?.string(forKey: DefaultString.Uid)
-        inputData["senderDisplayName"] =  self.userDefaults?.string(forKey: DefaultString.DisplayName)!
-        inputData["text"] = text
-        inputData["timestamp"] = String(time)
+        var inputDataMessage = [String : Any]()  //message
+        inputDataMessage["senderId"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
+        inputDataMessage["senderDisplayName"] =  UserDefaults.standard.string(forKey: DefaultString.DisplayName)
+        inputDataMessage["text"] = text
+        inputDataMessage["timestamp"] = String(time)
         
         // insert
         let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
-        ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
+        ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputDataMessage)
         // update
         ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : text])
         ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : String(time)])
         ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
         ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
         
-        // 既読フラグupdate        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
-        // ブリーダー（相手）の未読リストにroomIdを追加
+        // 既読フラグupdate        
+        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
+        // あずかり人（相手）の未読リストにroomIdを追加
         ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
         
         // HUDで投稿完了を表示する

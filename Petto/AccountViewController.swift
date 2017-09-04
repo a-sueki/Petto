@@ -11,42 +11,15 @@ import Eureka
 import Firebase
 import FirebaseDatabase
 import SVProgressHUD
-import CoreLocation
+//import CoreLocation
 
 class AccountViewController: BaseFormViewController {
-    
-//    var userDefaults : UserDefaults?
-//    var userData: UserData?
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
     
     var inputData = [String : Any]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         print("DEBUG_PRINT: AccountViewController.viewDidLoad start")
-
-        // HUDで処理中を表示
-        SVProgressHUD.show()
-        
-        // ログイン中かチェック
-        if let _ = FIRAuth.auth()?.currentUser?.uid {
-//            self.userDefaults = UserDefaults.standard
-            // Formを表示
-            self.updateUserData()
-            // HUDを消す
-            SVProgressHUD.dismiss()
-
-        }
-        // HUDを消す
-        SVProgressHUD.dismiss()
-
-        print("DEBUG_PRINT: AccountViewController.viewDidLoad end")
-    }
-    
-    func updateUserData() {
-        print("DEBUG_PRINT: AccountViewController.updateUserData start")
         
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
@@ -76,7 +49,7 @@ class AccountViewController: BaseFormViewController {
             
             <<< EmailRow("mail") {
                 $0.title = "メールアドレス"
-                $0.value = userDefaults?.string(forKey: DefaultString.Mail)
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Mail)
                 $0.add(rule: RuleRequired())
                 var ruleSet = RuleSet<String>()
                 ruleSet.add(rule: RuleRequired())
@@ -102,10 +75,9 @@ class AccountViewController: BaseFormViewController {
                         }
                     }
             }
-            //TODO:必須入力じゃダメ。入力項目から削除？
             <<< PasswordRow("password") {
                 $0.title = "パスワード"
-                $0.value = userDefaults?.string(forKey: DefaultString.Password)
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Password)
                 $0.add(rule: RuleRequired())
                 $0.add(rule: RuleMinLength(minLength: 6, msg: ErrorMsgString.RulePassword))
                 $0.add(rule: RuleMaxLength(maxLength: 12, msg: ErrorMsgString.RulePassword))
@@ -131,7 +103,7 @@ class AccountViewController: BaseFormViewController {
             }
             <<< AccountRow("displayName") {
                 $0.title = "ニックネーム"
-                $0.value = userDefaults?.string(forKey: DefaultString.DisplayName)
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -160,24 +132,22 @@ class AccountViewController: BaseFormViewController {
                 }.onCellSelection { [weak self] (cell, row) in
                     if let error = row.section?.form?.validate() , error.count != 0 {
                         SVProgressHUD.showError(withStatus: "入力を修正してください")
-                        print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
+                        print("DEBUG_PRINT: AccountViewController.viewDidLoad \(error)のため処理は行いません")
                     }else{
-                        self?.executePost()
+                        self?.executeUpdate()
                     }
         }
-        print("DEBUG_PRINT: AccountViewController.updateUserData end")
+        print("DEBUG_PRINT: AccountViewController.viewDidLoad end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func executePost() {
-        print("DEBUG_PRINT: AccountViewController.executePost start")
-        
-        // HUDで処理中を表示
-        SVProgressHUD.show()
+    @IBAction func executeUpdate() {
+        print("DEBUG_PRINT: AccountViewController.executeUpdate start")
 
+        
         // アカウント情報の修正
         for (key,value) in form.values() {
             if value == nil {
@@ -185,7 +155,7 @@ class AccountViewController: BaseFormViewController {
             }else if case let itemValue as String = value {
                 // 表示名を設定する
                 if key == "displayName" {
-                    if self.userDefaults?.string(forKey: DefaultString.DisplayName) != itemValue {
+                    if UserDefaults.standard.string(forKey: DefaultString.DisplayName) != itemValue {
                         // HUDで処理中を表示
                         SVProgressHUD.show()
                         let user = FIRAuth.auth()?.currentUser
@@ -199,7 +169,8 @@ class AccountViewController: BaseFormViewController {
                                     SVProgressHUD.showError(withStatus: "ニックネームの更新に失敗しました")
                                }
                                 print("DEBUG_PRINT: [displayName = \(user.displayName!)]の設定に成功しました。")
-                                self.userDefaults?.set(itemValue , forKey: DefaultString.DisplayName)
+                                // ユーザーデフォルト設定（アカウント項目）
+                                UserDefaults.standard.set(itemValue , forKey: DefaultString.DisplayName)
                                 // HUDで完了を知らせる
                                 SVProgressHUD.showSuccess(withStatus: "ニックネームを更新しました")
                             }
@@ -209,7 +180,7 @@ class AccountViewController: BaseFormViewController {
                     }
                     // メールアドレスを設定する
                 }else if key == "mail" {
-                    if self.userDefaults?.string(forKey: DefaultString.Mail) != itemValue {
+                    if UserDefaults.standard.string(forKey: DefaultString.Mail) != itemValue {
                         // HUDで処理中を表示
                         SVProgressHUD.show()
                         let user = FIRAuth.auth()?.currentUser
@@ -221,7 +192,8 @@ class AccountViewController: BaseFormViewController {
                                     SVProgressHUD.showError(withStatus: "メールアドレスの更新に失敗しました")
                                 }
                                 print("DEBUG_PRINT: [email = \(user.email!)]の設定に成功しました。")
-                                self.userDefaults?.set(itemValue, forKey: DefaultString.Mail)
+                                // ユーザーデフォルト設定（アカウント項目）
+                                UserDefaults.standard.set(itemValue , forKey: DefaultString.Mail)
                                 // HUDで完了を知らせる
                                 SVProgressHUD.showSuccess(withStatus: "メールアドレスを更新しました")
                             })
@@ -231,7 +203,7 @@ class AccountViewController: BaseFormViewController {
                     }
                     // パスワードを設定する
                 }else if key == "password" {
-                    if self.userDefaults?.string(forKey: DefaultString.Password) != itemValue {
+                    if UserDefaults.standard.string(forKey: DefaultString.Password) != itemValue {
                         // HUDで処理中を表示
                         SVProgressHUD.show()
                         let user = FIRAuth.auth()?.currentUser
@@ -243,7 +215,8 @@ class AccountViewController: BaseFormViewController {
                                     SVProgressHUD.showError(withStatus: "パスワードの更新に失敗しました")
                                 }
                                 print("DEBUG_PRINT: パスワードの更新に成功しました。")
-                                self.userDefaults?.set(itemValue , forKey: DefaultString.Password)
+                                // ユーザーデフォルト設定（アカウント項目）
+                                UserDefaults.standard.set(itemValue , forKey: DefaultString.Password)
                                 // HUDで完了を知らせる
                                 SVProgressHUD.showSuccess(withStatus: "パスワードを更新しました")
                             })

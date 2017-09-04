@@ -235,14 +235,14 @@
 		846705E11F0F7BAA00FFEA8D /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				84DB3BFB1F543D5B0067A680 /* BreederMessagesContainerViewController.swift */,
-				844577EF1F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift */,
-				841ADB171F0CA18C00534A37 /* MessagesViewController.swift */,
-				84DB3BF91F540A490067A680 /* BookingViewController.swift */,
-				844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */,
 				846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */,
 				846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */,
 				846705E51F0F81E400FFEA8D /* MessageListTableViewCell.xib */,
+				84DB3BFB1F543D5B0067A680 /* BreederMessagesContainerViewController.swift */,
+				844577EF1F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift */,
+				84DB3BF91F540A490067A680 /* BookingViewController.swift */,
+				844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */,
+				841ADB171F0CA18C00534A37 /* MessagesViewController.swift */,
 				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 			);
 			name = Messages;

@@ -18,9 +18,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     var roomIdList: [String] = []
     var roomDataArray: [RoomData] = []
     var sortedRoomDataArray: [RoomData] = []
-    // FIRDatabaseのobserveEventの登録状態を表す
-    var observing = false
-    // RKNotificationHubのインスタンス
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,83 +32,62 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         tableView.rowHeight = UITableViewAutomaticDimension
         
         // userのmessages[]を取得　→roomIdList
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            // HUDで処理中を表示
-            SVProgressHUD.show()
+        if UserDefaults.standard.object(forKey: DefaultString.RoomIds) != nil {
             
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-            // Userのメッセージリスト（roomIdList）の取得
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: MessageListViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
-                self.userData = UserData(snapshot: snapshot, myId: uid)
-                if self.userData?.roomIds.count != 0 {
-                    // user,petデータを取得
-                    for (key, _) in (self.userData?.roomIds)! {
-                        self.roomIdList.append(key)
-                        self.getData(roomId: key)
-                    }
-                }else{
-                    //roomが0件の時は「メッセージ送受信はありません」を表示
-                    SVProgressHUD.showError(withStatus: "まだメッセージがありません")
-                }
-            }) { (error) in
-                print(error.localizedDescription)
+            for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!{
+                roomIdList.append(key)
+                self.getDataSingleEvent(roomId: key)
             }
-            self.observing = true
         }else{
-            print("DEBUG_PRINT: MessageListViewController.viewDidLoad ユーザがログインしていません。")
-            // ログインしていない場合
-            if observing == true {
-                // ログアウトを検出したら、一旦テーブルをクリアしてオブザーバーを削除する。
-                roomIdList = []
-                self.tableView.reloadData()
-                // オブザーバーを削除する
-                FIRDatabase.database().reference().removeAllObservers()
-                // FIRDatabaseのobserveEventが上記コードにより解除されたためfalseとする
-                observing = false
-                SVProgressHUD.showError(withStatus: "再度、ログインしてお試し下さい")
-            }
-            
-            // ログイン画面に遷移
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
-            }
+            //roomが0件の時は「メッセージ送受信はありません」を表示
+            SVProgressHUD.showError(withStatus: "まだメッセージがありません")
         }
+
         print("DEBUG_PRINT: MessageListViewController.viewDidLoad end")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print("DEBUG_PRINT: MessageListViewController.viewWillAppear start")
+
+        var roomIdListAgain: [String] = []
         
-        // 既読の場合、表示更新
-        if let uid = self.userDefaults?.string(forKey: DefaultString.Uid) {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
-            // Userの未読リストを取得
-            ref.observe(.value, with: { (snapshot) in
-                print("DEBUG_PRINT: MessageListViewController.viewWillAppear .valueイベントが発生しました。")
-                if let _ = snapshot.value as? NSDictionary {
-                    self.userData = UserData(snapshot: snapshot, myId: uid)
-                    
-                    super.helper.setupNavigationBar()
-                    super.userData = super.helper.userData
-                    super.userDefaults = super.helper.userDefaults
-                }
-            }) { (error) in
-                print(error.localizedDescription)
+        // userのmessages[]を取得　→roomIdList
+        if UserDefaults.standard.object(forKey: DefaultString.RoomIds) != nil {
+            
+            for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!{
+                roomIdListAgain.append(key)
             }
+        }else{
+            //roomが0件の時は「メッセージ送受信はありません」を表示
+            SVProgressHUD.showError(withStatus: "まだメッセージがありません")
         }
         
+        // 比較用にsort
+        let ascendingOldList : [String] = roomIdList.sorted(by: {$0 < $1})
+        let ascendingNewList : [String] = roomIdListAgain.sorted(by: {$0 < $1})
+
+        // roomIdListの内容が変わっていた場合（削除・追加）
+        if ascendingOldList != ascendingNewList {
+            print("DEBUG_PRINT: MessageListViewController.viewWillAppear roomIdListの内容が変更されました")
+            // リストを初期化
+            self.roomDataArray.removeAll()
+            self.sortedRoomDataArray.removeAll()
+            // リストを再取得・テーブルreloadData
+            for key in ascendingNewList {
+                self.getDataSingleEvent(roomId: key)
+            }
+        }
+
         print("DEBUG_PRINT: MessageListViewController.viewWillAppear end")
     }
     
-    func getData(roomId: String) {
-        print("DEBUG_PRINT: MessageListViewController.getData start")
+    func getDataSingleEvent(roomId: String) {
+        print("DEBUG_PRINT: MessageListViewController.getDataSingleEvent start")
         
         // roomDataリストの取得
         let ref = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            print("DEBUG_PRINT: MessageListTableViewCell.getData .observeSingleEventイベントが発生しました。")
+            print("DEBUG_PRINT: MessageListViewController.getDataSingleEvent .observeSingleEventイベントが発生しました。")
             if let _ = snapshot.value as? NSDictionary {
                 let roomData = RoomData(snapshot: snapshot, myId: roomId)
                 self.roomDataArray.append(roomData)
@@ -128,9 +104,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             print(error.localizedDescription)
         }
         
-        print("DEBUG_PRINT: MessageListViewController.getData end")
+        print("DEBUG_PRINT: MessageListViewController.getDataSingleEvent end")
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -150,11 +125,12 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         // roomDataリスト取得（非同期）の完了前のテーブル表示エラー防止のため
         if self.roomIdList.count == self.sortedRoomDataArray.count {
-            cell.setData(userData: self.userData!, roomData: self.sortedRoomDataArray[indexPath.row])
+            cell.setData(roomData: self.sortedRoomDataArray[indexPath.row])
             
-            // 未読の場合、ハイライト
-            if self.userData?.unReadRoomIds.count != 0 {
-                for (rid,_) in (self.userData?.unReadRoomIds)! {
+            // 未読の場合
+            if UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds) != nil {
+                // セルをハイライト
+                for (rid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)! {
                     if rid == self.sortedRoomDataArray[indexPath.row].id {
                         cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
                         cell.unReadLabel.isHidden = false
@@ -207,7 +183,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
         // 自分のuidを取得
-        let uid = self.userDefaults?.string(forKey: DefaultString.Uid)!
+        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
         
         // 既読フラグupdate
         if let roomId = self.sortedRoomDataArray[(indexPath?.row)!].id {
