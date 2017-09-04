@@ -50,13 +50,13 @@ class MessageListTableViewCell: UITableViewCell {
         self.petImageView.layer.cornerRadius = 25.0
         self.petImageView.layer.masksToBounds = true
        
-        self.userImageView.image = userData.image
-        self.userNameLabel.text = self.userDefaults.string(forKey: DefaultString.DisplayName)
+        self.userImageView.image = roomData.userImage
+        self.userNameLabel.text = roomData.userName
 
         //TODO: 評価カウントをセット
-        self.goodIntLabel.text = "10" //String(userData.goods.count)
-        self.badIntLabel.text = "3" //String(userData.bads.count)
-        self.userProfile.text = userData.area! + " | " + userData.age! + "才"
+        self.goodIntLabel.text = "10" //String(roomData.userGoodInt)
+        self.badIntLabel.text = "3" //String(roomData.userBadInt)
+        self.userProfile.text = roomData.userArea! + " | " + roomData.userAge! + "才"
         self.petImageView.image = roomData.petImage
         self.petNameLabel.text = roomData.petName
         

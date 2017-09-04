@@ -211,10 +211,11 @@ class BookingViewController: BaseFormViewController {
         var start = String(describing: self.inputData["startDate"]!)
         var end = String(describing: self.inputData["endDate"]!)
         start = start.substring(to: start.index(start.startIndex, offsetBy: 10))
+        start = start.replacingOccurrences(of: "-", with: "/")
         end = end.substring(to: end.index(end.startIndex, offsetBy: 10))
-        
+        end = end.replacingOccurrences(of: "-", with: "/")
         // Messageを更新
-        let text = "[自動送信メッセージ]\n以下の日程で、\(self.roomData?.petName ?? "ペット")の飼い主さんがおあずけ期間を提案しました。\n\(self.roomData?.userName ?? "あずかり人")さんは\"承認\"もしくは\"否認\"をタップして下さい。\n\(start)~\(end))"
+        let text = "[自動送信メッセージ]\n以下の日程で、\(self.roomData?.petName ?? "ペット")の飼い主さんがおあずけ期間を提案しました。\n\(self.roomData?.userName ?? "あずかり人")さんは\"承認\"もしくは\"否認\"をタップして下さい。\n\(start)~\(end)"
         // Firebase連携用
         inputData["senderId"] = self.userDefaults?.string(forKey: DefaultString.Uid)
         inputData["senderDisplayName"] =  self.userDefaults?.string(forKey: DefaultString.DisplayName)!

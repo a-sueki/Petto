@@ -290,7 +290,7 @@ class MessagesViewController: JSQMessagesViewController {
         ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
         
         // update
-        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : "[写真が届いています]"])
+        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : "[自動送信メッセージ]\n写真が届いています"])
         ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : String(time)])
         ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
         ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])

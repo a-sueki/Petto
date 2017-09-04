@@ -344,9 +344,13 @@ class PetDetailViewController: BaseFormViewController {
                     inputData["userId"] = uid
                     inputData["userName"] = self.userDefaults?.string(forKey: DefaultString.DisplayName)
                     inputData["userImageString"] = self.userDefaults?.string(forKey: DefaultString.Phote)
+                    inputData["userArea"] = self.userDefaults?.string(forKey: DefaultString.Area)
+                    inputData["userAge"] = self.userDefaults?.string(forKey: DefaultString.Age)
+                    //TODO: 評価実装後、活性
+//                    inputData["userGoodInt"] = self.userDefaults?.string(forKey: DefaultString.Good)
+//                    inputData["userBadInt"] = self.userDefaults?.string(forKey: DefaultString.Bad)
                     inputData["petId"] = pid
                     inputData["petName"] = self.petData?.name
-                    inputData["petImageString"] = self.petData?.imageString
                     inputData["petImageString"] = self.petData?.imageString
                     inputData["userOpenedFlg"] = true
                     inputData["petOpenedFlg"] = false

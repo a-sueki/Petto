@@ -85,7 +85,7 @@ class UserMessagesContainerViewController: UIViewController {
             // ViewController②の表示
             view.addSubview(underViewController.view)
             underViewController.didMove(toParentViewController: self)
-            underViewController.view.frame = CGRect(x: 0, y: view.frame.height - 210, width: view.frame.width, height: view.frame.height)
+            underViewController.view.frame = CGRect(x: 0, y: view.frame.height - 210, width: view.frame.width, height: 210)
         }else{
             // ViewController①をContainerViewControllerの子として追加
             topViewController.roomData = self.roomData
@@ -94,7 +94,7 @@ class UserMessagesContainerViewController: UIViewController {
             // ViewController①の表示
             view.addSubview(topViewController.view)
             topViewController.didMove(toParentViewController: self)
-            topViewController.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+            topViewController.view.frame = CGRect(x: 0, y: 60, width: view.frame.width, height: view.frame.height - 60)
         }
         
         print("DEBUG_PRINT: UserMessagesContainerViewController.setView end")

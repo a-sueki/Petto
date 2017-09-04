@@ -53,7 +53,7 @@ class BreederMessagesContainerViewController: UIViewController {
         // ViewController②の表示
         view.addSubview(underViewController.view)
         underViewController.didMove(toParentViewController: self)
-        underViewController.view.frame = CGRect(x: 0, y: view.frame.height - 180, width: view.frame.width, height: view.frame.height)
+        underViewController.view.frame = CGRect(x: 0, y: view.frame.height - 180, width: view.frame.width, height: 180)
         
         print("DEBUG_PRINT: BreederMessagesContainerViewController.viewDidLoad end")
     }

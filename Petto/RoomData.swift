@@ -12,16 +12,22 @@ import FirebaseDatabase
 class RoomData: NSObject {
     
     var id: String?
-
+    
     var userId: String?
     var userName: String?
     var userImage: UIImage?
     var userImageString: String?
+    var userArea: String?
+    var userAge: String?
+    var userGoodInt: Int?
+    var userBadInt: Int?
+    
     var petId: String?
     var petName: String?
     var petImage: UIImage?
     var petImageString: String?
     var breederId: String?
+    
     var lastMessage:String?
     var userOpenedFlg :Bool?
     var petOpenedFlg :Bool?
@@ -38,6 +44,12 @@ class RoomData: NSObject {
         self.userName = valueDictionary["userName"] as? String
         userImageString = valueDictionary["userImageString"] as? String
         self.userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
+        self.userArea = valueDictionary["userArea"] as? String
+        self.userAge = valueDictionary["userAge"] as? String
+        self.userGoodInt = valueDictionary["userGoodInt"] as? Int
+        self.userBadInt = valueDictionary["userBadInt"] as? Int
+        
+        
         self.petId = valueDictionary["petId"] as? String
         self.petName = valueDictionary["petName"] as? String
         petImageString = valueDictionary["petImageString"] as? String

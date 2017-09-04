@@ -97,11 +97,13 @@ class ConsentViewController: BaseFormViewController {
         var start = String(describing: self.inputData["startDate"]!)
         var end = String(describing: self.inputData["endDate"]!)
         start = start.substring(to: start.index(start.startIndex, offsetBy: 10))
+        start = start.replacingOccurrences(of: "-", with: "/")
         end = end.substring(to: end.index(end.startIndex, offsetBy: 10))
+        end = end.replacingOccurrences(of: "-", with: "/")
 
         self.inputData["suggestFlag"] = false
         let showMessage = "\(self.roomData?.petName! ?? "ペット")の飼い主さんにおあずけ期間の否認を通知しました"
-        let sendText = "[自動送信メッセージ]\n以下のおあずかり日程は、\(self.roomData?.userName ?? "あずかり人")さんに否認されました。\n\(start)~\(end))"
+        let sendText = "[自動送信メッセージ]\n以下のおあずかり日程は、\(self.roomData?.userName ?? "あずかり人")さんに否認されました。\n\(start)~\(end)"
         self.updateFIR(showMessage: showMessage, sendText: sendText)
         
         print("DEBUG_PRINT: ConsentViewController.deny start")
@@ -118,13 +120,15 @@ class ConsentViewController: BaseFormViewController {
             }
         }
         var start = String(describing: self.inputData["startDate"]!)
-        var end = String(describing: self.inputData["startDate"]!)
+        var end = String(describing: self.inputData["endDate"]!)
         start = start.substring(to: start.index(start.startIndex, offsetBy: 10))
+        start = start.replacingOccurrences(of: "-", with: "/")
         end = end.substring(to: end.index(end.startIndex, offsetBy: 10))
+        end = end.replacingOccurrences(of: "-", with: "/")
         
         self.inputData["acceptFlag"] = true
         let showMessage = "\(self.roomData?.petName! ?? "ペット")の飼い主さんにおあずけ期間の承諾を通知しました"
-        let sendText = "[自動送信メッセージ]\n以下のおあずかり日程で、\(self.roomData?.userName ?? "あずかり人")さんが承諾しました。\nペットの受け渡し時間・場所、当日の持ち物などを確認して下さい。\n\(start)~\(end))"
+        let sendText = "[自動送信メッセージ]\n以下のおあずかり日程で、\(self.roomData?.userName ?? "あずかり人")さんが承諾しました。\nペットの受け渡し時間・場所、当日の持ち物などを確認して下さい。\n\(start)~\(end)"
         self.updateFIR(showMessage: showMessage, sendText: sendText)
 
         print("DEBUG_PRINT: ConsentViewController.accept end")
