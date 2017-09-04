@@ -311,8 +311,10 @@ class PetDetailViewController: BaseFormViewController {
     @IBAction func toMessages() {
         print("DEBUG_PRINT: PetDetailViewController.toMessages start")
         
-        let messagesContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessagesContainer") as! UserMessagesContainerViewController
-        
+        let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+        let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
+        let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
+
         // roomIdを取得
         let uid = userDefaults?.string(forKey: DefaultString.Uid)!
         let pid = (self.petData?.id)!
@@ -329,9 +331,11 @@ class PetDetailViewController: BaseFormViewController {
                 print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
                     print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを取得")
+
                     // roomDataをセットして画面遷移
-                    messagesContainerViewController.roomData = RoomData(snapshot: snapshot, myId: roomId)
-                    self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+                    userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot, myId: roomId)
+                    self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
+                    
                 }else{
                     print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを新規作成")
                     var inputData = [String : Any]()
@@ -363,8 +367,9 @@ class PetDetailViewController: BaseFormViewController {
                         print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。（２）")
                         if let _ = snapshot2.value as? NSDictionary {
                             // roomDataをセットして画面遷移
-                            messagesContainerViewController.roomData = RoomData(snapshot: snapshot2, myId: roomId)
-                            self.navigationController?.pushViewController(messagesContainerViewController, animated: true)
+                            userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot2, myId: roomId)
+                            self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
+                            
                         }
                     })
                 }
