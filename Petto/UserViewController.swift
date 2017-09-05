@@ -20,7 +20,16 @@ class UserViewController: BaseFormViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: UserViewController.viewDidLoad start")
-        
+        if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) != nil {
+            self.showForm()
+        }else{
+            SVProgressHUD.showError(withStatus: "エラーが発生しました。ログインし直して下さい")
+        }
+        print("DEBUG_PRINT: UserViewController.viewDidLoad end")
+    }
+
+    func showForm(){
+        print("DEBUG_PRINT: UserViewController.showForm start")
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
             cell.contentView.backgroundColor = .red
@@ -44,7 +53,7 @@ class UserViewController: BaseFormViewController  {
         // フォーム
         form +++
             Section() {
-                if let _ = UserDefaults.standard.string(forKey: DefaultString.ImageString) {
+                if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
                     $0.header = HeaderFooterView<UserEditView>(.class)
                 }else {
                     $0.header = HeaderFooterView<UserEntryView>(.class)
@@ -53,9 +62,13 @@ class UserViewController: BaseFormViewController  {
             //TODO: コミットメント＆小さなバッチ（メダル）
             <<< ImageRow("image"){
                 $0.title = "写真"
-                let imageString = UserDefaults.standard.string(forKey: DefaultString.ImageString)!
-                let image = UIImage(data: NSData(base64Encoded: imageString, options: .ignoreUnknownCharacters)! as Data)!
-                $0.baseValue = image 
+                if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+                    let imageString = UserDefaults.standard.string(forKey: DefaultString.ImageString)!
+                    let image = UIImage(data: NSData(base64Encoded: imageString, options: .ignoreUnknownCharacters)! as Data)!
+                    $0.baseValue = image
+                }else {
+                    $0.baseValue = nil
+                }
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -311,7 +324,7 @@ class UserViewController: BaseFormViewController  {
                     }
         }
         
-        print("DEBUG_PRINT: UserViewController.viewDidLoad end")
+        print("DEBUG_PRINT: UserViewController.showForm end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
@@ -437,20 +450,21 @@ class UserViewController: BaseFormViewController  {
             SVProgressHUD.showSuccess(withStatus: "プロフィールを作成しました")
         }
         
-         // UserDefaultsを更新（ユーザー項目）
-         UserDefaults.standard.set(self.inputData["imageString"] , forKey: DefaultString.ImageString)
-         UserDefaults.standard.set(self.inputData["lastname"] , forKey: DefaultString.Lastname)
-         UserDefaults.standard.set(self.inputData["firstname"] , forKey: DefaultString.Firstname)
-         UserDefaults.standard.set(self.inputData["area"] , forKey: DefaultString.Area)
-         UserDefaults.standard.set(self.inputData["birthday"] , forKey: DefaultString.Birthday)
-         UserDefaults.standard.set(self.inputData["age"] , forKey: DefaultString.Age)
-         UserDefaults.standard.set(self.inputData["hasAnotherPet"] , forKey: DefaultString.HasAnotherPet)
-         UserDefaults.standard.set(self.inputData["isExperienced"] , forKey: DefaultString.IsExperienced)
-         UserDefaults.standard.set(self.inputData["ngs"] , forKey: DefaultString.Ngs)
-         UserDefaults.standard.set(self.inputData["expectTo"] , forKey: DefaultString.ExpectTo)
-         UserDefaults.standard.set(self.inputData["userEnvironments"] , forKey: DefaultString.UserEnvironments)
-         UserDefaults.standard.set(self.inputData["userTools"] , forKey: DefaultString.UserTools)
-         UserDefaults.standard.set(self.inputData["userNgs"] , forKey: DefaultString.UserNgs)
+        // UserDefaultsを更新（ユーザー項目）
+        UserDefaults.standard.set(false, forKey: DefaultString.GuestFlag)
+        UserDefaults.standard.set(self.inputData["imageString"] , forKey: DefaultString.ImageString)
+        UserDefaults.standard.set(self.inputData["lastname"] , forKey: DefaultString.Lastname)
+        UserDefaults.standard.set(self.inputData["firstname"] , forKey: DefaultString.Firstname)
+        UserDefaults.standard.set(self.inputData["area"] , forKey: DefaultString.Area)
+        UserDefaults.standard.set(self.inputData["birthday"] , forKey: DefaultString.Birthday)
+        UserDefaults.standard.set(self.inputData["age"] , forKey: DefaultString.Age)
+        UserDefaults.standard.set(self.inputData["hasAnotherPet"] , forKey: DefaultString.HasAnotherPet)
+        UserDefaults.standard.set(self.inputData["isExperienced"] , forKey: DefaultString.IsExperienced)
+        UserDefaults.standard.set(self.inputData["ngs"] , forKey: DefaultString.Ngs)
+        UserDefaults.standard.set(self.inputData["expectTo"] , forKey: DefaultString.ExpectTo)
+        UserDefaults.standard.set(self.inputData["userEnvironments"] , forKey: DefaultString.UserEnvironments)
+        UserDefaults.standard.set(self.inputData["userTools"] , forKey: DefaultString.UserTools)
+        UserDefaults.standard.set(self.inputData["userNgs"] , forKey: DefaultString.UserNgs)
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         

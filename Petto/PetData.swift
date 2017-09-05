@@ -41,7 +41,6 @@ class PetData: NSObject {
 
     // メッセージ情報
     var roomIds = [String:Bool]()
-    var unReadRoomIds = [String:Bool]()
     
     // システム項目
     var createAt: NSDate?
@@ -96,9 +95,6 @@ class PetData: NSObject {
         // メッセージ情報
         if let roomIds = valueDictionary["roomIds"] as? [String:Bool] {
             self.roomIds = roomIds
-        }
-        if let unReadRoomIds = valueDictionary["unReadRoomIds"] as? [String:Bool] {
-            self.unReadRoomIds = unReadRoomIds
         }
         // システム項目
         let createAt = valueDictionary["createAt"] as? String

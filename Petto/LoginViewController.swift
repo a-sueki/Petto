@@ -88,7 +88,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     // HUDを消す
                     SVProgressHUD.dismiss()
                     
-                    //TODO: UserDefaultsが消えてる場合、ユーザーデータを取得してセット
                     // Firebaseから登録済みデータを取得
                     if let uid = user?.uid {
                         let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
@@ -134,7 +133,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 if !userData.unReadRoomIds.isEmpty {
                                 UserDefaults.standard.set(userData.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
                                 }
-                                if !userData.goods.isEmpty {
+                                if !userData.todoRoomIds.isEmpty {
+                                    UserDefaults.standard.set(userData.todoRoomIds , forKey: DefaultString.TodoRoomIds)
+                                }
+                               if !userData.goods.isEmpty {
                                 UserDefaults.standard.set(userData.goods , forKey: DefaultString.Goods)
                                 }
                                 if !userData.bads.isEmpty {
@@ -144,6 +146,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
                             }
                         })
+                    }else{
+                        UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
                     }
                     
                     // ユーザーデフォルト設定（アカウント項目）

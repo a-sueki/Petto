@@ -42,7 +42,7 @@ class BookingViewController: BaseFormViewController {
                 }
             }
         }
-                
+        
         print("DEBUG_PRINT: BookingViewController.viewDidLoad end")
     }
     
@@ -172,82 +172,62 @@ class BookingViewController: BaseFormViewController {
                 self.inputData["\(key)"] = DateCommon.dateToString(itemValue, dateFormat: DateCommon.dateFormat)
             }
         }
+        // message作成
+        let start = displayDate(stringDate: String(describing: self.inputData["startDate"]!))
+        let end = displayDate(stringDate: String(describing: self.inputData["endDate"]!))
+        let showMessage = "\(self.roomData?.userName! ?? "あずかり人")さんに、おあずけ期間を提案しました"
+        let sendText = "[自動送信メッセージ]\n以下の日程で、\(self.roomData?.petName ?? "ペット")の飼い主さんがおあずけ期間を提案しました。\n\(self.roomData?.userName ?? "あずかり人")さんは\"承認\"もしくは\"否認\"をタップして下さい。\n\(start)~\(end)"
+        let time = NSDate.timeIntervalSinceReferenceDate
+        var inputData2 = [String : Any]()  //message
+        inputData2["senderId"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
+        inputData2["senderDisplayName"] =  UserDefaults.standard.string(forKey: DefaultString.DisplayName)
+        inputData2["text"] = sendText
+        inputData2["timestamp"] = String(time)
+        // massage送信＆更新
+        let messagesViewController: MessagesViewController
+        messagesViewController = MessagesViewController()
+        messagesViewController.roomData = self.roomData
+        messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText)
         
+        // leaveDataをinsert
+        self.inputData["userId"] = self.roomData?.userId
+        self.inputData["userName"] = self.roomData?.userName
+        self.inputData["userImageString"] = self.roomData?.userImageString
+        self.inputData["petId"] = self.roomData?.petId
+        self.inputData["petName"] = self.roomData?.petName
+        self.inputData["petImageString"] = self.roomData?.petImageString
+        self.inputData["breederId"] = self.roomData?.breederId
         self.inputData["suggestFlag"] = true
         self.inputData["acceptFlag"] = false
         self.inputData["completeFlag"] = false
         self.inputData["abortFlag"] = false
-        
-        // inputDataに必要な情報を取得しておく
-        let time = NSDate.timeIntervalSinceReferenceDate
-        let uid = FIRAuth.auth()?.currentUser?.uid
-        // 辞書を作成
-        let ref = FIRDatabase.database().reference()
-        
-        //Firebaseに保存
-        if let data = self.leaveData {
-            self.inputData["updateAt"] = String(time)
-            self.inputData["updateBy"] = uid!
-            // update
-            ref.child(Paths.LeavePath).child(data.id!).updateChildValues(inputData)
-        }else{
-            self.inputData["userId"] = self.roomData?.userId
-            self.inputData["userName"] = self.roomData?.userName
-            self.inputData["userImageString"] = self.roomData?.userImageString
-            self.inputData["petId"] = self.roomData?.petId
-            self.inputData["petName"] = self.roomData?.petName
-            self.inputData["petImageString"] = self.roomData?.petImageString
-            self.inputData["breederId"] = self.roomData?.breederId
-            
-            self.inputData["updateAt"] = String(time)
-            self.inputData["updateBy"] = uid!
-            self.inputData["createAt"] = String(time)
-            self.inputData["createBy"] = uid!
-            // insert
-            ref.child(Paths.LeavePath).child((self.roomData?.id)!).setValue(inputData)
-        }
-        var start = String(describing: self.inputData["startDate"]!)
-        var end = String(describing: self.inputData["endDate"]!)
-        start = start.substring(to: start.index(start.startIndex, offsetBy: 10))
-        start = start.replacingOccurrences(of: "-", with: "/")
-        end = end.substring(to: end.index(end.startIndex, offsetBy: 10))
-        end = end.replacingOccurrences(of: "-", with: "/")
-
-        // Messageを更新
-        let text = "[自動送信メッセージ]\n以下の日程で、\(self.roomData?.petName ?? "ペット")の飼い主さんがおあずけ期間を提案しました。\n\(self.roomData?.userName ?? "あずかり人")さんは\"承認\"もしくは\"否認\"をタップして下さい。\n\(start)~\(end)"
-        // Firebase連携用
-        var inputDataMessage = [String : Any]()  //message
-        inputDataMessage["senderId"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
-        inputDataMessage["senderDisplayName"] =  UserDefaults.standard.string(forKey: DefaultString.DisplayName)
-        inputDataMessage["text"] = text
-        inputDataMessage["timestamp"] = String(time)
-        
+        self.inputData["updateAt"] = String(time)
+        self.inputData["updateBy"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
+        self.inputData["createAt"] = String(time)
+        self.inputData["createBy"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
         // insert
-        let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
-        ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputDataMessage)
-        // update
-        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : text])
-        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : String(time)])
-        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
-        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
-        
-        // 既読フラグupdate        
-        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["userOpenedFlg" : false])
-        // あずかり人（相手）の未読リストにroomIdを追加
-        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
+        let ref = FIRDatabase.database().reference()
+        ref.child(Paths.LeavePath).child((self.roomData?.id)!).setValue(inputData)
         
         // HUDで投稿完了を表示する
-        SVProgressHUD.showSuccess(withStatus: "\(self.roomData?.petName! ?? "ペット")の飼い主さんにおあずけ期間を提案しました")
-        
+        SVProgressHUD.showSuccess(withStatus: showMessage)
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-        
         // 前の画面に戻る
         navigationController?.popViewController(animated: true)
-    
+        
         print("DEBUG_PRINT: BookingViewController.suggest end")
     }
     
+    func displayDate(stringDate: String) -> String {
+        print("DEBUG_PRINT: BookingViewController.displayDate end")
+        
+        var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 10))
+        result = stringDate.replacingOccurrences(of: "-", with: "/")
+        
+        print("DEBUG_PRINT: BookingViewController.displayDate end")
+        return result
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

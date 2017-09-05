@@ -36,6 +36,7 @@ class UserData: NSObject {
     var myPets = [String:Bool]()
     var roomIds = [String:Bool]()
     var unReadRoomIds = [String:Bool]()
+    var todoRoomIds = [String:Bool]()
     var goods: [String] = []
     var isGooded: Bool = false
     var bads: [String] = []
@@ -87,6 +88,9 @@ class UserData: NSObject {
         }
         if let unReadRoomIds = valueDictionary["unReadRoomIds"] as? [String:Bool] {
             self.unReadRoomIds = unReadRoomIds
+        }
+        if let todoRoomIds = valueDictionary["todoRoomIds"] as? [String:Bool] {
+            self.todoRoomIds = todoRoomIds
         }
         if let goods = valueDictionary["goods"] as? [String] {
             self.goods = goods

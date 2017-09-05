@@ -46,6 +46,7 @@ struct DefaultString {
     static let MyPets = "myPets"
     static let RoomIds = "roomIds"
     static let UnReadRoomIds = "unReadRoomIds"
+    static let TodoRoomIds = "todoRoomIds"
     static let Goods = "goods"
     static let Bads = "bads"
 }

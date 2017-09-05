@@ -319,7 +319,7 @@ class EditViewController: BaseFormViewController {
                 $0.value = self.petData?.walk ?? nil
             }
             +++
-            Section("おあずけ可能期間"){
+            Section("おあずけ人募集期間"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false

@@ -349,8 +349,8 @@ class PetDetailViewController: BaseFormViewController {
                     inputData["petId"] = pid
                     inputData["petName"] = self.petData?.name
                     inputData["petImageString"] = self.petData?.imageString
-                    inputData["userOpenedFlg"] = true
-                    inputData["petOpenedFlg"] = false
+//                    inputData["userOpenedFlg"] = true
+//                    inputData["petOpenedFlg"] = false
                     inputData["breederId"] = self.petData?.createBy
                     inputData["createAt"] = String(time)
                     inputData["updateAt"] = String(time)

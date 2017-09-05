@@ -67,7 +67,16 @@ class UserMessagesContainerViewController: UIViewController {
     func setView(){
         print("DEBUG_PRINT: UserMessagesContainerViewController.setView start")
         
-        if self.leaveData != nil {
+        if self.leaveData == nil {
+            // ViewController①をContainerViewControllerの子として追加
+            topViewController.roomData = self.roomData
+            addChildViewController(topViewController)
+            
+            // ViewController①の表示
+            view.addSubview(topViewController.view)
+            topViewController.didMove(toParentViewController: self)
+            topViewController.view.frame = CGRect(x: 0, y: 60, width: view.frame.width, height: view.frame.height - 60)
+        }else{
             // ViewController①をContainerViewControllerの子として追加
             topViewController.roomData = self.roomData
             addChildViewController(topViewController)
@@ -86,15 +95,6 @@ class UserMessagesContainerViewController: UIViewController {
             view.addSubview(underViewController.view)
             underViewController.didMove(toParentViewController: self)
             underViewController.view.frame = CGRect(x: 0, y: view.frame.height - 210, width: view.frame.width, height: 210)
-        }else{
-            // ViewController①をContainerViewControllerの子として追加
-            topViewController.roomData = self.roomData
-            addChildViewController(topViewController)
-            
-            // ViewController①の表示
-            view.addSubview(topViewController.view)
-            topViewController.didMove(toParentViewController: self)
-            topViewController.view.frame = CGRect(x: 0, y: 60, width: view.frame.width, height: view.frame.height - 60)
         }
         
         print("DEBUG_PRINT: UserMessagesContainerViewController.setView end")

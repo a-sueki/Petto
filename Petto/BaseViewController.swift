@@ -53,6 +53,8 @@ class NavigationBarHandler: NSObject {
         
         // ユーザーデフォルト設定
         if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+            // 未読なしの場合のユーザーデフォルトの設定
+            UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.UnReadRoomIds)
             // UnReadRoomIds取得
             var unReadRoomIds = [String:Bool]()
             ref.child(user.uid).child("unReadRoomIds").observe(.childAdded, with: { (snapshot) in
@@ -75,6 +77,33 @@ class NavigationBarHandler: NSObject {
             }) { (error) in
                 print(error.localizedDescription)
             }
+            
+            // 未実施なしの場合のユーザーデフォルトの設定
+            UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.TodoRoomIds)
+            // todoRoomIds取得
+            var todoRoomIds = [String:Bool]()
+            ref.child(user.uid).child("todoRoomIds").observe(.childAdded, with: { (snapshot) in
+                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar todoRoomIds.childAddedイベントが発生しました。")
+                if case _ as Bool = snapshot.value {
+                    todoRoomIds[snapshot.key] = true
+                    // ユーザーデフォルト設定
+                    UserDefaults.standard.set(todoRoomIds , forKey: DefaultString.TodoRoomIds)
+                    // 通知バッチの更新
+                    if unReadRoomIds.count != 0 {
+                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未実施あり\(todoRoomIds.count)")
+                        // 通知バッチをセット
+                        self.hub.setView(button3, andCount: Int32(todoRoomIds.count))
+                        // 設置するhubの背景色をredに文字色を白にする
+                        self.hub.setCircleColor(UIColor.red, label: UIColor.white)
+                        // バッチのサイズを変更
+                        self.hub.scaleCircleSize(by: 0.8)
+                    }
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+
+            
             // myPets取得
             var myPets = [String:Bool]()
             ref.child(user.uid).child("myPets").observe(.childAdded, with: { (snapshot) in
@@ -157,8 +186,8 @@ class NavigationBarHandler: NSObject {
         // アニメーション削除
         self.viewController?.navigationController?.view.layer.removeAllAnimations()
         
-        let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "Leave") as! LeaveViewController
-        self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
+//        let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "TodoList") as! TodoListViewController
+//        self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
     }
     func onClick4() {
         // ユーザープロフィールが未作成の場合
@@ -193,7 +222,7 @@ class BaseFormViewController: FormViewController {
         print("DEBUG_PRINT: BaseFormViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
-        if UserDefaults.standard.object(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
+        if UserDefaults.standard.string(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
             // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
@@ -222,7 +251,7 @@ class BaseViewController: UIViewController {
         print("DEBUG_PRINT: BaseViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
-        if UserDefaults.standard.object(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
+        if UserDefaults.standard.string(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
             // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
