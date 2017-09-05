@@ -160,7 +160,7 @@ class ConsentViewController: BaseFormViewController {
         print("DEBUG_PRINT: ConsentViewController.displayDate end")
         
         var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 10))
-        result = stringDate.replacingOccurrences(of: "-", with: "/")
+        result = result.replacingOccurrences(of: "-", with: "/")
         
         print("DEBUG_PRINT: ConsentViewController.displayDate end")
         return result

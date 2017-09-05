@@ -220,11 +220,11 @@ class BookingViewController: BaseFormViewController {
     }
     
     func displayDate(stringDate: String) -> String {
-        print("DEBUG_PRINT: BookingViewController.displayDate end")
+        print("DEBUG_PRINT: BookingViewController.displayDate start")
         
         var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 10))
-        result = stringDate.replacingOccurrences(of: "-", with: "/")
-        
+        result = result.replacingOccurrences(of: "-", with: "/")
+
         print("DEBUG_PRINT: BookingViewController.displayDate end")
         return result
     }
