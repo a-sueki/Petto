@@ -44,7 +44,7 @@ class BreederMessagesContainerViewController: UIViewController {
         // ViewController①の表示
         view.addSubview(topViewController.view)
         topViewController.didMove(toParentViewController: self)
-        topViewController.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height/2)
+        topViewController.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height/4 * 3)
  
         // ViewController②をContainerViewControllerの子として追加
         underViewController.roomData = self.roomData
@@ -53,7 +53,7 @@ class BreederMessagesContainerViewController: UIViewController {
         // ViewController②の表示
         view.addSubview(underViewController.view)
         underViewController.didMove(toParentViewController: self)
-        underViewController.view.frame = CGRect(x: 0, y: view.frame.height/2, width: view.frame.width, height: view.frame.height/2)
+        underViewController.view.frame = CGRect(x: 0, y: view.frame.height/4 * 3, width: view.frame.width, height: view.frame.height/4)
         
         print("DEBUG_PRINT: BreederMessagesContainerViewController.viewDidLoad end")
     }
