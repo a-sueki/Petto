@@ -77,7 +77,7 @@ class BookingViewController: BaseFormViewController {
                         self?.suggest()
                     }
             }
-            <<< DateRow("startDate") {
+            <<< DateTimeInlineRow("startDate") {
                 $0.title = "開始日付"
                 if let _ = self.leaveData, self.leaveData?.suggestFlag == true {
                     $0.value = DateCommon.stringToDate((self.leaveData?.startDate)!, dateFormat: DateCommon.dateFormat)
@@ -85,7 +85,7 @@ class BookingViewController: BaseFormViewController {
                 }else{
                     $0.value = Date()
                 }
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+//                $0.cell.Date.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
                 let formatter = DateFormatter()
                 formatter.locale = .current
                 formatter.dateStyle = .long
@@ -100,6 +100,16 @@ class BookingViewController: BaseFormViewController {
                         endRow.cell!.backgroundColor = .white
                         endRow.updateCell()
                     }
+                }
+                .onExpandInlineRow { cell, row, inlineRow in
+                    inlineRow.cellUpdate() { cell, row in
+                            cell.datePicker.datePickerMode = .dateAndTime
+                    }
+                    let color = cell.detailTextLabel?.textColor
+                    row.onCollapseInlineRow { cell, _, _ in
+                        cell.detailTextLabel?.textColor = color
+                    }
+                    cell.detailTextLabel?.textColor = cell.tintColor
                 }
                 .onRowValidationChanged { cell, row in
                     let rowIndex = row.indexPath!.row
@@ -117,7 +127,7 @@ class BookingViewController: BaseFormViewController {
                     }
             }
             
-            <<< DateRow("endDate") {
+            <<< DateTimeInlineRow("endDate") {
                 $0.title = "終了日付"
                 if let _ = self.leaveData, self.leaveData?.suggestFlag == true {
                     $0.value = DateCommon.stringToDate((self.leaveData?.endDate)!, dateFormat: DateCommon.dateFormat)
@@ -125,7 +135,7 @@ class BookingViewController: BaseFormViewController {
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+//                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
                 let formatter = DateFormatter()
                 formatter.locale = .current
                 formatter.dateStyle = .long
@@ -143,7 +153,18 @@ class BookingViewController: BaseFormViewController {
                 })
                 $0.add(ruleSet: ruleSet)
                 $0.validationOptions = .validatesOnChange
-                }.onRowValidationChanged { cell, row in
+                }
+                .onExpandInlineRow { cell, row, inlineRow in
+                    inlineRow.cellUpdate() { cell, row in
+                        cell.datePicker.datePickerMode = .dateAndTime
+                    }
+                    let color = cell.detailTextLabel?.textColor
+                    row.onCollapseInlineRow { cell, _, _ in
+                        cell.detailTextLabel?.textColor = color
+                    }
+                    cell.detailTextLabel?.textColor = cell.tintColor
+                }
+                .onRowValidationChanged { cell, row in
                     let rowIndex = row.indexPath!.row
                     while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
                         row.section?.remove(at: rowIndex + 1)

@@ -27,18 +27,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: LeftViewController.viewDidLoad start")
-        
-/*        print(UserDefaults.standard.bool(forKey: DefaultString.GuestFlag))
-        print(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
-        print(UserDefaults.standard.string(forKey: DefaultString.Lastname)!)
-        print(UserDefaults.standard.string(forKey: DefaultString.Firstname)!)
-        print(UserDefaults.standard.string(forKey: DefaultString.Area)!)
-        print(UserDefaults.standard.string(forKey: DefaultString.Age)!)
-        print(UserDefaults.standard.bool(forKey: DefaultString.ExpectTo))
-        print(UserDefaults.standard.string(forKey: DefaultString.CreateAt)!)
-        print(UserDefaults.standard.string(forKey: DefaultString.UpdateAt)!)
-        print(UserDefaults.standard.dictionary(forKey: DefaultString.Ngs) ?? "nilだお")
-*/        
+
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 0.5)

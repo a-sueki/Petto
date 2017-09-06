@@ -18,23 +18,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
     var myNavigationController: UINavigationController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        print("DEBUG_PRINT: AppDelegate.application start ")
+        print("DEBUG_PRINT: AppDelegate.didFinishLaunchingWithOptions start ")
 
         // FireBase setup
         FIRApp.configure()
         
         // Register APNs
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self
             
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current()
-                .requestAuthorization(options: authOptions,
-                                      completionHandler: {_, _ in })
-        }
-        else {
-            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound],
-                                                      categories: nil)
+            UNUserNotificationCenter.current().requestAuthorization(options: authOptions,completionHandler: { (granted, error) in
+                if error != nil {
+                    return
+                }
+                if granted {
+                    print("通知許可")
+                    UNUserNotificationCenter.current().delegate = self
+                } else {
+                    print("通知拒否")
+                }
+            })
+        } else {
+            // iOS 9以下
+            let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
         application.registerForRemoteNotifications()
@@ -47,7 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
             print("DEBUG_PRINT: AppDelegate.application .addStateDidChangeListenerイベントが発生しました")
             if let user = user {
                 print("DEBUG_PRINT: AppDelegate.application ユーザ「\(user.uid)」がログイン中")
-                UserDefaults.standard.set(user.uid, forKey: DefaultString.Uid)
+                // ユーザーデフォルト設定（アカウント項目）
+                UserDefaults.standard.set(user.uid , forKey: DefaultString.Uid)
                 UserDefaults.standard.set(user.email, forKey: DefaultString.Mail)
                 UserDefaults.standard.set(user.displayName, forKey: DefaultString.DisplayName)
             } else {
@@ -74,111 +81,81 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
                           animations: {},
                           completion: {(b) in })
 
-        
-        
-        // ユーザに通知の許可を求める
-//        let center = UNUserNotificationCenter.current()
-//        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            // Enable or disable features based on authorization
-//        }
-//        center.delegate = self;     // 追加
-        
-        
-        print("DEBUG_PRINT: AppDelegate.application end ")
+        print("DEBUG_PRINT: AppDelegate.didFinishLaunchingWithOptions end")
         return true
     }
     
-    // アプリがフォアグラウンドの時に通知を受け取ると呼ばれるメソッド
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//        completionHandler([.sound, .alert])
-//    }
-    
-/*    func applicationDidEnterBackground(_ application: UIApplication) {
-        FIRMessaging.messaging().disconnect()
-    }
-    
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        connectToFcm()
-    }
-    
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Unable to register for remote notifications: \(error.localizedDescription)")
-    }
-    
-    
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let deviceTokenStr: String = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-        print("APNsトークン: \(deviceTokenStr)")
+    // アプリ閉じそうな時に呼ばれる
+    func applicationWillResignActive(_ application: UIApplication) {
+        print("DEBUG_PRINT: AppDelegate.applicationWillResignActive start")
         
-        // APNsトークンを、FCM登録トークンにマッピング
-        FIRInstanceID.instanceID().setAPNSToken(deviceToken, type: .prod)
         
-        if let fcmToken = FIRInstanceID.instanceID().token() {
-            print("FCMトークン: \(fcmToken)")
-        }
-    }
-    
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        if #available(iOS 10.0, *) {
-        } else {
-            FIRMessaging.messaging().appDidReceiveMessage(userInfo)
-        }
-    }
- */
-}
-/*
-// MARK: - UNUserNotificationCenterDelegate
-@available(iOS 10.0, *)
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    // Called when a notification is delivered to a foreground app.
-        completionHandler([.badge, .sound, .alert])
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        // Called to let your app know which action was selected by the user for a given notification.
-        let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
-        FIRMessaging.messaging().appDidReceiveMessage(userInfo)
-        completionHandler()
-    }
-}
-// MARK: - Firebase setting
-extension AppDelegate {
-    func configureFirebase() {
-        #if STAGING_ENV
-            let firebasePlistFileName = "Staging-GoogleService-Info"
-        #else
-            let firebasePlistFileName = "GoogleService-Info"
-        #endif
-        if let path = Bundle.main.path(forResource: firebasePlistFileName, ofType: "plist") {
-            let firebaseOptions: FIROptions = FIROptions(contentsOfFile: path)
-            FIRApp.configure(with: firebaseOptions)
-        }
-    }
-    
-    func addRefreshFcmTokenNotificationObserver() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.fcmTokenRefreshNotification(_:)),
-            name: .firInstanceIDTokenRefresh,
-            object: nil)
-    }
-    
-    func fcmTokenRefreshNotification(_ notification: Notification) {
-        if let refreshedFcmToken = FIRInstanceID.instanceID().token() {
-//            print("FCMトークン: \(fcmToken)")
-        }
-        connectToFcm()
-    }
-    
-    func connectToFcm() {
-        FIRMessaging.messaging().connect { (error: Error?) in
-            if let error = error {
-                print(error)
-                return
-            }
-        }
-    }
-}
- */
+        
+        //　通知設定に必要なクラスをインスタンス化
+        let trigger: UNNotificationTrigger
+        let content = UNMutableNotificationContent()
+        var notificationTime = DateComponents()
+        
+        // トリガー設定
+        notificationTime.hour = 12
+        notificationTime.minute = 52
+        trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: false)
+        
+        // 通知内容の設定
+        content.title = ""
+        content.body = "食事の時間になりました！"
+        content.sound = UNNotificationSound.default()
+        
+        // 通知スタイルを指定
+        let request = UNNotificationRequest(identifier: "uuid", content: content, trigger: trigger)
+        // 通知をセット
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
 
+        
+        print("DEBUG_PRINT: AppDelegate.applicationWillResignActive end")
+    }
+    // アプリを閉じた時に呼ばれる
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print("DEBUG_PRINT: AppDelegate.applicationDidEnterBackground start")
+
+        
+        
+        
+        //　通知設定に必要なクラスをインスタンス化
+        let trigger: UNNotificationTrigger
+        let content = UNMutableNotificationContent()
+        var notificationTime = DateComponents()
+        
+        // トリガー設定
+        notificationTime.hour = 12
+        notificationTime.minute = 51
+        trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: false)
+        
+        // 通知内容の設定
+        content.title = ""
+        content.body = "食事の時間になりました！"
+        content.sound = UNNotificationSound.default()
+        
+        // 通知スタイルを指定
+        let request = UNNotificationRequest(identifier: "uuid", content: content, trigger: trigger)
+        // 通知をセット
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+
+        print("DEBUG_PRINT: AppDelegate.applicationDidEnterBackground end")
+    }
+    // アプリを開きそうな時に呼ばれる
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        print("DEBUG_PRINT: AppDelegate.applicationWillEnterForeground start")
+        print("DEBUG_PRINT: AppDelegate.applicationWillEnterForeground end")
+    }
+    // アプリを開いた時に呼ばれる
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        print("DEBUG_PRINT: AppDelegate.applicationDidBecomeActive start")
+        print("DEBUG_PRINT: AppDelegate.applicationDidBecomeActive end")
+    }
+    // フリックしてアプリを終了させた時に呼ばれる
+    func applicationWillTerminate(_ application: UIApplication) {
+        print("DEBUG_PRINT: AppDelegate.applicationWillTerminate start")
+        print("DEBUG_PRINT: AppDelegate.applicationWillTerminate end")
+    }
+}

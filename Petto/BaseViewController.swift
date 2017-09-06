@@ -51,7 +51,7 @@ class NavigationBarHandler: NSObject {
         // ref作成
         let ref = FIRDatabase.database().reference().child(Paths.UserPath)
         
-        // ユーザーデフォルト設定
+        // ユーザーデフォルト設定、通知バッチ更新
         if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
             // 未読なしの場合のユーザーデフォルトの設定
             UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.UnReadRoomIds)
@@ -63,22 +63,17 @@ class NavigationBarHandler: NSObject {
                     unReadRoomIds[snapshot.key] = true
                     // ユーザーデフォルト設定
                     UserDefaults.standard.set(unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
-                    // 通知バッチの更新
                     if unReadRoomIds.count != 0 {
                         print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読あり\(unReadRoomIds.count)")
-                        // 通知バッチをセット
-                        self.hub.setView(button4, andCount: Int32(unReadRoomIds.count))
-                        // 設置するhubの背景色をredに文字色を白にする
-                        self.hub.setCircleColor(UIColor.red, label: UIColor.white)
-                        // バッチのサイズを変更
-                        self.hub.scaleCircleSize(by: 0.8)
+                        // 通知バッチの更新
+                        self.setNotificationBatch(button: button4, count: unReadRoomIds.count)
                     }
                 }
             }) { (error) in
                 print(error.localizedDescription)
             }
             
-            // 未実施なしの場合のユーザーデフォルトの設定
+            // TODOなしの場合のユーザーデフォルトの設定
             UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.TodoRoomIds)
             // todoRoomIds取得
             var todoRoomIds = [String:Bool]()
@@ -88,16 +83,13 @@ class NavigationBarHandler: NSObject {
                     todoRoomIds[snapshot.key] = true
                     // ユーザーデフォルト設定
                     UserDefaults.standard.set(todoRoomIds , forKey: DefaultString.TodoRoomIds)
-                    // 通知バッチの更新
-                    if unReadRoomIds.count != 0 {
-                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未実施あり\(todoRoomIds.count)")
-                        // 通知バッチをセット
-                        self.hub.setView(button3, andCount: Int32(todoRoomIds.count))
-                        // 設置するhubの背景色をredに文字色を白にする
-                        self.hub.setCircleColor(UIColor.red, label: UIColor.white)
-                        // バッチのサイズを変更
-                        self.hub.scaleCircleSize(by: 0.8)
-                    }
+                    if todoRoomIds.count != 0 {
+                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar TODOあり\(todoRoomIds.count)")
+                        // 通知バッチの更新
+                        self.setNotificationBatch(button: button3, count: todoRoomIds.count)
+                        //TODO: ローカル通知登録
+                        
+                    }                    
                 }
             }) { (error) in
                 print(error.localizedDescription)
@@ -172,6 +164,22 @@ class NavigationBarHandler: NSObject {
         
     }
     
+    func setNotificationBatch(button: UIButton, count: Int) {
+        print("DEBUG_PRINT: NavigationBarHandler.setNotificationBatch start")
+        
+        // 通知バッチの更新
+        if count != 0 {
+            // 通知バッチをセット
+            self.hub.setView(button, andCount: Int32(count))
+            // 設置するhubの背景色をredに文字色を白にする
+            self.hub.setCircleColor(UIColor.red, label: UIColor.white)
+            // バッチのサイズを変更
+            self.hub.scaleCircleSize(by: 0.8)
+        }
+        
+        print("DEBUG_PRINT: NavigationBarHandler.setNotificationBatch end")
+    }
+    
     func onClick1() {
         self.viewController?.slideMenuController()?.openLeft()
     }
@@ -222,7 +230,7 @@ class BaseFormViewController: FormViewController {
         print("DEBUG_PRINT: BaseFormViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
-        if UserDefaults.standard.string(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
+        if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || FIRAuth.auth()?.currentUser == nil{
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
             // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
@@ -251,7 +259,7 @@ class BaseViewController: UIViewController {
         print("DEBUG_PRINT: BaseViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
-        if UserDefaults.standard.string(forKey: DefaultString.Uid) == nil || FIRAuth.auth()?.currentUser == nil{
+        if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || FIRAuth.auth()?.currentUser == nil{
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
             // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする

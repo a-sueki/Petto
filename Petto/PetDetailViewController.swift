@@ -352,6 +352,7 @@ class PetDetailViewController: BaseFormViewController {
 //                    inputData["userOpenedFlg"] = true
 //                    inputData["petOpenedFlg"] = false
                     inputData["breederId"] = self.petData?.createBy
+                    inputData["lastMessage"] = " "
                     inputData["createAt"] = String(time)
                     inputData["updateAt"] = String(time)
                     

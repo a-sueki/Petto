@@ -140,13 +140,18 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         print("DEBUG_PRINT: MessageListViewController.cellForRowAt start")
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageListCell", for: indexPath) as! MessageListTableViewCell
+        // セル内のボタンのアクションをソースコードで設定する
+        cell.messageLabelButton.addTarget(self, action:#selector(handleMessageLabelButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+        cell.userProfileButton.addTarget(self, action:#selector(handleUserProfileButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+        cell.petProfileButton.addTarget(self, action:#selector(handlePetProfileButton(sender:event:)), for:  UIControlEvents.touchUpInside)
         
         // roomDataリスト取得（非同期）の完了前のテーブル表示エラー防止のため
         if self.roomIdList.count == self.sortedRoomDataArray.count {
             cell.setData(roomData: self.sortedRoomDataArray[indexPath.row])
             
             // 未読の場合
-            if !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
+            if UserDefaults.standard.object(forKey: DefaultString.UnReadRoomIds) != nil,
+                !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
                 
                 // セルをハイライト
                 for (rid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)! {
@@ -163,10 +168,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 cell.backgroundColor = UIColor.white
                 cell.unReadLabel.isHidden = true
             }
-            // セル内のボタンのアクションをソースコードで設定する
-            cell.messageLabelButton.addTarget(self, action:#selector(handleMessageLabelButton(sender:event:)), for:  UIControlEvents.touchUpInside)
-            cell.userProfileButton.addTarget(self, action:#selector(handleUserProfileButton(sender:event:)), for:  UIControlEvents.touchUpInside)
-            cell.petProfileButton.addTarget(self, action:#selector(handlePetProfileButton(sender:event:)), for:  UIControlEvents.touchUpInside)
         }
         
         print("DEBUG_PRINT: MessageListViewController.cellForRowAt end")

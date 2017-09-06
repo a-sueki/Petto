@@ -107,7 +107,7 @@ class MessagesViewController: JSQMessagesViewController {
         inputData["senderDisplayName"] = senderDisplayName
         inputData["text"] = text
         inputData["timestamp"] = String(time)
-        
+
         // Firebase連携
         updateMessageData(inputData: inputData, lastMessage: text)
         

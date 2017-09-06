@@ -116,31 +116,31 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                     UserDefaults.standard.set(userData.ngs , forKey: DefaultString.Ngs)
                                 }
                                 if !userData.userEnvironments.isEmpty {
-                                UserDefaults.standard.set(userData.userEnvironments , forKey: DefaultString.UserEnvironments)
+                                    UserDefaults.standard.set(userData.userEnvironments , forKey: DefaultString.UserEnvironments)
                                 }
                                 if !userData.userTools.isEmpty {
-                                UserDefaults.standard.set(userData.userTools , forKey: DefaultString.UserTools)
+                                    UserDefaults.standard.set(userData.userTools , forKey: DefaultString.UserTools)
                                 }
                                 if !userData.userNgs.isEmpty {
-                                UserDefaults.standard.set(userData.userNgs , forKey: DefaultString.UserNgs)
+                                    UserDefaults.standard.set(userData.userNgs , forKey: DefaultString.UserNgs)
                                 }
                                 if !userData.myPets.isEmpty {
-                                UserDefaults.standard.set(userData.myPets , forKey: DefaultString.MyPets)
+                                    UserDefaults.standard.set(userData.myPets , forKey: DefaultString.MyPets)
                                 }
                                 if !userData.roomIds.isEmpty {
-                                UserDefaults.standard.set(userData.roomIds , forKey: DefaultString.RoomIds)
+                                    UserDefaults.standard.set(userData.roomIds , forKey: DefaultString.RoomIds)
                                 }
                                 if !userData.unReadRoomIds.isEmpty {
-                                UserDefaults.standard.set(userData.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
+                                    UserDefaults.standard.set(userData.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
                                 }
                                 if !userData.todoRoomIds.isEmpty {
                                     UserDefaults.standard.set(userData.todoRoomIds , forKey: DefaultString.TodoRoomIds)
                                 }
-                               if !userData.goods.isEmpty {
-                                UserDefaults.standard.set(userData.goods , forKey: DefaultString.Goods)
+                                if !userData.goods.isEmpty {
+                                    UserDefaults.standard.set(userData.goods , forKey: DefaultString.Goods)
                                 }
                                 if !userData.bads.isEmpty {
-                                UserDefaults.standard.set(userData.bads , forKey: DefaultString.Bads)
+                                    UserDefaults.standard.set(userData.bads , forKey: DefaultString.Bads)
                                 }
                             }else{
                                 UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
@@ -149,8 +149,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     }else{
                         UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
                     }
-                    
-                    // ユーザーデフォルト設定（アカウント項目）
+                     // ユーザーデフォルト設定（アカウント項目）
                     UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
                     UserDefaults.standard.set(address , forKey: DefaultString.Mail)
                     UserDefaults.standard.set(password , forKey: DefaultString.Password)
@@ -158,7 +157,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     
                     // Homeに画面遷移
                     DispatchQueue.main.async {
-                        
                         let appDelegate = UIApplication.shared.delegate as! AppDelegate
                         let leftViewController = self.storyboard?.instantiateViewController(withIdentifier: "Left") as! LeftViewController
                         let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
@@ -240,7 +238,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 UserDefaults.standard.set(uid! , forKey: DefaultString.Uid)
                 UserDefaults.standard.set(address , forKey: DefaultString.Mail)
                 UserDefaults.standard.set(password , forKey: DefaultString.Password)
-                UserDefaults.standard.set("ゲストさん" , forKey: DefaultString.DisplayName)                
+                UserDefaults.standard.set("ゲストさん" , forKey: DefaultString.DisplayName)
                 
                 // 表示名を設定する
                 let user = FIRAuth.auth()?.currentUser
@@ -291,7 +289,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func handlePasswordResetButton(_ sender: Any) {
         print("DEBUG_PRINT: LoginViewController.handlePasswordResetButton start")
-
+        
         self.view.endEditing(true)
         // PasswordResetに画面遷移
         let passwordResetViewController = self.storyboard?.instantiateViewController(withIdentifier: "PasswordReset") as! PasswordResetViewController
