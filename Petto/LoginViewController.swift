@@ -97,6 +97,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 let userData = UserData(snapshot: snapshot, myId: uid)
                                 
                                 UserDefaults.standard.set(false , forKey: DefaultString.GuestFlag)
+                                // ユーザーデフォルト設定（アカウント項目）
+                                UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
+                                UserDefaults.standard.set(address , forKey: DefaultString.Mail)
+                                UserDefaults.standard.set(password , forKey: DefaultString.Password)
+                                UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
                                 // ユーザーデフォルト設定（ユーザー項目（必須））
                                 UserDefaults.standard.set(userData.imageString , forKey: DefaultString.ImageString)
                                 UserDefaults.standard.set(userData.firstname , forKey: DefaultString.Firstname)
@@ -144,35 +149,34 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 }
                             }else{
                                 UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
+                                // ユーザーデフォルト設定（アカウント項目）
+                                UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
+                                UserDefaults.standard.set(address , forKey: DefaultString.Mail)
+                                UserDefaults.standard.set(password , forKey: DefaultString.Password)
+                                UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
+                            }
+                            // Homeに画面遷移
+                            DispatchQueue.main.async {
+                                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                                let leftViewController = self.storyboard?.instantiateViewController(withIdentifier: "Left") as! LeftViewController
+                                let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+                                
+                                let nvc: UINavigationController = UINavigationController(rootViewController: homeViewController)
+                                leftViewController.mainViewController = nvc
+                                
+                                let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
+                                
+                                appDelegate.window?.rootViewController = slideMenuController
+                                appDelegate.window?.makeKeyAndVisible()
+                                UIView.transition(with: appDelegate.window!,
+                                                  duration: 0.6,
+                                                  options: UIViewAnimationOptions.transitionFlipFromLeft,
+                                                  animations: {},
+                                                  completion: {(b) in })
                             }
                         })
                     }else{
                         UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
-                    }
-                     // ユーザーデフォルト設定（アカウント項目）
-                    UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
-                    UserDefaults.standard.set(address , forKey: DefaultString.Mail)
-                    UserDefaults.standard.set(password , forKey: DefaultString.Password)
-                    UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
-                    
-                    // Homeに画面遷移
-                    DispatchQueue.main.async {
-                        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                        let leftViewController = self.storyboard?.instantiateViewController(withIdentifier: "Left") as! LeftViewController
-                        let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
-                        
-                        let nvc: UINavigationController = UINavigationController(rootViewController: homeViewController)
-                        leftViewController.mainViewController = nvc
-                        
-                        let slideMenuController = SlideMenuController(mainViewController: nvc, leftMenuViewController: leftViewController)
-                        
-                        appDelegate.window?.rootViewController = slideMenuController
-                        appDelegate.window?.makeKeyAndVisible()
-                        UIView.transition(with: appDelegate.window!,
-                                          duration: 0.6,
-                                          options: UIViewAnimationOptions.transitionFlipFromLeft,
-                                          animations: {},
-                                          completion: {(b) in })
                     }
                 }
             }

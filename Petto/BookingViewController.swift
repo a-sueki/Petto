@@ -86,24 +86,48 @@ class BookingViewController: BaseFormViewController {
                     $0.value = Date()
                 }
 //                $0.cell.Date.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
+//                let formatter = DateFormatter()
+//                formatter.locale = .current
+//                formatter.dateStyle = .long
+//                $0.dateFormatter = formatter
+//                $0.dateFormatter?.dateStyle = .short
+//                $0.dateFormatter?.timeStyle = .long
+                
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }
+//                .onPresent { from, to in
+//                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+//                }
                 .onChange { [weak self] row in
-                    let endRow: DateRow! = self?.form.rowBy(tag: "endDate")
-                    if row.value?.compare(endRow.value!) == .orderedDescending {
-                        endRow.value = Date(timeInterval: 60*60*24, since: row.value!)
+                    let endRow: DateTimeInlineRow! = self?.form.rowBy(tag: "endDate")
+                    if let _ = endRow.value, row.value?.compare(endRow.value!) == .orderedDescending {
+                        endRow.value! = Date(timeInterval: 60*60*24, since: row.value!)
                         endRow.cell!.backgroundColor = .white
                         endRow.updateCell()
                     }
                 }
                 .onExpandInlineRow { cell, row, inlineRow in
-                    inlineRow.cellUpdate() { cell, row in
-                            cell.datePicker.datePickerMode = .dateAndTime
+                    inlineRow.cellUpdate() { [weak self] cell, row in
+                        cell.datePicker.datePickerMode = .dateAndTime
+                        //row.cell.datePicker.heightAnchor = cell
+                            //CGRect(x:0,y:0,width: (self?.view.frame.width)!, height: (self?.view.frame.height)!/4)
+                        /*
+                        // キーボードに表示するツールバーの表示
+                        let pickerToolBar = UIToolbar(frame: CGRect(x:0, y:self.view.frame.size.height/6, width:self.view.frame.size.width, height:40.0))
+                        pickerToolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
+                        pickerToolBar.barStyle = .blackTranslucent
+                        pickerToolBar.tintColor = UIColor.white
+                        pickerToolBar.backgroundColor = UIColor.black
+                        //ボタンの設定
+                        //右寄せのためのスペース設定
+                        let spaceBarBtn = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace,target: self,action: nil)
+                        //完了ボタンを設定
+                        let toolBarBtn      = UIBarButtonItem(title: "完了", style: .done, target: self, action: #selector(self.toolBarBtnPush))
+                        //ツールバーにボタンを表示
+                        pickerToolBar.items = [spaceBarBtn,toolBarBtn]
+                        cell.datePicker.inputAccessoryView = pickerToolBar
+ */
                     }
                     let color = cell.detailTextLabel?.textColor
                     row.onCollapseInlineRow { cell, _, _ in
@@ -136,17 +160,19 @@ class BookingViewController: BaseFormViewController {
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
 //                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
+//                let formatter = DateFormatter()
+//                formatter.locale = .current
+//                formatter.dateStyle = .long
+//                $0.dateFormatter = formatter
+//                $0.dateFormatter?.dateStyle = .short
+//                $0.dateFormatter?.timeStyle = .long
                 $0.add(rule: RuleRequired())
                 var ruleSet = RuleSet<Date>()
                 ruleSet.add(rule: RuleRequired())
                 ruleSet.add(rule: RuleClosure { [weak self] row -> ValidationError? in
-                    let startRow: DateRow! = self!.form.rowBy(tag: "startDate")
-                    let endRow: DateRow! = self!.form.rowBy(tag: "endDate")
-                    if startRow.value?.compare(endRow.value!) == .orderedDescending {
+                    let startRow: DateTimeInlineRow! = self!.form.rowBy(tag: "startDate")
+                    let endRow: DateTimeInlineRow! = self!.form.rowBy(tag: "endDate")
+                    if let _ = startRow.value, startRow.value?.compare(endRow.value!) == .orderedDescending {
                         return ValidationError(msg: ErrorMsgString.RuleEndDate)
                     }
                     return nil
@@ -154,7 +180,7 @@ class BookingViewController: BaseFormViewController {
                 $0.add(ruleSet: ruleSet)
                 $0.validationOptions = .validatesOnChange
                 }
-                .onExpandInlineRow { cell, row, inlineRow in
+/*                .onExpandInlineRow { cell, row, inlineRow in
                     inlineRow.cellUpdate() { cell, row in
                         cell.datePicker.datePickerMode = .dateAndTime
                     }
@@ -164,7 +190,7 @@ class BookingViewController: BaseFormViewController {
                     }
                     cell.detailTextLabel?.textColor = cell.tintColor
                 }
-                .onRowValidationChanged { cell, row in
+*/                .onRowValidationChanged { cell, row in
                     let rowIndex = row.indexPath!.row
                     while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
                         row.section?.remove(at: rowIndex + 1)
@@ -181,6 +207,11 @@ class BookingViewController: BaseFormViewController {
         }
         
         print("DEBUG_PRINT: BookingViewController.showLeaveData end")
+    }
+    
+    //完了を押すとピッカーを閉じる
+    func toolBarBtnPush(sender: UIBarButtonItem){
+        self.view.endEditing(true)
     }
     
     @IBAction func suggest() {
