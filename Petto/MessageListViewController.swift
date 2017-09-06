@@ -52,8 +52,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         var roomIdListAgain: [String] = []
         
         // userのmessages[]を取得　→roomIdList
+        SVProgressHUD.show()
         if UserDefaults.standard.object(forKey: DefaultString.RoomIds) != nil {
-            
             for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!{
                 roomIdListAgain.append(key)
                 // 未読→既読に更新
@@ -71,6 +71,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                     UserDefaults.standard.set(unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
                     // tableViewを再表示する
                     self.tableView.reloadData()
+                    SVProgressHUD.dismiss()
                 }) { (error) in
                     print(error.localizedDescription)
                 }
@@ -81,6 +82,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         }
         // tableViewを再表示する
         self.tableView.reloadData()
+        SVProgressHUD.dismiss()
         
         // 比較用にsort
         let ascendingOldList : [String] = roomIdList.sorted(by: {$0 < $1})
@@ -117,6 +119,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 })
                 // tableViewを再表示する
                 self.tableView.reloadData()
+                SVProgressHUD.dismiss()
             }
         }) { (error) in
             print(error.localizedDescription)

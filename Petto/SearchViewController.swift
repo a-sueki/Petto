@@ -49,7 +49,7 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.updateSearchData start")
         
         // Cell初期設定
-        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
+//        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
         // フォーム
         form +++
@@ -199,11 +199,11 @@ class SearchViewController: BaseFormViewController {
                 }else{
                     $0.value = Date()
                 }
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
+//                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+//                let formatter = DateFormatter()
+//                formatter.locale = .current
+//                formatter.dateStyle = .long
+//                $0.dateFormatter = formatter
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }
@@ -239,10 +239,10 @@ class SearchViewController: BaseFormViewController {
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
                 $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
+//                let formatter = DateFormatter()
+//                formatter.locale = .current
+//                formatter.dateStyle = .long
+//                $0.dateFormatter = formatter
                 $0.add(rule: RuleRequired())
                 var ruleSet = RuleSet<Date>()
                 ruleSet.add(rule: RuleRequired())

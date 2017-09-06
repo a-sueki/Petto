@@ -85,6 +85,7 @@ class BookingViewController: BaseFormViewController {
                 }else{
                     $0.value = Date()
                 }
+                $0.minimumDate = Date()
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }
@@ -120,6 +121,7 @@ class BookingViewController: BaseFormViewController {
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
+                $0.minimumDate = Date()
                 $0.add(rule: RuleRequired())
                 var ruleSet = RuleSet<Date>()
                 ruleSet.add(rule: RuleRequired())

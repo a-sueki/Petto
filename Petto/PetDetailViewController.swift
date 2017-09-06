@@ -23,7 +23,7 @@ class PetDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
         
         // Cell初期設定
-        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
+//        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
         // フォーム
         form +++

@@ -172,11 +172,11 @@ class UserViewController: BaseFormViewController  {
                     $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000", dateFormat: DateCommon.dateFormat)
                 }
                 $0.maximumDate = Date()
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
+//                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+//                let formatter = DateFormatter()
+//                formatter.locale = .current
+//                formatter.dateStyle = .long
+//                $0.dateFormatter = formatter
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { [weak self] (cell, row) in
