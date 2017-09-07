@@ -52,7 +52,7 @@ class UserViewController: BaseFormViewController  {
         
         // フォーム
         form +++
-            Section(footer: "プロフィールは、あなたがメッセージを送ったペットの飼い主さんにのみ公開されます。") {
+            Section(footer: "プロフィールは、あなたがメッセージを送ったペットの飼い主さんにのみ公開されます。（姓、生年月日は非公開）") {
                 if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
                     $0.header = HeaderFooterView<UserEditView>(.class)
                 }else {
@@ -446,6 +446,10 @@ class UserViewController: BaseFormViewController  {
         
         //Firebaseに保存
         if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            if UserDefaults.standard.string(forKey: "") != nil || UserDefaults.standard.string(forKey: "") != nil {
+                self.inputData["createAt"] = String(time)
+                self.inputData["createBy"] = uid!
+            }            
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // remove（任意項目のみ）

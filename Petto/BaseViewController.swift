@@ -53,7 +53,7 @@ class NavigationBarHandler: NSObject {
         
         // ユーザーデフォルト設定、通知バッチ更新
         if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
-            // 未読なしの場合のユーザーデフォルトの設定
+           // 未読なしの場合のユーザーデフォルトの設定
             UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.UnReadRoomIds)
             // UnReadRoomIds取得
             var unReadRoomIds = [String:Bool]()
@@ -71,6 +71,7 @@ class NavigationBarHandler: NSObject {
                 }
             }) { (error) in
                 print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
             
             // TODOなしの場合のユーザーデフォルトの設定
@@ -93,7 +94,8 @@ class NavigationBarHandler: NSObject {
                 }
             }) { (error) in
                 print(error.localizedDescription)
-            }
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+           }
             
             
             // myPets取得
@@ -119,6 +121,7 @@ class NavigationBarHandler: NSObject {
                 }
             }) { (error) in
                 print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
             // goods取得
             var goods = [String:Bool]()
@@ -131,6 +134,7 @@ class NavigationBarHandler: NSObject {
                 }
             }) { (error) in
                 print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
             // bads取得
             var bads = [String:Bool]()
@@ -143,6 +147,7 @@ class NavigationBarHandler: NSObject {
                 }
             }) { (error) in
                 print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
         } else {
             print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ゲストユーザです。")

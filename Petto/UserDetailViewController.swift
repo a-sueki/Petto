@@ -15,7 +15,7 @@ import SVProgressHUD
 
 class UserDetailViewController: BaseFormViewController {
     
-    var uid: String?
+    var userData: UserData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,27 +32,124 @@ class UserDetailViewController: BaseFormViewController {
                         view.userImageView.image = image
                         
                         view.userImageView.alpha = 1;
-/*                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
-                            view?.userImageView.alpha = 1
-                        })
-                        view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-                        UIView.animate(withDuration: 1.0, animations: { [weak view] in
-                            view?.layer.transform = CATransform3DIdentity
-                        })
- */
+                        /*                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
+                         view?.userImageView.alpha = 1
+                         })
+                         view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
+                         UIView.animate(withDuration: 1.0, animations: { [weak view] in
+                         view?.layer.transform = CATransform3DIdentity
+                         })
+                         */
                     }
                     $0.header = header
                 }
             }
             
             //TODO: コミットメント＆小さなバッチ（メダル）
+            <<< NameRow("firstname") {
+                $0.title = "名"
+                $0.value = self.userData?.firstname ?? nil
+                $0.disabled = true
+            }
             <<< TextRow("area") {
                 $0.title = "エリア"
-                $0.value = UserDefaults.standard.string(forKey: DefaultString.Area) ?? nil
+                $0.value = self.userData?.area ?? nil
+                $0.disabled = true
+            }
+            <<< TextRow("age") {
+                $0.title = "年齢"
+                $0.value = self.userData?.age ?? nil
+                $0.disabled = true
+            }
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = UserSex.strings
+                $0.value = self.userData?.sex ?? $0.options.first
                 $0.disabled = true
             }
             
-            +++ Section("ペット経験")
+            +++ Section()
+            <<< SwitchRow("expectTo"){
+                $0.title = "ペットをあずかりたい"
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.ExpectTo)
+                $0.disabled = true
+            }
+            +++ Section("あずかり環境（任意）"){
+                $0.hidden = .function(["expectTo"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
+                    return row.value ?? false == false
+                })
+            }
+            <<< MultipleSelectorRow<String>("userEnvironments") {
+                $0.title = "飼養環境"
+                $0.options = Environment.strings
+                if UserDefaults.standard.object(forKey: DefaultString.UserEnvironments) != nil {
+                    var codes = [String]()
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserEnvironments)! {
+                        if val as! Bool == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Environment.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
+            }
+            <<< MultipleSelectorRow<String>("userTools") {
+                $0.title = "用意できる道具"
+                $0.options = Tool.strings
+                if UserDefaults.standard.object(forKey: DefaultString.UserTools) != nil {
+                    var codes = [String]()
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserTools)!{
+                        if val as! Bool == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Tool.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
+            }
+            <<< MultipleSelectorRow<String>("userNgs") {
+                $0.title = "あずかりNGペット"
+                $0.options = UserNGs.strings
+                if UserDefaults.standard.object(forKey: DefaultString.UserNgs) != nil {
+                    var codes = [String]()
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserNgs)! {
+                        if val as! Bool == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = UserNGs.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
+            }
+            +++ Section()
+            <<< SwitchRow("enterDetails"){
+                $0.title = "より詳細なプロフィールを入力する"
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.EnterDetails)
+                $0.disabled = true
+            }
+            
+            +++ Section("ペット経験など"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    return row.value ?? false == false
+                })
+            }
             <<< CheckRow("hasAnotherPet") {
                 $0.title = "現在、他にペットを飼っている"
                 $0.value = UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet)
@@ -85,88 +182,7 @@ class UserDetailViewController: BaseFormViewController {
             }
             
             
-            +++ Section()
-            <<< SwitchRow("expectTo"){
-                $0.title = "ペットをあずかりたい"
-                $0.value = UserDefaults.standard.bool(forKey: DefaultString.ExpectTo)
-                $0.disabled = true
-            }
             
-            +++ Section("あずかり環境"){
-                $0.hidden = .function(["expectTo"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
-                    return row.value ?? false == false
-                })
-            }
-            <<< MultipleSelectorRow<String>("userEnvironments") {
-                $0.title = "飼養環境"
-                $0.hidden = .function(["expectTo"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
-                    return row.value ?? false == false
-                })
-                $0.options = Environment.strings
-                if UserDefaults.standard.object(forKey: DefaultString.UserEnvironments) != nil {
-                    var codes = [String]()
-                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserEnvironments)! {
-                        if val as! Bool == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = Environment.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    let _ = to.view
-                    to.tableView?.isUserInteractionEnabled = false
-            }
-            <<< MultipleSelectorRow<String>("userTools") {
-                $0.title = "用意できる道具"
-                $0.hidden = .function(["expectTo"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
-                    return row.value ?? false == false
-                })
-                $0.options = Tool.strings
-                if UserDefaults.standard.object(forKey: DefaultString.UserTools) != nil {
-                    var codes = [String]()
-                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserTools)!{
-                        if val as! Bool == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = Tool.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    let _ = to.view
-                    to.tableView?.isUserInteractionEnabled = false
-            }
-            <<< MultipleSelectorRow<String>("userNgs") {
-                $0.title = "NGペット"
-                $0.hidden = .function(["expectTo"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
-                    return row.value ?? false == false
-                })
-                $0.options = UserNGs.strings
-                if UserDefaults.standard.object(forKey: DefaultString.UserNgs) != nil {
-                    var codes = [String]()
-                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.UserNgs)! {
-                        if val as! Bool == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = UserNGs.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    let _ = to.view
-                    to.tableView?.isUserInteractionEnabled = false
-            }
             //TODO:Petto利用履歴
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in

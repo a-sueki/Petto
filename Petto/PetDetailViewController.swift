@@ -22,9 +22,6 @@ class PetDetailViewController: BaseFormViewController {
         super.viewDidLoad()
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
         
-        // Cell初期設定
-//        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
-        
         // フォーム
         form +++
             Section() {
@@ -56,32 +53,140 @@ class PetDetailViewController: BaseFormViewController {
                 $0.value = self.petData?.area ?? nil
                 $0.disabled = true
             }
-            
-            +++ Section("プロフィール")
-            <<< SegmentedRow<String>("sex") {
-                $0.title =  "性別"
-                $0.options = Sex.strings
-                $0.value = self.petData?.sex ?? nil
-                $0.disabled = true
-            }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
                 $0.options = Kind.strings
                 $0.value = self.petData?.kind ?? nil
                 $0.disabled = true
             }
-            <<< PickerInputRow<String>("category"){
-                $0.title = "品種"
-                $0.value = self.petData?.category ?? nil
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = Sex.strings
+                $0.value = self.petData?.sex ?? nil
                 $0.disabled = true
+            }
+            
+            +++ Section()
+            <<< SwitchRow("isAvailable"){
+                $0.title = "あずかり人を募集する"
+                $0.value = self.petData?.isAvailable ?? false
+                $0.disabled = true
+            }
+
+            +++
+            Section(header: "おあずけ人募集期間", footer: "期間外では、自動的にあずかり人募集表示がOFFになります"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+            }
+            <<< CheckRow("toolRentalAllowed") {
+                $0.title = "道具の貸し出し可能"
+                $0.value = self.petData?.toolRentalAllowed ?? true
+                $0.disabled = true
+                }
+                .cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "dogchain")
+            }
+            <<< CheckRow("feedingFeePayable") {
+                $0.title = "エサ代は飼い主負担"
+                $0.value = self.petData?.feedingFeePayable ?? true
+                $0.disabled = true
+                }
+                .cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "dogBowl")
+            }
+            <<< DateRow("startDate") {
+                if let dateString = self.petData?.startDate {
+                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
+                }else{
+                    $0.value = Date()
+                }
+                $0.title = "開始日付"
+                $0.disabled = true
+            }
+            <<< DateRow("endDate") {
+                if let dateString = self.petData?.endDate {
+                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
+                }else{
+                    $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
+                }
+                $0.title = "終了日付"
+                $0.disabled = true
+            }
+            +++
+            Section(header:"連続おあずけ日数", footer:"連続30日間以上でのおあずけ依頼はできません。"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+            }
+            <<< PickerInputRow<Int>("minDays"){
+                $0.title = "最短"
+                $0.value = self.petData?.minDays ?? 1
+                $0.disabled = true
+            }
+            <<< PickerInputRow<Int>("maxDays"){
+                $0.title = "最長"
+                $0.value = self.petData?.maxDays ?? 30
+                $0.disabled = true
+            }
+            +++ Section()
+            <<< SwitchRow("enterDetails"){
+                $0.title = "より詳細なプロフィールを入力する"
+                $0.value = self.petData?.enterDetails ?? false
+                $0.disabled = true
+            }
+            +++ Section("プロフィール（任意）"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    return row.value ?? false == false
+                })
             }
             <<< PickerInputRow<String>("age"){
                 $0.title = "年齢"
                 $0.value = self.petData?.age ?? $0.options.first
                 $0.disabled = true
             }
+            <<< SegmentedRow<String>("size") {
+                $0.title =  "大きさ"
+                $0.options = Size.strings
+                $0.value = self.petData?.size ?? $0.options.first
+                $0.disabled = true
+            }
+            <<< MultipleSelectorRow<String>("color") {
+                $0.title = "色"
+                $0.options = Color.strings
+                if let data = self.petData , data.color.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.color {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Color.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    let _ = to.view
+                    to.tableView?.isUserInteractionEnabled = false
+            }
             
-            +++ Section("状態")
+            
+            <<< PickerInputRow<String>("category"){
+                $0.title = "品種"
+                $0.value = self.petData?.category ?? nil
+                $0.disabled = true
+            }
+            
+            +++ Section("ペットの状態"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    return row.value ?? false == false
+                })
+        }
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
                 $0.value = self.petData?.isVaccinated ?? false
@@ -118,25 +223,19 @@ class PetDetailViewController: BaseFormViewController {
             }
             
             
-            +++ Section()
-            <<< SwitchRow("isAvailable"){
-                $0.title = "あずかり人を募集する"
-                $0.value = self.petData?.isAvailable ?? false
-                $0.disabled = true
-            }
             
-            +++ Section("おあずけ条件"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
+            +++ Section(header: "おあずけ条件(任意)", footer: "おあずかりの際は、事前に確認しましょう"){
+                $0.hidden = .function(["isAvailable","enterDetails"], { form -> Bool in
+                    let row1: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    let row2: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    if row1.value == true && row2.value == true {
+                        return false
+                    }
+                    return true
                 })
             }
             <<< MultipleSelectorRow<String>("environments") {
                 $0.title = "飼養環境"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
                 $0.options = Environment.strings
                 if let data = self.petData , data.environments.count > 0 {
                     var codes = [String]()
@@ -157,10 +256,6 @@ class PetDetailViewController: BaseFormViewController {
             
             <<< MultipleSelectorRow<String>("tools") {
                 $0.title = "必要な道具"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
                 $0.options = Tool.strings
                 if let data = self.petData , data.tools.count > 0 {
                     var codes = [String]()
@@ -180,10 +275,6 @@ class PetDetailViewController: BaseFormViewController {
             }
             <<< MultipleSelectorRow<String>("ngs") {
                 $0.title = "おあずけNGユーザ"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
                 $0.options = PetNGs.strings
                 if let data = self.petData , data.ngs.count > 0 {
                     var codes = [String]()
@@ -202,13 +293,6 @@ class PetDetailViewController: BaseFormViewController {
                     to.tableView?.isUserInteractionEnabled = false
             }
             
-            
-            +++ Section("お世話の方法"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
             <<< SegmentedRow<String>("feeding"){
                 $0.title =  "ごはんの回数/日"
                 $0.options = ["1回","2回","3回"]
@@ -228,49 +312,18 @@ class PetDetailViewController: BaseFormViewController {
                 $0.disabled = true
             }
             +++
-            Section("おあずけ可能期間"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+            Section("その他、特記事項など（任意）"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
                     return row.value ?? false == false
                 })
             }
-            <<< DateRow("startDate") {
-                if let dateString = self.petData?.startDate {
-                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
-                }else{
-                    $0.value = Date()
-                }
-                $0.title = "開始日付"
+            <<< TextAreaRow("notices") {
+                $0.textAreaHeight = .dynamic(initialTextViewHeight: 50)
+                $0.value = self.petData?.notices ?? nil
                 $0.disabled = true
-            }
-            <<< DateRow("endDate") {
-                if let dateString = self.petData?.endDate {
-                    $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
-                }else{
-                    $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
-                }
-                $0.title = "終了日付"
-                $0.disabled = true
-            }
-            +++
-            Section("連続おあずけ日数"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
-            <<< PickerInputRow<Int>("minDays"){
-                $0.title = "最短"
-                $0.value = self.petData?.minDays ?? 1
-                $0.disabled = true
-            }
-            <<< PickerInputRow<Int>("maxDays"){
-                $0.title = "最長"
-                $0.value = self.petData?.maxDays ?? 30
-                $0.disabled = true
-            }
-            //TODO: その他、特記事項入力フォーム
-            
+           }
+           
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -343,6 +396,7 @@ class PetDetailViewController: BaseFormViewController {
                     inputData["userImageString"] = UserDefaults.standard.string(forKey: DefaultString.ImageString)
                     inputData["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
                     inputData["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
+                    inputData["userSex"] = UserDefaults.standard.string(forKey: DefaultString.Sex)
                     //TODO: 評価実装後、活性
 //                    inputData["userGoodInt"] = self.userDefaults?.string(forKey: DefaultString.Good)
 //                    inputData["userBadInt"] = self.userDefaults?.string(forKey: DefaultString.Bad)

@@ -245,10 +245,20 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         // 画面遷移
         if let userId = self.sortedLeaveDataArray[(indexPath?.row)!].userId {
-            let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
-            userDetailViewController.uid = userId
-            self.navigationController?.pushViewController(userDetailViewController, animated: true)
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: TodoListViewController.handleUserDetailButton .observeSingleEventイベントが発生しました。")
+                if let _ = snapshot.value as? NSDictionary {
+                    let userData = UserData(snapshot: snapshot, myId: userId)
+                    let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
+                    userDetailViewController.userData = userData
+                    self.navigationController?.pushViewController(userDetailViewController, animated: true)
+                    SVProgressHUD.dismiss()
+                }
+            })
         }
+
         print("DEBUG_PRINT: TodoListViewController.handleUserDetailButton end")
     }
     

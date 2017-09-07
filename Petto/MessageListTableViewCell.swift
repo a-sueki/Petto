@@ -57,7 +57,7 @@ class MessageListTableViewCell: UITableViewCell {
         //TODO: 評価カウントをセット
         self.goodIntLabel.text = "10" //String(roomData.userGoodInt)
         self.badIntLabel.text = "3" //String(roomData.userBadInt)
-        self.userProfile.text = roomData.userArea! + " | " + roomData.userAge! + "才"
+        self.userProfile.text = roomData.userArea! + " | " + roomData.userSex! + " | " + roomData.userAge! + "才"
         self.petImageView.image = roomData.petImage
         self.petNameLabel.text = roomData.petName
         

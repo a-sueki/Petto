@@ -71,9 +71,9 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                     UserDefaults.standard.set(unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
                     // tableViewを再表示する
                     self.tableView.reloadData()
-                    SVProgressHUD.dismiss()
                 }) { (error) in
                     print(error.localizedDescription)
+                    SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
                 }
             }
         }else{
@@ -82,7 +82,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         }
         // tableViewを再表示する
         self.tableView.reloadData()
-        SVProgressHUD.dismiss()
         
         // 比較用にsort
         let ascendingOldList : [String] = roomIdList.sorted(by: {$0 < $1})
@@ -107,6 +106,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         print("DEBUG_PRINT: MessageListViewController.getDataSingleEvent start")
         
         // roomDataリストの取得
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         let ref = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             print("DEBUG_PRINT: MessageListViewController.getDataSingleEvent .observeSingleEventイベントが発生しました。")
@@ -123,6 +123,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             }
         }) { (error) in
             print(error.localizedDescription)
+            SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
         }
         
         print("DEBUG_PRINT: MessageListViewController.getDataSingleEvent end")
@@ -199,7 +200,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                 }
             }
         }
-
         print("DEBUG_PRINT: MessageListViewController.cellForRowAt end")
 
         return cell
@@ -270,10 +270,23 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         // 画面遷移
         if let userId = self.sortedRoomDataArray[(indexPath?.row)!].userId {
-            let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
-            userDetailViewController.uid = userId
-            self.navigationController?.pushViewController(userDetailViewController, animated: true)
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton .observeSingleEventイベントが発生しました。")
+                if let _ = snapshot.value as? NSDictionary {
+                    let userData = UserData(snapshot: snapshot, myId: userId)
+                    let userDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserDetail") as! UserDetailViewController
+                    userDetailViewController.userData = userData
+                    self.navigationController?.pushViewController(userDetailViewController, animated: true)
+                    SVProgressHUD.dismiss()
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+            }
         }
+        
         print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton end")
     }
     
@@ -288,6 +301,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         // 画面遷移
         if let petId = self.sortedRoomDataArray[(indexPath?.row)!].petId {
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton .observeSingleEventイベントが発生しました。")
@@ -296,8 +310,12 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                     let petDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "PetDetail") as! PetDetailViewController
                     petDetailViewController.petData = petData
                     self.navigationController?.pushViewController(petDetailViewController, animated: true)
+                    SVProgressHUD.dismiss()
                 }
-            })
+            }) { (error) in
+                print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+            }
         }
         
         print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton end")

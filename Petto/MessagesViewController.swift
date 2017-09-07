@@ -133,7 +133,7 @@ class MessagesViewController: JSQMessagesViewController {
         inputData["imageString"] = imageString
         inputData["timestamp"] = String(time)
         
-        let lastMessage = "[自動送信メッセージ]\n写真が届いています"
+        let lastMessage = "[写真が届いています]"
         
         // Firebase連携
         updateMessageData(inputData: inputData ,lastMessage: lastMessage)

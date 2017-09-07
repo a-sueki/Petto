@@ -175,7 +175,7 @@ class EditViewController: BaseFormViewController {
             }
             
             +++
-            Section(header: "おあずけ人募集期間", footer: "期間外では、自動的にあずかり人募集はOFFになります"){
+            Section(header: "おあずけ人募集期間", footer: "期間外では、自動的にあずかり人募集表示がOFFになります"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
