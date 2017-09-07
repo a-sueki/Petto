@@ -191,6 +191,8 @@ class BookingViewController: BaseFormViewController {
         self.inputData["userId"] = self.roomData?.userId
         self.inputData["userName"] = self.roomData?.userName
         self.inputData["userImageString"] = self.roomData?.userImageString
+        self.inputData["userAge"] = self.roomData?.userAge
+        self.inputData["userArea"] = self.roomData?.userArea
         self.inputData["petId"] = self.roomData?.petId
         self.inputData["petName"] = self.roomData?.petName
         self.inputData["petImageString"] = self.roomData?.petImageString

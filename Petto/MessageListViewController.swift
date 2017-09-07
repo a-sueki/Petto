@@ -152,28 +152,56 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         if self.roomIdList.count == self.sortedRoomDataArray.count {
             cell.setData(roomData: self.sortedRoomDataArray[indexPath.row])
             
-            // 未読の場合
-            if UserDefaults.standard.object(forKey: DefaultString.UnReadRoomIds) != nil,
-                !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
-                
-                // セルをハイライト
-                for (rid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)! {
-                    if rid == self.sortedRoomDataArray[indexPath.row].id {
-                        cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
-                        cell.unReadLabel.isHidden = false
-                        break
-                    }else{
-                        cell.backgroundColor = UIColor.white
-                        cell.unReadLabel.isHidden = true
+            // あずかり人の場合
+            if self.sortedRoomDataArray[indexPath.row].breederId != UserDefaults.standard.string(forKey: DefaultString.Uid) {
+                // 未読の場合
+                if UserDefaults.standard.object(forKey: DefaultString.UnReadRoomIds) != nil,
+                    !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
+                    // セルをハイライト
+                    for (rid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)! {
+                        if rid == self.sortedRoomDataArray[indexPath.row].id {
+                            cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
+                            cell.unReadLabel.isHidden = false
+                            cell.isBreederLabel.isHidden = true
+                            break
+                        }else{
+                            cell.backgroundColor = UIColor.white
+                            cell.unReadLabel.isHidden = true
+                            cell.isBreederLabel.isHidden = true
+                        }
                     }
+                }else{
+                    cell.backgroundColor = UIColor.white
+                    cell.unReadLabel.isHidden = true
+                    cell.isBreederLabel.isHidden = true
                 }
             }else{
-                cell.backgroundColor = UIColor.white
-                cell.unReadLabel.isHidden = true
+                // 未読の場合
+                if UserDefaults.standard.object(forKey: DefaultString.UnReadRoomIds) != nil,
+                    !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
+                    // セルをハイライト
+                    for (rid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)! {
+                        if rid == self.sortedRoomDataArray[indexPath.row].id {
+                            cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
+                            cell.isBreederLabel.isHidden = false
+                            cell.unReadLabel.isHidden = false
+                            break
+                        }else{
+                            cell.backgroundColor = UIColor.white
+                            cell.isBreederLabel.isHidden = false
+                            cell.unReadLabel.isHidden = true
+                        }
+                    }
+                }else{
+                    cell.backgroundColor = UIColor.white
+                    cell.isBreederLabel.isHidden = false
+                    cell.unReadLabel.isHidden = true
+                }
             }
         }
-        
+
         print("DEBUG_PRINT: MessageListViewController.cellForRowAt end")
+
         return cell
     }
     

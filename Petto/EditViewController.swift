@@ -80,7 +80,27 @@ class EditViewController: BaseFormViewController {
                 $0.title = "名前"
                 $0.placeholder = "ポチ"
                 $0.value = self.petData?.name ?? nil
-            }
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnBlur
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.textLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+                }
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
@@ -221,7 +241,7 @@ class EditViewController: BaseFormViewController {
                 $0.value = self.petData?.isAvailable ?? false
             }
             
-            +++ Section("おあずけ条件"){
+            +++ Section("おあずけ条件(任意)"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -296,7 +316,7 @@ class EditViewController: BaseFormViewController {
             }
             
             
-            +++ Section("お世話の方法"){
+            +++ Section("お世話の方法(任意)"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -319,13 +339,12 @@ class EditViewController: BaseFormViewController {
                 $0.value = self.petData?.walk ?? nil
             }
             +++
-            Section("おあずけ人募集期間"){
+            Section(header: "おあずけ人募集期間", footer: "期間外では、自動的にあずかり人募集はOFFになります"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
             }
-            //TODO: 注意書き「期間が終了すると、自動的に募集が終了します」
             <<< DateRow("startDate") {
                 $0.title = "開始日付"
                 if let dateString = self.petData?.startDate {
@@ -334,11 +353,6 @@ class EditViewController: BaseFormViewController {
                     $0.value = Date()
                 }
                 $0.minimumDate = Date()
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }
@@ -374,11 +388,6 @@ class EditViewController: BaseFormViewController {
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
                 $0.minimumDate = Date()
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-                let formatter = DateFormatter()
-                formatter.locale = .current
-                formatter.dateStyle = .long
-                $0.dateFormatter = formatter
                 $0.add(rule: RuleRequired())
                 var ruleSet = RuleSet<Date>()
                 ruleSet.add(rule: RuleRequired())
@@ -409,7 +418,7 @@ class EditViewController: BaseFormViewController {
             }
             
             +++
-            Section("連続おあずけ日数"){
+            Section(header:"連続おあずけ日数", footer:"連続30日間以上でのおあずけ依頼はできません。"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -484,7 +493,17 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
-            //TODO: その他、特記事項入力フォーム
+            +++
+            Section("その他、特記事項など（任意）"){
+                $0.hidden = .function(["isAvailable"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    return row.value ?? false == false
+                })
+            }
+            <<< TextAreaRow("notices") {
+                $0.textAreaHeight = .dynamic(initialTextViewHeight: 50)
+            }
+            
             
             
             +++ Section()

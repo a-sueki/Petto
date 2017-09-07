@@ -50,8 +50,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         if FIRAuth.auth()?.currentUser != nil {
             if self.observing == false {
                 // HUDで処理中を表示
-                SVProgressHUD.show()
-                
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                 // 要素が追加されたらpostArrayに追加してTableViewを再表示する
                 let postsRef = FIRDatabase.database().reference().child(Paths.PetPath)
                 postsRef.queryLimited(toLast: 10).observe(.childAdded, with: { snapshot in
@@ -70,7 +69,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 })
                 
                 // HUDで処理中を表示
-                SVProgressHUD.show()
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                 // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
                 postsRef.queryLimited(toLast: 10).observe(.childChanged, with: { snapshot in
                     print("DEBUG_PRINT: HomeViewController.viewWillAppear .childChangedイベントが発生しました。")
@@ -102,7 +101,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 // 絞り込み条件を読み込む
                 if let uid = FIRAuth.auth()?.currentUser?.uid {
                     // HUDで処理中を表示
-                    SVProgressHUD.show()
+                    SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                     // 要素が追加されたら再表示
                     let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
                     ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -301,7 +300,9 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             self.navigationController?.pushViewController(editViewController, animated: true)
         }else{
             // ユーザープロフィールが存在しない場合はクリック不可
-            SVProgressHUD.showError(withStatus: "ペット投稿にはプロフィール作成が必要です")
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "プロフィールを登録してください")
+            let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
+            self.navigationController?.pushViewController(userViewController, animated: true)
         }
         // HUDを消す
         SVProgressHUD.dismiss(withDelay: 1)

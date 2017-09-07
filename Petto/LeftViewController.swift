@@ -73,7 +73,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 2:
             // ユーザープロフィールが未作成の場合
             if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
+                SVProgressHUD.showInfo(withStatus: "プロフィール登録が必要です")
             }else{
                 let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "MyPetList") as! MyPetListViewController
                 let navigationController = UINavigationController(rootViewController: postViewController)
@@ -82,7 +82,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 3:
             // ユーザープロフィールが未作成の場合
             if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
+                SVProgressHUD.showInfo(withStatus: "プロフィール登録が必要です")
             }else{
                 let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
                 let navigationController = UINavigationController(rootViewController: messageListViewController)

@@ -27,6 +27,7 @@ class MessageListTableViewCell: UITableViewCell {
     @IBOutlet weak var petProfileButton: UIButton!
     @IBOutlet weak var messageLabelButton: UIButton!
     @IBOutlet weak var unReadLabel: UILabel!
+    @IBOutlet weak var isBreederLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

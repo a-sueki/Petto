@@ -38,6 +38,7 @@ class PetData: NSObject {
     var endDate: String?
     var minDays: Int?
     var maxDays: Int?
+    var notices: String?
 
     // メッセージ情報
     var roomIds = [String:Bool]()
@@ -91,6 +92,7 @@ class PetData: NSObject {
         self.endDate = valueDictionary["endDate"] as? String
         self.minDays = valueDictionary["minDays"] as? Int
         self.maxDays = valueDictionary["maxDays"] as? Int
+        self.notices = valueDictionary["notices"] as? String
         
         // メッセージ情報
         if let roomIds = valueDictionary["roomIds"] as? [String:Bool] {

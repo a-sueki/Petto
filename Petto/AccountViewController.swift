@@ -55,7 +55,7 @@ class AccountViewController: BaseFormViewController {
                 ruleSet.add(rule: RuleRequired())
                 ruleSet.add(rule: RuleEmail())
                 $0.add(ruleSet: ruleSet)
-                $0.validationOptions = .validatesOnChangeAfterBlurred
+                $0.validationOptions = .validatesOnBlur
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
@@ -81,7 +81,7 @@ class AccountViewController: BaseFormViewController {
                 $0.add(rule: RuleRequired())
                 $0.add(rule: RuleMinLength(minLength: 6, msg: ErrorMsgString.RulePassword))
                 $0.add(rule: RuleMaxLength(maxLength: 12, msg: ErrorMsgString.RulePassword))
-                $0.validationOptions = .validatesOnChangeAfterBlurred
+                $0.validationOptions = .validatesOnBlur
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
@@ -105,7 +105,7 @@ class AccountViewController: BaseFormViewController {
                 $0.title = "ニックネーム"
                 $0.value = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
                 $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
+                $0.validationOptions = .validatesOnBlur
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red

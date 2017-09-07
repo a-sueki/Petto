@@ -51,6 +51,16 @@ struct DefaultString {
     static let Bads = "bads"
 }
 
+struct RandomImage {
+    static let all = ["random1","random2","random3","random4","random5","random6","random7","random8","random9","random10","random11","random12","random13","random14","random15","random16","random17","random18","random19","random20","random21","random22","random23","random24","random25","random26","random27","random28","random29"]
+    
+    static func getRandomImage() -> UIImage {
+        let index = Int(arc4random_uniform(UInt32(all.count)))
+        return UIImage(named: all[index])!
+    }
+}
+
+
 struct ErrorMsgString {
     static let RuleRequired = "必須入力です"
     static let RuleEmail = "不正なメールアドレスです"

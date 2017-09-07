@@ -16,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="455" height="147"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="455" height="147"/>
+                <rect key="frame" x="0.0" y="0.0" width="455" height="146.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="user" translatesAutoresizingMaskIntoConstraints="NO" id="VAo-H7-SKC">
@@ -144,12 +144,25 @@
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUM-R7-4dl">
                         <rect key="frame" x="370" y="0.0" width="85" height="76"/>
                     </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="あなたは飼い主です" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiE-WU-Dvg">
+                        <rect key="frame" x="132" y="119" width="125" height="20"/>
+                        <color key="backgroundColor" red="0.40000000600000002" green="0.40000000600000002" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="Ct3-kK-g9g"/>
+                            <constraint firstAttribute="width" constant="125" id="ox9-Sr-IC2"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="QC7-6A-8pP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="0By-U9-gfU"/>
                     <constraint firstItem="fx8-QD-4oE" firstAttribute="leading" secondItem="J6O-oD-utm" secondAttribute="trailing" constant="10" id="2rx-h0-awy"/>
                     <constraint firstItem="xUM-R7-4dl" firstAttribute="leading" secondItem="QC7-6A-8pP" secondAttribute="trailing" id="2ze-V6-FCR"/>
+                    <constraint firstItem="HzH-RI-RIw" firstAttribute="bottom" secondItem="HiE-WU-Dvg" secondAttribute="bottom" id="5G9-mK-o2z"/>
                     <constraint firstAttribute="topMargin" secondItem="VAo-H7-SKC" secondAttribute="top" id="6wA-cr-ufy"/>
+                    <constraint firstItem="VUP-2i-ccW" firstAttribute="leading" secondItem="HiE-WU-Dvg" secondAttribute="trailing" constant="8" id="7l9-dZ-1gs"/>
                     <constraint firstAttribute="trailing" secondItem="17e-re-fkX" secondAttribute="trailing" id="7wQ-Z7-A68"/>
                     <constraint firstItem="SGc-ei-ZZE" firstAttribute="centerY" secondItem="VAo-H7-SKC" secondAttribute="centerY" id="9Cp-xe-eYo"/>
                     <constraint firstItem="17e-re-fkX" firstAttribute="top" secondItem="xUM-R7-4dl" secondAttribute="bottom" id="EVY-FL-qZr"/>
@@ -193,6 +206,7 @@
             <connections>
                 <outlet property="badIntLabel" destination="ajf-O1-FPZ" id="Dtr-Ne-33p"/>
                 <outlet property="goodIntLabel" destination="35J-1e-ccV" id="jZX-Dh-xf5"/>
+                <outlet property="isBreederLabel" destination="HiE-WU-Dvg" id="4A1-dv-VcX"/>
                 <outlet property="messageLabel" destination="TvR-pi-NUs" id="rsH-sb-D3B"/>
                 <outlet property="messageLabelButton" destination="17e-re-fkX" id="iiC-eG-8Ju"/>
                 <outlet property="petImageView" destination="SGc-ei-ZZE" id="8Ug-2l-yQQ"/>

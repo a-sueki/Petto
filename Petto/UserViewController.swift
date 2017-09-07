@@ -94,7 +94,7 @@ class UserViewController: BaseFormViewController  {
                 $0.title = "姓"
                 $0.value = UserDefaults.standard.string(forKey: DefaultString.Lastname) ?? nil
                 $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
+                $0.validationOptions = .validatesOnBlur
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red
@@ -118,7 +118,7 @@ class UserViewController: BaseFormViewController  {
                 $0.title = "名"
                 $0.value = UserDefaults.standard.string(forKey: DefaultString.Firstname) ?? nil
                 $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
+                $0.validationOptions = .validatesOnBlur
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.titleLabel?.textColor = .red

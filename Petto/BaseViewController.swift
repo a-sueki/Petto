@@ -89,12 +89,12 @@ class NavigationBarHandler: NSObject {
                         self.setNotificationBatch(button: button3, count: todoRoomIds.count)
                         //TODO: ローカル通知登録
                         
-                    }                    
+                    }
                 }
             }) { (error) in
                 print(error.localizedDescription)
             }
-
+            
             
             // myPets取得
             var myPets = [String:Bool]()
@@ -191,16 +191,31 @@ class NavigationBarHandler: NSObject {
         self.viewController?.navigationController?.pushViewController(viewController2, animated: false)
     }
     func onClick3() {
-        // アニメーション削除
-        self.viewController?.navigationController?.view.layer.removeAllAnimations()
-        
-//        let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "TodoList") as! TodoListViewController
-//        self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
+        // ユーザープロフィールが未作成の場合
+        if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
+            // アニメーション削除
+            self.viewController?.navigationController?.view.layer.removeAllAnimations()
+            
+            let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
+            self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
+        }else{
+            // アニメーション削除
+            self.viewController?.navigationController?.view.layer.removeAllAnimations()
+            
+            let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "TodoList") as! TodoListViewController
+            self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
+        }
     }
     func onClick4() {
         // ユーザープロフィールが未作成の場合
         if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
             SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
+            // アニメーション削除
+            self.viewController?.navigationController?.view.layer.removeAllAnimations()
+            
+            let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
+            self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
         }else{
             // アニメーション削除
             self.viewController?.navigationController?.view.layer.removeAllAnimations()

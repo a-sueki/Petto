@@ -17,6 +17,8 @@ class LeaveData: NSObject {
     var userName: String?
     var userImage: UIImage?
     var userImageString: String?
+    var userArea: String?
+    var userAge: String?
     var petId: String?
     var petName: String?
     var petImage: UIImage?
@@ -49,6 +51,8 @@ class LeaveData: NSObject {
         self.userName = valueDictionary["userName"] as? String
         userImageString = valueDictionary["userImageString"] as? String
         self.userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
+        self.userArea = valueDictionary["userArea"] as? String
+        self.userAge = valueDictionary["userAge"] as? String
         self.petId = valueDictionary["petId"] as? String
         self.petName = valueDictionary["petName"] as? String
         petImageString = valueDictionary["petImageString"] as? String
