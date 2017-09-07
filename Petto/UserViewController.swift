@@ -27,7 +27,7 @@ class UserViewController: BaseFormViewController  {
         }
         print("DEBUG_PRINT: UserViewController.viewDidLoad end")
     }
-
+    
     func showForm(){
         print("DEBUG_PRINT: UserViewController.showForm start")
         // 必須入力チェック
@@ -52,7 +52,7 @@ class UserViewController: BaseFormViewController  {
         
         // フォーム
         form +++
-            Section() {
+            Section(footer: "プロフィールは、あなたがメッセージを送ったペットの飼い主さんにのみ公開されます。") {
                 if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
                     $0.header = HeaderFooterView<UserEditView>(.class)
                 }else {
@@ -71,6 +71,8 @@ class UserViewController: BaseFormViewController  {
                 }
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
+                }.cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "camera-1")
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.textLabel?.textColor = .red
@@ -163,7 +165,6 @@ class UserViewController: BaseFormViewController  {
                         }
                     }
             }
-            
             <<< DateRow("birthday") {
                 $0.title = "生年月日"
                 if let dateString = UserDefaults.standard.string(forKey: DefaultString.Birthday) {
@@ -172,11 +173,6 @@ class UserViewController: BaseFormViewController  {
                     $0.value = DateCommon.stringToDate("1980-01-01 00:00:00 +000", dateFormat: DateCommon.dateFormat)
                 }
                 $0.maximumDate = Date()
-//                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-//                let formatter = DateFormatter()
-//                formatter.locale = .current
-//                formatter.dateStyle = .long
-//                $0.dateFormatter = formatter
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { [weak self] (cell, row) in
@@ -200,36 +196,11 @@ class UserViewController: BaseFormViewController  {
                 $0.value = UserDefaults.standard.string(forKey: DefaultString.Age) ?? nil
                 $0.disabled = true
             }
-            
-            +++ Section("あなたのペット経験")
-            <<< CheckRow("hasAnotherPet") {
-                $0.title = "現在、他にペットを飼っている"
-                $0.value = UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet)
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = UserSex.strings
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Sex) ?? $0.options.first
             }
-            <<< CheckRow("isExperienced") {
-                $0.title = "過去、ペットを飼ったことがある"
-                $0.value = UserDefaults.standard.bool(forKey: DefaultString.IsExperienced)
-            }
-            //TODO: 「Bad評価1つ以上」は非表示。システムで判断する。
-            <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "飼い主さんへの留意事項"
-                $0.options = PetNGs.strings
-                if UserDefaults.standard.object(forKey: DefaultString.Ngs) != nil {
-                    var codes = [String]()
-                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.Ngs)! {
-                        if val as! Bool == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = PetNGs.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            
             
             +++ Section()
             <<< SwitchRow("expectTo"){
@@ -237,7 +208,7 @@ class UserViewController: BaseFormViewController  {
                 $0.value = UserDefaults.standard.bool(forKey: DefaultString.ExpectTo)
             }
             
-            +++ Section("おあずかり環境"){
+            +++ Section("あなたの環境（任意）"){
                 $0.hidden = .function(["expectTo"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "expectTo")
                     return row.value ?? false == false
@@ -312,6 +283,48 @@ class UserViewController: BaseFormViewController  {
             }
             //TODO:Petto利用履歴
             
+            
+            +++ Section()
+            <<< SwitchRow("enterDetails"){
+                $0.title = "より詳細なプロフィールを入力する"
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.EnterDetails)
+            }
+            
+            +++ Section("あなたのペット経験など（任意）"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    return row.value ?? false == false
+                })
+            }
+            <<< CheckRow("hasAnotherPet") {
+                $0.title = "現在、他にペットを飼っている"
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet)
+            }
+            <<< CheckRow("isExperienced") {
+                $0.title = "過去、ペットを飼ったことがある"
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.IsExperienced)
+            }
+            //TODO: 「Bad評価1つ以上」は非表示。システムで判断する。
+            <<< MultipleSelectorRow<String>("ngs") {
+                $0.title = "飼い主さんへの留意事項"
+                $0.options = PetNGs.strings
+                if UserDefaults.standard.object(forKey: DefaultString.Ngs) != nil {
+                    var codes = [String]()
+                    for (key,val) in UserDefaults.standard.dictionary(forKey: DefaultString.Ngs)! {
+                        if val as! Bool == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = PetNGs.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            
+            
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "OK"
@@ -350,6 +363,7 @@ class UserViewController: BaseFormViewController  {
                 // Bool
             }else if case let v as Bool = value {
                 switch key {
+                case "enterDetails": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.EnterDetails))
                 case "expectTo": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.ExpectTo))
                 case "hasAnotherPet": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet))
                 case "isExperienced": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.IsExperienced))
@@ -434,6 +448,13 @@ class UserViewController: BaseFormViewController  {
         if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
+            // remove（任意項目のみ）
+            ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("userEnvironments").removeValue()
+            ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("userTools").removeValue()
+            ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("userNgs").removeValue()
+            ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("hasAnotherPet").removeValue()
+            ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("isExperienced").removeValue()
+            ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("ngs").removeValue()
             // update
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).updateChildValues(self.inputData)
             // HUDで投稿完了を表示する
@@ -453,6 +474,7 @@ class UserViewController: BaseFormViewController  {
         // UserDefaultsを更新（ユーザー項目）
         UserDefaults.standard.set(false, forKey: DefaultString.GuestFlag)
         UserDefaults.standard.set(self.inputData["imageString"] , forKey: DefaultString.ImageString)
+        UserDefaults.standard.set(self.inputData["sex"] , forKey: DefaultString.Sex)
         UserDefaults.standard.set(self.inputData["lastname"] , forKey: DefaultString.Lastname)
         UserDefaults.standard.set(self.inputData["firstname"] , forKey: DefaultString.Firstname)
         UserDefaults.standard.set(self.inputData["area"] , forKey: DefaultString.Area)
@@ -462,9 +484,45 @@ class UserViewController: BaseFormViewController  {
         UserDefaults.standard.set(self.inputData["isExperienced"] , forKey: DefaultString.IsExperienced)
         UserDefaults.standard.set(self.inputData["ngs"] , forKey: DefaultString.Ngs)
         UserDefaults.standard.set(self.inputData["expectTo"] , forKey: DefaultString.ExpectTo)
+        UserDefaults.standard.set(self.inputData["enterDetails"] , forKey: DefaultString.EnterDetails)
         UserDefaults.standard.set(self.inputData["userEnvironments"] , forKey: DefaultString.UserEnvironments)
         UserDefaults.standard.set(self.inputData["userTools"] , forKey: DefaultString.UserTools)
         UserDefaults.standard.set(self.inputData["userNgs"] , forKey: DefaultString.UserNgs)
+        
+        
+        // HUDで処理中を表示
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+        
+        if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) != nil,
+            !UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!.isEmpty {
+            for (roomId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)! {
+                let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+                // roomDataの取得
+                roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    print("DEBUG_PRINT: UserViewController.executePost .observeSingleEventイベントが発生しました。")
+                    if let _ = snapshot.value as? NSDictionary {
+                        
+                        // roomDataを取得
+                        let roomData = RoomData(snapshot: snapshot, myId: roomId)
+                        // 自分があずかり人の場合
+                        if UserDefaults.standard.string(forKey: DefaultString.Uid) == roomData.userId {
+                            var inputData2 = [String : Any]()
+                            inputData2["userName"] = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
+                            inputData2["userImageString"] = UserDefaults.standard.string(forKey: DefaultString.ImageString)
+                            inputData2["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
+                            inputData2["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
+                            inputData2["userSex"] = UserDefaults.standard.string(forKey: DefaultString.Sex)
+                            inputData2["updateAt"] = String(time)
+                            // roomDataを更新
+                            roomRef.child(Paths.RoomPath).child(roomId).updateChildValues(inputData2)
+                        }
+                    }
+                })
+                // HUDを消す
+                SVProgressHUD.dismiss()
+            }
+        }
+        
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         
@@ -475,6 +533,7 @@ class UserViewController: BaseFormViewController  {
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)
         
+        print("DEBUG_PRINT: UserViewController.executePost end")
     }
     
     override func didReceiveMemoryWarning() {

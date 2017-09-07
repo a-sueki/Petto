@@ -107,7 +107,7 @@ class EditViewController: BaseFormViewController {
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
-                $0.value = self.petData?.area ?? $0.options.first
+                $0.value = self.petData?.area ?? UserDefaults.standard.string(forKey: DefaultString.Area)
                 $0.add(rule: RuleRequired())
                 let ruleRequiredViaClosure = RuleClosure<String> { rowValue in
                     return (rowValue == nil || rowValue!.isEmpty || rowValue == SelectString.unspecified) ? ValidationError(msg: "エリアを選択してください") : nil
@@ -166,8 +166,8 @@ class EditViewController: BaseFormViewController {
                 $0.options = Sex.strings
                 $0.value = self.petData?.sex ?? $0.options.first
             }
-
-           
+            
+            
             +++ Section()
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集する"
@@ -538,7 +538,8 @@ class EditViewController: BaseFormViewController {
             }
             <<< TextAreaRow("notices") {
                 $0.textAreaHeight = .dynamic(initialTextViewHeight: 50)
-            }
+                $0.value = self.petData?.notices ?? nil
+           }
             
             
             
@@ -649,6 +650,28 @@ class EditViewController: BaseFormViewController {
         if let data = self.petData {
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
+            // remove（任意項目のみ）
+            ref.child(Paths.PetPath).child(data.id!).child("toolRentalAllowed").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("feedingFeePayable").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("startDate").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("endDate").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("minDays").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("maxDays").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("age").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("size").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("color").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("category").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("isVaccinated").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("isCastrated").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("wanted").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("userNgs").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("environments").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("tools").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("ngs").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("feeding").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("dentifrice").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("walk").removeValue()
+            ref.child(Paths.PetPath).child(data.id!).child("notices").removeValue()
             // update
             ref.child(Paths.PetPath).child(data.id!).updateChildValues(inputData)
             // HUDで投稿完了を表示する
@@ -665,6 +688,30 @@ class EditViewController: BaseFormViewController {
             ref.child(Paths.UserPath).child(uid!).child("myPets").updateChildValues([key: true])
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "ペット情報を投稿しました")
+        }
+        
+        // HUDで処理中を表示
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+        
+        if let data = self.petData, self.petData?.roomIds != nil, !(self.petData?.roomIds.isEmpty)! {
+            for (roomId,_) in data.roomIds {
+                let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+                // roomDataの取得
+                roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    print("DEBUG_PRINT: EditViewController.executePost .observeSingleEventイベントが発生しました。")
+                    if let _ = snapshot.value as? NSDictionary {
+                        
+                        var inputData2 = [String : Any]()
+                        inputData2["petName"] = data.name
+                        inputData2["petImageString"] = data.imageString
+                        inputData2["updateAt"] = String(time)
+                        // roomDataを更新
+                        roomRef.child(Paths.RoomPath).child(roomId).updateChildValues(inputData2)
+                    }
+                })
+                // HUDを消す
+                SVProgressHUD.dismiss()
+            }
         }
         
         // 全てのモーダルを閉じる

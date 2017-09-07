@@ -145,7 +145,7 @@ class NavigationBarHandler: NSObject {
                 print(error.localizedDescription)
             }
         } else {
-            print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ユーザはログインしていません")
+            print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ゲストユーザです。")
         }
         
         btn1 = UIBarButtonItem(customView: button1)

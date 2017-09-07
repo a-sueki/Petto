@@ -15,6 +15,7 @@ class UserData: NSObject {
     var id: String
     var image: UIImage
     var imageString: String
+    var sex: String
     var firstname: String
     var lastname: String
     var birthday: String
@@ -23,6 +24,7 @@ class UserData: NSObject {
     var hasAnotherPet: Bool        // 他にペットを飼っている
     var isExperienced: Bool        // ペット飼育経験あり
     var expectTo: Bool             // ペットあずかりを希望する
+    var enterDetails: Bool? // add
     var createAt: NSDate
     var createBy: String
     var updateAt: NSDate
@@ -52,6 +54,7 @@ class UserData: NSObject {
         self.id = myId
         self.imageString = valueDictionary["imageString"] as! String
         self.image = UIImage(data: NSData(base64Encoded: self.imageString, options: .ignoreUnknownCharacters)! as Data)!
+        self.sex = valueDictionary["sex"] as! String
         self.firstname = valueDictionary["firstname"] as! String
         self.lastname = valueDictionary["lastname"] as! String
         self.birthday = valueDictionary["birthday"] as! String
@@ -60,6 +63,7 @@ class UserData: NSObject {
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as! Bool
         self.isExperienced = valueDictionary["isExperienced"] as! Bool
         self.expectTo = valueDictionary["expectTo"] as! Bool
+        self.enterDetails = valueDictionary["enterDetails"] as! Bool
         let createAtString = valueDictionary["createAt"] as! String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAtString)!)
         self.createBy = valueDictionary["createBy"] as! String

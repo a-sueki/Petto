@@ -19,6 +19,7 @@ class RoomData: NSObject {
     var userImageString: String?
     var userArea: String?
     var userAge: String?
+    var userSex: String?
     var userGoodInt: Int?
     var userBadInt: Int?
     
@@ -47,6 +48,7 @@ class RoomData: NSObject {
         self.userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
         self.userArea = valueDictionary["userArea"] as? String
         self.userAge = valueDictionary["userAge"] as? String
+        self.userSex = valueDictionary["userSex"] as? String
         self.userGoodInt = valueDictionary["userGoodInt"] as? Int
         self.userBadInt = valueDictionary["userBadInt"] as? Int
         

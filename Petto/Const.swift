@@ -26,6 +26,7 @@ struct DefaultString {
     static let DisplayName = "displayName"
     // ユーザー項目（必須）
     static let ImageString = "imageString"
+    static let Sex = "sex"
     static let Firstname = "firstname"
     static let Lastname = "lastname"
     static let Birthday = "birthday"
@@ -34,6 +35,7 @@ struct DefaultString {
     static let HasAnotherPet = "hasAnotherPet"
     static let IsExperienced = "isExperienced"
     static let ExpectTo = "expectTo"
+    static let EnterDetails = "enterDetails"
     static let CreateAt = "createAt"
     static let CreateBy = "createBy"
     static let UpdateAt = "updateAt"
@@ -94,6 +96,12 @@ struct Sex {
     static let female = "♀"
 
 }
+struct UserSex {
+    static let strings = ["男性", "女性"]
+    static let male = "男性"
+    static let female = "女性"
+}
+
 struct Size {
     static let strings = ["小型", "中型", "大型"]
     static let searchStrings = [SearchString.unspecified,"小型", "中型", "大型"]

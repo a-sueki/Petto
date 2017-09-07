@@ -104,6 +104,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
                                 // ユーザーデフォルト設定（ユーザー項目（必須））
                                 UserDefaults.standard.set(userData.imageString , forKey: DefaultString.ImageString)
+                                UserDefaults.standard.set(userData.sex , forKey: DefaultString.Sex)
                                 UserDefaults.standard.set(userData.firstname , forKey: DefaultString.Firstname)
                                 UserDefaults.standard.set(userData.lastname , forKey: DefaultString.Lastname)
                                 UserDefaults.standard.set(userData.birthday , forKey: DefaultString.Birthday)
@@ -112,6 +113,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 UserDefaults.standard.set(userData.hasAnotherPet , forKey: DefaultString.HasAnotherPet)
                                 UserDefaults.standard.set(userData.isExperienced , forKey: DefaultString.IsExperienced)
                                 UserDefaults.standard.set(userData.expectTo , forKey: DefaultString.ExpectTo)
+                                UserDefaults.standard.set(userData.enterDetails , forKey: DefaultString.EnterDetails)
                                 UserDefaults.standard.set(userData.createAt , forKey: DefaultString.CreateAt)
                                 UserDefaults.standard.set(userData.createBy , forKey: DefaultString.CreateBy)
                                 UserDefaults.standard.set(userData.updateAt , forKey: DefaultString.UpdateAt)
