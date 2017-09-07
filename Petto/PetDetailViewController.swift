@@ -321,7 +321,7 @@ class PetDetailViewController: BaseFormViewController {
             SVProgressHUD.showError(withStatus: "このペットの飼い主はあなたです")
         }else{
             // HUDで処理中を表示
-            SVProgressHUD.show()
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             // roomDataの取得
             let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
             roomRef.observeSingleEvent(of: .value, with: { (snapshot) in

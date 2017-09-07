@@ -157,7 +157,7 @@ class AccountViewController: BaseFormViewController {
                 if key == "displayName" {
                     if UserDefaults.standard.string(forKey: DefaultString.DisplayName) != itemValue {
                         // HUDで処理中を表示
-                        SVProgressHUD.show()
+                        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                         let user = FIRAuth.auth()?.currentUser
                         if let user = user {
                             let changeRequest = user.profileChangeRequest()
@@ -182,7 +182,7 @@ class AccountViewController: BaseFormViewController {
                 }else if key == "mail" {
                     if UserDefaults.standard.string(forKey: DefaultString.Mail) != itemValue {
                         // HUDで処理中を表示
-                        SVProgressHUD.show()
+                        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                         let user = FIRAuth.auth()?.currentUser
                         if let user = user {
                             user.updateEmail(itemValue, completion: { error in
@@ -205,7 +205,7 @@ class AccountViewController: BaseFormViewController {
                 }else if key == "password" {
                     if UserDefaults.standard.string(forKey: DefaultString.Password) != itemValue {
                         // HUDで処理中を表示
-                        SVProgressHUD.show()
+                        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                         let user = FIRAuth.auth()?.currentUser
                         if let user = user {
                             user.updatePassword(itemValue, completion: { error in

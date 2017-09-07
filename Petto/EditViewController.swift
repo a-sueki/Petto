@@ -56,6 +56,8 @@ class EditViewController: BaseFormViewController {
                 $0.baseValue = self.petData?.image ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
+                }.cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "camera-1")
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.textLabel?.textColor = .red
@@ -75,13 +77,14 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
-            
             <<< NameRow("name") {
                 $0.title = "名前"
                 $0.placeholder = "ポチ"
                 $0.value = self.petData?.name ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnBlur
+                }.cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "dogtag")
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.textLabel?.textColor = .red
@@ -100,13 +103,19 @@ class EditViewController: BaseFormViewController {
                             row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
                         }
                     }
-                }
+            }
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
                 $0.value = self.petData?.area ?? $0.options.first
                 $0.add(rule: RuleRequired())
+                let ruleRequiredViaClosure = RuleClosure<String> { rowValue in
+                    return (rowValue == nil || rowValue!.isEmpty || rowValue == SelectString.unspecified) ? ValidationError(msg: "エリアを選択してください") : nil
+                }
+                $0.add(rule: ruleRequiredViaClosure)
                 $0.validationOptions = .validatesOnChange
+                }.cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "maker")
                 }.cellUpdate { cell, row in
                     if !row.isValid {
                         cell.textLabel?.textColor = .red
@@ -126,114 +135,6 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
-            
-            +++ Section("プロフィール")
-            <<< SegmentedRow<String>("sex") {
-                $0.title =  "性別"
-                $0.options = Sex.strings
-                $0.value = self.petData?.sex ?? nil
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
-            }
-            <<< SegmentedRow<String>("kind") {
-                $0.title =  "種類"
-                $0.options = Kind.strings
-                $0.value = self.petData?.kind ?? nil
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
-            }
-            <<< PickerInputRow<String>("categoryDog"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? Kind.dog == Kind.cat
-                })
-                $0.options = CategoryDog.strings
-                $0.value = self.petData?.category ?? $0.options.first
-            }
-            <<< PickerInputRow<String>("categoryCat"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? Kind.dog == Kind.dog
-                })
-                $0.options = CategoryCat.strings
-                $0.value = self.petData?.category ?? $0.options.first
-            }
-            <<< PickerInputRow<String>("age"){
-                $0.title = "年齢"
-                $0.options = Age.strings
-                $0.value = self.petData?.age ?? $0.options.first
-            }
-            
-            +++ Section("状態")
-            <<< CheckRow("isVaccinated") {
-                $0.title = "ワクチン接種済み"
-                $0.value = self.petData?.isVaccinated ?? false
-            }
-            <<< CheckRow("isCastrated") {
-                $0.title = "去勢/避妊手術済み"
-                $0.value = self.petData?.isCastrated ?? false
-            }
-            <<< CheckRow("wanted") {
-                $0.title = "里親募集中"
-                $0.value = self.petData?.wanted ?? false
-            }
-            <<< MultipleSelectorRow<String>("userNgs") {
-                $0.title = "あずかり人への留意事項"
-                $0.options = UserNGs.strings
-                if let data = self.petData , data.userNgs.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.userNgs {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = UserNGs.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            
             
             +++ Section()
             <<< SwitchRow("isAvailable"){
@@ -241,109 +142,26 @@ class EditViewController: BaseFormViewController {
                 $0.value = self.petData?.isAvailable ?? false
             }
             
-            +++ Section("おあずけ条件(任意)"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
-            <<< MultipleSelectorRow<String>("environments") {
-                $0.title = "飼養環境"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = Environment.strings
-                if let data = self.petData , data.environments.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.environments {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = Environment.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            
-            <<< MultipleSelectorRow<String>("tools") {
-                $0.title = "必要な道具"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = Tool.strings
-                if let data = self.petData , data.tools.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.tools {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = Tool.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            <<< MultipleSelectorRow<String>("ngs") {
-                $0.title = "おあずけNGユーザ"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = PetNGs.strings
-                if let data = self.petData , data.ngs.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.ngs {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = PetNGs.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            
-            
-            +++ Section("お世話の方法(任意)"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-            }
-            <<< SegmentedRow<String>("feeding"){
-                $0.title =  "ごはんの回数/日"
-                $0.options = ["1回","2回","3回"]
-                $0.value = self.petData?.feeding ?? nil
-                
-            }
-            <<< SegmentedRow<String>("dentifrice") {
-                $0.title = "歯磨きの回数/日"
-                $0.options = ["1回","2回","3回"]
-                $0.value = self.petData?.dentifrice ?? nil
-            }
-            <<< SegmentedRow<String>("walk") {
-                $0.title = "お散歩の回数/日"
-                $0.options = ["不要","1回","2回"]
-                $0.value = self.petData?.walk ?? nil
-            }
             +++
             Section(header: "おあずけ人募集期間", footer: "期間外では、自動的にあずかり人募集はOFFになります"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
+            }
+            <<< CheckRow("toolRentalAllowed") {
+                $0.title = "道具の貸し出し可能"
+                $0.value = self.petData?.toolRentalAllowed ?? true
+                }
+                .cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "dogchain")
+            }
+            <<< CheckRow("feedingFeePayable") {
+                $0.title = "エサ代は飼い主負担"
+                $0.value = self.petData?.feedingFeePayable ?? true
+                }
+                .cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "dogBowl")
             }
             <<< DateRow("startDate") {
                 $0.title = "開始日付"
@@ -493,10 +311,227 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
+            
+            +++ Section()
+            <<< SwitchRow("enterDetails"){
+                $0.title = "より詳細なプロフィールを入力する"
+                $0.value = self.petData?.enterDetails ?? false
+            }
+            
+            +++ Section("プロフィール（任意）"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    return row.value ?? false == false
+                })
+            }
+            <<< PickerInputRow<String>("age"){
+                $0.title = "年齢"
+                $0.options = Age.strings
+                $0.value = self.petData?.age ?? $0.options.first
+            }
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = Sex.strings
+                $0.value = self.petData?.sex ?? $0.options.first
+            }
+            <<< SegmentedRow<String>("size") {
+                $0.title =  "大きさ"
+                $0.options = Size.strings
+                $0.value = self.petData?.size ?? $0.options.first
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+            }
+            
+            <<< MultipleSelectorRow<String>("color") {
+                $0.title = "色"
+                $0.options = Color.strings
+                if let data = self.petData , data.color.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.color {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Color.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            //TODO: 犬猫以外も選べるようにする
+            <<< SegmentedRow<String>("kind") {
+                $0.title =  "種類"
+                $0.options = Kind.strings
+                $0.value = self.petData?.kind ?? $0.options.first
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+            }
+            //TODO:もっと選びやすいUIにする
+            <<< PickerInputRow<String>("categoryDog"){
+                $0.title = "品種"
+                $0.hidden = .function(["kind"], { form -> Bool in
+                    let row: RowOf<String>! = form.rowBy(tag: "kind")
+                    return row.value ?? Kind.dog == Kind.cat
+                })
+                $0.options = CategoryDog.strings
+                $0.value = self.petData?.category ?? $0.options.first
+            }
+            <<< PickerInputRow<String>("categoryCat"){
+                $0.title = "品種"
+                $0.hidden = .function(["kind"], { form -> Bool in
+                    let row: RowOf<String>! = form.rowBy(tag: "kind")
+                    return row.value ?? Kind.dog == Kind.dog
+                })
+                $0.options = CategoryCat.strings
+                $0.value = self.petData?.category ?? $0.options.first
+            }
+            
+            
+            +++ Section("ペットの状態"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    return row.value ?? false == false
+                })
+            }
+            <<< CheckRow("isVaccinated") {
+                $0.title = "ワクチン接種済み"
+                $0.value = self.petData?.isVaccinated ?? false
+            }
+            <<< CheckRow("isCastrated") {
+                $0.title = "去勢/避妊手術済み"
+                $0.value = self.petData?.isCastrated ?? false
+            }
+            <<< CheckRow("wanted") {
+                $0.title = "里親募集中"
+                $0.value = self.petData?.wanted ?? false
+            }
+            <<< MultipleSelectorRow<String>("userNgs") {
+                $0.title = "あずかり人への留意事項"
+                $0.options = UserNGs.strings
+                if let data = self.petData , data.userNgs.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.userNgs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = UserNGs.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            
+            
+            
+            +++ Section(header: "おあずけ条件(任意)", footer: "おあずけの際、あずかり人に確認してもらいましょう"){
+                $0.hidden = .function(["isAvailable","enterDetails"], { form -> Bool in
+                    let row1: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                    let row2: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    if row1.value == true && row2.value == true {
+                        return false
+                    }
+                    return true
+                })
+            }
+            <<< MultipleSelectorRow<String>("environments") {
+                $0.title = "飼養環境"
+                $0.options = Environment.strings
+                if let data = self.petData , data.environments.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.environments {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Environment.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            
+            <<< MultipleSelectorRow<String>("tools") {
+                $0.title = "必要な道具"
+                $0.options = Tool.strings
+                if let data = self.petData , data.tools.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.tools {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Tool.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            <<< MultipleSelectorRow<String>("ngs") {
+                $0.title = "おあずけNGユーザ"
+                $0.options = PetNGs.strings
+                if let data = self.petData , data.ngs.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.ngs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = PetNGs.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            <<< SegmentedRow<String>("feeding"){
+                $0.title =  "ごはんの回数/日"
+                $0.options = ["1回","2回","3回","その他"]
+                $0.value = self.petData?.feeding ?? $0.options.last
+                
+            }
+            <<< SegmentedRow<String>("dentifrice") {
+                $0.title = "歯磨きの回数/日"
+                $0.options = ["1回","2回","3回","その他"]
+                $0.value = self.petData?.dentifrice ?? $0.options.last
+            }
+            <<< SegmentedRow<String>("walk") {
+                $0.title = "お散歩の回数/日"
+                $0.options = ["不要","1回","2回","その他"]
+                $0.value = self.petData?.walk ?? $0.options.last
+            }
+            
             +++
             Section("その他、特記事項など（任意）"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
                     return row.value ?? false == false
                 })
             }
@@ -550,6 +585,9 @@ class EditViewController: BaseFormViewController {
                 case "isCastrated": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.isCastrated)
                 case "wanted": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.wanted)
                 case "isAvailable": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.isAvailable)
+                case "enterDetails": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.enterDetails)
+                case "toolRentalAllowed": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.toolRentalAllowed)
+                case "feedingFeePayable": self.inputData["\(key)"] = boolSet(new: v ,old: self.petData?.feedingFeePayable)
                 default: break
                 }
                 // Date
@@ -562,6 +600,12 @@ class EditViewController: BaseFormViewController {
             }else {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
+                case "color" :
+                    var codeArray = [String : Bool]()
+                    for itemValue in [String] (Array(fmap)){
+                        codeArray[Color.toCode(itemValue)] = true
+                    }
+                    self.inputData["color"] = codeSet(codes: Color.codes, new: codeArray, old: petData?.color)
                 case "environments" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
@@ -592,7 +636,7 @@ class EditViewController: BaseFormViewController {
         }
         
         // HUDで処理中を表示
-        SVProgressHUD.show()
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
@@ -725,4 +769,3 @@ class EntryView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

@@ -396,7 +396,7 @@ class UserViewController: BaseFormViewController  {
         
         // 表示名（ニックネーム）を名前で更新
         // HUDで処理中を表示
-        SVProgressHUD.show()
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         let user = FIRAuth.auth()?.currentUser
         if let newName = self.inputData["firstname"] as? String,
             newName != UserDefaults.standard.string(forKey: DefaultString.DisplayName){
@@ -421,7 +421,7 @@ class UserViewController: BaseFormViewController  {
         }
         
         // HUDで処理中を表示
-        SVProgressHUD.show()
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate

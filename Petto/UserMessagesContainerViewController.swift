@@ -44,7 +44,7 @@ class UserMessagesContainerViewController: UIViewController {
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             if let roomId = self.roomData?.id {
-                SVProgressHUD.show()
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                 // 要素が追加されたら再表示
                 let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
                 ref.observeSingleEvent(of: .value, with: { (snapshot) in

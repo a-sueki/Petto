@@ -17,6 +17,10 @@ class PetData: NSObject {
     var name: String?
     var area: String?
     var sex: String?
+    var size: String? //add
+    var color = [String:Bool]() //add
+    
+    var enterDetails: Bool? // add
     var kind: String?
     var category: String?
     var age: String?
@@ -27,9 +31,13 @@ class PetData: NSObject {
 
     // おあずけ条件
     var isAvailable: Bool?
+    var toolRentalAllowed: Bool?    //add 道具レンタル可
+    var feedingFeePayable: Bool?    //add エサ代支払い可
+
     var environments = [String:Bool]()
     var tools = [String:Bool]()
     var ngs = [String:Bool]()
+
     var feeding: String?
     var dentifrice: String?
     var walk: String?
@@ -38,7 +46,7 @@ class PetData: NSObject {
     var endDate: String?
     var minDays: Int?
     var maxDays: Int?
-    var notices: String?
+    var notices: String? //add
 
     // メッセージ情報
     var roomIds = [String:Bool]()
@@ -65,6 +73,11 @@ class PetData: NSObject {
         self.kind = valueDictionary["kind"] as? String
         self.category = valueDictionary["category"] as? String
         self.sex = valueDictionary["sex"] as? String
+        self.size = valueDictionary["size"] as? String
+        if let color = valueDictionary["color"] as? [String:Bool] {
+            self.color = color
+        }
+        self.enterDetails = valueDictionary["enterDetails"] as? Bool
         self.age = valueDictionary["age"] as? String
         self.isVaccinated = valueDictionary["isVaccinated"] as? Bool
         self.isCastrated = valueDictionary["isCastrated"] as? Bool
@@ -75,6 +88,9 @@ class PetData: NSObject {
         
         // おあずけ条件
         self.isAvailable = valueDictionary["isAvailable"] as? Bool
+        self.toolRentalAllowed = valueDictionary["toolRentalAllowed"] as? Bool
+        self.feedingFeePayable = valueDictionary["feedingFeePayable"] as? Bool
+        
         if let environments = valueDictionary["environments"] as? [String:Bool] {
             self.environments = environments
         }

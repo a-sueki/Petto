@@ -52,11 +52,11 @@ class SearchViewController: BaseFormViewController {
 //        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
         // フォーム
-        form +++
+/*         form +++
             Section("絞り込み条件") {
                 $0.header = HeaderFooterView<SearchView>(.class)
             }
-            +++ Section("ペットのプロフィール")
+           +++ Section("ペットのプロフィール")
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = SearchArea.strings
@@ -464,7 +464,7 @@ class SearchViewController: BaseFormViewController {
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
         
-        SVProgressHUD.show()
+         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         //Firebaseに保存
         if let data = self.searchData {
             self.inputData["updateAt"] = String(time)
@@ -560,5 +560,7 @@ class SearchView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+*/
     }
+
 }

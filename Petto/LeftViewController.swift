@@ -58,9 +58,6 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("DEBUG_PRINT: LeftViewController.didSelectRowAt start")
         
-        // HUDで処理中を表示
-        SVProgressHUD.show()
-
         switch indexPath.row {
         case 0:
             let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
@@ -93,9 +90,6 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         default:
             break
         }
-        
-        // HUDを消す
-        SVProgressHUD.dismiss(withDelay: 3)
         
         self.slideMenuController()?.closeLeft()
         

@@ -52,7 +52,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         var roomIdListAgain: [String] = []
         
         // userのmessages[]を取得　→roomIdList
-        SVProgressHUD.show()
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         if UserDefaults.standard.object(forKey: DefaultString.RoomIds) != nil {
             for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!{
                 roomIdListAgain.append(key)

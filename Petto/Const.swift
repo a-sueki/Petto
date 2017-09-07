@@ -77,57 +77,104 @@ struct ErrorMsgString {
     static let RulePassword = "パスワードは6~12文字で設定して下さい"
 }
 
+struct SelectString {
+    static let unspecified = "選択してください"
+}
 struct SearchString {
     static let unspecified = "指定しない"
 }
-
 struct Area {
-    static let strings = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
+    static let strings = [SelectString.unspecified,"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
+    static let searchStrings = [SearchString.unspecified,"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
 }
-struct SearchArea {
-    static let strings = [SearchString.unspecified,"北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
-}
-
 struct Sex {
     static let strings = ["♂", "♀"]
+    static let searchStrings = [SearchString.unspecified,"♂", "♀"]
     static let male = "♂"
     static let female = "♀"
+
 }
-struct SearchSex {
-    static let strings = [SearchString.unspecified,"♂", "♀"]
-    static let male = "♂"
-    static let female = "♀"
+struct Size {
+    static let strings = ["小型", "中型", "大型"]
+    static let searchStrings = [SearchString.unspecified,"小型", "中型", "大型"]
+    static let small = "小型"
+    static let medium = "中型"
+    static let large = "大型"
+}
+struct Color {
+    static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4,Codes.C5,Codes.C6,Codes.C7,Codes.C8]
+    static let strings = ["白","黒","灰","黄","茶","赤","青","紫"]
+    static let icons = strings
+    
+    static func toString(_ code:String) -> String {
+        switch code {
+        case codes[0] : return strings[0]
+        case codes[1] : return strings[1]
+        case codes[2] : return strings[2]
+        case codes[3] : return strings[3]
+        case codes[4] : return strings[4]
+        case codes[5] : return strings[5]
+        case codes[6] : return strings[6]
+        case codes[7] : return strings[7]
+        default:  return "不明"
+        }
+    }
+    static func toCode(_ string:String) -> String {
+        switch string {
+        case strings[0] : return codes[0]
+        case strings[1] : return codes[1]
+        case strings[2] : return codes[2]
+        case strings[3] : return codes[3]
+        case strings[4] : return codes[4]
+        case strings[5] : return codes[5]
+        case strings[6] : return codes[6]
+        case strings[7] : return codes[7]
+        default:  return "不明"
+        }
+    }
+    static func toIcon(_ code:String) -> UIImage {
+        switch code {
+        case codes[0] : return UIImage(named: icons[0])!
+        case codes[1] : return UIImage(named: icons[1])!
+        case codes[2] : return UIImage(named: icons[2])!
+        case codes[3] : return UIImage(named: icons[3])!
+        case codes[4] : return UIImage(named: icons[4])!
+        case codes[5] : return UIImage(named: icons[5])!
+        case codes[6] : return UIImage(named: icons[6])!
+        case codes[7] : return UIImage(named: icons[7])!
+        default: return UIImage()
+        }
+    }
+    
+    static func convertList(_ codeList: [String]) -> Set<String> {
+        var nameList:Set<String> = []
+        for code in codeList {
+            nameList.insert(toString(code))
+        }
+        return nameList
+    }
 }
 
 struct Kind {
     static let strings = ["イヌ", "ネコ"]
+    static let searchStrings = [SearchString.unspecified,"イヌ", "ネコ"]
     static let dog = "イヌ"
     static let cat = "ネコ"
 }
-struct SearchKind {
-    static let strings = [SearchString.unspecified,"イヌ", "ネコ"]
-    static let dog = "イヌ"
-    static let cat = "ネコ"
-}
+
 struct CategoryDog {
     static let strings = ["雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
-}
-struct SearchCategoryDog {
-    static let strings = [SearchString.unspecified,"雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
+    static let searchStrings = [SearchString.unspecified,"雑種","キャバリア","コーギー","ゴールデン・レトリバー","シー・ズー","柴犬","ダックスフンド","チワワ","パグ","パピヨン","ビーグル","ピンシャー","プードル/トイ・プードル","ブルドッグ","フレンチ・ブルドッグ","ボーダー・コリー","ポメラニアン","マルチーズ","ミニチュア・シュナウザー","ミニチュア・ダックスフンド","ヨークシャ・テリア","ラブラドール・レトリバー","不明"]
 }
 
 struct CategoryCat {
     static let strings = ["雑種","アビシニアン","アメリカンカール","アメリカンショートヘア","エキゾチックショートヘア","サイベリアン","シャム","シャルトリュー","シンガプーラ","スコティッシュフォールド","スフィンクス","ソマリ","ノルウェージャンフォレストキャット","ヒマラヤン","ブリティッシュショートヘア","ペルシャ","ベンガル","マンチカン","メインクーン","ラグドール","ロシアンブルー","不明"]
-}
-struct SearchCategoryCat {
-    static let strings = [SearchString.unspecified,"雑種","アビシニアン","アメリカンカール","アメリカンショートヘア","エキゾチックショートヘア","サイベリアン","シャム","シャルトリュー","シンガプーラ","スコティッシュフォールド","スフィンクス","ソマリ","ノルウェージャンフォレストキャット","ヒマラヤン","ブリティッシュショートヘア","ペルシャ","ベンガル","マンチカン","メインクーン","ラグドール","ロシアンブルー","不明"]
+    static let searchStrings = [SearchString.unspecified,"雑種","アビシニアン","アメリカンカール","アメリカンショートヘア","エキゾチックショートヘア","サイベリアン","シャム","シャルトリュー","シンガプーラ","スコティッシュフォールド","スフィンクス","ソマリ","ノルウェージャンフォレストキャット","ヒマラヤン","ブリティッシュショートヘア","ペルシャ","ベンガル","マンチカン","メインクーン","ラグドール","ロシアンブルー","不明"]
 }
 
 struct Age {
     static let strings = ["8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
-}
-struct SearchAge {
-    static let strings = [SearchString.unspecified,"8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
+    static let searchStrings = [SearchString.unspecified,"8ヶ月〜1歳","1〜2歳","3〜6歳","6〜9歳","10〜15歳","16歳〜","不明"]
 }
 
 struct Codes {
@@ -165,13 +212,13 @@ struct Environment {
         default:  return "不明"
         }
     }
-    static func toIcon(_ code:String) -> String {
+    static func toIcon(_ code:String) -> UIImage {
         switch code {
-        case codes[0] : return icons[0]
-        case codes[1] : return icons[1]
-        case codes[2] : return icons[2]
-        case codes[3] : return icons[3]
-        default:  return "不明"
+        case codes[0] : return UIImage(named: icons[0])!
+        case codes[1] : return UIImage(named: icons[1])!
+        case codes[2] : return UIImage(named: icons[2])!
+        case codes[3] : return UIImage(named: icons[3])!
+        default:  return UIImage()
         }
     }
     

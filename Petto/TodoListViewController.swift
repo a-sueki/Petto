@@ -53,7 +53,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         var leaveIdListAgain: [String] = []
         
         // userのTodoRoomIdsからleaveIdを取得
-        SVProgressHUD.show()
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         if UserDefaults.standard.object(forKey: DefaultString.TodoRoomIds) != nil {
             for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!{
                 leaveIdListAgain.append(key)
