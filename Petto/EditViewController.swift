@@ -135,7 +135,39 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
-            
+            //TODO: 犬猫以外も選べるようにする
+            <<< SegmentedRow<String>("kind") {
+                $0.title =  "種類"
+                $0.options = Kind.strings
+                $0.value = self.petData?.kind ?? $0.options.first
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+                }.cellUpdate { cell, row in
+                    if !row.isValid {
+                        cell.titleLabel?.textColor = .red
+                    }
+                }.onRowValidationChanged { cell, row in
+                    let rowIndex = row.indexPath!.row
+                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
+                        row.section?.remove(at: rowIndex + 1)
+                    }
+                    if !row.isValid {
+                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
+                            let labelRow = LabelRow() {
+                                $0.title = validationMsg
+                                $0.cell.height = { 30 }
+                            }
+                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
+                        }
+                    }
+            }
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = Sex.strings
+                $0.value = self.petData?.sex ?? $0.options.first
+            }
+
+           
             +++ Section()
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集する"
@@ -329,11 +361,6 @@ class EditViewController: BaseFormViewController {
                 $0.options = Age.strings
                 $0.value = self.petData?.age ?? $0.options.first
             }
-            <<< SegmentedRow<String>("sex") {
-                $0.title =  "性別"
-                $0.options = Sex.strings
-                $0.value = self.petData?.sex ?? $0.options.first
-            }
             <<< SegmentedRow<String>("size") {
                 $0.title =  "大きさ"
                 $0.options = Size.strings
@@ -359,32 +386,6 @@ class EditViewController: BaseFormViewController {
                 }
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            //TODO: 犬猫以外も選べるようにする
-            <<< SegmentedRow<String>("kind") {
-                $0.title =  "種類"
-                $0.options = Kind.strings
-                $0.value = self.petData?.kind ?? $0.options.first
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-                }.cellUpdate { cell, row in
-                    if !row.isValid {
-                        cell.titleLabel?.textColor = .red
-                    }
-                }.onRowValidationChanged { cell, row in
-                    let rowIndex = row.indexPath!.row
-                    while row.section!.count > rowIndex + 1 && row.section?[rowIndex  + 1] is LabelRow {
-                        row.section?.remove(at: rowIndex + 1)
-                    }
-                    if !row.isValid {
-                        for (index, validationMsg) in row.validationErrors.map({ $0.msg }).enumerated() {
-                            let labelRow = LabelRow() {
-                                $0.title = validationMsg
-                                $0.cell.height = { 30 }
-                            }
-                            row.section?.insert(labelRow, at: row.indexPath!.row + index + 1)
-                        }
-                    }
             }
             //TODO:もっと選びやすいUIにする
             <<< PickerInputRow<String>("categoryDog"){
