@@ -479,29 +479,14 @@ class SearchViewController: BaseFormViewController {
          SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         //Firebaseに保存
         if let data = self.searchData {
+            // 更新しないデータを引き継ぎ
+            self.inputData["createAt"] = String(data.createAt!.timeIntervalSinceReferenceDate)
+            self.inputData["createBy"] = data.createBy
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
-            // remove（任意項目のみ）
-            ref.child(Paths.SearchPath).child(data.id!).child("toolRentalAllowed").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("feedingFeePayable").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("startDate").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("endDate").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("minDays").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("maxDays").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("age").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("size").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("color").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("category").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("specifyConditions").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("isVaccinated").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("isCastrated").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("wanted").removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).child("userNgs").removeValue()
-            // update
-            ref.child(Paths.SearchPath).child(data.id!).updateChildValues(inputData)
-            for key in removeKeyList {
-                ref.child(Paths.SearchPath).child(data.id!).child(key).removeValue()
-            }
+            // search初期化&更新
+            ref.child(Paths.SearchPath).child(data.id!).removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).setValue(self.inputData)            
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を更新しました")
         }else{

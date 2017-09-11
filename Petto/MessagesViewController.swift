@@ -148,26 +148,28 @@ class MessagesViewController: JSQMessagesViewController {
     func updateMessageData(inputData: [String : Any], lastMessage: String ){
         print("DEBUG_PRINT: MessagesViewController.updateMessageData start")
         
-        // message
+        // messageをinsert
         let ref = FIRDatabase.database().reference()
         let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
         ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
-        // room
-        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["lastMessage" : lastMessage])
-        ref.child(Paths.RoomPath).child((self.roomData?.id)!).updateChildValues(["updateAt" : inputData["timestamp"]!])
-        // user
-        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
-        // pet
-        ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").updateChildValues([(self.roomData?.id)! : true])
         
-        // 既読フラグupdate
+        // room,user,petをupdate
         if checkSender() {
-            // ブリーダー（相手）の未読リストにroomIdを追加
-            ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
+            // 自分があずかり人の場合
+            let childUpdates = ["/\(Paths.RoomPath)/\(self.roomData!.id!)/lastMessage/": lastMessage,
+                                "/\(Paths.RoomPath)/\(self.roomData!.id!)/updateAt/": inputData["timestamp"]!,
+                                "/\(Paths.UserPath)/\(self.roomData!.userId!)/roomIds/\(self.roomData!.id!)": true,
+                                "/\(Paths.PetPath)/\(self.roomData!.petId!)/roomIds/\(self.roomData!.id!)": true,
+                                "/\(Paths.UserPath)/\(self.roomData!.breederId!)/unReadRoomIds/\(self.roomData!.id!)/": true] as [String : Any] // 相手の未読をON
+            ref.updateChildValues(childUpdates)
         }else{
-            print("わたしはブリーダーです")
-            // あずかり人（相手）の未読リストにroomIdを追加
-            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").updateChildValues([(self.roomData?.id)! : true])
+            // 自分がブリーダーの場合
+            let childUpdates = ["/\(Paths.RoomPath)/\(self.roomData!.id!)/lastMessage/": lastMessage,
+                                "/\(Paths.RoomPath)/\(self.roomData!.id!)/updateAt/": inputData["timestamp"]!,
+                                "/\(Paths.UserPath)/\(self.roomData!.userId!)/roomIds/\(self.roomData!.id!)": true,
+                                "/\(Paths.PetPath)/\(self.roomData!.petId!)/roomIds/\(self.roomData!.id!)": true,
+                                "/\(Paths.UserPath)/\(self.roomData!.userId!)/unReadRoomIds/\(self.roomData!.id!)/": true] as [String : Any] // 相手の未読をON
+            ref.updateChildValues(childUpdates)
         }
         
         print("DEBUG_PRINT: MessagesViewController.updateMessageData end")

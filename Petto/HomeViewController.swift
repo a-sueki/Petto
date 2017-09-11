@@ -322,6 +322,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         // 配列からタップされたインデックスのデータを取り出す
         let petData = self.petData[indexPath!.row]
         
+        //TODO: ref.runTransactionBlockに修正
         // Firebaseに保存するデータの準備
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             if petData.isLiked {

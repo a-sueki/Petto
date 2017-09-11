@@ -408,13 +408,14 @@ class PetDetailViewController: BaseFormViewController {
                     inputData["createAt"] = String(time)
                     inputData["updateAt"] = String(time)
                     
-                    // insert
+                    // roomをinsert
                     let ref = FIRDatabase.database().reference()
                     ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
-                    // update
-                    ref.child(Paths.UserPath).child(uid!).child("roomIds").updateChildValues([roomId : true]) // あずかり人
-                    ref.child(Paths.PetPath).child(pid).child("roomIds").updateChildValues([roomId : true])
-                    ref.child(Paths.UserPath).child((self.petData?.createBy)!).child("roomIds").updateChildValues([roomId : true]) // ブリーダー
+                    // user,petをupdate
+                    let childUpdates = ["/\(Paths.UserPath)/\(uid!)/roomIds/": true,
+                                        "/\(Paths.PetPath)/\(pid)/roomIds/":true,
+                                        "/\(Paths.UserPath)/\(self.petData!.createBy!)/roomIds/": true]
+                    ref.updateChildValues(childUpdates)
                     
                     // roomDataの取得
                     roomRef.observeSingleEvent(of: .value, with: { (snapshot2) in

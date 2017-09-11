@@ -648,7 +648,7 @@ class EditViewController: BaseFormViewController {
         
         //Firebaseに保存
         if let data = self.petData {
-            // 他画面で更新されるデータを引き継ぎ
+            // 更新しないデータを引き継ぎ
             self.inputData["createAt"] = String(data.createAt!.timeIntervalSinceReferenceDate)
             self.inputData["createBy"] = data.createBy
             self.inputData["roomIds"] = data.roomIds

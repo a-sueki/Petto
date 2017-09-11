@@ -145,12 +145,6 @@ class ConsentViewController: BaseFormViewController {
                             "/\(Paths.UserPath)/\(self.roomData!.userId!)/todoRoomIds/\(self.roomData!.id!)/": true,
                             "/\(Paths.UserPath)/\(self.roomData!.breederId!)/todoRoomIds/\(self.roomData!.id!)/": true]
         ref.updateChildValues(childUpdates)
-/*
-        ref.child(Paths.LeavePath).child((self.roomData?.id)!).updateChildValues(["acceptFlag": true])
-        // userをupdate
-        ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("todoRoomIds").updateChildValues([(self.roomData?.id)! : true])
-        ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("todoRoomIds").updateChildValues([(self.roomData?.id)! : true])
-*/
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: showMessage)
         // 全てのモーダルを閉じる
