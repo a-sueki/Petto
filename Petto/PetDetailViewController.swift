@@ -412,9 +412,9 @@ class PetDetailViewController: BaseFormViewController {
                     let ref = FIRDatabase.database().reference()
                     ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
                     // user,petをupdate
-                    let childUpdates = ["/\(Paths.UserPath)/\(uid!)/roomIds/": true,
-                                        "/\(Paths.PetPath)/\(pid)/roomIds/":true,
-                                        "/\(Paths.UserPath)/\(self.petData!.createBy!)/roomIds/": true]
+                    let childUpdates = ["/\(Paths.UserPath)/\(uid!)/roomIds/\(roomId)/": true,
+                                        "/\(Paths.PetPath)/\(pid)/roomIds/\(roomId)/":true,
+                                        "/\(Paths.UserPath)/\(self.petData!.createBy!)/roomIds/\(roomId)/": true]
                     ref.updateChildValues(childUpdates)
                     
                     // roomDataの取得
@@ -432,6 +432,7 @@ class PetDetailViewController: BaseFormViewController {
             }) { (error) in
                 print(error.localizedDescription)
             }
+            
             // HUDを消す
             SVProgressHUD.dismiss()
         }
@@ -442,6 +443,19 @@ class PetDetailViewController: BaseFormViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear start")
+
+        // roomIdを取得
+        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
+        let pid = (self.petData?.id)!
+        let roomId = uid! + pid
+        let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+        roomRef.removeAllObservers()
+        
+        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear end")
     }
 }
 

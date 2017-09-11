@@ -425,7 +425,7 @@ class UserViewController: BaseFormViewController  {
                     }
                     print("DEBUG_PRINT: [displayName = \(newName)]の設定に成功しました。")
                     // UserDefaultsを更新（アカウント項目）
-                    UserDefaults.standard.set(self.inputData["displayName"] , forKey: DefaultString.DisplayName)
+                    UserDefaults.standard.set(self.inputData["firstname"] , forKey: DefaultString.DisplayName)
                     // HUDで投稿完了を表示する
                     SVProgressHUD.showSuccess(withStatus: "表示名を\(newName)に変更しました")
                 }

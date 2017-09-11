@@ -97,19 +97,6 @@ class NavigationBarHandler: NSObject {
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
            }
             
-            
-            // myPets取得
-            var myPets = [String:Bool]()
-            ref.child(user.uid).child("myPets").observe(.childAdded, with: { (snapshot) in
-                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar myPets.childAddedイベントが発生しました。")
-                if case _ as Bool = snapshot.value {
-                    myPets[snapshot.key] = true
-                    // ユーザーデフォルト設定
-                    UserDefaults.standard.set(myPets , forKey: DefaultString.MyPets)
-                }
-            }) { (error) in
-                print(error.localizedDescription)
-            }
             // roomIds取得
             var roomIds = [String:Bool]()
             ref.child(user.uid).child("roomIds").observe(.childAdded, with: { (snapshot) in
@@ -123,8 +110,9 @@ class NavigationBarHandler: NSObject {
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
+            
             // goods取得
-            var goods = [String:Bool]()
+/*            var goods = [String:Bool]()
             ref.child(user.uid).child("goods").observe(.childAdded, with: { (snapshot) in
                 print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar goods.childAddedイベントが発生しました。")
                 if case _ as Bool = snapshot.value {
@@ -149,6 +137,7 @@ class NavigationBarHandler: NSObject {
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
+ */
         } else {
             print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ゲストユーザです。")
         }
@@ -265,6 +254,20 @@ class BaseFormViewController: FormViewController {
         }
         print("DEBUG_PRINT: BaseFormViewController.viewDidAppear end")
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear start")
+        
+        if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
+            ref.child(user.uid).child("unReadRoomIds").removeAllObservers()
+            ref.child(user.uid).child("todoRoomIds").removeAllObservers()
+            ref.child(user.uid).child("roomIds").removeAllObservers()
+            ref.child(user.uid).child("goods").removeAllObservers()
+            ref.child(user.uid).child("bads").removeAllObservers()
+        }
+        print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear end")
+    }
 }
 
 class BaseViewController: UIViewController {
@@ -295,6 +298,21 @@ class BaseViewController: UIViewController {
         
         print("DEBUG_PRINT: BaseViewController.viewDidAppear end")
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: BaseViewController.viewWillDisappear start")
+        
+        if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
+            ref.child(user.uid).child("unReadRoomIds").removeAllObservers()
+            ref.child(user.uid).child("todoRoomIds").removeAllObservers()
+            ref.child(user.uid).child("roomIds").removeAllObservers()
+            ref.child(user.uid).child("goods").removeAllObservers()
+            ref.child(user.uid).child("bads").removeAllObservers()
+        }
+        print("DEBUG_PRINT: BaseViewController.viewWillDisappear end")
+    }
+
 }
 
 

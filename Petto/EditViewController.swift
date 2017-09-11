@@ -680,6 +680,16 @@ class EditViewController: BaseFormViewController {
             ref.child(Paths.PetPath).child(key).setValue(self.inputData)
             //ユーザのmyPetsIdを追加
             ref.child(Paths.UserPath).child(uid!).child("myPets").updateChildValues([key: true])
+            // ユーザーデフォルトを更新
+            if UserDefaults.standard.dictionary(forKey: DefaultString.MyPets) != nil && !UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!.isEmpty {
+                var myPets = UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!
+                myPets[key] = true
+                UserDefaults.standard.set(myPets , forKey: DefaultString.MyPets)
+            }else{
+                var myPets = [String:Bool]()
+                myPets[key] = true
+                UserDefaults.standard.set(myPets , forKey: DefaultString.MyPets)
+            }
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "ペット情報を投稿しました")
         }

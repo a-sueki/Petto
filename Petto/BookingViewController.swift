@@ -24,7 +24,6 @@ class BookingViewController: BaseFormViewController {
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             if let roomId = self.roomData?.id {
-                // 要素が追加されたら再表示
                 let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
                 ref.observeSingleEvent(of: .value, with: { (snapshot) in
                     print("DEBUG_PRINT: BookingViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
@@ -44,6 +43,17 @@ class BookingViewController: BaseFormViewController {
         }
         
         print("DEBUG_PRINT: BookingViewController.viewDidLoad end")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: BookingViewController.viewWillDisappear start")
+
+        if let roomId = self.roomData?.id {
+            let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
+            ref.removeAllObservers()
+        }
+        
+        print("DEBUG_PRINT: BookingViewController.viewWillDisappear end")
     }
     
     func showLeaveData() {

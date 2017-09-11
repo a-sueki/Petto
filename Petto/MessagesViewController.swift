@@ -107,7 +107,7 @@ class MessagesViewController: JSQMessagesViewController {
         inputData["senderDisplayName"] = senderDisplayName
         inputData["text"] = text
         inputData["timestamp"] = String(time)
-
+        
         // Firebase連携
         updateMessageData(inputData: inputData, lastMessage: text)
         
@@ -319,6 +319,16 @@ class MessagesViewController: JSQMessagesViewController {
         
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: MessagesViewController.viewDidDisappear start")
+
+        let ref1 = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
+        ref1.removeAllObservers()
+        
+        print("DEBUG_PRINT: MessagesViewController.viewDidDisappear end")
+    }
+
+    
     
     func checkSender () -> Bool {
         var result = false

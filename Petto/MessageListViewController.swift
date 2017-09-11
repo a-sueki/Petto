@@ -287,6 +287,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             }
         }
         
+        
         print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton end")
     }
     
@@ -321,5 +322,31 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton end")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: MessageListViewController.viewWillDisappear start")
+        
+        
+        let ref = FIRDatabase.database().reference()
+        let ref1 = ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("unReadRoomIds")
+        ref1.removeAllObservers()
+        for roomId in roomIdList {
+            let ref2 = ref.child(Paths.RoomPath).child(roomId)
+            ref2.removeAllObservers()
+        }
+        
+        for rooms in self.sortedRoomDataArray {
+            if let userId = rooms.userId {
+                let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+                ref.removeAllObservers()
+            }
+            if let petId = rooms.petId {
+                let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+                ref.removeAllObservers()
+            }
+        }
+
+        print("DEBUG_PRINT: MessageListViewController.viewWillDisappear end")
+    }
+
     
 }

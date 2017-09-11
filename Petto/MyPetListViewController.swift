@@ -169,4 +169,16 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         
         print("DEBUG_PRINT: MyPetListViewController.handleImageView end")
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: MyPetListViewController.viewWillDisappear start")
+        
+        for petId in petIdList {
+            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+            ref.removeAllObservers()
+        }
+        
+        print("DEBUG_PRINT: MyPetListViewController.viewWillDisappear end")
+    }
+    
 }

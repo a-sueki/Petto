@@ -104,4 +104,15 @@ class UserMessagesContainerViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: UserMessagesContainerViewController.viewWillDisappear start")
+        
+        if let roomId = self.roomData?.id {
+            let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
+            ref.removeAllObservers()
+        }
+        
+        print("DEBUG_PRINT: UserMessagesContainerViewController.viewWillDisappear end")
+    }
 }

@@ -288,5 +288,26 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         print("DEBUG_PRINT: TodoListViewController.handlePetDetailButton end")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: TodoListViewController.viewWillDisappear start")
+        
+        let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("todoRoomIds")
+        ref.removeAllObservers()
+        for leaveId in leaveIdList {
+            let ref2 = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
+            ref2.removeAllObservers()
+        }
+        for leaves in self.sortedLeaveDataArray {
+            if let userId = leaves.userId {
+                let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+                ref.removeAllObservers()
+            }
+            if let petId = leaves.petId {
+                let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+                ref.removeAllObservers()
+            }
+        }
+        print("DEBUG_PRINT: TodoListViewController.viewWillDisappear end")
+    }
     
 }

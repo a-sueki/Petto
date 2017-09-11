@@ -531,6 +531,17 @@ class SearchViewController: BaseFormViewController {
         }
         return result
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: SearchViewController.viewWillDisappear start")
+        
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
+            ref.removeAllObservers()
+        }
+        
+        print("DEBUG_PRINT: SearchViewController.viewWillDisappear end")
+    }
 }
 class SearchView: UIView {
     
