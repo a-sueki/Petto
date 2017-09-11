@@ -19,7 +19,6 @@ class PetData: NSObject {
     var sex: String?
     var size: String? //add
     var color = [String:Bool]() //add
-    
     var enterDetails: Bool? // add
     var kind: String?
     var category: String?
@@ -28,16 +27,13 @@ class PetData: NSObject {
     var isCastrated: Bool?
     var wanted: Bool?
     var userNgs = [String:Bool]()
-
     // おあずけ条件
     var isAvailable: Bool?
     var toolRentalAllowed: Bool?    //add 道具レンタル可
     var feedingFeePayable: Bool?    //add エサ代支払い可
-
     var environments = [String:Bool]()
     var tools = [String:Bool]()
     var ngs = [String:Bool]()
-
     var feeding: String?
     var dentifrice: String?
     var walk: String?
@@ -47,20 +43,21 @@ class PetData: NSObject {
     var minDays: Int?
     var maxDays: Int?
     var notices: String? //add
-
-    // メッセージ情報
-    var roomIds = [String:Bool]()
-    
     // システム項目
     var createAt: NSDate?
     var createBy: String?
     var updateAt: NSDate?
     var updateBy: String?
+
+    // EditView以外から更新
+    // メッセージ情報
+    var roomIds = [String:Bool]()
     // 評価
     var likes: [String] = []
     var isLiked: Bool = false
     
     init(snapshot: FIRDataSnapshot, myId: String) {
+        print("DEBUG_PRINT: PetData.init start")
         self.id = snapshot.key
         
         let valueDictionary = snapshot.value as! [String: AnyObject]
@@ -132,6 +129,6 @@ class PetData: NSObject {
                 break
             }
         }
-        
+        print("DEBUG_PRINT: PetData.init end")
     }
 }

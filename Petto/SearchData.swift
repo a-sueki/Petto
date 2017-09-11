@@ -15,6 +15,10 @@ class SearchData: NSObject {
     var name: String?
     var area: String?
     var sex: String?
+    var size: String? //add
+    var color = [String:Bool]() //add
+
+    var enterDetails: Bool? // add
     var kind: String?
     var category: String?
     var age: String?
@@ -25,12 +29,10 @@ class SearchData: NSObject {
     
     // おあずけ条件
     var isAvailable: Bool?
-    var environments = [String:Bool]()
-    var tools = [String:Bool]()
-    var ngs = [String:Bool]()
-    var feeding: String?
-    var dentifrice: String?
-    var walk: String?
+    var specifyConditions: Bool?    //add ペットの状態を指定する
+    var toolRentalAllowed: Bool?    //add 道具レンタル可
+    var feedingFeePayable: Bool?    //add エサ代支払い可
+    
     //おかずけ期間
     var startDate: String?
     var endDate: String?
@@ -59,7 +61,14 @@ class SearchData: NSObject {
         self.kind = valueDictionary["kind"] as? String
         self.category = valueDictionary["category"] as? String
         self.sex = valueDictionary["sex"] as? String
+        self.sex = valueDictionary["sex"] as? String
+        self.size = valueDictionary["size"] as? String
+        if let color = valueDictionary["color"] as? [String:Bool] {
+            self.color = color
+        }
+        self.enterDetails = valueDictionary["enterDetails"] as? Bool
         self.age = valueDictionary["age"] as? String
+        self.specifyConditions = valueDictionary["specifyConditions"] as? Bool
         self.isVaccinated = valueDictionary["isVaccinated"] as? Bool
         self.isCastrated = valueDictionary["isCastrated"] as? Bool
         self.wanted = valueDictionary["wanted"] as? Bool
@@ -69,19 +78,9 @@ class SearchData: NSObject {
         
         // おあずけ条件
         self.isAvailable = valueDictionary["isAvailable"] as? Bool
-        if let environments = valueDictionary["environments"] as? [String:Bool] {
-            self.environments = environments
-        }
-        if let tools = valueDictionary["tools"] as? [String:Bool] {
-            self.tools = tools
-        }
-        if let ngs = valueDictionary["ngs"] as? [String:Bool] {
-            self.ngs = ngs
-        }
-        self.feeding = valueDictionary["feeding"] as? String
-        self.dentifrice = valueDictionary["dentifrice"] as? String
-        self.walk = valueDictionary["walk"] as? String
-        
+        self.toolRentalAllowed = valueDictionary["toolRentalAllowed"] as? Bool
+        self.feedingFeePayable = valueDictionary["feedingFeePayable"] as? Bool
+
         self.startDate = valueDictionary["startDate"] as? String
         self.endDate = valueDictionary["endDate"] as? String
         self.minDays = valueDictionary["minDays"] as? Int

@@ -9,7 +9,7 @@
 import UIKit
 
 class HomeCollectionViewCell: UICollectionViewCell {
-
+    
     @IBOutlet weak var petImageView: UIImageView!
     @IBOutlet weak var kindImageView: UIImageView!
     @IBOutlet weak var sexImageView: UIImageView!
@@ -82,5 +82,5 @@ class HomeCollectionViewCell: UICollectionViewCell {
         
         print("DEBUG_PRINT: HomeCollectionViewCell.setPetData end")
     }
-
+    
 }

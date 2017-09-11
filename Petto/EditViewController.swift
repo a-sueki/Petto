@@ -175,7 +175,7 @@ class EditViewController: BaseFormViewController {
             }
             
             +++
-            Section(header: "おあずけ人募集期間", footer: "期間外では、自動的にあずかり人募集表示がOFFになります"){
+            Section(header: "あずかり人を募集する期間", footer: "期間外では、自動的に募集OFFになります"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -607,31 +607,31 @@ class EditViewController: BaseFormViewController {
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Color.toCode(itemValue)] = true
                     }
-                    self.inputData["color"] = codeSet(codes: Color.codes, new: codeArray, old: petData?.color)
+                    self.inputData["color"] = ListSet.codeSet(codes: Color.codes, new: codeArray, old: petData?.color)
                 case "environments" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Environment.toCode(itemValue)] = true
                     }
-                    self.inputData["environments"] = codeSet(codes: Environment.codes, new: codeArray, old: petData?.environments)
+                    self.inputData["environments"] = ListSet.codeSet(codes: Environment.codes, new: codeArray, old: petData?.environments)
                 case "tools" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Tool.toCode(itemValue)] = true
                     }
-                    self.inputData["tools"] = codeSet(codes: Tool.codes, new: codeArray, old: petData?.tools)
+                    self.inputData["tools"] = ListSet.codeSet(codes: Tool.codes, new: codeArray, old: petData?.tools)
                 case "ngs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[PetNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: codeArray, old: self.petData?.ngs)
+                    self.inputData["ngs"] = ListSet.codeSet(codes: PetNGs.codes, new: codeArray, old: self.petData?.ngs)
                 case "userNgs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[UserNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: codeArray, old: petData?.userNgs)
+                    self.inputData["userNgs"] = ListSet.codeSet(codes: UserNGs.codes, new: codeArray, old: petData?.userNgs)
                 default: break
                 }
             }
@@ -648,32 +648,26 @@ class EditViewController: BaseFormViewController {
         
         //Firebaseに保存
         if let data = self.petData {
+            // 他画面で更新されるデータを引き継ぎ
+            self.inputData["createAt"] = String(data.createAt!.timeIntervalSinceReferenceDate)
+            self.inputData["createBy"] = data.createBy
+            self.inputData["roomIds"] = data.roomIds
+            self.inputData["likes"] = data.likes
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
-            // remove（任意項目のみ）
-            ref.child(Paths.PetPath).child(data.id!).child("toolRentalAllowed").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("feedingFeePayable").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("startDate").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("endDate").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("minDays").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("maxDays").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("age").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("size").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("color").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("category").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("isVaccinated").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("isCastrated").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("wanted").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("userNgs").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("environments").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("tools").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("ngs").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("feeding").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("dentifrice").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("walk").removeValue()
-            ref.child(Paths.PetPath).child(data.id!).child("notices").removeValue()
-            // update
-            ref.child(Paths.PetPath).child(data.id!).updateChildValues(inputData)
+            // pet初期化&更新
+            ref.child(Paths.PetPath).child(data.id!).removeValue()
+            ref.child(Paths.PetPath).child(data.id!).setValue(self.inputData)
+            // room更新
+            var roomUpdateData1 = [String : Any]()
+            for (roomId,_) in data.roomIds {
+                roomUpdateData1["\(Paths.RoomPath)/\(roomId)/petName"] = self.inputData["name"]
+                roomUpdateData1["\(Paths.RoomPath)/\(roomId)/petImageString"] = self.inputData["imageString"]
+                roomUpdateData1["\(Paths.RoomPath)/\(roomId)/updateAt"] = self.inputData["updateAt"]
+            }
+            if !roomUpdateData1.isEmpty{
+                ref.updateChildValues(roomUpdateData1)
+            }
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "ペット情報を更新しました")
         }else{
@@ -683,35 +677,11 @@ class EditViewController: BaseFormViewController {
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             // insert
-            ref.child(Paths.PetPath).child(key).setValue(inputData)
+            ref.child(Paths.PetPath).child(key).setValue(self.inputData)
             //ユーザのmyPetsIdを追加
             ref.child(Paths.UserPath).child(uid!).child("myPets").updateChildValues([key: true])
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "ペット情報を投稿しました")
-        }
-        
-        // HUDで処理中を表示
-        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        
-        if let data = self.petData, self.petData?.roomIds != nil, !(self.petData?.roomIds.isEmpty)! {
-            for (roomId,_) in data.roomIds {
-                let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
-                // roomDataの取得
-                roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                    print("DEBUG_PRINT: EditViewController.executePost .observeSingleEventイベントが発生しました。")
-                    if let _ = snapshot.value as? NSDictionary {
-                        
-                        var inputData2 = [String : Any]()
-                        inputData2["petName"] = data.name
-                        inputData2["petImageString"] = data.imageString
-                        inputData2["updateAt"] = String(time)
-                        // roomDataを更新
-                        roomRef.child(Paths.RoomPath).child(roomId).updateChildValues(inputData2)
-                    }
-                })
-                // HUDを消す
-                SVProgressHUD.dismiss()
-            }
         }
         
         // 全てのモーダルを閉じる
@@ -745,33 +715,6 @@ class EditViewController: BaseFormViewController {
         }
         return result
     }
-    
-    func codeSet(codes: [String], new: [String:Bool]?, old: [String:Bool]?) -> [String:Bool] {
-        var result = [String:Bool]()
-        if old == nil {
-            for code in codes {
-                if new?[code] == true {
-                    result[code] = true
-                }else{
-                    result[code] = false
-                }
-            }
-        }else{
-            for code in codes {
-                if old?[code] == true, new?[code] == nil {
-                    result[code] = false
-                }else if old?[code] == true, new?[code] == true {
-                    result[code] = true
-                }else if old?[code] == false, new?[code] == nil {
-                    result[code] = false
-                }else if old?[code] == false, new?[code] == true {
-                    result[code] = true
-                }
-            }
-        }
-        return result
-    }
-    
 }
 
 class EditViewNib: UIView {

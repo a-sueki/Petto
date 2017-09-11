@@ -339,3 +339,31 @@ struct UserNGs {
         return nameList
     }
 }
+
+struct ListSet {
+    static func codeSet(codes: [String], new: [String:Bool]?, old: [String:Bool]?) -> [String:Bool] {
+        var result = [String:Bool]()
+        if old == nil || (old?.isEmpty)! {
+            for code in codes {
+                if new?[code] == true {
+                    result[code] = true
+                }else{
+                    result[code] = false
+                }
+            }
+        }else{
+            for code in codes {
+                if old?[code] == true, new?[code] == nil {
+                    result[code] = false
+                }else if old?[code] == true, new?[code] == true {
+                    result[code] = true
+                }else if old?[code] == false, new?[code] == nil {
+                    result[code] = false
+                }else if old?[code] == false, new?[code] == true {
+                    result[code] = true
+                }
+            }
+        }
+        return result
+    }
+}

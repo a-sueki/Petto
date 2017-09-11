@@ -24,7 +24,7 @@ class UserData: NSObject {
     var hasAnotherPet: Bool        // 他にペットを飼っている
     var isExperienced: Bool        // ペット飼育経験あり
     var expectTo: Bool             // ペットあずかりを希望する
-    var enterDetails: Bool? // add
+    var enterDetails: Bool // add
     var createAt: NSDate
     var createBy: String
     var updateAt: NSDate

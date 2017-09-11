@@ -49,149 +49,56 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.updateSearchData start")
         
         // Cell初期設定
-//        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
+        DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
         // フォーム
-/*         form +++
+         form +++
             Section("絞り込み条件") {
                 $0.header = HeaderFooterView<SearchView>(.class)
             }
-           +++ Section("ペットのプロフィール")
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
-                $0.options = SearchArea.strings
+                $0.options = Area.searchStrings
                 $0.value = self.searchData?.area ?? UserDefaults.standard.string(forKey: DefaultString.Area)
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
-                $0.options = SearchKind.strings
-                $0.value = self.searchData?.kind ?? nil
+                $0.options = Kind.searchStrings
+                $0.value = self.searchData?.kind ?? $0.options.first
             }
-            //TODO: もうちょい選択しやすいUIに変更
-            <<< PickerInputRow<String>("categoryDog"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    if row.value != nil ,row.value != "指定しない" {
-                        return row.value ?? Kind.dog == Kind.cat
-                    }else{
-                        return true
-                    }
-                })
-                $0.options = SearchCategoryDog.strings
-                $0.value = self.searchData?.category ?? $0.options.first
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = Sex.searchStrings
+                $0.value = self.searchData?.sex ?? $0.options.first
             }
-            <<< PickerInputRow<String>("categoryCat"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    if row.value != nil ,row.value != "指定しない" {
-                        return row.value ?? Kind.dog == Kind.dog
-                    }else{
-                        return true
-                    }
-                })
-                $0.options = SearchCategoryCat.strings
-                $0.value = self.searchData?.category ?? $0.options.first
-            }
-            <<< PickerInputRow<String>("age"){
-                $0.title = "年齢"
-                $0.options = SearchAge.strings
-                $0.value = self.searchData?.age ?? $0.options.first
-            }
-            
-            +++ Section("ペットの状態")
-            //TODO: チェックボックスを表示
-            <<< CheckRow("isVaccinated") {
-                $0.title = "ワクチン接種済み"
-                $0.value = self.searchData?.isVaccinated ?? true
-            }
-            <<< CheckRow("isCastrated") {
-                $0.title = "去勢/避妊手術済み"
-                $0.value = self.searchData?.isCastrated ?? true
-            }
-            <<< CheckRow("wanted") {
-                $0.title = "里親を募集中"
-                $0.value = self.searchData?.wanted ?? true
-            }
-            
-            +++ Section("おあずけ条件")
+
+            +++ Section()
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集中"
                 $0.value = self.searchData?.isAvailable ?? true
             }
-            <<< MultipleSelectorRow<String>("environments") {
-                $0.title = "飼養環境"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = Environment.strings
-                if let data = self.searchData , data.environments.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.environments {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = Environment.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            //TODO: 道具の貸し出しがアリかナシかだけ選択
-            <<< MultipleSelectorRow<String>("tools") {
-                $0.title = "必要な道具"
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
-                    return row.value ?? false == false
-                })
-                $0.options = Tool.strings
-                if let data = self.searchData , data.tools.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.tools {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = Tool.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            <<< MultipleSelectorRow<String>("userNgs") {
-                $0.title = "除外するペット"
-                $0.options = UserNGs.strings
-                if let data = self.searchData , data.userNgs.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.userNgs {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = UserNGs.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            
-            
             +++
-            Section("おあずけ可能期間"){
+            Section(header: "あずかり人を募集する期間", footer: "期間外では、自動的に募集OFFになります"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
             }
+            <<< CheckRow("toolRentalAllowed") {
+                $0.title = "道具の貸し出し可能"
+                $0.value = self.searchData?.toolRentalAllowed ?? true
+                }
+                .cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "dogchain")
+            }
+            <<< CheckRow("feedingFeePayable") {
+                $0.title = "エサ代は飼い主負担"
+                $0.value = self.searchData?.feedingFeePayable ?? true
+                }
+                .cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "dogBowl")
+            }
+            
             <<< DateRow("startDate") {
                 $0.title = "開始日付"
                 if let dateString = self.searchData?.startDate {
@@ -199,11 +106,7 @@ class SearchViewController: BaseFormViewController {
                 }else{
                     $0.value = Date()
                 }
-//                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-//                let formatter = DateFormatter()
-//                formatter.locale = .current
-//                formatter.dateStyle = .long
-//                $0.dateFormatter = formatter
+                $0.minimumDate = Date()
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }
@@ -238,11 +141,7 @@ class SearchViewController: BaseFormViewController {
                 }else{
                     $0.value = NSDate(timeInterval: 60*60*24*30, since: Date()) as Date
                 }
-                $0.cell.datePicker.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-//                let formatter = DateFormatter()
-//                formatter.locale = .current
-//                formatter.dateStyle = .long
-//                $0.dateFormatter = formatter
+                $0.minimumDate = Date()
                 $0.add(rule: RuleRequired())
                 var ruleSet = RuleSet<Date>()
                 ruleSet.add(rule: RuleRequired())
@@ -271,9 +170,8 @@ class SearchViewController: BaseFormViewController {
                         }
                     }
             }
-            
             +++
-            Section("連続おあずけ日数"){
+            Section(header:"連続おあずけ日数", footer:"連続30日間以上でのおあずけ依頼はできません。"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -348,6 +246,122 @@ class SearchViewController: BaseFormViewController {
                         }
                     }
             }
+            
+            +++ Section()
+            <<< SwitchRow("enterDetails"){
+                $0.title = "より詳細なプロフィールで検索する"
+                $0.value = self.searchData?.enterDetails ?? false
+            }
+            
+            +++ Section("プロフィール（詳細）"){
+                $0.hidden = .function(["enterDetails"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
+                    return row.value ?? false == false
+                })
+            }
+            
+            <<< PickerInputRow<String>("age"){
+                $0.title = "ペットの年齢"
+                $0.options = Age.searchStrings
+                $0.value = self.searchData?.age ?? $0.options.first
+            }
+            <<< SegmentedRow<String>("size") {
+                $0.title =  "大きさ"
+                $0.options = Size.searchStrings
+                $0.value = self.searchData?.size ?? $0.options.first
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+            }
+            
+            <<< MultipleSelectorRow<String>("color") {
+                $0.title = "色"
+                $0.options = Color.strings
+                if let data = self.searchData , data.color.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.color {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Color.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            //TODO: もうちょい選択しやすいUIに変更
+            <<< PickerInputRow<String>("categoryDog"){
+                $0.title = "品種"
+                $0.hidden = .function(["kind"], { form -> Bool in
+                    let row: RowOf<String>! = form.rowBy(tag: "kind")
+                    if row.value != nil ,row.value != SearchString.unspecified {
+                        return row.value ?? Kind.dog == Kind.cat
+                    }else{
+                        return true
+                    }
+                })
+                $0.options = CategoryDog.searchStrings
+                $0.value = self.searchData?.category ?? $0.options.first
+            }
+            <<< PickerInputRow<String>("categoryCat"){
+                $0.title = "品種"
+                $0.hidden = .function(["kind"], { form -> Bool in
+                    let row: RowOf<String>! = form.rowBy(tag: "kind")
+                    if row.value != nil ,row.value != SearchString.unspecified {
+                        return row.value ?? Kind.dog == Kind.dog
+                    }else{
+                        return true
+                    }
+                })
+                $0.options = CategoryCat.searchStrings
+                $0.value = self.searchData?.category ?? $0.options.first
+            }
+            
+            +++ Section()
+            <<< SwitchRow("specifyConditions"){
+                $0.title = "ペットの状態を指定する"
+                $0.value = self.searchData?.specifyConditions ?? false
+            }
+            
+             +++ Section("ペットの状態"){
+            $0.hidden = .function(["specifyConditions"], { form -> Bool in
+            let row: RowOf<Bool>! = form.rowBy(tag: "specifyConditions")
+            return row.value ?? false == false
+            })
+            }
+            <<< CheckRow("isVaccinated") {
+                $0.title = "ワクチン接種済み"
+                $0.value = self.searchData?.isVaccinated ?? true
+            }
+            <<< CheckRow("isCastrated") {
+                $0.title = "去勢/避妊手術済み"
+                $0.value = self.searchData?.isCastrated ?? true
+            }
+            <<< CheckRow("wanted") {
+                $0.title = "里親を募集中"
+                $0.value = self.searchData?.wanted ?? true
+            }
+            <<< MultipleSelectorRow<String>("userNgs") {
+                $0.title = "訳ありペットを除外"
+                $0.options = UserNGs.strings
+                if let data = self.searchData , data.userNgs.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.userNgs {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = UserNGs.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            
             //TODO: 並び順
             
             
@@ -423,6 +437,10 @@ class SearchViewController: BaseFormViewController {
                 case "isCastrated": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.isCastrated)
                 case "wanted": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.wanted)
                 case "isAvailable": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.isAvailable)
+                case "enterDetails": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.enterDetails)
+                case "toolRentalAllowed": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.toolRentalAllowed)
+                case "feedingFeePayable": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.feedingFeePayable)
+                case "specifyConditions": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.specifyConditions)
                 default: break
                 }
                 // Date
@@ -435,24 +453,18 @@ class SearchViewController: BaseFormViewController {
             }else {
                 let fmap = (value as! Set<String>).flatMap({$0.components(separatedBy: ",")})
                 switch key {
-                case "environments" :
+                case "color" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
-                        codeArray[Environment.toCode(itemValue)] = true
+                        codeArray[Color.toCode(itemValue)] = true
                     }
-                    self.inputData["environments"] = codeSet(codes: Environment.codes, new: codeArray, old: self.searchData?.environments)
-                case "tools" :
-                    var codeArray = [String : Bool]()
-                    for itemValue in [String] (Array(fmap)){
-                        codeArray[Tool.toCode(itemValue)] = true
-                    }
-                    self.inputData["tools"] = codeSet(codes: Tool.codes, new: codeArray, old: self.searchData?.tools)
-                case "ngs" :
+                    self.inputData["color"] = ListSet.codeSet(codes: Color.codes, new: codeArray, old: searchData?.color)
+                case "userNgs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[UserNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["ngs"] = codeSet(codes: UserNGs.codes, new: codeArray, old: self.searchData?.ngs)
+                    self.inputData["userNgs"] = ListSet.codeSet(codes: UserNGs.codes, new: codeArray, old: self.searchData?.userNgs)
                 default: break
                 }
             }
@@ -469,6 +481,22 @@ class SearchViewController: BaseFormViewController {
         if let data = self.searchData {
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
+            // remove（任意項目のみ）
+            ref.child(Paths.SearchPath).child(data.id!).child("toolRentalAllowed").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("feedingFeePayable").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("startDate").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("endDate").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("minDays").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("maxDays").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("age").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("size").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("color").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("category").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("specifyConditions").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("isVaccinated").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("isCastrated").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("wanted").removeValue()
+            ref.child(Paths.SearchPath).child(data.id!).child("userNgs").removeValue()
             // update
             ref.child(Paths.SearchPath).child(data.id!).updateChildValues(inputData)
             for key in removeKeyList {
@@ -518,39 +546,12 @@ class SearchViewController: BaseFormViewController {
         }
         return result
     }
-    
-    func codeSet(codes: [String], new: [String:Bool]?, old: [String:Bool]?) -> [String:Bool] {
-        var result = [String:Bool]()
-        if old == nil {
-            for code in codes {
-                if new?[code] == true {
-                    result[code] = true
-                }else{
-                    result[code] = false
-                }
-            }
-        }else{
-            for code in codes {
-                if old?[code] == true, new?[code] == nil {
-                    result[code] = false
-                }else if old?[code] == true, new?[code] == true {
-                    result[code] = true
-                }else if old?[code] == false, new?[code] == nil {
-                    result[code] = false
-                }else if old?[code] == false, new?[code] == true {
-                    result[code] = true
-                }
-            }
-        }
-        return result
-    }
-    
 }
 class SearchView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let imageView = UIImageView(image: UIImage(named: "search"))
+        let imageView = UIImageView(image: UIImage(named: "pet2search"))
         imageView.frame = CGRect(x: 0, y: 10, width: 320, height: 100)
         imageView.autoresizingMask = .flexibleWidth
         self.frame = CGRect(x: 0, y: 0, width: 320, height: 120)
@@ -560,7 +561,6 @@ class SearchView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-*/
     }
 
 }

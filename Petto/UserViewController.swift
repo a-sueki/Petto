@@ -384,25 +384,25 @@ class UserViewController: BaseFormViewController  {
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Environment.toCode(itemValue)] = true
                     }
-                    self.inputData["userEnvironments"] = codeSet(codes: Environment.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserEnvironments) as? [String : Bool])
+                    self.inputData["userEnvironments"] = ListSet.codeSet(codes: Environment.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserEnvironments) as? [String : Bool])
                 case "userTools" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[Tool.toCode(itemValue)] = true
                     }
-                    self.inputData["userTools"] = codeSet(codes: Tool.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserTools) as? [String : Bool])
+                    self.inputData["userTools"] = ListSet.codeSet(codes: Tool.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserTools) as? [String : Bool])
                 case "userNgs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[UserNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["userNgs"] = codeSet(codes: UserNGs.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserNgs) as? [String : Bool])
+                    self.inputData["userNgs"] = ListSet.codeSet(codes: UserNGs.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.UserNgs) as? [String : Bool])
                 case "ngs" :
                     var codeArray = [String : Bool]()
                     for itemValue in [String] (Array(fmap)){
                         codeArray[PetNGs.toCode(itemValue)] = true
                     }
-                    self.inputData["ngs"] = codeSet(codes: PetNGs.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.Ngs) as? [String : Bool])
+                    self.inputData["ngs"] = ListSet.codeSet(codes: PetNGs.codes, new: codeArray, old: UserDefaults.standard.dictionary(forKey: DefaultString.Ngs) as? [String : Bool])
                 default: break
                 }
             }
@@ -446,10 +446,6 @@ class UserViewController: BaseFormViewController  {
         
         //Firebaseに保存
         if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-            if UserDefaults.standard.string(forKey: "") != nil || UserDefaults.standard.string(forKey: "") != nil {
-                self.inputData["createAt"] = String(time)
-                self.inputData["createBy"] = uid!
-            }            
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // remove（任意項目のみ）
@@ -459,8 +455,26 @@ class UserViewController: BaseFormViewController  {
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("hasAnotherPet").removeValue()
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("isExperienced").removeValue()
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("ngs").removeValue()
-            // update
+            // user更新
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).updateChildValues(self.inputData)
+            // room更新
+            var roomUpdateData1 = [String : Any]()
+            if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) != nil {
+                for (roomId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)! {
+                    roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userName"] = inputData["firstname"]
+                    roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userImageString"] = inputData["imageString"]
+                    roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userArea"] = inputData["area"]
+                    roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userAge"] = inputData["age"]
+                    roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userSex"] = inputData["sex"]
+                    roomUpdateData1["\(Paths.RoomPath)/\(roomId)/updateAt"] = inputData["updateAt"]
+                }
+                if !roomUpdateData1.isEmpty{
+                    ref.updateChildValues(roomUpdateData1)
+                }
+            }
+            //TODO: todo更新
+            //TODO: history更新
+            
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")
         }else{
@@ -493,40 +507,6 @@ class UserViewController: BaseFormViewController  {
         UserDefaults.standard.set(self.inputData["userTools"] , forKey: DefaultString.UserTools)
         UserDefaults.standard.set(self.inputData["userNgs"] , forKey: DefaultString.UserNgs)
         
-        
-        // HUDで処理中を表示
-        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        
-        if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) != nil,
-            !UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!.isEmpty {
-            for (roomId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)! {
-                let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
-                // roomDataの取得
-                roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                    print("DEBUG_PRINT: UserViewController.executePost .observeSingleEventイベントが発生しました。")
-                    if let _ = snapshot.value as? NSDictionary {
-                        
-                        // roomDataを取得
-                        let roomData = RoomData(snapshot: snapshot, myId: roomId)
-                        // 自分があずかり人の場合
-                        if UserDefaults.standard.string(forKey: DefaultString.Uid) == roomData.userId {
-                            var inputData2 = [String : Any]()
-                            inputData2["userName"] = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
-                            inputData2["userImageString"] = UserDefaults.standard.string(forKey: DefaultString.ImageString)
-                            inputData2["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
-                            inputData2["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
-                            inputData2["userSex"] = UserDefaults.standard.string(forKey: DefaultString.Sex)
-                            inputData2["updateAt"] = String(time)
-                            // roomDataを更新
-                            roomRef.child(Paths.RoomPath).child(roomId).updateChildValues(inputData2)
-                        }
-                    }
-                })
-                // HUDを消す
-                SVProgressHUD.dismiss()
-            }
-        }
-        
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         
@@ -555,32 +535,6 @@ class UserViewController: BaseFormViewController  {
             }
         }else{
             result = new
-        }
-        return result
-    }
-    
-    func codeSet(codes: [String], new: [String:Bool]?, old: [String:Bool]?) -> [String:Bool] {
-        var result = [String:Bool]()
-        if old == nil {
-            for code in codes {
-                if new?[code] == true {
-                    result[code] = true
-                }else{
-                    result[code] = false
-                }
-            }
-        }else{
-            for code in codes {
-                if old?[code] == true, new?[code] == nil {
-                    result[code] = false
-                }else if old?[code] == true, new?[code] == true {
-                    result[code] = true
-                }else if old?[code] == false, new?[code] == nil {
-                    result[code] = false
-                }else if old?[code] == false, new?[code] == true {
-                    result[code] = true
-                }
-            }
         }
         return result
     }
