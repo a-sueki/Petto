@@ -16,9 +16,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
 
     @IBOutlet weak var tableView: UITableView!
     
-    var leaveIdList: [String] = []
     var leaveDataArray: [LeaveData] = []
-    var sortedLeaveDataArray: [LeaveData] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,102 +30,52 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         tableView.register(nib, forCellReuseIdentifier: "todoListCell")
         tableView.rowHeight = UITableViewAutomaticDimension
         
-        // userのTodoRoomIdsからleaveIdを取得
-        if UserDefaults.standard.object(forKey: DefaultString.TodoRoomIds) != nil {
-            
-            for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!{
-                leaveIdList.append(key)
-                self.getDataSingleEvent(leaveId: key)
-            }
-        }else{
-            //todoRoomIdsが0件の時は「TODOはありません」を表示
-            SVProgressHUD.showError(withStatus: "TODOはありません")
-        }
-        
         print("DEBUG_PRINT: TodoListViewController.viewDidLoad end")
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         print("DEBUG_PRINT: TodoListViewController.viewWillAppear start")
         
-        var leaveIdListAgain: [String] = []
-        
-        // userのTodoRoomIdsからleaveIdを取得
-        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        if UserDefaults.standard.object(forKey: DefaultString.TodoRoomIds) != nil {
-            for (key, _) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!{
-                leaveIdListAgain.append(key)
-                // 未実施→実施済に更新
-                let ref = FIRDatabase.database().reference().child(Paths.UserPath)
-                // 未実施なしの場合のユーザーデフォルトの設定
-                UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.TodoRoomIds)
-                // todoRoomIds取得
-                var todoRoomIds = [String:Bool]()
-                ref.child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("todoRoomIds").observe(.childAdded, with: { (snapshot) in
-                    print("DEBUG_PRINT: TodoListViewController.viewWillAppear todoRoomIds.childAddedイベントが発生しました。")
-                    if case _ as Bool = snapshot.value {
-                        todoRoomIds[snapshot.key] = true
-                    }
-                    // ユーザーデフォルト設定
-                    UserDefaults.standard.set(todoRoomIds , forKey: DefaultString.TodoRoomIds)
-                    // tableViewを再表示する
-                    self.tableView.reloadData()
-                    SVProgressHUD.dismiss()
-                }) { (error) in
-                    print(error.localizedDescription)
-                }
-            }
-        }else{
-            //todoRoomIdsが0件の時は「TODOはありません」を表示
-            SVProgressHUD.showError(withStatus: "TODOはありません")
+        if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) == nil || UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.count == 0 {
+            SVProgressHUD.showError(withStatus: "まだTODOがありません")
         }
-        // tableViewを再表示する
-        self.tableView.reloadData()
-        SVProgressHUD.dismiss()
-        
-        // 比較用にsort
-        let ascendingOldList : [String] = leaveIdList.sorted(by: {$0 < $1})
-        let ascendingNewList : [String] = leaveIdListAgain.sorted(by: {$0 < $1})
-        
-        // leaveIdListの内容が変わっていた場合（削除・追加）
-        if ascendingOldList != ascendingNewList {
-            print("DEBUG_PRINT: TodoListViewController.viewWillAppear leaveIdListの内容が変更されました")
-            // リストを初期化
-            self.leaveDataArray.removeAll()
-            self.sortedLeaveDataArray.removeAll()
-            // リストを再取得・テーブルreloadData
-            for key in ascendingNewList {
-                self.getDataSingleEvent(leaveId: key)
-            }
-        }
+        self.leaveDataArray.removeAll()
+        self.read()
         
         print("DEBUG_PRINT: TodoListViewController.viewWillAppear end")
     }
     
-    func getDataSingleEvent(leaveId: String) {
-        print("DEBUG_PRINT: TodoListViewController.getDataSingleEvent start")
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("DEBUG_PRINT: TodoListViewController.viewDidAppear start")
+        print("DEBUG_PRINT: TodoListViewController.viewDidAppear end")
+    }
+    
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("DEBUG_PRINT: TodoListViewController.viewDidDisappear start")
         
-        // leaveDataリストの取得
-        let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            print("DEBUG_PRINT: TodoListViewController.getDataSingleEvent .observeSingleEventイベントが発生しました。")
-            if let _ = snapshot.value as? NSDictionary {
-                let leaveData = LeaveData(snapshot: snapshot, myId: leaveId)
-                self.leaveDataArray.append(leaveData)
-                // 開始日で並び替え
-                self.sortedLeaveDataArray = self.leaveDataArray.sorted(by: {
-                    
-                    DateCommon.stringToDate($0.startDate!, dateFormat: DateCommon.dateFormat).compare(DateCommon.stringToDate($1.startDate!, dateFormat: DateCommon.dateFormat)) == ComparisonResult.orderedDescending
-                })
-                // tableViewを再表示する
-                self.tableView.reloadData()
-                SVProgressHUD.dismiss()
+        if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil && (UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
+            for (leaveId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
+                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
+                ref.removeAllObservers()
             }
-        }) { (error) in
-            print(error.localizedDescription)
         }
         
-        print("DEBUG_PRINT: TodoListViewController.getDataSingleEvent end")
+        for leaves in self.leaveDataArray {
+            if let userId = leaves.userId {
+                let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+                ref.removeAllObservers()
+            }
+            if let petId = leaves.petId {
+                let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+                ref.removeAllObservers()
+            }
+        }
+        
+        print("DEBUG_PRINT: TodoListViewController.viewDidDisappear end")
     }
     
     override func didReceiveMemoryWarning() {
@@ -137,13 +85,40 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
     
     // データの数（＝セルの数）を返すメソッド
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return leaveIdList.count
+        print("DEBUG_PRINT: TodoListViewController.numberOfRowsInSection start")
+        print("DEBUG_PRINT: TodoListViewController.numberOfRowsInSection end")
+        return leaveDataArray.count
     }
     
-    // 各セルの内容を返すメソッド
+    // 各セルを選択した時に実行されるメソッド
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("DEBUG_PRINT: TodoListViewController.didSelectRowAt start")
+        
+        // セルをタップされたら何もせずに選択状態を解除する
+        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
+        
+        print("DEBUG_PRINT: TodoListViewController.didSelectRowAt end")
+    }
+    
+    // セルが削除が可能なことを伝えるメソッド
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)-> UITableViewCellEditingStyle {
+        print("DEBUG_PRINT: TodoListViewController.editingStyleForRowAt start")
+        print("DEBUG_PRINT: TodoListViewController.editingStyleForRowAt end")
+        return UITableViewCellEditingStyle.delete
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        print("DEBUG_PRINT: TodoListViewController.estimatedHeightForRowAt start")
+        print("DEBUG_PRINT: TodoListViewController.estimatedHeightForRowAt end")
+        // Auto Layoutを使ってセルの高さを動的に変更する
+        return UITableViewAutomaticDimension
+    }
+    
+    //返すセルを決める
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("DEBUG_PRINT: TodoListViewController.cellForRowAt start")
         
+        //xibとカスタムクラスで作成したCellのインスタンスを作成
         let cell = tableView.dequeueReusableCell(withIdentifier: "todoListCell", for: indexPath) as! TodoListTableViewCell
         // セル内のボタンのアクションをソースコードで設定する
         cell.leaveInfoButton.addTarget(self, action:#selector(handleLeaveInfoButton(sender:event:)), for:  UIControlEvents.touchUpInside)
@@ -151,16 +126,15 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         cell.petDetailButton.addTarget(self, action:#selector(handlePetDetailButton(sender:event:)), for:  UIControlEvents.touchUpInside)
         
         
+        cell.setData(leaveData: self.leaveDataArray[indexPath.row])
         
-        // leaveDataリスト取得（非同期）の完了前のテーブル表示エラー防止のため
-        if self.leaveIdList.count == self.sortedLeaveDataArray.count {
-            cell.setData(leaveData: self.sortedLeaveDataArray[indexPath.row])
-            
+        // あずかり人の場合
+        if self.leaveDataArray[indexPath.row].breederId != UserDefaults.standard.string(forKey: DefaultString.Uid) {
             // あずかり人の場合
-            if self.sortedLeaveDataArray[indexPath.row].breederId != UserDefaults.standard.string(forKey: DefaultString.Uid) {
+            if self.leaveDataArray[indexPath.row].breederId != UserDefaults.standard.string(forKey: DefaultString.Uid) {
                 // 未実施の場合
-                if self.sortedLeaveDataArray[indexPath.row].acceptFlag == true &&
-                    DateCommon.stringToDate(self.sortedLeaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
+                if self.leaveDataArray[indexPath.row].acceptFlag == true &&
+                    DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
                     cell.willDoLabel.isHidden = false
                     cell.isBreederLabel.isHidden = true
                 }else{
@@ -169,8 +143,8 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                 }
             }else{
                 // 未実施の場合
-                if self.sortedLeaveDataArray[indexPath.row].acceptFlag == true &&
-                    DateCommon.stringToDate(self.sortedLeaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
+                if self.leaveDataArray[indexPath.row].acceptFlag == true &&
+                    DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
                     cell.willDoLabel.isHidden = false
                     cell.isBreederLabel.isHidden = false
                 }else{
@@ -184,24 +158,52 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         return cell
     }
     
-    // 各セルを選択した時に実行されるメソッド
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // セルをタップされたら何もせずに選択状態を解除する
-        tableView.deselectRow(at: indexPath as IndexPath, animated: true)
-        
+    
+    func read() {
+        print("DEBUG_PRINT: TodoListViewController.read start")
+        // userのleaveを取得
+        if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil && !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
+            // leaveDataリストの取得
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+            for (leaveId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
+                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId).queryOrderedByKey()
+                ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                    print("DEBUG_PRINT: TodoListViewController.read .observeSingleEventイベントが発生しました。")
+                    if let _ = snapshot.value as? NSDictionary {
+                        // leaveを取得
+                        let leaveData = LeaveData(snapshot: snapshot, myId: leaveId)
+                        self.leaveDataArray.append(leaveData)
+                        
+                        // 更新日で並び替え
+                        self.leaveDataArray = self.leaveDataArray.sorted(by: {
+                            DateCommon.stringToDate($0.startDate!, dateFormat: DateCommon.dateFormat).compare(DateCommon.stringToDate($1.startDate!, dateFormat: DateCommon.dateFormat)) == ComparisonResult.orderedDescending
+                        })
+                    }
+                    // tableViewを再表示する
+                    if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!.count == self.leaveDataArray.count {
+                        DispatchQueue.main.async {
+                            print("DEBUG_PRINT: TodoListViewController.read [DispatchQueue.main.async]")
+                            self.reload(leaveDataArray: self.leaveDataArray)
+                            SVProgressHUD.dismiss()
+                        }
+                    }
+                }) { (error) in
+                    print(error.localizedDescription)
+                    SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+                }
+            }
+        }
+        print("DEBUG_PRINT: TodoListViewController.read end")
     }
     
-    // セルが削除が可能なことを伝えるメソッド
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath)-> UITableViewCellEditingStyle {
-        return UITableViewCellEditingStyle.delete
+    func reload(leaveDataArray: [LeaveData]) {
+        print("DEBUG_PRINT: TodoListViewController.reload start")
+        //テーブルビューをリロード
+        self.tableView.reloadData()
+        print("DEBUG_PRINT: TodoListViewController.reload end")
     }
     
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        // Auto Layoutを使ってセルの高さを動的に変更する
-        return UITableViewAutomaticDimension
-    }
-    
-    // メッセージラベルがタップされたらメッセージ画面に遷移
+    // TODOラベルがタップされたらメッセージ画面に遷移
     func handleLeaveInfoButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: TodoListViewController.handleLeaveInfoButton start")
         
@@ -211,25 +213,25 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         let indexPath = tableView.indexPathForRow(at: point)
         
         //TODO: Leave画面に遷移
-        let leave = self.sortedLeaveDataArray[(indexPath?.row)!]
+        let leave = self.leaveDataArray[(indexPath?.row)!]
         if leave.userId == UserDefaults.standard.string(forKey: DefaultString.Uid)! {
             // 自分があずかり人の場合
             // leaveDataをセットして画面遷移
-/*            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-            let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
-            let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
-            userMessagesContainerViewController.roomData = self.sortedLeaveDataArray[(indexPath?.row)!]
-            self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
-*/
+            /*            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+             let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
+             let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
+             userMessagesContainerViewController.roomData = self.leaveDataArray[(indexPath?.row)!]
+             self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
+             */
         }else{
             // 自分がブリーダーの場合
             // leaveDataをセットして画面遷移
-/*            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-            let bookingViewController = self.storyboard?.instantiateViewController(withIdentifier: "Booking") as! BookingViewController
-            let breederMessagesContainerViewController = BreederMessagesContainerViewController(top: messagesViewController, under: bookingViewController)
-            breederMessagesContainerViewController.roomData = self.sortedLeaveDataArray[(indexPath?.row)!]
-            self.navigationController?.pushViewController(breederMessagesContainerViewController, animated: true)
- */
+            /*            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+             let bookingViewController = self.storyboard?.instantiateViewController(withIdentifier: "Booking") as! BookingViewController
+             let breederMessagesContainerViewController = BreederMessagesContainerViewController(top: messagesViewController, under: bookingViewController)
+             breederMessagesContainerViewController.roomData = self.leaveDataArray[(indexPath?.row)!]
+             self.navigationController?.pushViewController(breederMessagesContainerViewController, animated: true)
+             */
         }
         print("DEBUG_PRINT: TodoListViewController.handleLeaveInfoButton end")
     }
@@ -244,7 +246,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         let indexPath = tableView.indexPathForRow(at: point)
         
         // 画面遷移
-        if let userId = self.sortedLeaveDataArray[(indexPath?.row)!].userId {
+        if let userId = self.leaveDataArray[(indexPath?.row)!].userId {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -256,7 +258,10 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                     self.navigationController?.pushViewController(userDetailViewController, animated: true)
                     SVProgressHUD.dismiss()
                 }
-            })
+            }) { (error) in
+                print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+            }
         }
 
         print("DEBUG_PRINT: TodoListViewController.handleUserDetailButton end")
@@ -272,7 +277,8 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         let indexPath = tableView.indexPathForRow(at: point)
         
         // 画面遷移
-        if let petId = self.sortedLeaveDataArray[(indexPath?.row)!].petId {
+        if let petId = self.leaveDataArray[(indexPath?.row)!].petId {
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: TodoListViewController.handlePetDetailButton .observeSingleEventイベントが発生しました。")
@@ -281,33 +287,14 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                     let petDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "PetDetail") as! PetDetailViewController
                     petDetailViewController.petData = petData
                     self.navigationController?.pushViewController(petDetailViewController, animated: true)
+                    SVProgressHUD.dismiss()
                 }
-            })
+            }) { (error) in
+                print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+            }
         }
         
         print("DEBUG_PRINT: TodoListViewController.handlePetDetailButton end")
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        print("DEBUG_PRINT: TodoListViewController.viewWillDisappear start")
-        
-        let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("todoRoomIds")
-        ref.removeAllObservers()
-        for leaveId in leaveIdList {
-            let ref2 = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
-            ref2.removeAllObservers()
-        }
-        for leaves in self.sortedLeaveDataArray {
-            if let userId = leaves.userId {
-                let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
-                ref.removeAllObservers()
-            }
-            if let petId = leaves.petId {
-                let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
-                ref.removeAllObservers()
-            }
-        }
-        print("DEBUG_PRINT: TodoListViewController.viewWillDisappear end")
-    }
-    
 }

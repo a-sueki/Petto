@@ -36,6 +36,9 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: MessageListViewController.viewWillAppear start")
         
+        if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) == nil || UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)?.count == 0 {
+            SVProgressHUD.showError(withStatus: "まだメッセージがありません")
+        }
         self.roomDataArray.removeAll()
         self.read()
         
