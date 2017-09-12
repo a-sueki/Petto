@@ -21,28 +21,60 @@ class SearchViewController: BaseFormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: SearchViewController.viewDidLoad start")
+        print("DEBUG_PRINT: SearchViewController.viewDidLoad end")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("DEBUG_PRINT: SearchViewController.viewWillAppear start")
+        
+        self.read()
+        
+        print("DEBUG_PRINT: SearchViewController.viewWillAppear end")
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("DEBUG_PRINT: SearchViewController.viewWillDisappear start")
+        print("DEBUG_PRINT: SearchViewController.viewWillDisappear end")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("DEBUG_PRINT: SearchViewController.viewDidAppear start")
+        
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
+            ref.removeAllObservers()
+        }
+
+        print("DEBUG_PRINT: SearchViewController.viewDidAppear end")
+    }
+    
+    func read() {
+        print("DEBUG_PRINT: SearchViewController.read start")
         
         // Firebaseから登録済みデータを取得
         if let uid = FIRAuth.auth()?.currentUser?.uid {
-            // 要素が追加されたら再表示
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: SearchViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
+                print("DEBUG_PRINT: SearchViewController.read .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
                     self.searchData = SearchData(snapshot: snapshot, myId: uid)
+                }
+                DispatchQueue.main.async {
                     // Formを表示
                     self.updateSearchData()
-                }else{
-                    // Formを表示
-                    self.updateSearchData()
+                    SVProgressHUD.dismiss()
                 }
             }) { (error) in
                 print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
-        }else{
-            self.updateSearchData()
         }
-        print("DEBUG_PRINT: SearchViewController.viewDidLoad end")
+        
+        print("DEBUG_PRINT: SearchViewController.read end")
     }
     
     func updateSearchData() {
@@ -52,7 +84,7 @@ class SearchViewController: BaseFormViewController {
         DateRow.defaultRowInitializer = { row in row.minimumDate = Date() }
         
         // フォーム
-         form +++
+        form +++
             Section("絞り込み条件") {
                 $0.header = HeaderFooterView<SearchView>(.class)
             }
@@ -71,14 +103,14 @@ class SearchViewController: BaseFormViewController {
                 $0.options = Sex.searchStrings
                 $0.value = self.searchData?.sex ?? $0.options.first
             }
-
+            
             +++ Section()
             <<< SwitchRow("isAvailable"){
                 $0.title = "あずかり人を募集中"
                 $0.value = self.searchData?.isAvailable ?? true
             }
             +++
-            Section(header: "あずかり人を募集する期間", footer: "期間外では、自動的に募集OFFになります"){
+            Section(header: "あずかり人の募集条件", footer: "期間外では、自動的に募集OFFになります"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -325,11 +357,11 @@ class SearchViewController: BaseFormViewController {
                 $0.value = self.searchData?.specifyConditions ?? false
             }
             
-             +++ Section("ペットの状態"){
-            $0.hidden = .function(["specifyConditions"], { form -> Bool in
-            let row: RowOf<Bool>! = form.rowBy(tag: "specifyConditions")
-            return row.value ?? false == false
-            })
+            +++ Section("ペットの状態"){
+                $0.hidden = .function(["specifyConditions"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "specifyConditions")
+                    return row.value ?? false == false
+                })
             }
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
@@ -375,7 +407,7 @@ class SearchViewController: BaseFormViewController {
                     }else{
                         self?.executePost()
                     }
-        }
+            }
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "検索条件をクリア"
                 }.onCellSelection { [weak self] (cell, row) in
@@ -390,22 +422,28 @@ class SearchViewController: BaseFormViewController {
     
     @IBAction func clear() {
         print("DEBUG_PRINT: SearchViewController.clear start")
-    
+        
         if let uid = FIRAuth.auth()?.currentUser?.uid {
-        // 辞書を作成
-        let ref = FIRDatabase.database().reference()
-        ref.child(Paths.SearchPath).child(uid).removeValue()
+            // 辞書を作成
+            let ref = FIRDatabase.database().reference()
+            ref.child(Paths.SearchPath).child(uid).removeValue()
+            //ユーザのwithSearchを追加
+            ref.child(Paths.UserPath).child(uid).updateChildValues(["withSearch": false])
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件をクリアしました")
         } else{
             SVProgressHUD.showError(withStatus: "更新に失敗しました。再度ログインしてから実行してください")
         }
+        
+        // ユーザーデフォルトを更新
+        UserDefaults.standard.set(false , forKey: DefaultString.WithSearch)
+        
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: SearchViewController.clear end")
     }
-
+    
     @IBAction func executePost() {
         print("DEBUG_PRINT: SearchViewController.executePost start")
         
@@ -476,7 +514,6 @@ class SearchViewController: BaseFormViewController {
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
         
-         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         //Firebaseに保存
         if let data = self.searchData {
             // 更新しないデータを引き継ぎ
@@ -486,7 +523,7 @@ class SearchViewController: BaseFormViewController {
             self.inputData["updateBy"] = uid!
             // search初期化&更新
             ref.child(Paths.SearchPath).child(data.id!).removeValue()
-            ref.child(Paths.SearchPath).child(data.id!).setValue(self.inputData)            
+            ref.child(Paths.SearchPath).child(data.id!).setValue(self.inputData)
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を更新しました")
         }else{
@@ -496,15 +533,18 @@ class SearchViewController: BaseFormViewController {
             self.inputData["createBy"] = uid!
             // insert
             ref.child(Paths.SearchPath).child(uid!).setValue(inputData)
+            //ユーザのwithSearchを追加
+            ref.child(Paths.UserPath).child(uid!).updateChildValues(["withSearch": true])
+            
+            // ユーザーデフォルトを更新
+            UserDefaults.standard.set(true , forKey: DefaultString.WithSearch)
+            
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を保存しました")
         }
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-        
-        // HUDを消す
-        SVProgressHUD.dismiss()
         
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
@@ -532,16 +572,6 @@ class SearchViewController: BaseFormViewController {
         return result
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        print("DEBUG_PRINT: SearchViewController.viewWillDisappear start")
-        
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
-            ref.removeAllObservers()
-        }
-        
-        print("DEBUG_PRINT: SearchViewController.viewWillDisappear end")
-    }
 }
 class SearchView: UIView {
     
@@ -558,5 +588,5 @@ class SearchView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
 }

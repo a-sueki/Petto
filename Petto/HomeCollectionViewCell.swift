@@ -48,8 +48,6 @@ class HomeCollectionViewCell: UICollectionViewCell {
                 self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))日間"
             }
         }else{
-            print("DEBUG_PRINT: HomeCollectionViewCell.setPetData XXXXXX")
-            print(petData.id)
             self.termLabel.text = "期間外"
             // 写真をグレーアウト
             let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")
@@ -58,9 +56,11 @@ class HomeCollectionViewCell: UICollectionViewCell {
             myMonochromeFilter?.setValue(1.0, forKey: kCIInputIntensityKey)
             let myOutputImage : CIImage = myMonochromeFilter!.outputImage!
             self.petImageView.image = UIImage(ciImage: myOutputImage)
+            // 再描画
+            self.petImageView.setNeedsDisplay()
             
             // 帯を追加
-            let bandLabel = UILabel(frame: CGRect(x: 0, y: self.petImageView.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
+            let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
             bandLabel.backgroundColor = UIColor.black
             bandLabel.alpha = 0.9
             bandLabel.font = UIFont(name: "Gill Sans", size: 14)
@@ -69,8 +69,6 @@ class HomeCollectionViewCell: UICollectionViewCell {
             bandLabel.textAlignment = NSTextAlignment.center
             self.petImageView.addSubview(bandLabel)
             
-            // 再描画
-            //self.petImageView.setNeedsDisplay()
         }
         if petData.isLiked {
             let buttonImage = UIImage(named: "like-red")

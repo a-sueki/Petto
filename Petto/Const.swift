@@ -45,6 +45,7 @@ struct DefaultString {
     static let UserEnvironments = "userEnvironments"
     static let UserTools = "userTools"
     static let UserNgs = "userNgs"
+    static let WithSearch = "withSearch"
     static let MyPets = "myPets"
     static let RoomIds = "roomIds"
     static let UnReadRoomIds = "unReadRoomIds"

@@ -124,7 +124,8 @@ class PetData: NSObject {
             self.likes = likes
         }
         for followerId in self.likes {
-            if followerId == myId {
+//            if followerId == myId {
+            if followerId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
                 self.isLiked = true
                 break
             }

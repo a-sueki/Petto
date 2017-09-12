@@ -53,7 +53,9 @@ class UserMessagesContainerViewController: UIViewController {
                         self.leaveData = LeaveData(snapshot: snapshot, myId: uid)
                     }
                     self.setView()
-                    SVProgressHUD.dismiss()
+                    DispatchQueue.main.async {
+                        SVProgressHUD.dismiss()
+                    }
 
                 }) { (error) in
                     print(error.localizedDescription)
@@ -62,6 +64,18 @@ class UserMessagesContainerViewController: UIViewController {
         }
         
         print("DEBUG_PRINT: UserMessagesContainerViewController.viewDidLoad end")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("DEBUG_PRINT: UserMessagesContainerViewController.viewDidDisappear start")
+        
+        if let roomId = self.roomData?.id {
+            let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
+            ref.removeAllObservers()
+        }
+        
+        print("DEBUG_PRINT: UserMessagesContainerViewController.viewDidDisappear end")
     }
     
     func setView(){
@@ -103,16 +117,5 @@ class UserMessagesContainerViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        print("DEBUG_PRINT: UserMessagesContainerViewController.viewWillDisappear start")
-        
-        if let roomId = self.roomData?.id {
-            let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
-            ref.removeAllObservers()
-        }
-        
-        print("DEBUG_PRINT: UserMessagesContainerViewController.viewWillDisappear end")
     }
 }

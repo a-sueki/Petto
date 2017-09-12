@@ -11,6 +11,7 @@ import SwiftyJSON
 import Firebase
 import FirebaseDatabase
 import JSQMessagesViewController
+import SVProgressHUD
 
 class MessagesViewController: JSQMessagesViewController {
     
@@ -62,11 +63,46 @@ class MessagesViewController: JSQMessagesViewController {
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad end")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: MessagesViewController.viewWillDisappear start")
+        
+        let ref = FIRDatabase.database().reference()
+        if self.messages.count == 0 {
+            // Roomの削除
+            ref.child(Paths.RoomPath).child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.MessagePath).child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
+            ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
+            print("DEBUG_PRINT: MessagesViewController.viewWillDisappear .removeValueイベントが発生しました。")
+        } else {
+            // 既読にする
+            if checkSender() {
+                ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
+            }else{
+                ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
+            }
+        }
+        
+        print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("DEBUG_PRINT: MessagesViewController.viewDidDisappear start")
+        
+        let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
+        ref.removeAllObservers()
+        
+        print("DEBUG_PRINT: MessagesViewController.viewDidDisappear end")
+    }
+    
+    
     func getMessages() {
         print("DEBUG_PRINT: MessagesViewController.getMessages start")
         
         let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
         // Messageの取得
+        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         ref.queryLimited(toLast: 10).observeSingleEvent(of: .value, with: { (snapshot) in
             print("DEBUG_PRINT: MessagesViewController.getMessages .observeSingleEventイベントが発生しました。")
             
@@ -83,11 +119,16 @@ class MessagesViewController: JSQMessagesViewController {
                         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
                         self.messages.append(message!)
                     }
+                    
+                }
+                DispatchQueue.main.async {
                     self.collectionView.reloadData()
+                    SVProgressHUD.dismiss()
                 }
             }
         }) { (error) in
             print(error.localizedDescription)
+            SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
         }
         print("DEBUG_PRINT: MessagesViewController.getMessages end")
         
@@ -295,40 +336,6 @@ class MessagesViewController: JSQMessagesViewController {
             }
         }
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        print("DEBUG_PRINT: MessagesViewController.viewWillDisappear start")
-        
-        let ref = FIRDatabase.database().reference()
-        if self.messages.count == 0 {
-            // Roomの削除
-            ref.child(Paths.RoomPath).child((self.roomData?.id)!).removeValue()
-            ref.child(Paths.MessagePath).child((self.roomData?.id)!).removeValue()
-            ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
-            ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
-            ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
-            print("DEBUG_PRINT: MessagesViewController.viewWillDisappear .removeValueイベントが発生しました。")
-        } else {
-            // 既読にする
-            if checkSender() {
-                ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
-            }else{
-                ref.child(Paths.UserPath).child((self.roomData?.breederId)!).child("unReadRoomIds").child((self.roomData?.id)!).removeValue()
-            }
-        }
-        
-        print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
-    }
-    override func viewDidDisappear(_ animated: Bool) {
-        print("DEBUG_PRINT: MessagesViewController.viewDidDisappear start")
-
-        let ref1 = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
-        ref1.removeAllObservers()
-        
-        print("DEBUG_PRINT: MessagesViewController.viewDidDisappear end")
-    }
-
-    
     
     func checkSender () -> Bool {
         var result = false

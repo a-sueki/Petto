@@ -409,8 +409,6 @@ class UserViewController: BaseFormViewController  {
         }
         
         // 表示名（ニックネーム）を名前で更新
-        // HUDで処理中を表示
-        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         let user = FIRAuth.auth()?.currentUser
         if let newName = self.inputData["firstname"] as? String,
             newName != UserDefaults.standard.string(forKey: DefaultString.DisplayName){
@@ -433,9 +431,6 @@ class UserViewController: BaseFormViewController  {
                 print("DEBUG_PRINT: ニックネーム変更なし")
             }
         }
-        
-        // HUDで処理中を表示
-        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
@@ -509,9 +504,6 @@ class UserViewController: BaseFormViewController  {
         
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-        
-        // HUDを消す
-        SVProgressHUD.dismiss()
         
         // HOMEに画面遷移
         let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController

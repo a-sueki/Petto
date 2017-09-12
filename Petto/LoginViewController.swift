@@ -85,11 +85,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     return
                 } else {
                     print("DEBUG_PRINT: ログインに成功しました")
-                    // HUDを消す
-                    SVProgressHUD.dismiss()
                     
                     // Firebaseから登録済みデータを取得
                     if let uid = user?.uid {
+                        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                         let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
                         ref.observeSingleEvent(of: .value, with: { (snapshot) in
                             print("DEBUG_PRINT: LoginViewController.handleLoginButton .observeSingleEventイベントが発生しました。")
@@ -130,7 +129,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 }
                                 if !userData.userNgs.isEmpty {
                                     UserDefaults.standard.set(userData.userNgs , forKey: DefaultString.UserNgs)
-                                }
+                                } 
+                                UserDefaults.standard.set(userData.withSearch , forKey: DefaultString.WithSearch)
                                 if !userData.myPets.isEmpty {
                                     UserDefaults.standard.set(userData.myPets , forKey: DefaultString.MyPets)
                                 }
@@ -159,6 +159,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                             }
                             // Homeに画面遷移
                             DispatchQueue.main.async {
+                                ref.removeAllObservers()
+                                
                                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                                 let leftViewController = self.storyboard?.instantiateViewController(withIdentifier: "Left") as! LeftViewController
                                 let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
@@ -175,8 +177,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                                   options: UIViewAnimationOptions.transitionFlipFromLeft,
                                                   animations: {},
                                                   completion: {(b) in })
+                                // HUDを消す
+                                SVProgressHUD.dismiss()
                             }
-                        })
+                        }) { (error) in
+                            print(error.localizedDescription)
+                            SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+                        }
                     }else{
                         UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
                     }
@@ -204,8 +211,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 SVProgressHUD.showError(withStatus: "パスワードは6〜12文字にして下さい")
                 return
             }
-            // HUDで処理中を表示
-            SVProgressHUD.show()
             
             // アドレスとパスワードでユーザー作成。ユーザー作成に成功すると、自動的にログインする
             FIRAuth.auth()?.createUser(withEmail: address, password: password) { user, error in
@@ -245,6 +250,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 UserDefaults.standard.set(address , forKey: DefaultString.Mail)
                 UserDefaults.standard.set(password , forKey: DefaultString.Password)
                 UserDefaults.standard.set("ゲストさん" , forKey: DefaultString.DisplayName)
+                UserDefaults.standard.set(false , forKey: DefaultString.WithSearch)
                 
                 // 表示名を設定する
                 let user = FIRAuth.auth()?.currentUser
@@ -253,13 +259,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     changeRequest.displayName = "ゲストさん"
                     changeRequest.commitChanges { error in
                         if let error = error {
-                            SVProgressHUD.showError(withStatus: "")
                             print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton " + error.localizedDescription)
                         }
                         print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton [displayName = \(user.displayName!)]の設定に成功しました。")
-                        
-                        // HUDを消す
-                        SVProgressHUD.dismiss()
                     }
                 } else {
                     print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton displayNameの設定に失敗しました。")

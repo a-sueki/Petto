@@ -344,6 +344,20 @@ class PetDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear start")
+        
+        // roomIdを取得
+        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
+        let pid = (self.petData?.id)!
+        let roomId = uid! + pid
+        let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+        roomRef.removeAllObservers()
+        
+        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear end")
+    }
+    
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
@@ -443,19 +457,6 @@ class PetDetailViewController: BaseFormViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear start")
-
-        // roomIdを取得
-        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
-        let pid = (self.petData?.id)!
-        let roomId = uid! + pid
-        let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
-        roomRef.removeAllObservers()
-        
-        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear end")
     }
 }
 
