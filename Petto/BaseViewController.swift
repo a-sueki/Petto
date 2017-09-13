@@ -74,8 +74,6 @@ class NavigationBarHandler: NSObject {
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
             
-            // TODOなしの場合のユーザーデフォルトの設定
-            UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.TodoRoomIds)
             // todoRoomIds取得
             var todoRoomIds = [String:Bool]()
             ref.child(user.uid).child("todoRoomIds").observe(.childAdded, with: { (snapshot) in

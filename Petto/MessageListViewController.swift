@@ -199,6 +199,11 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
                             $0.updateAt?.compare($1.updateAt! as Date) == ComparisonResult.orderedDescending
                         })
                     }
+                    
+                    print("DEBUG_PRINT: MessageListViewController.read xxxxxxxxxxxxxx")
+                    print("DEBUG_PRINT: MessageListViewController.read \(UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!.count)")
+                    print("DEBUG_PRINT: MessageListViewController.read \(self.roomDataArray.count)")
+
                     // tableViewを再表示する
                     if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)!.count == self.roomDataArray.count {
                         DispatchQueue.main.async {

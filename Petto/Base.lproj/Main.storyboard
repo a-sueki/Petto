@@ -715,7 +715,6 @@
                         <color key="backgroundColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="TFR-tY-YkG" firstAttribute="top" secondItem="y2w-eN-cGR" secondAttribute="bottom" constant="20" id="Gbg-cX-UOs"/>
-                            <constraint firstItem="TFR-tY-YkG" firstAttribute="top" secondItem="y2w-eN-cGR" secondAttribute="bottom" constant="20" id="IBa-pO-3M9"/>
                             <constraint firstItem="Buj-xZ-gPK" firstAttribute="top" secondItem="TFR-tY-YkG" secondAttribute="bottom" id="PnR-cH-r9E"/>
                             <constraint firstItem="TFR-tY-YkG" firstAttribute="leading" secondItem="Cqk-Ro-9Ta" secondAttribute="leading" id="hEM-ec-ZWL"/>
                             <constraint firstItem="y2w-eN-cGR" firstAttribute="centerX" secondItem="Cqk-Ro-9Ta" secondAttribute="centerX" id="iB5-7V-LWp"/>

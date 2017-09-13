@@ -15,7 +15,6 @@ import SVProgressHUD
 class TodoListViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
-    
     var leaveDataArray: [LeaveData] = []
     
     override func viewDidLoad() {
@@ -179,6 +178,11 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                             DateCommon.stringToDate($0.startDate!, dateFormat: DateCommon.dateFormat).compare(DateCommon.stringToDate($1.startDate!, dateFormat: DateCommon.dateFormat)) == ComparisonResult.orderedDescending
                         })
                     }
+                    
+                    print("DEBUG_PRINT: TodoListViewController.read xxxxxxxxxxxxxx")
+                    print("DEBUG_PRINT: TodoListViewController.read \(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!.count)")
+                    print("DEBUG_PRINT: TodoListViewController.read \(self.leaveDataArray.count)")
+                    
                     // tableViewを再表示する
                     if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!.count == self.leaveDataArray.count {
                         DispatchQueue.main.async {
