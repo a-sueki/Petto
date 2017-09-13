@@ -36,6 +36,12 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         let nib = UINib(nibName: "HomeCollectionViewCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "homeCell")
         
+        self.petDataArray.removeAll()
+        self.read()
+        if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
+            self.refreshBysearch()
+        }
+
         print("DEBUG_PRINT: HomeViewController.viewDidLoad end")
     }
     
@@ -43,11 +49,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: HomeViewController.viewWillAppear start")
         
-        self.petDataArray.removeAll()
-        self.read()
-        if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
-            self.refreshBysearch()
-        }
         
         print("DEBUG_PRINT: HomeViewController.viewWillAppear end")
     }
@@ -61,7 +62,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
             let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
             ref.removeAllObservers()
-            print("DEBUG_PRINT: HomeViewController.viewWillDisappear aaaaa")
         }
         
         print("DEBUG_PRINT: HomeViewController.viewWillDisappear end")
@@ -81,11 +81,12 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 // petDataクラスを生成して受け取ったデータを設定する
                 let petData = PetData(snapshot: snapshot, myId: snapshot.key)
                 self.petDataArray.insert(petData, at: 0)
-                
-                self.reload(petDataArray: self.petDataArray)
+                //self.petDataArray.append(petData)
+
             }
             DispatchQueue.main.async {
                 print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
+                self.reload(petDataArray: self.petDataArray)
                 SVProgressHUD.dismiss()
             }
         }) { (error) in
@@ -116,10 +117,10 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 // 削除したところに更新済みのでデータを追加する
                 self.petDataArray.insert(petData, at: index)
                 
-                self.reload(petDataArray: self.petDataArray)
             }
             DispatchQueue.main.async {
                 print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
+                self.reload(petDataArray: self.petDataArray)
                 SVProgressHUD.dismiss()
             }
         }) { (error) in

@@ -53,9 +53,9 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        print("DEBUG_PRINT: TodoListViewController.viewDidDisappear start")
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("DEBUG_PRINT: TodoListViewController.viewWillDisappear start")
         
         if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil && (UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
             for (leaveId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
@@ -75,7 +75,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
             }
         }
         
-        print("DEBUG_PRINT: TodoListViewController.viewDidDisappear end")
+        print("DEBUG_PRINT: TodoListViewController.viewWillDisappear end")
     }
     
     override func didReceiveMemoryWarning() {

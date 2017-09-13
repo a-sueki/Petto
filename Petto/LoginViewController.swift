@@ -35,6 +35,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         print("DEBUG_PRINT: LoginViewController.viewDidLoad end")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("DEBUG_PRINT: LoginViewController.viewWillDisappear start")
+
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            ref.removeAllObservers()
+        }
+        
+        print("DEBUG_PRINT: LoginViewController.viewWillDisappear end")
+    }
+    
     // Returnキーでキーボードを閉じる
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn start")
@@ -159,8 +171,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                             }
                             // Homeに画面遷移
                             DispatchQueue.main.async {
-                                ref.removeAllObservers()
-                                
                                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                                 let leftViewController = self.storyboard?.instantiateViewController(withIdentifier: "Left") as! LeftViewController
                                 let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController

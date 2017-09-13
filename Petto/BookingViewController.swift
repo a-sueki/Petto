@@ -32,23 +32,17 @@ class BookingViewController: BaseFormViewController {
         
         print("DEBUG_PRINT: BookingViewController.viewWillAppear end")
     }
-    
+        
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BookingViewController.viewWillDisappear start")
-        print("DEBUG_PRINT: BookingViewController.viewWillDisappear end")
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        print("DEBUG_PRINT: BookingViewController.viewDidDisappear start")
         
         if let roomId = self.roomData?.id {
             let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
             ref.removeAllObservers()
         }
         
-        print("DEBUG_PRINT: BookingViewController.viewDidDisappear end")
+        print("DEBUG_PRINT: BookingViewController.viewWillDisappear end")
     }
     
     func read() {

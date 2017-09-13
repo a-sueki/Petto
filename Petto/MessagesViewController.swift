@@ -84,15 +84,14 @@ class MessagesViewController: JSQMessagesViewController {
             }
         }
         
+        let ref1 = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
+        ref1.removeAllObservers()
+        
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         print("DEBUG_PRINT: MessagesViewController.viewDidDisappear start")
-        
-        let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
-        ref.removeAllObservers()
-        
         print("DEBUG_PRINT: MessagesViewController.viewDidDisappear end")
     }
     

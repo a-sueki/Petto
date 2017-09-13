@@ -41,13 +41,14 @@ class HomeCollectionViewCell: UICollectionViewCell {
         } else {
             self.sexImageView.image = UIImage(named: "female-lightgray")
         }
+        
         if petData.isAvailable! {
             if petData.minDays == petData.maxDays {
                 self.termLabel.text = "期間：\(String(petData.minDays!))日間"
             }else{
                 self.termLabel.text = "期間：\(String(petData.minDays!))〜\(String(petData.maxDays!))日間"
             }
-        }else{
+        } else {
             self.termLabel.text = "期間外"
             // 写真をグレーアウト
             let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")
@@ -57,7 +58,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
             let myOutputImage : CIImage = myMonochromeFilter!.outputImage!
             self.petImageView.image = UIImage(ciImage: myOutputImage)
             // 再描画
-            self.petImageView.setNeedsDisplay()
+//            self.petImageView.setNeedsDisplay()
             
             // 帯を追加
             let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
@@ -68,8 +69,8 @@ class HomeCollectionViewCell: UICollectionViewCell {
             bandLabel.textColor = UIColor.white
             bandLabel.textAlignment = NSTextAlignment.center
             self.petImageView.addSubview(bandLabel)
-            
         }
+        
         if petData.isLiked {
             let buttonImage = UIImage(named: "like-red")
             self.likeButton.setImage(buttonImage, for: UIControlState.normal)

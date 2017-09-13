@@ -344,9 +344,9 @@ class PetDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear start")
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear start")
         
         // roomIdを取得
         let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
@@ -355,7 +355,7 @@ class PetDetailViewController: BaseFormViewController {
         let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
         roomRef.removeAllObservers()
         
-        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear end")
+        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {

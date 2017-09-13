@@ -52,9 +52,9 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     }
     
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        print("DEBUG_PRINT: MessageListViewController.viewDidDisappear start")
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("DEBUG_PRINT: MessageListViewController.viewWillDisappear start")
         
         if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) != nil && (UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)?.isEmpty)! {
             for (roomId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)! {
@@ -74,7 +74,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             }
         }
         
-        print("DEBUG_PRINT: MessageListViewController.viewDidDisappear end")
+        print("DEBUG_PRINT: MessageListViewController.viewWillDisappear end")
     }
     
     override func didReceiveMemoryWarning() {
