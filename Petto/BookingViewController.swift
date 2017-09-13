@@ -220,6 +220,7 @@ class BookingViewController: BaseFormViewController {
         self.inputData["userImageString"] = self.roomData?.userImageString
         self.inputData["userAge"] = self.roomData?.userAge
         self.inputData["userArea"] = self.roomData?.userArea
+        self.inputData["userSex"] = self.roomData?.userSex
         self.inputData["petId"] = self.roomData?.petId
         self.inputData["petName"] = self.roomData?.petName
         self.inputData["petImageString"] = self.roomData?.petImageString
@@ -249,7 +250,7 @@ class BookingViewController: BaseFormViewController {
     func displayDate(stringDate: String) -> String {
         print("DEBUG_PRINT: BookingViewController.displayDate start")
         
-        var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 10))
+        var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 16))
         result = result.replacingOccurrences(of: "-", with: "/")
 
         print("DEBUG_PRINT: BookingViewController.displayDate end")

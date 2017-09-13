@@ -13,7 +13,7 @@ import FirebaseDatabase
 import SVProgressHUD
 
 class TodoListViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource {
-
+    
     @IBOutlet weak var tableView: UITableView!
     var leaveDataArray: [LeaveData] = []
     
@@ -129,27 +129,24 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         // あずかり人の場合
         if self.leaveDataArray[indexPath.row].breederId != UserDefaults.standard.string(forKey: DefaultString.Uid) {
-            // あずかり人の場合
-            if self.leaveDataArray[indexPath.row].breederId != UserDefaults.standard.string(forKey: DefaultString.Uid) {
-                // 未実施の場合
-                if self.leaveDataArray[indexPath.row].acceptFlag == true &&
-                    DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
-                    cell.willDoLabel.isHidden = false
-                    cell.isBreederLabel.isHidden = true
-                }else{
-                    cell.willDoLabel.isHidden = true
-                    cell.isBreederLabel.isHidden = true
-                }
+            // 未実施の場合
+            if self.leaveDataArray[indexPath.row].acceptFlag == true &&
+                DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
+                cell.willDoLabel.isHidden = false
+                cell.isBreederLabel.isHidden = true
             }else{
-                // 未実施の場合
-                if self.leaveDataArray[indexPath.row].acceptFlag == true &&
-                    DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
-                    cell.willDoLabel.isHidden = false
-                    cell.isBreederLabel.isHidden = false
-                }else{
-                    cell.willDoLabel.isHidden = true
-                    cell.isBreederLabel.isHidden = false
-                }
+                cell.willDoLabel.isHidden = true
+                cell.isBreederLabel.isHidden = true
+            }
+        }else{
+            // 未実施の場合
+            if self.leaveDataArray[indexPath.row].acceptFlag == true &&
+                DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
+                cell.willDoLabel.isHidden = false
+                cell.isBreederLabel.isHidden = false
+            }else{
+                cell.willDoLabel.isHidden = true
+                cell.isBreederLabel.isHidden = false
             }
         }
         
@@ -267,7 +264,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
         }
-
+        
         print("DEBUG_PRINT: TodoListViewController.handleUserDetailButton end")
     }
     
