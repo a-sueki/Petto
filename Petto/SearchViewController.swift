@@ -28,7 +28,12 @@ class SearchViewController: BaseFormViewController {
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: SearchViewController.viewWillAppear start")
         
-        self.read()
+        if UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
+            self.read()
+        }else{
+            self.updateSearchData()
+        }
+        
         
         print("DEBUG_PRINT: SearchViewController.viewWillAppear end")
     }
@@ -39,16 +44,16 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.viewWillDisappear end")
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("DEBUG_PRINT: SearchViewController.viewDidAppear start")
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("DEBUG_PRINT: SearchViewController.viewDidDisappe arstart")
         
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
             ref.removeAllObservers()
         }
 
-        print("DEBUG_PRINT: SearchViewController.viewDidAppear end")
+        print("DEBUG_PRINT: SearchViewController.viewDidDisappear end")
     }
     
     func read() {
@@ -62,10 +67,10 @@ class SearchViewController: BaseFormViewController {
                 print("DEBUG_PRINT: SearchViewController.read .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
                     self.searchData = SearchData(snapshot: snapshot, myId: uid)
-                }
-                DispatchQueue.main.async {
                     // Formを表示
                     self.updateSearchData()
+                }
+                DispatchQueue.main.async {
                     SVProgressHUD.dismiss()
                 }
             }) { (error) in
