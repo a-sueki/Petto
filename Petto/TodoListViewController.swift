@@ -45,13 +45,6 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         print("DEBUG_PRINT: TodoListViewController.viewWillAppear end")
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("DEBUG_PRINT: TodoListViewController.viewDidAppear start")
-        print("DEBUG_PRINT: TodoListViewController.viewDidAppear end")
-    }
-    
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: TodoListViewController.viewWillDisappear start")
@@ -176,10 +169,6 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                         })
                     }
                     
-                    print("DEBUG_PRINT: TodoListViewController.read xxxxxxxxxxxxxx")
-                    print("DEBUG_PRINT: TodoListViewController.read \(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!.count)")
-                    print("DEBUG_PRINT: TodoListViewController.read \(self.leaveDataArray.count)")
-                    
                     // tableViewを再表示する
                     if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)!.count == self.leaveDataArray.count {
                         DispatchQueue.main.async {
@@ -213,30 +202,14 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         let point = touch!.location(in: self.tableView)
         let indexPath = tableView.indexPathForRow(at: point)
         
-        //TODO: Leave画面に遷移
-        let leave = self.leaveDataArray[(indexPath?.row)!]
-        if leave.userId == UserDefaults.standard.string(forKey: DefaultString.Uid)! {
-            // 自分があずかり人の場合
+        // Leave画面に遷移
             // leaveDataをセットして画面遷移
-            /*            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-             let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
-             let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
-             userMessagesContainerViewController.roomData = self.leaveDataArray[(indexPath?.row)!]
-             self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
-             */
-        }else{
-            // 自分がブリーダーの場合
-            // leaveDataをセットして画面遷移
-            /*            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
-             let bookingViewController = self.storyboard?.instantiateViewController(withIdentifier: "Booking") as! BookingViewController
-             let breederMessagesContainerViewController = BreederMessagesContainerViewController(top: messagesViewController, under: bookingViewController)
-             breederMessagesContainerViewController.roomData = self.leaveDataArray[(indexPath?.row)!]
-             self.navigationController?.pushViewController(breederMessagesContainerViewController, animated: true)
-             */
-        }
+            let leaveViewController = self.storyboard?.instantiateViewController(withIdentifier: "Leave") as! LeaveViewController
+            leaveViewController.leaveData = self.leaveDataArray[(indexPath?.row)!]
+            self.navigationController?.pushViewController(leaveViewController, animated: true)
+        
         print("DEBUG_PRINT: TodoListViewController.handleLeaveInfoButton end")
     }
-    
     // ユーザープロフィールがタップされたらユーザー詳細画面に遷移
     func handleUserDetailButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: TodoListViewController.handleUserDetailButton start")

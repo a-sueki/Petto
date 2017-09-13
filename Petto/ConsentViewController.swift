@@ -82,8 +82,8 @@ class ConsentViewController: BaseFormViewController {
         }
  
         // message作成
-        let start = displayDate(stringDate: String(describing: self.inputData["startDate"]!))
-        let end = displayDate(stringDate: String(describing: self.inputData["endDate"]!))
+        let start = DateCommon.displayDate(stringDate: String(describing: self.inputData["startDate"]!))
+        let end = DateCommon.displayDate(stringDate: String(describing: self.inputData["endDate"]!))
         let showMessage = "\(self.roomData?.petName! ?? "ペット")の飼い主さんに、おあずかりの否認を通知しました"
         let sendText = "[自動送信メッセージ]\n以下のおあずかり日程は、\(self.roomData?.userName ?? "あずかり人")さんに否認されました。\n\(start)~\(end)"
         let time = NSDate.timeIntervalSinceReferenceDate
@@ -123,8 +123,8 @@ class ConsentViewController: BaseFormViewController {
             }
         }
         // message作成
-        let start = displayDate(stringDate: String(describing: self.inputData["startDate"]!))
-        let end = displayDate(stringDate: String(describing: self.inputData["endDate"]!))
+        let start = DateCommon.displayDate(stringDate: String(describing: self.inputData["startDate"]!))
+        let end = DateCommon.displayDate(stringDate: String(describing: self.inputData["endDate"]!))
         let showMessage = "\(self.roomData?.petName! ?? "ペット")の飼い主さんに、おあずかりの承諾を通知しました"
         let sendText = "[自動送信メッセージ]\n以下のおあずかり日程で、\(self.roomData?.userName ?? "あずかり人")さんが承諾しました。\nペットの受け渡し時間・場所、当日の持ち物などを確認して下さい。\n\(start)~\(end)"
         let time = NSDate.timeIntervalSinceReferenceDate
@@ -154,17 +154,7 @@ class ConsentViewController: BaseFormViewController {
 
         print("DEBUG_PRINT: ConsentViewController.accept end")
     }
-
-    func displayDate(stringDate: String) -> String {
-        print("DEBUG_PRINT: ConsentViewController.displayDate end")
-        
-        var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 16))
-        //result = result.replacingOccurrences(of: "-", with: "/")
-        
-        print("DEBUG_PRINT: ConsentViewController.displayDate end")
-        return result
-    }
-    
+   
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

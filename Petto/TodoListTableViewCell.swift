@@ -60,25 +60,13 @@ class TodoListTableViewCell: UITableViewCell {
         self.petImageView.image = leaveData.petImage
         self.petNameLabel.text = leaveData.petName
         if leaveData.userId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
-            self.startDateLabel.text = "あずかり開始：" + displayDate(stringDate: leaveData.startDate!)
-            self.endDateLabel.text = "あずかり終了：" + displayDate(stringDate: leaveData.endDate!)
+            self.startDateLabel.text = "あずかり開始：" + DateCommon.displayDate(stringDate: leaveData.startDate!)
+            self.endDateLabel.text = "あずかり終了：" + DateCommon.displayDate(stringDate: leaveData.endDate!)
         }else{
-            self.startDateLabel.text = "おあずけ開始：" + displayDate(stringDate: leaveData.startDate!)
-            self.endDateLabel.text = "おあずけ終了：" + displayDate(stringDate: leaveData.endDate!)
+            self.startDateLabel.text = "おあずけ開始：" + DateCommon.displayDate(stringDate: leaveData.startDate!)
+            self.endDateLabel.text = "おあずけ終了：" + DateCommon.displayDate(stringDate: leaveData.endDate!)
         }
-        //DateCommon.dateToString(leaveData.updateAt! as Date, dateFormat: DateCommon.displayDateFormat)
         
         print("TodoListTableViewCell.setData start")
     }
-    
-    func displayDate(stringDate: String) -> String {
-        print("DEBUG_PRINT: TodoListTableViewCell.displayDate start")
-        
-        var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 16))
-        //result = result.replacingOccurrences(of: "-", with: "/")
-        
-        print("DEBUG_PRINT: TodoListTableViewCell.displayDate end")
-        return result
-    }
-    
 }

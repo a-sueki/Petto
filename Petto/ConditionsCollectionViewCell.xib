@@ -12,43 +12,46 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="ConditionsCell" id="gTV-IL-0wX" customClass="ConditionsCollectionViewCell" customModule="Petto" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="30" height="60"/>
+            <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="30" height="60"/>
+                <rect key="frame" x="0.0" y="0.0" width="70" height="50"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home" translatesAutoresizingMaskIntoConstraints="NO" id="YFQ-In-rB4">
-                        <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                        <rect key="frame" x="22.5" y="0.0" width="25" height="25"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="30" id="IxF-Oo-W2r"/>
-                            <constraint firstAttribute="width" constant="30" id="Med-g6-zpz"/>
+                            <constraint firstAttribute="height" constant="25" id="IxF-Oo-W2r"/>
+                            <constraint firstAttribute="width" constant="25" id="Med-g6-zpz"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xIi-bj-kCl">
-                        <rect key="frame" x="0.0" y="30" width="30" height="30"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="キャットタワー" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xIi-bj-kCl">
+                        <rect key="frame" x="0.0" y="25" width="70" height="20"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="30" id="4d5-Dp-AXJ"/>
-                            <constraint firstAttribute="height" constant="30" id="8F7-wW-Poy"/>
+                            <constraint firstAttribute="width" constant="70" id="aDr-94-Ly6"/>
+                            <constraint firstAttribute="height" constant="20" id="m6v-as-Y7r"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="9"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="xIi-bj-kCl" firstAttribute="top" secondItem="YFQ-In-rB4" secondAttribute="bottom" id="5pF-s0-FkN"/>
-                <constraint firstItem="YFQ-In-rB4" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="UgU-c3-D1n"/>
-                <constraint firstItem="YFQ-In-rB4" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="eC4-fM-Ti0"/>
-                <constraint firstItem="xIi-bj-kCl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="yD9-8U-bJQ"/>
+                <constraint firstItem="xIi-bj-kCl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="8zg-hU-pn3"/>
+                <constraint firstItem="xIi-bj-kCl" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="EgC-Q3-isz"/>
+                <constraint firstItem="YFQ-In-rB4" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="IEz-aP-UOh"/>
+                <constraint firstAttribute="trailing" secondItem="xIi-bj-kCl" secondAttribute="trailing" id="NcJ-qg-gNu"/>
+                <constraint firstItem="xIi-bj-kCl" firstAttribute="top" secondItem="YFQ-In-rB4" secondAttribute="bottom" id="ayM-AW-0sB"/>
+                <constraint firstItem="YFQ-In-rB4" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="elh-Vc-Jbs"/>
+                <constraint firstAttribute="bottom" secondItem="xIi-bj-kCl" secondAttribute="bottom" constant="5" id="fDf-zG-YCV"/>
             </constraints>
-            <size key="customSize" width="92" height="73"/>
+            <size key="customSize" width="176" height="4"/>
             <connections>
                 <outlet property="iconImageView" destination="YFQ-In-rB4" id="W3u-VY-ERM"/>
                 <outlet property="textLabel" destination="xIi-bj-kCl" id="Svk-J0-c8U"/>
             </connections>
-            <point key="canvasLocation" x="-17" y="-2"/>
+            <point key="canvasLocation" x="25" y="-38.5"/>
         </collectionViewCell>
     </objects>
     <resources>

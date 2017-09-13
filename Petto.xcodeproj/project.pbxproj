@@ -38,7 +38,6 @@
 		8491640D1F288093007597F9 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8491640C1F288093007597F9 /* EditViewController.swift */; };
 		8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8491640E1F2884B7007597F9 /* EditSectionHeader.xib */; };
 		849ED1E21F1CEE47003AD9F5 /* PetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849ED1E11F1CEE47003AD9F5 /* PetData.swift */; };
-		84A544911F443E4D00CD5617 /* ReserveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A544901F443E4D00CD5617 /* ReserveViewController.swift */; };
 		84A847F41F28251200D898EC /* MyPetListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A847F31F28251200D898EC /* MyPetListViewController.swift */; };
 		84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A847F51F2826A900D898EC /* MyPetListTableViewCell.swift */; };
 		84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */; };
@@ -126,7 +125,6 @@
 		8491640C1F288093007597F9 /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		8491640E1F2884B7007597F9 /* EditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSectionHeader.xib; sourceTree = "<group>"; };
 		849ED1E11F1CEE47003AD9F5 /* PetData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetData.swift; sourceTree = "<group>"; };
-		84A544901F443E4D00CD5617 /* ReserveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReserveViewController.swift; sourceTree = "<group>"; };
 		84A847F31F28251200D898EC /* MyPetListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPetListViewController.swift; sourceTree = "<group>"; };
 		84A847F51F2826A900D898EC /* MyPetListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPetListTableViewCell.swift; sourceTree = "<group>"; };
 		84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPetListTableViewCell.xib; sourceTree = "<group>"; };
@@ -296,14 +294,6 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		84A544921F4445C500CD5617 /* Reserve */ = {
-			isa = PBXGroup;
-			children = (
-				84A544901F443E4D00CD5617 /* ReserveViewController.swift */,
-			);
-			name = Reserve;
-			sourceTree = "<group>";
-		};
 		84CCDFFC1EFB791D0025B5D3 = {
 			isa = PBXGroup;
 			children = (
@@ -340,11 +330,10 @@
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
 				849ED1E31F1CF912003AD9F5 /* Model */,
 				84D523F21F57AD15004092D5 /* Login */,
+				849ED1E01F1B2F60003AD9F5 /* MyPet */,
 				8457462F1F2FF73300CE5470 /* User */,
 				846705DF1F0F7B2300FFEA8D /* Home */,
 				846705E11F0F7BAA00FFEA8D /* Messages */,
-				849ED1E01F1B2F60003AD9F5 /* MyPet */,
-				84A544921F4445C500CD5617 /* Reserve */,
 				847CA55F1F3ACE1000C68672 /* Leave */,
 			);
 			path = Petto;
@@ -544,7 +533,6 @@
 				841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */,
 				842732831F4FFA2400C32367 /* Common.swift in Sources */,
 				846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */,
-				84A544911F443E4D00CD5617 /* ReserveViewController.swift in Sources */,
 				844577F21F59F4B2006AB5C6 /* ConsentViewController.swift in Sources */,
 				84D6CD351F18F828000CA101 /* FloatLabelTextField.swift in Sources */,
 				840EE9551F4C7864004E9AF8 /* SearchViewController.swift in Sources */,

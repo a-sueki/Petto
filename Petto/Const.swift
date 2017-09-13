@@ -197,6 +197,10 @@ struct Codes {
     static let C8 = "code08"
 }
 
+struct ConditionsColor {
+    static let red = "-red"
+}
+
 struct Environment {
     static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4]
     //TODO: ユーザープロフィール画面表示用も作成する
@@ -221,16 +225,24 @@ struct Environment {
         default:  return "不明"
         }
     }
-    static func toIcon(_ code:String) -> UIImage {
-        switch code {
-        case codes[0] : return UIImage(named: icons[0])!
-        case codes[1] : return UIImage(named: icons[1])!
-        case codes[2] : return UIImage(named: icons[2])!
-        case codes[3] : return UIImage(named: icons[3])!
-        default:  return UIImage()
+    static func iconToCode(_ icon:String) -> String {
+        switch icon {
+        case icons[0] : return codes[0]
+        case icons[1] : return codes[1]
+        case icons[2] : return codes[2]
+        case icons[3] : return codes[3]
+        default:  return "不明"
         }
     }
-    
+    static func toIcon(_ code:String) -> String {
+        switch code {
+        case codes[0] : return icons[0]
+        case codes[1] : return icons[1]
+        case codes[2] : return icons[2]
+        case codes[3] : return icons[3]
+        default:  return "不明"
+        }
+    }
     static func convertList(_ codeList: [String]) -> Set<String> {
         var nameList:Set<String> = []
         for code in codeList {
@@ -243,7 +255,8 @@ struct Environment {
 struct Tool {
     static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4,Codes.C5,Codes.C6,Codes.C7,Codes.C8]
     static let strings = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
-    
+    static let icons = ["doghouse","sandbox","dogchain","cage","toothbrush","brush","scratch","cattower"]
+   
     static func toString(_ code:String) -> String {
         switch code {
         case codes[0] : return strings[0]
@@ -270,6 +283,32 @@ struct Tool {
         default:  return "不明"
         }
     }
+    static func iconToCode(_ icon:String) -> String {
+        switch icon {
+        case icons[0] : return codes[0]
+        case icons[1] : return codes[1]
+        case icons[2] : return codes[2]
+        case icons[3] : return codes[3]
+        case icons[4] : return codes[4]
+        case icons[5] : return codes[5]
+        case icons[6] : return codes[6]
+        case icons[7] : return codes[7]
+        default:  return "不明"
+        }
+    }
+    static func toIcon(_ code:String) -> String {
+        switch code {
+        case codes[0] : return icons[0]
+        case codes[1] : return icons[1]
+        case codes[2] : return icons[2]
+        case codes[3] : return icons[3]
+        case codes[4] : return icons[4]
+        case codes[5] : return icons[5]
+        case codes[6] : return icons[6]
+        case codes[7] : return icons[7]
+        default:  return "不明"
+        }
+    }
     static func convertList(_ codeList: [String]) -> Set<String> {
         var nameList:Set<String> = []
         for code in codeList {
@@ -280,7 +319,8 @@ struct Tool {
 }
 struct PetNGs {
     static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4,Codes.C5]
-    static let strings = ["Bad評価1つ以上","定時帰宅できない","一人暮らし","小児あり世帯","高齢者のみ世帯"]
+    static let strings = ["Bad評価あり","定時帰宅NG","一人暮らし","小児がいる","高齢者のみ"]
+    static let icons = ["nogood","timeout","absence","baby","aged"]
     
     static func toString(_ code:String) -> String {
         switch code {
@@ -302,6 +342,27 @@ struct PetNGs {
         default:  return "不明"
         }
     }
+    static func iconToCode(_ icon:String) -> String {
+        switch icon {
+        case icons[0] : return codes[0]
+        case icons[1] : return codes[1]
+        case icons[2] : return codes[2]
+        case icons[3] : return codes[3]
+        case icons[4] : return codes[4]
+        default:  return "不明"
+        }
+    }
+    static func toIcon(_ code:String) -> String {
+        switch code {
+        case codes[0] : return icons[0]
+        case codes[1] : return icons[1]
+        case codes[2] : return icons[2]
+        case codes[3] : return icons[3]
+        case codes[4] : return icons[4]
+        default:  return "不明"
+        }
+    }
+
     static func convertList(_ codeList: [String]) -> Set<String> {
         var nameList:Set<String> = []
         for code in codeList {
@@ -313,6 +374,7 @@ struct PetNGs {
 struct UserNGs {
     static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4]
     static let strings = ["吠え癖あり","噛み癖あり","生まれたて","持病あり"]
+    static let icons = ["howl","bite","born","hospital"]
     
     static func toString(_ code:String) -> String {
         switch code {
@@ -329,6 +391,24 @@ struct UserNGs {
         case strings[1] : return codes[1]
         case strings[2] : return codes[2]
         case strings[3] : return codes[3]
+        default:  return "不明"
+        }
+    }
+    static func iconToCode(_ icon:String) -> String {
+        switch icon {
+        case icons[0] : return codes[0]
+        case icons[1] : return codes[1]
+        case icons[2] : return codes[2]
+        case icons[3] : return codes[3]
+        default:  return "不明"
+        }
+    }
+    static func toIcon(_ code:String) -> String {
+        switch code {
+        case codes[0] : return icons[0]
+        case codes[1] : return icons[1]
+        case codes[2] : return icons[2]
+        case codes[3] : return icons[3]
         default:  return "不明"
         }
     }

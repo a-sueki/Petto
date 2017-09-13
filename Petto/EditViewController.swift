@@ -346,7 +346,7 @@ class EditViewController: BaseFormViewController {
             
             +++ Section()
             <<< SwitchRow("enterDetails"){
-                $0.title = "より詳細なプロフィールを入力する"
+                $0.title = "もっと詳しく入力する"
                 $0.value = self.petData?.enterDetails ?? false
             }
             

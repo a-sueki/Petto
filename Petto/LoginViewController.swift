@@ -121,8 +121,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 UserDefaults.standard.set(userData.birthday , forKey: DefaultString.Birthday)
                                 UserDefaults.standard.set(userData.area , forKey: DefaultString.Area)
                                 UserDefaults.standard.set(userData.age , forKey: DefaultString.Age)
-                                UserDefaults.standard.set(userData.hasAnotherPet , forKey: DefaultString.HasAnotherPet)
-                                UserDefaults.standard.set(userData.isExperienced , forKey: DefaultString.IsExperienced)
+                                if userData.hasAnotherPet != nil {
+                                    UserDefaults.standard.set(userData.hasAnotherPet , forKey: DefaultString.HasAnotherPet)
+                                }
+                                if userData.isExperienced != nil {
+                                    UserDefaults.standard.set(userData.isExperienced , forKey: DefaultString.IsExperienced)
+                                }
                                 UserDefaults.standard.set(userData.expectTo , forKey: DefaultString.ExpectTo)
                                 UserDefaults.standard.set(userData.enterDetails , forKey: DefaultString.EnterDetails)
                                 UserDefaults.standard.set(userData.createAt , forKey: DefaultString.CreateAt)

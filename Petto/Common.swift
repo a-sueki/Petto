@@ -30,4 +30,11 @@ struct DateCommon {
         return dateFormatter.date(from: string)!
     }
     
+    static func displayDate(stringDate: String) -> String {
+        
+        let result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 16))
+        
+        return result
+    }
+
 }

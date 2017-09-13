@@ -198,8 +198,8 @@ class BookingViewController: BaseFormViewController {
             }
         }
         // message作成
-        let start = displayDate(stringDate: String(describing: self.inputData["startDate"]!))
-        let end = displayDate(stringDate: String(describing: self.inputData["endDate"]!))
+        let start = DateCommon.displayDate(stringDate: String(describing: self.inputData["startDate"]!))
+        let end = DateCommon.displayDate(stringDate: String(describing: self.inputData["endDate"]!))
         let showMessage = "\(self.roomData?.userName! ?? "あずかり人")さんに、おあずけ期間を提案しました"
         let sendText = "[自動送信メッセージ]\n以下の日程で、\(self.roomData?.petName ?? "ペット")の飼い主さんがおあずけ期間を提案しました。\n\(self.roomData?.userName ?? "あずかり人")さんは\"承認\"もしくは\"否認\"をタップして下さい。\n\(start)~\(end)"
         let time = NSDate.timeIntervalSinceReferenceDate
@@ -245,16 +245,6 @@ class BookingViewController: BaseFormViewController {
         navigationController?.popViewController(animated: true)
         
         print("DEBUG_PRINT: BookingViewController.suggest end")
-    }
-    
-    func displayDate(stringDate: String) -> String {
-        print("DEBUG_PRINT: BookingViewController.displayDate start")
-        
-        var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 16))
-        //result = result.replacingOccurrences(of: "-", with: "/")
-
-        print("DEBUG_PRINT: BookingViewController.displayDate end")
-        return result
     }
     
     override func didReceiveMemoryWarning() {

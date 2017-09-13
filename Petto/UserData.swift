@@ -21,9 +21,9 @@ class UserData: NSObject {
     var birthday: String
     var area: String
     var age: String
-    var hasAnotherPet: Bool        // 他にペットを飼っている
-    var isExperienced: Bool        // ペット飼育経験あり
-    var expectTo: Bool             // ペットあずかりを希望する
+    var hasAnotherPet: Bool?        // 他にペットを飼っている
+    var isExperienced: Bool?        // ペット飼育経験あり
+    var expectTo: Bool              // ペットあずかりを希望する
     var enterDetails: Bool // add
     var createAt: NSDate
     var createBy: String
@@ -61,8 +61,8 @@ class UserData: NSObject {
         self.birthday = valueDictionary["birthday"] as! String
         self.area = valueDictionary["area"] as! String
         self.age = valueDictionary["age"] as! String
-        self.hasAnotherPet = valueDictionary["hasAnotherPet"] as! Bool
-        self.isExperienced = valueDictionary["isExperienced"] as! Bool
+        self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
+        self.isExperienced = valueDictionary["isExperienced"] as? Bool
         self.expectTo = valueDictionary["expectTo"] as! Bool
         self.enterDetails = valueDictionary["enterDetails"] as! Bool
         let createAtString = valueDictionary["createAt"] as! String

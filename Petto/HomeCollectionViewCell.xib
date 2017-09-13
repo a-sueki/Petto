@@ -55,7 +55,11 @@
                         </constraints>
                     </imageView>
                     <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HMb-mT-llA">
-                        <rect key="frame" x="116" y="116" width="25" height="25"/>
+                        <rect key="frame" x="109" y="109" width="35" height="35"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="35" id="6FX-D7-1DY"/>
+                            <constraint firstAttribute="width" constant="35" id="8ff-Vg-pd6"/>
+                        </constraints>
                         <state key="normal" image="unlike"/>
                     </button>
                 </subviews>
@@ -70,10 +74,10 @@
                 <constraint firstItem="v1v-pB-o3E" firstAttribute="leading" secondItem="S8j-FD-jhy" secondAttribute="trailing" constant="5" id="XnE-ID-D7L"/>
                 <constraint firstItem="V3G-s4-nr8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="bqN-ip-g4J"/>
                 <constraint firstAttribute="bottom" secondItem="V3G-s4-nr8" secondAttribute="bottom" id="cBi-vE-IoY"/>
-                <constraint firstItem="HMb-mT-llA" firstAttribute="top" secondItem="KQW-lg-eQn" secondAttribute="bottom" constant="-33" id="iK3-uy-Zy0"/>
+                <constraint firstItem="HMb-mT-llA" firstAttribute="top" secondItem="KQW-lg-eQn" secondAttribute="bottom" constant="-40" id="iK3-uy-Zy0"/>
                 <constraint firstItem="v1v-pB-o3E" firstAttribute="centerY" secondItem="S8j-FD-jhy" secondAttribute="centerY" id="igb-DH-9bC"/>
                 <constraint firstItem="KQW-lg-eQn" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="ouh-rj-y4I"/>
-                <constraint firstItem="HMb-mT-llA" firstAttribute="leading" secondItem="KQW-lg-eQn" secondAttribute="trailing" constant="-33" id="pmW-iV-zcL"/>
+                <constraint firstItem="HMb-mT-llA" firstAttribute="leading" secondItem="KQW-lg-eQn" secondAttribute="trailing" constant="-40" id="pmW-iV-zcL"/>
                 <constraint firstItem="S8j-FD-jhy" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="qIE-7M-shy"/>
                 <constraint firstItem="qsA-3y-aN3" firstAttribute="leading" secondItem="v1v-pB-o3E" secondAttribute="trailing" constant="5" id="sWT-e7-kdQ"/>
                 <constraint firstItem="vb9-TX-jmf" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="sgr-5e-lkG"/>
