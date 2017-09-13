@@ -257,6 +257,9 @@
 		847CA55F1F3ACE1000C68672 /* Leave */ = {
 			isa = PBXGroup;
 			children = (
+				844062FD1F60B36200640124 /* TodoListViewController.swift */,
+				844062FF1F60B44F00640124 /* TodoListTableViewCell.swift */,
+				844063001F60B44F00640124 /* TodoListTableViewCell.xib */,
 				847CA55D1F3ACD4E00C68672 /* LeaveViewController.swift */,
 				847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */,
 				847CA5651F3AFFE400C68672 /* ConditionsCollectionViewCell.xib */,
@@ -335,9 +338,6 @@
 				844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
-				844062FD1F60B36200640124 /* TodoListViewController.swift */,
-				844062FF1F60B44F00640124 /* TodoListTableViewCell.swift */,
-				844063001F60B44F00640124 /* TodoListTableViewCell.xib */,
 				849ED1E31F1CF912003AD9F5 /* Model */,
 				84D523F21F57AD15004092D5 /* Login */,
 				8457462F1F2FF73300CE5470 /* User */,

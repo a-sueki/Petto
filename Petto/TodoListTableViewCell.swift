@@ -75,7 +75,7 @@ class TodoListTableViewCell: UITableViewCell {
         print("DEBUG_PRINT: TodoListTableViewCell.displayDate start")
         
         var result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 16))
-        result = result.replacingOccurrences(of: "-", with: "/")
+        //result = result.replacingOccurrences(of: "-", with: "/")
         
         print("DEBUG_PRINT: TodoListTableViewCell.displayDate end")
         return result
