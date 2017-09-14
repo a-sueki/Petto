@@ -28,9 +28,9 @@ class ConsentViewController: BaseFormViewController {
             Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 if self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
-                    row.title = "以下の期間でペットあずかりを承諾する"
+                    row.title = "あずかりを承諾する"
                  }else if self.leaveData?.acceptFlag == true {
-                    row.title = "以下のおあずけ期間で承諾済み"
+                    row.title = "以下あずかり期間で承諾済み"
                     row.disabled = true
                 }
                 }.onCellSelection { [weak self] (cell, row) in
@@ -47,7 +47,7 @@ class ConsentViewController: BaseFormViewController {
                         return true
                     }
                 })
-                row.title = "以下の期間でのペットあずかりを否認する"
+                row.title = "あずかりを断る"
                 }.onCellSelection { [weak self] (cell, row) in
                         row.section?.form?.validate()
                         self?.deny()

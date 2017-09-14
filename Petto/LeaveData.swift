@@ -31,6 +31,7 @@ class LeaveData: NSObject {
 
     var suggestFlag: Bool?
     var acceptFlag: Bool?
+    var runningFlag: Bool?
     var completeFlag: Bool?
     var abortFlag: Bool?
     
@@ -66,6 +67,7 @@ class LeaveData: NSObject {
         
         self.suggestFlag = valueDictionary["suggestFlag"] as? Bool
         self.acceptFlag = valueDictionary["acceptFlag"] as? Bool
+        self.runningFlag = valueDictionary["runningFlag"] as? Bool
         self.completeFlag = valueDictionary["completeFlag"] as? Bool
         self.abortFlag = valueDictionary["abortFlag"] as? Bool
         

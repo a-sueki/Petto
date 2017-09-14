@@ -88,15 +88,16 @@ class BookingViewController: BaseFormViewController {
         // フォーム
         form +++
             Section()
+            //TODO: 期間終了後は提案可能な状態に戻す
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 if let _ = self.leaveData, self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
-                    row.title = "以下のおあずけ期間で相手の承諾待ち"
+                    row.title = "承諾待ち"
                     row.disabled = true
                 }else if self.leaveData?.acceptFlag == true {
-                    row.title = "以下のおあずけ期間で承認されました"
+                    row.title = "承認済み"
                     row.disabled = true
                 }else{
-                    row.title = "以下のおあずけ期間を相手に提案する"
+                    row.title = "この期間でペットおあずけを提案する"
                 }
                 }.onCellSelection { [weak self] (cell, row) in
                     if self?.leaveData == nil || self?.leaveData?.suggestFlag == false{
@@ -227,6 +228,7 @@ class BookingViewController: BaseFormViewController {
         self.inputData["breederId"] = self.roomData?.breederId
         self.inputData["suggestFlag"] = true
         self.inputData["acceptFlag"] = false
+        self.inputData["runningFlag"] = false
         self.inputData["completeFlag"] = false
         self.inputData["abortFlag"] = false
         self.inputData["updateAt"] = String(time)

@@ -27,6 +27,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     @IBOutlet weak var conditionsCollectionView: UICollectionView!
     @IBOutlet weak var excuteButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,18 +75,95 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     func setData() {
         print("DEBUG_PRINT: LeaveViewController.setData start")
         
-        // 自分があずかり人の場合
         if self.leaveData?.userId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+            // 自分があずかり人の場合
             self.termLabel.text = "あずかり期間"
-            self.excuteButton.titleLabel?.text = "あずかりを開始する！"
         }else{
+            // 自分がブリーダーの場合
             self.termLabel.text = "おあずけ期間"
-            self.excuteButton.titleLabel?.text = "おあずけを開始する！"
         }
         self.userImageView.image = self.leaveData?.userImage
         self.petImageView.image = self.leaveData?.petImage
-        self.startDateLabel.text = DateCommon.displayDate(stringDate: (self.leaveData?.startDate)!)
-        self.endDateLabel.text = DateCommon.displayDate(stringDate: (self.leaveData?.endDate)!)
+        self.startDateLabel.text = "開始：" + DateCommon.displayDate(stringDate: (self.leaveData?.startDate)!)
+        self.endDateLabel.text = "終了：" + DateCommon.displayDate(stringDate: (self.leaveData?.endDate)!)
+        
+        let startDate = DateCommon.stringToDate((self.leaveData?.startDate)!, dateFormat: DateCommon.dateFormat)
+        let endDate = DateCommon.stringToDate((self.leaveData?.endDate)!, dateFormat: DateCommon.dateFormat)
+
+        // ボタン制御
+        if startDate.compare(Date()) == ComparisonResult.orderedDescending {
+            // 期間前（startDateが今日よりも未来）
+            if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+                // 自分がブリーダーの場合
+                self.excuteButton.setTitle("おあずけを開始する！", for: .normal)
+                self.cancelButton.setTitle("やっぱりやめる", for: .normal)
+                self.excuteButton.isEnabled = false
+            }else{
+                // 自分があずかり人の場合
+                self.excuteButton.setTitle("おあずけ開始(飼い主のみ可)", for: .normal)
+                self.cancelButton.setTitle("キャンセル(飼い主のみ可)", for: .normal)
+                self.excuteButton.isEnabled = false
+                self.cancelButton.isEnabled = false
+            }
+        } else if startDate.compare(Date()) == ComparisonResult.orderedAscending && endDate.compare(Date()) == ComparisonResult.orderedDescending{
+            // 期間中（startDate < 今日 < endDate）
+            if (self.leaveData?.runningFlag)! {
+                // 実行中の場合
+                if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+                    // 自分がブリーダーの場合
+                    self.excuteButton.setTitle("おあずけ中です", for: .normal)
+                    self.cancelButton.setTitle("中断する", for: .normal)
+                    self.excuteButton.isEnabled = false
+                } else {
+                    // 自分があずかり人の場合
+                    self.excuteButton.setTitle("あずかり中です", for: .normal)
+                    self.cancelButton.setTitle("中断する(飼い主のみ可)", for: .normal)
+                    self.excuteButton.isEnabled = false
+                    self.cancelButton.isEnabled = false
+                }
+            }else{
+                // 未実行の場合
+                if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+                    // 自分がブリーダーの場合
+                    self.excuteButton.setTitle("おあずけを開始する！", for: .normal)
+                    self.cancelButton.setTitle("やっぱりやめる", for: .normal)
+                }else{
+                     // 自分があずかり人の場合
+                    self.excuteButton.setTitle("おあずけ開始(飼い主のみ可)", for: .normal)
+                    self.cancelButton.setTitle("キャンセル(飼い主のみ可)", for: .normal)
+                    self.excuteButton.isEnabled = false
+                    self.cancelButton.isEnabled = false
+                }
+            }
+        } else {
+            // 期間後（endDateが今日よりも過去）
+            if self.leaveData?.runningFlag == true {
+                if self.leaveData?.completeFlag == false && self.leaveData?.abortFlag == false {
+                    // 実行中の場合
+                    if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+                        // 自分がブリーダーの場合
+                        self.excuteButton.setTitle("おあずけを終了する！", for: .normal)
+                        self.cancelButton.isHidden = true
+                    }else{
+                        // 自分があずかり人の場合
+                        self.excuteButton.setTitle("あずかり終了(飼い主のみ可)", for: .normal)
+                        self.excuteButton.isEnabled = false
+                        self.cancelButton.isHidden = true
+                    }
+                }else{
+                     // 完了・中断済みの場合
+                    self.excuteButton.setTitle("終了しました", for: .normal)
+                    self.excuteButton.isEnabled = false
+                    self.cancelButton.isHidden = true
+                }
+            } else {
+                // 未実行の場合
+                self.excuteButton.setTitle("終了しました(未実施)", for: .normal)
+                self.excuteButton.isEnabled = false
+                self.cancelButton.isHidden = true
+            }
+        }
+        
         
         print("DEBUG_PRINT: LeaveViewController.setData end")
     }
@@ -236,6 +314,28 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // 要素数を入れる、要素以上の数字を入れると表示でエラーとなる
         return self.conditionArray.count
+    }
+    
+    @IBAction func handleExcuteButton(_ sender: Any) {
+        print("DEBUG_PRINT: LeaveViewController.handleExcuteButton start")
+        print("DEBUG_PRINT: LeaveViewController.handleExcuteButton end")
+    }
+ 
+    @IBAction func handleCancelButton(_ sender: Any) {
+        print("DEBUG_PRINT: LeaveViewController.handleCancelButton start")
+        
+        var inputData = [String:Bool]()
+        
+        if self.cancelButton.titleLabel?.text == "やっぱりやめる" {
+            inputData["abortFlag"] = true
+        }
+        
+        print("DEBUG_PRINT: LeaveViewController.handleCancelButton end")
+    }
+    
+    @IBAction func handleBackButton(_ sender: Any) {
+        print("DEBUG_PRINT: LeaveViewController.handleBackButton start")
+        print("DEBUG_PRINT: LeaveViewController.handleBackButton end")
     }
     
 }
