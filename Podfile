@@ -18,4 +18,5 @@ target 'Petto' do
   pod 'Eureka'
   pod 'RKNotificationHub'
   pod 'Firebase/Messaging'
+  pod 'SCLAlertView'
 end

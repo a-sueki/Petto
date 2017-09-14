@@ -11,6 +11,7 @@ import Eureka
 import Firebase
 import FirebaseDatabase
 import SVProgressHUD
+import SCLAlertView
 
 class LeaveViewController: BaseViewController,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
@@ -18,6 +19,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     var leaveData: LeaveData?
     var userData: UserData?
     var petData: PetData?
+    var appearance1 :SCLAlertView.SCLAppearance?
     
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var petImageView: UIImageView!
@@ -43,6 +45,13 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         self.getPet()
         self.setData()
         
+        self.appearance1 = SCLAlertView.SCLAppearance(
+            kTitleFont: UIFont(name: "Helvetica", size: 17)!,
+            kTextFont: UIFont(name: "Helvetica", size: 14)!,
+            kButtonFont: UIFont(name: "Helvetica", size: 14)!,
+            showCloseButton: false
+        )
+        
         print("DEBUG_PRINT: LeaveViewController.viewDidLoad end")
     }
     
@@ -50,10 +59,20 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: LeaveViewController.viewWillAppear start")
         
+        // 自分があずかり人で、かつ、あずかり中の場合
+        if self.leaveData?.userId == UserDefaults.standard.string(forKey: DefaultString.Uid){
+            if self.leaveData?.runningFlag == true || self.leaveData?.completeFlag == true || self.leaveData?.abortFlag == true {
+                // ポップアップ表示、ボタン活性化
+                let alertView = SCLAlertView(appearance: self.appearance1!)
+                alertView.addButton("了解", target:self, selector:#selector(LeaveViewController.cancel))
+                alertView.showInfo("思い出フォト", subTitle: "\nあずかったペットとの写真を投稿できるようになりました！")
+                
+           }
+        }
+        
         
         print("DEBUG_PRINT: LeaveViewController.viewWillAppear end")
     }
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -89,7 +108,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         
         let startDate = DateCommon.stringToDate((self.leaveData?.startDate)!, dateFormat: DateCommon.dateFormat)
         let endDate = DateCommon.stringToDate((self.leaveData?.endDate)!, dateFormat: DateCommon.dateFormat)
-
+        
         // ボタン制御
         if startDate.compare(Date()) == ComparisonResult.orderedDescending {
             // 期間前（startDateが今日よりも未来）
@@ -128,7 +147,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                     self.excuteButton.setTitle("おあずけを開始する！", for: .normal)
                     self.cancelButton.setTitle("やっぱりやめる", for: .normal)
                 }else{
-                     // 自分があずかり人の場合
+                    // 自分があずかり人の場合
                     self.excuteButton.setTitle("おあずけ開始(飼い主のみ可)", for: .normal)
                     self.cancelButton.setTitle("キャンセル(飼い主のみ可)", for: .normal)
                     self.excuteButton.isEnabled = false
@@ -151,7 +170,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                         self.cancelButton.isHidden = true
                     }
                 }else{
-                     // 完了・中断済みの場合
+                    // 完了・中断済みの場合
                     self.excuteButton.setTitle("終了しました", for: .normal)
                     self.excuteButton.isEnabled = false
                     self.cancelButton.isHidden = true
@@ -161,6 +180,8 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                 self.excuteButton.setTitle("終了しました(未実施)", for: .normal)
                 self.excuteButton.isEnabled = false
                 self.cancelButton.isHidden = true
+                
+                //TODO:自動でTODOバッチをOFFに。leaveの更新は？
             }
         }
         
@@ -284,7 +305,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         print("DEBUG_PRINT: LeaveViewController.cellForItemAt start")
-
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ConditionsCell", for: indexPath) as! ConditionsCollectionViewCell
         if self.userData != nil && self.petData != nil{
             cell.setData(iconString: self.conditionArray[indexPath.row], userData: self.userData!)
@@ -318,16 +339,39 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     
     @IBAction func handleExcuteButton(_ sender: Any) {
         print("DEBUG_PRINT: LeaveViewController.handleExcuteButton start")
+        
+        if self.leaveData?.runningFlag == false {
+            // 開始
+            let alertView = SCLAlertView(appearance: self.appearance1!)
+            alertView.addButton("引き渡し完了", target:self, selector:#selector(LeaveViewController.excuted))
+            alertView.addButton("ちょっと待って...", target:self, selector:#selector(LeaveViewController.cancel))
+            alertView.showSuccess("ペットを引き渡して下さい", subTitle: "\nトラブル防止のため、\nあずかり人の連絡先・住所の確認を推奨します。")
+        } else {
+            // 完了
+            let alertView = SCLAlertView(appearance: self.appearance1!)
+            alertView.addButton("引き取り完了", target:self, selector:#selector(LeaveViewController.complete))
+            alertView.addButton("ちょっと待って...", target:self, selector:#selector(LeaveViewController.cancel))
+            alertView.showSuccess("ペットを引き取って下さい", subTitle: "\nペットに異常がないか、ペットが迷惑をかけなかったかなど確認しましょう。")
+        }
+        
         print("DEBUG_PRINT: LeaveViewController.handleExcuteButton end")
     }
- 
+    
     @IBAction func handleCancelButton(_ sender: Any) {
         print("DEBUG_PRINT: LeaveViewController.handleCancelButton start")
         
-        var inputData = [String:Bool]()
-        
-        if self.cancelButton.titleLabel?.text == "やっぱりやめる" {
-            inputData["abortFlag"] = true
+        if self.leaveData?.runningFlag == false {
+            // 中止
+            let alertView = SCLAlertView(appearance: self.appearance1!)
+            alertView.addButton("おあずけ中止", target:self, selector:#selector(LeaveViewController.stop))
+            alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
+            alertView.showWarning("おあずけを中止しますか？", subTitle: "\n中止すると、あずかり人にも通知されます。")
+        }else{
+            // 中断
+            let alertView = SCLAlertView(appearance: self.appearance1!)
+            alertView.addButton("おあずけ中断", target:self, selector:#selector(LeaveViewController.abort))
+            alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
+            alertView.showWarning("おあずけを中断しますか？", subTitle: "\n中断する前に、ペットを引き取りましょう。")
         }
         
         print("DEBUG_PRINT: LeaveViewController.handleCancelButton end")
@@ -335,8 +379,177 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     
     @IBAction func handleBackButton(_ sender: Any) {
         print("DEBUG_PRINT: LeaveViewController.handleBackButton start")
+        
+        //前画面に戻る
+        self.navigationController?.popViewController(animated: true)
+        
         print("DEBUG_PRINT: LeaveViewController.handleBackButton end")
     }
+    
+    func excuted(){
+        print("DEBUG_PRINT: LeaveViewController.excuted start")
+        
+        // leaveData,UserDataをupdate
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let ref = FIRDatabase.database().reference()
+        let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": true,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualStartDate/": Date().description,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": true] as [String : Any]
+        ref.updateChildValues(childUpdates)
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        // 前の画面に戻る
+        navigationController?.popViewController(animated: true)
+        
+        //TODO: ユーザーが思い出写真、コメントを投稿できるようにする（通知バッチ表示、当画面を開くとポップアップ表示）
+        
+        
+        
+        print("DEBUG_PRINT: LeaveViewController.excuted end")
+    }
+    func complete(){
+        print("DEBUG_PRINT: LeaveViewController.complete start")
+        
+        var breederComment: String?
+        var goods = self.userData?.goods
+        var bads = self.userData?.bads
+        
+        // ユーザ評価
+        let alertView = SCLAlertView(appearance: self.appearance1!)
+        let textField = alertView.addTextField("コメントなど")
+        alertView.addButton("Good!!"){
+            breederComment = textField.text
+            goods?.append((self.leaveData?.breederId)!)
+            self.completeUpdateFIR(breederComment: breederComment, goods: goods, bads: bads)
+        }
+        alertView.addButton("Bad..."){
+            breederComment = textField.text
+            bads?.append((self.leaveData?.breederId)!)
+            self.completeUpdateFIR(breederComment: breederComment, goods: goods, bads: bads)
+        }
+        alertView.showEdit("お疲れさまでした", subTitle: "\nあずかり人を評価して下さい。")
+        
+        print("DEBUG_PRINT: LeaveViewController.complete end")
+    }
+    
+    func completeUpdateFIR(breederComment: String?, goods: [String]?, bads: [String]? ){
+        print("DEBUG_PRINT: LeaveViewController.completeUpdateFIR start")
+        
+        // leaveData,UserDataをupdate
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let ref = FIRDatabase.database().reference()
+        let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": false,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/completeFlag/": true,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/breederComment/": breederComment ?? "[コメントはありません]",
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualEndDate/": Date().description,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/goods/": goods ?? [],
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/bads/": bads ?? [],
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": false,
+                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/todoRoomIds/\(self.leaveData!.id!)/": false] as [String : Any]
+        ref.updateChildValues(childUpdates)
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        // 前の画面に戻る
+        navigationController?.popViewController(animated: true)
+        
+        print("DEBUG_PRINT: LeaveViewController.completeUpdateFIR end")
+    }
+    
+    
+    func stop(){
+        print("DEBUG_PRINT: LeaveViewController.stop start")
+        
+        var breederComment: String?
+        // 中止理由
+        let alertView = SCLAlertView(appearance: self.appearance1!)
+        let textField = alertView.addTextField("急な予定が入ったから")
+        alertView.addButton("OK"){
+            breederComment = textField.text
+            self.stopUpdateFIR(breederComment: breederComment)
+        }
+        alertView.showEdit("中止します", subTitle: "\n中止の理由を入力して下さい。")
+        
+        print("DEBUG_PRINT: LeaveViewController.stop end")
+    }
+    
+    func stopUpdateFIR(breederComment: String?){
+        print("DEBUG_PRINT: LeaveViewController.stopUpdateFIR start")
+        
+        // leaveData,UserDataをupdate
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let ref = FIRDatabase.database().reference()
+        let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": false,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/stopFlag/": true,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/breederComment/": breederComment ?? "[コメントはありません]",
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualEndDate/": Date().description,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": false,
+                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/todoRoomIds/\(self.leaveData!.id!)/": false] as [String : Any]
+        ref.updateChildValues(childUpdates)
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        // 前の画面に戻る
+        navigationController?.popViewController(animated: true)
+        
+        print("DEBUG_PRINT: LeaveViewController.stopUpdateFIR end")
+    }
+    
+    func abort(){
+        print("DEBUG_PRINT: LeaveViewController.abort start")
+        
+        var breederComment: String?
+        var goods = self.userData?.goods
+        var bads = self.userData?.bads
+        // 中断理由
+        let alertView = SCLAlertView(appearance: self.appearance1!)
+        let textField = alertView.addTextField("ペットが病気になったから")
+        alertView.addButton("Good!!"){
+            breederComment = textField.text
+            goods?.append((self.leaveData?.breederId)!)
+            self.abortUpdateFIR(breederComment: breederComment, goods: goods, bads: bads)
+        }
+        alertView.addButton("Bad..."){
+            breederComment = textField.text
+            bads?.append((self.leaveData?.breederId)!)
+            self.abortUpdateFIR(breederComment: breederComment, goods: goods, bads: bads)
+        }
+        alertView.showEdit("中断します", subTitle: "\n中断の理由を入力し、\nあずかり人を評価して下さい。")
+        
+        print("DEBUG_PRINT: LeaveViewController.abort end")
+    }
+    
+    func abortUpdateFIR(breederComment: String?, goods: [String]?, bads: [String]? ){
+        print("DEBUG_PRINT: LeaveViewController.abortUpdateFIR start")
+        
+        // leaveData,UserDataをupdate
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let ref = FIRDatabase.database().reference()
+        let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": false,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/abortFlag/": true,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/breederComment/": breederComment ?? "[コメントはありません]",
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualEndDate/": Date().description,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/goods/": goods ?? [],
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/bads/": bads ?? [],
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": false,
+                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/todoRoomIds/\(self.leaveData!.id!)/": false] as [String : Any]
+        ref.updateChildValues(childUpdates)
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        // 前の画面に戻る
+        navigationController?.popViewController(animated: true)
+        
+        print("DEBUG_PRINT: LeaveViewController.abortUpdateFIR end")
+    }
+    
+    func cancel(){
+        print("DEBUG_PRINT: LeaveViewController.cancel start")
+        // なにもしない
+        print("DEBUG_PRINT: LeaveViewController.cancel end")
+    }
+    
     
 }
 

@@ -28,11 +28,14 @@ class LeaveData: NSObject {
     
     var startDate: String?
     var endDate: String?
+    var actualStartDate: String?
+    var actualEndDate: String?
 
     var suggestFlag: Bool?
     var acceptFlag: Bool?
     var runningFlag: Bool?
     var completeFlag: Bool?
+    var stopFlag: Bool?
     var abortFlag: Bool?
     
     var commemorativePhote: UIImage?
@@ -64,11 +67,14 @@ class LeaveData: NSObject {
         
         self.startDate = valueDictionary["startDate"] as? String
         self.endDate = valueDictionary["endDate"] as? String
+        self.actualStartDate = valueDictionary["actualStartDate"] as? String
+        self.actualEndDate = valueDictionary["actualEndDate"] as? String
         
         self.suggestFlag = valueDictionary["suggestFlag"] as? Bool
         self.acceptFlag = valueDictionary["acceptFlag"] as? Bool
         self.runningFlag = valueDictionary["runningFlag"] as? Bool
         self.completeFlag = valueDictionary["completeFlag"] as? Bool
+        self.stopFlag = valueDictionary["stopFlag"] as? Bool
         self.abortFlag = valueDictionary["abortFlag"] as? Bool
         
         

@@ -230,6 +230,7 @@ class BookingViewController: BaseFormViewController {
         self.inputData["acceptFlag"] = false
         self.inputData["runningFlag"] = false
         self.inputData["completeFlag"] = false
+        self.inputData["stopFlag"] = false
         self.inputData["abortFlag"] = false
         self.inputData["updateAt"] = String(time)
         self.inputData["updateBy"] = UserDefaults.standard.string(forKey: DefaultString.Uid)

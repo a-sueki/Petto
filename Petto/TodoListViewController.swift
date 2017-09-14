@@ -151,7 +151,8 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
     func read() {
         print("DEBUG_PRINT: TodoListViewController.read start")
         // userのleaveを取得
-        if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil && !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
+        if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil &&
+            !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
             // leaveDataリストの取得
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             for (leaveId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {

@@ -142,8 +142,9 @@ class ConsentViewController: BaseFormViewController {
         // leaveData,UserDataをupdate
         let ref = FIRDatabase.database().reference()
         let childUpdates = ["/\(Paths.LeavePath)/\(self.roomData!.id!)/acceptFlag/": true,
+                            "/\(Paths.LeavePath)/\(self.roomData!.id!)/updateAt/": String(time),
                             "/\(Paths.UserPath)/\(self.roomData!.userId!)/todoRoomIds/\(self.roomData!.id!)/": true,
-                            "/\(Paths.UserPath)/\(self.roomData!.breederId!)/todoRoomIds/\(self.roomData!.id!)/": true]
+                            "/\(Paths.UserPath)/\(self.roomData!.breederId!)/todoRoomIds/\(self.roomData!.id!)/": true] as [String : Any]
         ref.updateChildValues(childUpdates)
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: showMessage)
