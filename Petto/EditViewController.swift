@@ -543,7 +543,7 @@ class EditViewController: BaseFormViewController {
             
             
             
-            +++ Section()
+            +++ Section(footer: "※投稿したペットは削除できません（編集・非活性は可）")
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "投稿する"
                 }.onCellSelection { [weak self] (cell, row) in
