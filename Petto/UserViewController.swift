@@ -59,7 +59,7 @@ class UserViewController: BaseFormViewController  {
                     $0.header = HeaderFooterView<UserEntryView>(.class)
                 }
             }
-            //TODO: コミットメント＆小さなバッチ（メダル）
+            //TODO: コミットメント＆小さなバッジ（メダル）
             <<< ImageRow("image"){
                 $0.title = "写真"
                 if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {

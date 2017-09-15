@@ -45,7 +45,7 @@ class UserDetailViewController: BaseFormViewController {
                 }
             }
             
-            //TODO: コミットメント＆小さなバッチ（メダル）
+            //TODO: コミットメント＆小さなバッジ（メダル）
             <<< NameRow("firstname") {
                 $0.title = "名"
                 $0.value = self.userData?.firstname ?? nil

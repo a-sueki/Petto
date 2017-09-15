@@ -20,14 +20,14 @@ enum LeftMenu: Int {
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var mainViewController: UINavigationController!
-    var menus = ["アカウント","プロフィール", "マイペットリスト","メッセージリスト","ログアウト"]
+    var menus = ["Account","Profile", "My pet", "Message", "Oazuke / Azukari", "Logout"]
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: LeftViewController.viewDidLoad start")
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 0.5)
@@ -48,7 +48,32 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath)
         // Cellに値を設定する.
         let menu = menus[indexPath.row]
-        cell.textLabel?.text = menu
+        
+        if indexPath.row == 3 {
+            if !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
+                cell.textLabel?.text = "\(menu) (\(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)!.count))"
+                cell.textLabel?.textColor = UIColor.red
+            }else{
+                cell.textLabel?.text = menu
+            }
+        }else if indexPath.row == 4 {
+            var count = 0
+            if !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
+                for (_,v) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
+                    if v as! Bool{
+                        count = count + 1
+                    }
+                }
+            }
+            if count != 0 {
+                cell.textLabel?.text = "\(menu) (\(count))"
+                cell.textLabel?.textColor = UIColor.red
+            }else{
+                cell.textLabel?.text = menu
+            }
+        }else {
+            cell.textLabel?.text = menu
+        }
         
         print("DEBUG_PRINT: LeftViewController.cellForRowAt end")
         return cell
@@ -86,6 +111,15 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             }
         case 4:
+            // ユーザープロフィールが未作成の場合
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+                SVProgressHUD.showInfo(withStatus: "プロフィール登録が必要です")
+            }else{
+                let todoListViewController = self.storyboard?.instantiateViewController(withIdentifier: "TodoList") as! TodoListViewController
+                let navigationController = UINavigationController(rootViewController: todoListViewController)
+                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            }
+        case 5:
             logout()
         default:
             break
@@ -120,13 +154,13 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func logout() {
         print("DEBUG_PRINT: LeftViewController.logout start")
-
+        
         // ログアウト
         do {
             try FIRAuth.auth()?.signOut()
             let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
             self.present(loginViewController!, animated: true, completion: nil)
-
+            
         }catch let error as NSError {
             print("\(error.localizedDescription)")
         }

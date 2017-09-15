@@ -181,7 +181,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                 self.excuteButton.isEnabled = false
                 self.cancelButton.isHidden = true
                 
-                //TODO:自動でTODOバッチをOFFに。leaveの更新は？
+                //TODO:自動でTODOバッジをOFFに。leaveの更新は？
             }
         }
         
@@ -402,7 +402,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         // 前の画面に戻る
         navigationController?.popViewController(animated: true)
         
-        //TODO: ユーザーが思い出写真、コメントを投稿できるようにする（通知バッチ表示、当画面を開くとポップアップ表示）
+        //TODO: ユーザーが思い出写真、コメントを投稿できるようにする（通知バッジ表示、当画面を開くとポップアップ表示）
         
         
         

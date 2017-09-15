@@ -27,27 +27,19 @@ class NavigationBarHandler: NSObject {
     var btn1: UIBarButtonItem!
     var btn2: UIBarButtonItem!
     var btn3: UIBarButtonItem!
-    var btn4: UIBarButtonItem!
-    var btn5: UIBarButtonItem!
     
     func setupNavigationBar() {
         print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar start")
         
-        let button1 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
+        let button1 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
         button1.setImage(UIImage(named: "menu"), for: .normal)
         button1.addTarget(self, action: #selector(onClick1), for: .touchUpInside)
-        let button2 = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 25))
+        let button2 = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
         button2.setImage(UIImage(named: "logo"), for: .normal)
         button2.addTarget(self, action: #selector(onClick2), for: .touchUpInside)
-        let button3 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
-        button3.setImage(UIImage(named: "todolist"), for: .normal)
+        let button3 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+        button3.setImage(UIImage(named: "search"), for: .normal)
         button3.addTarget(self, action: #selector(onClick3), for: .touchUpInside)
-        let button4 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
-        button4.setImage(UIImage(named: "mail"), for: .normal)
-        button4.addTarget(self, action: #selector(onClick4), for: .touchUpInside)
-        let button5 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 25))
-        button5.setImage(UIImage(named: "search"), for: .normal)
-        button5.addTarget(self, action: #selector(onClick5), for: .touchUpInside)
         
         // userを取得
         if let user = FIRAuth.auth()?.currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
@@ -56,26 +48,25 @@ class NavigationBarHandler: NSObject {
                 print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .valueイベントが発生しました。")
                 if let _ = snapshot.value {
                     self.myUserData = UserData(snapshot: snapshot, myId: user.uid)
+                    var unReadRoomIds = 0
+                    var todoRoomIds = 0
                     // ユーザーデフォルト設定
                     UserDefaults.standard.set([String:Bool](), forKey: DefaultString.UnReadRoomIds)
                     if self.myUserData?.unReadRoomIds != nil && !(self.myUserData?.unReadRoomIds.isEmpty)! {
                         // ユーザーデフォルト設定
                         UserDefaults.standard.set(self.myUserData?.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
                         // 未読
-                        var unReadRoomIds = 0
                         for (_,v) in (self.myUserData?.unReadRoomIds)! {
                             if v {
                                 unReadRoomIds = unReadRoomIds + 1
                             }
                         }
-                        self.setNotificationBatch(button: button4, count: unReadRoomIds)
                     }
                     UserDefaults.standard.set([String:Bool](), forKey: DefaultString.TodoRoomIds)
                     if self.myUserData?.todoRoomIds != nil && !(self.myUserData?.todoRoomIds.isEmpty)! {
                         // ユーザーデフォルト設定
                         UserDefaults.standard.set(self.myUserData?.todoRoomIds , forKey: DefaultString.TodoRoomIds)
                         // TODO
-                        var todoRoomIds = 0
                         for (k,v) in (self.myUserData?.todoRoomIds)! {
                             if v {
                                 todoRoomIds = todoRoomIds + 1
@@ -83,13 +74,16 @@ class NavigationBarHandler: NSObject {
                                 self.readLeaveData(leaveId: k)
                             }
                         }
-                        self.setNotificationBatch(button: button3, count: todoRoomIds)
                     }
                     UserDefaults.standard.set([String:Bool](), forKey: DefaultString.RoomIds)
                     if self.myUserData?.roomIds != nil && !(self.myUserData?.roomIds.isEmpty)! {
                         // ユーザーデフォルト設定
                         UserDefaults.standard.set(self.myUserData?.roomIds , forKey: DefaultString.RoomIds)
                     }
+                    
+                    // 通知バッジ
+                    self.setNotificationBatch(button: button1, unReadCount: unReadRoomIds ,todoCount: todoRoomIds)
+
                 }
             }) { (error) in
                 print(error.localizedDescription)
@@ -102,11 +96,9 @@ class NavigationBarHandler: NSObject {
         btn1 = UIBarButtonItem(customView: button1)
         btn2 = UIBarButtonItem(customView: button2)
         btn3 = UIBarButtonItem(customView: button3)
-        btn4 = UIBarButtonItem(customView: button4)
-        btn5 = UIBarButtonItem(customView: button5)
         
         let leftBtns: [UIBarButtonItem] = [btn1,btn2]
-        let rightBtns: [UIBarButtonItem] = [btn3,btn4,btn5]
+        let rightBtns: [UIBarButtonItem] = [btn3]
         
         self.viewController?.navigationItem.leftBarButtonItems = leftBtns
         self.viewController?.navigationItem.rightBarButtonItems = rightBtns
@@ -115,16 +107,16 @@ class NavigationBarHandler: NSObject {
         
     }
     
-    func setNotificationBatch(button: UIButton, count: Int) {
+    func setNotificationBatch(button: UIButton, unReadCount: Int ,todoCount: Int) {
         print("DEBUG_PRINT: NavigationBarHandler.setNotificationBatch start")
         
-        // 通知バッチの更新
-        if count != 0 {
-            // 通知バッチをセット
-            self.hub.setView(button, andCount: Int32(count))
+        // 通知バッジの更新
+        if unReadCount + todoCount != 0 {
+            // 通知バッジをセット
+            self.hub.setView(button, andCount: Int32(unReadCount + todoCount))
             // 設置するhubの背景色をredに文字色を白にする
             self.hub.setCircleColor(UIColor.red, label: UIColor.white)
-            // バッチのサイズを変更
+            // バッジのサイズを変更
             self.hub.scaleCircleSize(by: 0.8)
         }
         

@@ -15,7 +15,6 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterDelegate{
 
     var window: UIWindow?
-    var myNavigationController: UINavigationController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         print("DEBUG_PRINT: AppDelegate.didFinishLaunchingWithOptions start ")
@@ -88,28 +87,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
     // アプリ閉じそうな時に呼ばれる
     func applicationWillResignActive(_ application: UIApplication) {
         print("DEBUG_PRINT: AppDelegate.applicationWillResignActive start")
-        
-        //　通知設定に必要なクラスをインスタンス化
-        let trigger: UNNotificationTrigger
-        let content = UNMutableNotificationContent()
-        var notificationTime = DateComponents()
-        
-        // トリガー設定
-        notificationTime.hour = 12
-        notificationTime.minute = 52
-        trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: false)
-        
-        // 通知内容の設定
-        content.title = ""
-        content.body = "食事の時間になりました！"
-        content.sound = UNNotificationSound.default()
-        
-        // 通知スタイルを指定
-        let request = UNNotificationRequest(identifier: "uuid", content: content, trigger: trigger)
-        // 通知をセット
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-
-        
         print("DEBUG_PRINT: AppDelegate.applicationWillResignActive end")
     }
     // アプリを閉じた時に呼ばれる

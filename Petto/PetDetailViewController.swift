@@ -374,8 +374,8 @@ class PetDetailViewController: BaseFormViewController {
     // Messageに画面遷移
     @IBAction func toMessages() {
         print("DEBUG_PRINT: PetDetailViewController.toMessages start")
-        
-        let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
+
+        let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessages") as! MessagesViewController
         let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
         let userMessagesContainerViewController = UserMessagesContainerViewController(top: consentViewController, under: messagesViewController)
 
@@ -411,9 +411,8 @@ class PetDetailViewController: BaseFormViewController {
                     inputData["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
                     inputData["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
                     inputData["userSex"] = UserDefaults.standard.string(forKey: DefaultString.Sex)
-                    //TODO: 評価実装後、活性
-//                    inputData["userGoodInt"] = self.userDefaults?.string(forKey: DefaultString.Good)
-//                    inputData["userBadInt"] = self.userDefaults?.string(forKey: DefaultString.Bad)
+                    inputData["userGoodInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Goods)
+                    inputData["userBadInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Bads)
                     inputData["petId"] = pid
                     inputData["petName"] = self.petData?.name
                     inputData["petImageString"] = self.petData?.imageString
