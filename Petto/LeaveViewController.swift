@@ -389,6 +389,11 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     func excuted(){
         print("DEBUG_PRINT: LeaveViewController.excuted start")
         
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "excuted" as NSObject,
+            kFIRParameterItemID: "4" as NSObject
+            ])
+        
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
         let ref = FIRDatabase.database().reference()
@@ -410,6 +415,11 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     }
     func complete(){
         print("DEBUG_PRINT: LeaveViewController.complete start")
+        
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "complete" as NSObject,
+            kFIRParameterItemID: "5" as NSObject
+            ])
         
         var breederComment: String?
         var goods = self.userData?.goods
@@ -461,6 +471,11 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     func stop(){
         print("DEBUG_PRINT: LeaveViewController.stop start")
         
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "stop" as NSObject,
+            kFIRParameterItemID: "4" as NSObject
+            ])
+
         var breederComment: String?
         // 中止理由
         let alertView = SCLAlertView(appearance: self.appearance1!)
@@ -499,6 +514,11 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     func abort(){
         print("DEBUG_PRINT: LeaveViewController.abort start")
         
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "abort" as NSObject,
+            kFIRParameterItemID: "5" as NSObject
+            ])
+
         var breederComment: String?
         var goods = self.userData?.goods
         var bads = self.userData?.bads

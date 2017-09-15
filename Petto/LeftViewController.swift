@@ -50,7 +50,8 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         let menu = menus[indexPath.row]
         
         if indexPath.row == 3 {
-            if !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
+            if UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds) != nil &&
+                !(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)?.isEmpty)! {
                 cell.textLabel?.text = "\(menu) (\(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)!.count))"
                 cell.textLabel?.textColor = UIColor.red
             }else{
@@ -58,7 +59,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }else if indexPath.row == 4 {
             var count = 0
-            if !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
+            if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil && !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
                 for (_,v) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
                     if v as! Bool{
                         count = count + 1

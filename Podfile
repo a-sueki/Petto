@@ -9,6 +9,7 @@ target 'Petto' do
   pod 'Firebase'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
+  pod 'Firebase/Core'
   pod 'SVProgressHUD'
   pod 'SlideMenuControllerSwift'
   pod 'RxCocoa'

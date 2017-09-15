@@ -73,6 +73,11 @@ class ConsentViewController: BaseFormViewController {
     @IBAction func deny() {
         print("DEBUG_PRINT: ConsentViewController.deny start")
 
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "deny" as NSObject,
+            kFIRParameterItemID: "3" as NSObject
+            ])
+        
         for (key,value) in form.values() {
             if value == nil {
                 // Date
@@ -115,6 +120,11 @@ class ConsentViewController: BaseFormViewController {
     @IBAction func accept() {
         print("DEBUG_PRINT: ConsentViewController.accept start")
         
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "accept" as NSObject,
+            kFIRParameterItemID: "3" as NSObject
+            ])
+
         for (key,value) in form.values() {
             if value == nil {
                 // Date

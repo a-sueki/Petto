@@ -21,6 +21,9 @@ class PetDetailViewController: BaseFormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
+
+        // ユーザプロパティを設定
+        FIRAnalytics.setUserPropertyString("A", forName: "firstMessage")
         
         // フォーム
         form +++
@@ -365,6 +368,10 @@ class PetDetailViewController: BaseFormViewController {
     @IBAction func back() {
         print("DEBUG_PRINT: PetDetailViewController.back start")
         
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "send" as NSObject,
+            kFIRParameterItemID: "1" as NSObject
+            ])
         //前画面に戻る
         self.navigationController?.popViewController(animated: true)
         
@@ -374,6 +381,11 @@ class PetDetailViewController: BaseFormViewController {
     // Messageに画面遷移
     @IBAction func toMessages() {
         print("DEBUG_PRINT: PetDetailViewController.toMessages start")
+        
+        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+            kFIRParameterContentType: "send" as NSObject,
+            kFIRParameterItemID: "1" as NSObject
+            ])
 
         let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessages") as! MessagesViewController
         let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
