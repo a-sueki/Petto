@@ -256,7 +256,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             // roomDataをセットして画面遷移
             let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
             let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
-            let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
+            let userMessagesContainerViewController = UserMessagesContainerViewController(top: consentViewController, under: messagesViewController)
             userMessagesContainerViewController.roomData = self.roomDataArray[(indexPath?.row)!]
             self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
             
@@ -266,7 +266,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             // roomDataをセットして画面遷移
             let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "Messages") as! MessagesViewController
             let bookingViewController = self.storyboard?.instantiateViewController(withIdentifier: "Booking") as! BookingViewController
-            let breederMessagesContainerViewController = BreederMessagesContainerViewController(top: messagesViewController, under: bookingViewController)
+            let breederMessagesContainerViewController = BreederMessagesContainerViewController(top: bookingViewController, under: messagesViewController)
             breederMessagesContainerViewController.roomData = self.roomDataArray[(indexPath?.row)!]
             self.navigationController?.pushViewController(breederMessagesContainerViewController, animated: true)
         }

@@ -13,7 +13,7 @@ import FirebaseDatabase
 import JSQMessagesViewController
 import SVProgressHUD
 
-class MessagesViewController: JSQMessagesViewController {
+class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDelegate {
     
     var roomData: RoomData?
     var messageData: MessageData?
@@ -32,6 +32,14 @@ class MessagesViewController: JSQMessagesViewController {
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad start")
         
+        // 一番下までスクロールして表示
+        automaticallyScrollsToMostRecentMessage = true
+        
+        // 画面タップでキーボードを隠す
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        tapGestureRecognizer.delegate = self
+        self.collectionView?.addGestureRecognizer(tapGestureRecognizer)
+
         // 初期設定
         self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "incomingCell")
         self.collectionView.register(UINib(nibName: "CellWithConfimationButtons", bundle: nil), forCellWithReuseIdentifier: "outgoingCell")
@@ -56,11 +64,49 @@ class MessagesViewController: JSQMessagesViewController {
         }
         // roomDataからメッセージを取得
         getMessages()
-        //        }
         
         self.finishReceivingMessage()
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad end")
+    }
+    
+    func gestureRecognizer(_: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    func dismissKeyboard(gesture: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAt indexPath: IndexPath!) -> NSAttributedString!
+    {
+        let message = messages[indexPath.item]
+        
+        if message.senderId == senderId {
+            return nil
+        } else {
+            guard let senderDisplayName = message.senderDisplayName else {
+                assertionFailure()
+                return nil
+            }
+            return NSAttributedString(string: senderDisplayName)
+            
+        }
+        
+    }
+    
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAt indexPath: IndexPath!) -> CGFloat
+    {
+        //return 17.0
+        let message = messages[indexPath.item]
+        
+        if message.senderId == senderId {
+            return 0.0
+        } else {
+            
+            return 17.0
+            
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

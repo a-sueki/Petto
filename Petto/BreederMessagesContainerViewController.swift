@@ -13,11 +13,11 @@ class BreederMessagesContainerViewController: UIViewController {
     var roomData: RoomData?
     var messageData: MessageData?
  
-    let topViewController: MessagesViewController  // ViewController①を保持
-    let underViewController: BookingViewController  // ViewController②を保持
+    let topViewController: BookingViewController  // ViewController①を保持
+    let underViewController: MessagesViewController  // ViewController②を保持
     
     // ContainerViewControllerにViewController①と②をセットするイニシャライザ
-    init(top:MessagesViewController, under:BookingViewController){
+    init(top:BookingViewController, under:MessagesViewController){
         print("DEBUG_PRINT: BreederMessagesContainerViewController.init start")
 
         topViewController = top
@@ -44,7 +44,8 @@ class BreederMessagesContainerViewController: UIViewController {
         // ViewController①の表示
         view.addSubview(topViewController.view)
         topViewController.didMove(toParentViewController: self)
-        topViewController.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height/4 * 3)
+//        topViewController.view.frame = CGRect(x: 0, y: -40, width: view.frame.width, height: 250)
+        topViewController.view.frame = CGRect(x: 0, y: -40, width: view.frame.width, height: 235)
  
         // ViewController②をContainerViewControllerの子として追加
         underViewController.roomData = self.roomData
@@ -53,7 +54,8 @@ class BreederMessagesContainerViewController: UIViewController {
         // ViewController②の表示
         view.addSubview(underViewController.view)
         underViewController.didMove(toParentViewController: self)
-        underViewController.view.frame = CGRect(x: 0, y: view.frame.height/4 * 3, width: view.frame.width, height: view.frame.height/4)
+//        underViewController.view.frame = CGRect(x: 0, y: 210, width: view.frame.width, height: view.frame.height - 210)
+        underViewController.view.frame = CGRect(x: 0, y: 195, width: view.frame.width, height: view.frame.height - 195)
         
         print("DEBUG_PRINT: BreederMessagesContainerViewController.viewDidLoad end")
     }
