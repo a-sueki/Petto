@@ -14,7 +14,6 @@ class HomeCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var kindImageView: UIImageView!
     @IBOutlet weak var sexImageView: UIImageView!
     @IBOutlet weak var areaLabel: UILabel!
-    @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var termLabel: UILabel!
     
     @IBOutlet weak var toDetailButton: UIButton!
@@ -70,15 +69,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
             bandLabel.textAlignment = NSTextAlignment.center
             self.petImageView.addSubview(bandLabel)
         }
-        
-        if petData.isLiked {
-            let buttonImage = UIImage(named: "like-red")
-            self.likeButton.setImage(buttonImage, for: UIControlState.normal)
-        } else {
-            let buttonImage = UIImage(named: "unlike")
-            self.likeButton.setImage(buttonImage, for: UIControlState.normal)
-        }
-        
+                
         print("DEBUG_PRINT: HomeCollectionViewCell.setPetData end")
     }
     

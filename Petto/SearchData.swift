@@ -44,10 +44,6 @@ class SearchData: NSObject {
     var createBy: String?
     var updateAt: NSDate?
     var updateBy: String?
-
-    // 評価
-    var likes: [String] = []
-    var isLiked: Bool = false
     
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: SearchData.init start")
@@ -93,16 +89,6 @@ class SearchData: NSObject {
         if let updateAt = valueDictionary["updateAt"] as? String {
             self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt)!)
             self.updateBy = valueDictionary["updateBy"] as? String
-        }
-        // 評価
-        if let likes = valueDictionary["likes"] as? [String] {
-            self.likes = likes
-        }
-        for followerId in self.likes {
-            if followerId == myId {
-                self.isLiked = true
-                break
-            }
         }
         print("DEBUG_PRINT: SearchData.init end")
        

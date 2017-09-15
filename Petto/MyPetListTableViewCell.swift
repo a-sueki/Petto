@@ -15,7 +15,6 @@ class MyPetListTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var footprintImageView: UIImageView!
-    @IBOutlet weak var likeImageView: NSLayoutConstraint!
     @IBOutlet weak var messageImageView: UIImageView!
     @IBOutlet weak var todoImageView: UIImageView!
     @IBOutlet weak var historyImageView: UIImageView!

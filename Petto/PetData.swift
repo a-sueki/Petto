@@ -52,9 +52,6 @@ class PetData: NSObject {
     // EditView以外から更新
     // メッセージ情報
     var roomIds = [String:Bool]()
-    // 評価
-    var likes: [String] = []
-    var isLiked: Bool = false
     
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: PetData.init start")
@@ -118,17 +115,6 @@ class PetData: NSObject {
         if let updateAt = valueDictionary["updateAt"] as? String {
             self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt)!)
             self.updateBy = valueDictionary["updateBy"] as? String
-        }
-        // 評価
-        if let likes = valueDictionary["likes"] as? [String] {
-            self.likes = likes
-        }
-        for followerId in self.likes {
-//            if followerId == myId {
-            if followerId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
-                self.isLiked = true
-                break
-            }
         }
         print("DEBUG_PRINT: PetData.init end")
     }

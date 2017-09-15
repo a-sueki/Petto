@@ -313,7 +313,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCollectionViewCell
         cell.setPetData(petData: petDataArray[indexPath.row])
         // セル内のボタンのアクションをソースコードで設定する
-        cell.likeButton.addTarget(self, action:#selector(handleLikeButton(sender:event:)), for:  UIControlEvents.touchUpInside)
         cell.toDetailButton.addTarget(self, action: #selector(handleToDetailButton(sender:event:)), for: UIControlEvents.touchUpInside)
         return cell
         
@@ -341,45 +340,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    
-    // セル内のボタンがタップされた時に呼ばれるメソッド
-    func handleLikeButton(sender: UIButton, event:UIEvent) {
-        print("DEBUG_PRINT: HomeViewController.handleLikeButton start")
-        
-        // タップされたセルのインデックスを求める
-        let touch = event.allTouches?.first
-        let point = touch!.location(in: self.collectionView)
-        let indexPath = collectionView.indexPathForItem(at: point)
-        // 配列からタップされたインデックスのデータを取り出す
-        let petData = self.petDataArray[indexPath!.row]
-        
-        //TODO: ref.runTransactionBlockに修正
-        // Firebaseに保存するデータの準備
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            if petData.isLiked {
-                // すでにいいねをしていた場合はいいねを解除するためIDを取り除く
-                var index = -1
-                for likeId in petData.likes {
-                    if likeId == uid {
-                        // 削除するためにインデックスを保持しておく
-                        index = petData.likes.index(of: likeId)!
-                        break
-                    }
-                }
-                petData.likes.remove(at: index)
-            } else {
-                petData.likes.append(uid)
-            }
-            
-            // 増えたlikesをFirebaseに保存する
-            let postRef = FIRDatabase.database().reference().child(Paths.PetPath).child(petData.id!)
-            let likes = ["likes": petData.likes]
-            postRef.updateChildValues(likes)
-        }
-        
-        print("DEBUG_PRINT: HomeViewController.handleLikeButton end")
     }
     
     func handleToDetailButton(sender: UIButton, event: UIEvent) {
