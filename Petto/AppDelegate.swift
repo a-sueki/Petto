@@ -89,8 +89,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
     func applicationWillResignActive(_ application: UIApplication) {
         print("DEBUG_PRINT: AppDelegate.applicationWillResignActive start")
         
-        
-        
         //　通知設定に必要なクラスをインスタンス化
         let trigger: UNNotificationTrigger
         let content = UNMutableNotificationContent()
@@ -117,30 +115,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
     // アプリを閉じた時に呼ばれる
     func applicationDidEnterBackground(_ application: UIApplication) {
         print("DEBUG_PRINT: AppDelegate.applicationDidEnterBackground start")
-
-        
-        
-        
-        //　通知設定に必要なクラスをインスタンス化
-        let trigger: UNNotificationTrigger
-        let content = UNMutableNotificationContent()
-        var notificationTime = DateComponents()
-        
-        // トリガー設定
-        notificationTime.hour = 12
-        notificationTime.minute = 51
-        trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: false)
-        
-        // 通知内容の設定
-        content.title = ""
-        content.body = "食事の時間になりました！"
-        content.sound = UNNotificationSound.default()
-        
-        // 通知スタイルを指定
-        let request = UNNotificationRequest(identifier: "uuid", content: content, trigger: trigger)
-        // 通知をセット
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-
         print("DEBUG_PRINT: AppDelegate.applicationDidEnterBackground end")
     }
     // アプリを開きそうな時に呼ばれる
@@ -157,5 +131,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
     func applicationWillTerminate(_ application: UIApplication) {
         print("DEBUG_PRINT: AppDelegate.applicationWillTerminate start")
         print("DEBUG_PRINT: AppDelegate.applicationWillTerminate end")
+    }
+    // バックグラウンドで来た通知をタップしてアプリ起動したら呼ばれる
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("DEBUG_PRINT: AppDelegate.userNotificationCenter.didReceive start")
+        print("DEBUG_PRINT: AppDelegate.userNotificationCenter.didReceive end")
+    }
+    // アプリがフォアグラウンドの時に通知が来たら呼ばれる
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("DEBUG_PRINT: AppDelegate.userNotificationCenter.willPresent start")
+
+        completionHandler([.alert, .badge, .sound])
+        
+        print("DEBUG_PRINT: AppDelegate.userNotificationCenter.willPresent end")
     }
 }

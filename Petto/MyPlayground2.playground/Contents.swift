@@ -1,57 +1,21 @@
 import UIKit
 
-struct Codes {
-    static let C1 = "code01"
-    static let C2 = "code02"
-    static let C3 = "code03"
-    static let C4 = "code04"
-    static let C5 = "code05"
-    static let C6 = "code06"
-    static let C7 = "code07"
-}
+let start = "2017-09-16 13:55:01 +0900"
 
-let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4]
+let y = start.substring(with: start.index(start.startIndex, offsetBy: 0)..<start.index(start.endIndex, offsetBy: -21))
+print(y)
 
-//new
-var a = [String:Bool]()
-a[Codes.C2] = true
-a[Codes.C3] = true
+let m = start.substring(with: start.index(start.startIndex, offsetBy: 5)..<start.index(start.endIndex, offsetBy: -18))
+print(m)
 
-//old
-var b = [String:Bool]()
-b[Codes.C1] = false
-b[Codes.C2] = false
-b[Codes.C3] = true
-b[Codes.C4] = true
+let d = start.substring(with: start.index(start.startIndex, offsetBy: 8)..<start.index(start.endIndex, offsetBy: -15))
+print(d)
 
-//update
-var c = [String:Bool]()
+let h = start.substring(with: start.index(start.startIndex, offsetBy: 11)..<start.index(start.endIndex, offsetBy: -12))
+print(h)
 
+let mm = start.substring(with: start.index(start.startIndex, offsetBy: 14)..<start.index(start.endIndex, offsetBy: -9))
+print(mm)
 
-var hensu : String
-
-for code in codes {
-    if b[code] == nil, a[code] == nil {
-        c[code] = false
-    }else if b[code] == nil, a[code] == true {
-        c[code] = true
-        // old = ture, new = nil
-    }else if b[code] == true, a[code] == nil {
-        c[code] = false
-        // old = true, new = true
-    }else if b[code] == true, a[code] == true {
-        c[code] = true
-        // old = false, new = nil
-    }else if b[code] == false, a[code] == nil {
-        c[code] = false
-        // old = false, new = true
-    }else if b[code] == false, a[code] == true {
-        c[code] = true
-    }
-}
-
-for (k,v) in c {
-    print(k)
-    print(v)
-}
-
+let a = Int(d)! - 1
+print(a)

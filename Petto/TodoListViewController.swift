@@ -123,8 +123,13 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         // あずかり人の場合
         if self.leaveDataArray[indexPath.row].breederId != UserDefaults.standard.string(forKey: DefaultString.Uid) {
             // 未実施の場合
+            //TODO: 開始日を過ぎているのに未実施の場合、セルの背景を変えて「過ぎている」ラベルを表示
+            //TODO: 終了日を過ぎているのに実施中の場合、セルの背景を変えて「過ぎている」ラベルを表示
+            //TODO: 終了日を過ぎているのに実施中の場合、セルの背景を変えて「過ぎている」ラベルを表示
+            //TODO: 未実施・実施中・終了、でラベルを変更する
+
             if self.leaveDataArray[indexPath.row].acceptFlag == true &&
-                DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
+                DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedDescending {
                 cell.willDoLabel.isHidden = false
                 cell.isBreederLabel.isHidden = true
             }else{
@@ -134,7 +139,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         }else{
             // 未実施の場合
             if self.leaveDataArray[indexPath.row].acceptFlag == true &&
-                DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
+                DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedDescending {
                 cell.willDoLabel.isHidden = false
                 cell.isBreederLabel.isHidden = false
             }else{

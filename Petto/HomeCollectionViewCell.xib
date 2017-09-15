@@ -64,6 +64,7 @@
                     </button>
                 </subviews>
             </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="V3G-s4-nr8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="4KB-gt-L6I"/>
                 <constraint firstAttribute="trailing" secondItem="V3G-s4-nr8" secondAttribute="trailing" id="DwF-FX-0x8"/>

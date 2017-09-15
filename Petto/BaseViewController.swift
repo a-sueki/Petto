@@ -6,16 +6,17 @@
 //  Copyright © 2017年 aoi.sueki. All rights reserved.
 //
 
-import Eureka
-import RKNotificationHub
+import UIKit
 import Firebase
 import FirebaseAuth
+import Eureka
+import RKNotificationHub
+import UserNotifications
 import SVProgressHUD
-import UIKit
 
 class NavigationBarHandler: NSObject {
     
-    var userData: UserData?
+    var myUserData: UserData?
     
     // RKNotificationHubのインスタンス
     let hub = RKNotificationHub()
@@ -48,94 +49,52 @@ class NavigationBarHandler: NSObject {
         button5.setImage(UIImage(named: "search"), for: .normal)
         button5.addTarget(self, action: #selector(onClick5), for: .touchUpInside)
         
-        // ref作成
-        let ref = FIRDatabase.database().reference().child(Paths.UserPath)
-        
-        // ユーザーデフォルト設定、通知バッチ更新
-        if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
-           // 未読なしの場合のユーザーデフォルトの設定
-            UserDefaults.standard.set([String:Bool]() , forKey: DefaultString.UnReadRoomIds)
-            // UnReadRoomIds取得
-            var unReadRoomIds = [String:Bool]()
-            ref.child(user.uid).child("unReadRoomIds").observe(.childAdded, with: { (snapshot) in
-                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar unReadRoomIds.childAddedイベントが発生しました。")
-                if case _ as Bool = snapshot.value {
-                    unReadRoomIds[snapshot.key] = true
+        // userを取得
+        if let user = FIRAuth.auth()?.currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
+            ref.child(user.uid).observe(.value, with: { (snapshot) in
+                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .valueイベントが発生しました。")
+                if let _ = snapshot.value {
+                    self.myUserData = UserData(snapshot: snapshot, myId: user.uid)
                     // ユーザーデフォルト設定
-                    UserDefaults.standard.set(unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
-                    if unReadRoomIds.count != 0 {
-                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar 未読あり\(unReadRoomIds.count)")
-                        // 通知バッチの更新
-                        self.setNotificationBatch(button: button4, count: unReadRoomIds.count)
+                    UserDefaults.standard.set([String:Bool](), forKey: DefaultString.UnReadRoomIds)
+                    if self.myUserData?.unReadRoomIds != nil && !(self.myUserData?.unReadRoomIds.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
+                        // 未読
+                        var unReadRoomIds = 0
+                        for (_,v) in (self.myUserData?.unReadRoomIds)! {
+                            if v {
+                                unReadRoomIds = unReadRoomIds + 1
+                            }
+                        }
+                        self.setNotificationBatch(button: button4, count: unReadRoomIds)
+                    }
+                    UserDefaults.standard.set([String:Bool](), forKey: DefaultString.TodoRoomIds)
+                    if self.myUserData?.todoRoomIds != nil && !(self.myUserData?.todoRoomIds.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.todoRoomIds , forKey: DefaultString.TodoRoomIds)
+                        // TODO
+                        var todoRoomIds = 0
+                        for (k,v) in (self.myUserData?.todoRoomIds)! {
+                            if v {
+                                todoRoomIds = todoRoomIds + 1
+                                // leaveを取得
+                                self.readLeaveData(leaveId: k)
+                            }
+                        }
+                        self.setNotificationBatch(button: button3, count: todoRoomIds)
+                    }
+                    UserDefaults.standard.set([String:Bool](), forKey: DefaultString.RoomIds)
+                    if self.myUserData?.roomIds != nil && !(self.myUserData?.roomIds.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.roomIds , forKey: DefaultString.RoomIds)
                     }
                 }
             }) { (error) in
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
-            
-            // todoRoomIds取得
-            var todoRoomIds = [String:Bool]()
-            ref.child(user.uid).child("todoRoomIds").observe(.childAdded, with: { (snapshot) in
-                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar todoRoomIds.childAddedイベントが発生しました。")
-                if case _ as Bool = snapshot.value {
-                    todoRoomIds[snapshot.key] = true
-                    // ユーザーデフォルト設定
-                    UserDefaults.standard.set(todoRoomIds , forKey: DefaultString.TodoRoomIds)
-                    if todoRoomIds.count != 0 {
-                        print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar TODOあり\(todoRoomIds.count)")
-                        // 通知バッチの更新
-                        self.setNotificationBatch(button: button3, count: todoRoomIds.count)
-                        //TODO: ローカル通知登録
-                        
-                    }
-                }
-            }) { (error) in
-                print(error.localizedDescription)
-                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
-           }
-            
-            // roomIds取得
-            var roomIds = [String:Bool]()
-            ref.child(user.uid).child("roomIds").observe(.childAdded, with: { (snapshot) in
-                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar roomIds.childAddedイベントが発生しました。")
-                if case _ as Bool = snapshot.value {
-                    roomIds[snapshot.key] = true
-                    // ユーザーデフォルト設定
-                    UserDefaults.standard.set(roomIds , forKey: DefaultString.RoomIds)
-                }
-            }) { (error) in
-                print(error.localizedDescription)
-                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
-            }
-            
-            // goods取得
-/*            var goods = [String:Bool]()
-            ref.child(user.uid).child("goods").observe(.childAdded, with: { (snapshot) in
-                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar goods.childAddedイベントが発生しました。")
-                if case _ as Bool = snapshot.value {
-                    goods[snapshot.key] = true
-                    // ユーザーデフォルト設定
-                    UserDefaults.standard.set(goods , forKey: DefaultString.Goods)
-                }
-            }) { (error) in
-                print(error.localizedDescription)
-                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
-            }
-            // bads取得
-            var bads = [String:Bool]()
-            ref.child(user.uid).child("bads").observe(.childAdded, with: { (snapshot) in
-                print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar bads.childAddedイベントが発生しました。")
-                if case _ as Bool = snapshot.value {
-                    bads[snapshot.key] = true
-                    // ユーザーデフォルト設定
-                    UserDefaults.standard.set(bads , forKey: DefaultString.Bads)
-                }
-            }) { (error) in
-                print(error.localizedDescription)
-                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
-            }
- */
         } else {
             print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ゲストユーザです。")
         }
@@ -170,6 +129,70 @@ class NavigationBarHandler: NSObject {
         }
         
         print("DEBUG_PRINT: NavigationBarHandler.setNotificationBatch end")
+    }
+    
+    func readLeaveData(leaveId: String) {
+        print("DEBUG_PRINT: NavigationBarHandler.readLeaveData start")
+        
+        let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
+        ref.child(leaveId).observeSingleEvent(of: .value, with: { (snapshot) in
+            print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .observeSingleEventイベントが発生しました。")
+            if let _ = snapshot.value {
+                let leaveData = LeaveData(snapshot: snapshot, myId: leaveId)
+                if leaveData.acceptFlag! && !leaveData.runningFlag! && !leaveData.stopFlag! && !leaveData.abortFlag! && !leaveData.completeFlag! {
+                    //TODO: おあずけ開始（予定）が今日より未来の場合
+                    self.registerLocalNotification(leaveData: leaveData)
+                }
+                
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+            SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+        }
+        
+        print("DEBUG_PRINT: NavigationBarHandler.readLeaveData end")
+    }
+    
+    func registerLocalNotification(leaveData: LeaveData) {
+        print("DEBUG_PRINT: NavigationBarHandler.registerLocalNotification start")
+        
+        //　通知設定に必要なクラスをインスタンス化
+        let trigger: UNNotificationTrigger
+        let content = UNMutableNotificationContent()
+        var notificationTime = DateComponents()
+        
+        let start = leaveData.startDate!
+        
+        let y = start.substring(with: start.index(start.startIndex, offsetBy: 0)..<start.index(start.endIndex, offsetBy: -21))
+        let m = start.substring(with: start.index(start.startIndex, offsetBy: 5)..<start.index(start.endIndex, offsetBy: -18))
+        let d = start.substring(with: start.index(start.startIndex, offsetBy: 8)..<start.index(start.endIndex, offsetBy: -15))
+        let h = start.substring(with: start.index(start.startIndex, offsetBy: 11)..<start.index(start.endIndex, offsetBy: -12))
+        let mm = start.substring(with: start.index(start.startIndex, offsetBy: 14)..<start.index(start.endIndex, offsetBy: -9))
+        
+        // トリガー設定
+        notificationTime.year = Int(y)
+        notificationTime.month = Int(m)
+        notificationTime.day = Int(d)! - 1
+        notificationTime.hour = Int(h)
+        notificationTime.minute = Int(mm)
+        trigger = UNCalendarNotificationTrigger(dateMatching: notificationTime, repeats: false)
+        
+        // 通知内容の設定
+        content.title = "Pettoリマインド通知"
+        if leaveData.userId == FIRAuth.auth()?.currentUser?.uid {
+            content.body = "明日がペット（\(leaveData.petName!)）の引き取り日です！"
+        }else{
+            content.body = "明日がペット（\(leaveData.petName!)）の引き渡し日です！"
+        }
+        content.sound = UNNotificationSound.default()
+        content.badge = 29
+        
+        // 通知スタイルを指定
+        let request = UNNotificationRequest(identifier: "petto-\(leaveData.id!)", content: content, trigger: trigger)
+        // 通知をセット
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+        
+        print("DEBUG_PRINT: NavigationBarHandler.registerLocalNotification end")
     }
     
     func onClick1() {
@@ -230,10 +253,12 @@ class BaseFormViewController: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("DEBUG_PRINT: BaseFormViewController.viewDidLoad")
+        print("DEBUG_PRINT: BaseFormViewController.viewDidLoad start")
+        print("DEBUG_PRINT: BaseFormViewController.viewDidLoad end")
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         print("DEBUG_PRINT: BaseFormViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
@@ -254,16 +279,18 @@ class BaseFormViewController: FormViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear start")
         
-        if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
-            ref.child(user.uid).child("unReadRoomIds").removeAllObservers()
-            ref.child(user.uid).child("todoRoomIds").removeAllObservers()
-            ref.child(user.uid).child("roomIds").removeAllObservers()
-            ref.child(user.uid).child("goods").removeAllObservers()
-            ref.child(user.uid).child("bads").removeAllObservers()
+        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+            for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
+                if v {
+                    let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
+                    ref.child(k).removeAllObservers()
+                }
+            }
         }
+        
         print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear end")
     }
 }
@@ -273,10 +300,12 @@ class BaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("DEBUG_PRINT: BaseViewController.viewDidLoad")
+        print("DEBUG_PRINT: BaseViewController.viewDidLoad start")
+        print("DEBUG_PRINT: BaseViewController.viewDidLoad end")
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         print("DEBUG_PRINT: BaseViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
@@ -298,19 +327,20 @@ class BaseViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseViewController.viewWillDisappear start")
         
-        if let user = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
-            ref.child(user.uid).child("unReadRoomIds").removeAllObservers()
-            ref.child(user.uid).child("todoRoomIds").removeAllObservers()
-            ref.child(user.uid).child("roomIds").removeAllObservers()
-            ref.child(user.uid).child("goods").removeAllObservers()
-            ref.child(user.uid).child("bads").removeAllObservers()
+        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+            for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
+                if v {
+                    let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
+                    ref.child(k).removeAllObservers()
+                }
+            }
         }
+        
         print("DEBUG_PRINT: BaseViewController.viewWillDisappear end")
     }
-
 }
 
 
