@@ -74,7 +74,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         // HUDで処理中を表示
         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        ref.queryOrderedByKey().queryLimited(toLast: 10).observe(.childAdded, with: { snapshot in
+        ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childAdded, with: { snapshot in
             print("DEBUG_PRINT: HomeViewController.read .childAddedイベントが発生しました。")
             
             if let _ = snapshot.value {
@@ -97,7 +97,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
         // HUDで処理中を表示
         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        ref.queryOrderedByKey().queryLimited(toLast: 10).observe(.childChanged, with: { snapshot in
+        ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childChanged, with: { snapshot in
             print("DEBUG_PRINT: HomeViewController.read .childChangedイベントが発生しました。")
             
             if let _ = snapshot.value {
@@ -321,7 +321,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     // Screenサイズに応じたセルサイズを返す
     // UICollectionViewDelegateFlowLayoutの設定が必要
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellSize:CGFloat = self.view.frame.size.width/2-2
+        let cellSize:CGFloat = self.view.frame.size.width/2 - 1
         // 正方形で返すためにwidth,heightを同じにする
         return CGSize(width: cellSize, height: cellSize*1.4141)
     }

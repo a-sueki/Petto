@@ -34,7 +34,7 @@ class NavigationBarHandler: NSObject {
         let button1 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
         button1.setImage(UIImage(named: "menu"), for: .normal)
         button1.addTarget(self, action: #selector(onClick1), for: .touchUpInside)
-        let button2 = UIButton(frame: CGRect(x: 0, y: 0, width: 150, height: 30))
+        let button2 = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 30))
         button2.setImage(UIImage(named: "logo"), for: .normal)
         button2.addTarget(self, action: #selector(onClick2), for: .touchUpInside)
         let button3 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
@@ -99,7 +99,6 @@ class NavigationBarHandler: NSObject {
         
         let leftBtns: [UIBarButtonItem] = [btn1,btn2]
         let rightBtns: [UIBarButtonItem] = [btn3]
-        
         self.viewController?.navigationItem.leftBarButtonItems = leftBtns
         self.viewController?.navigationItem.rightBarButtonItems = rightBtns
         
