@@ -35,7 +35,8 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: TodoListViewController.viewWillAppear start")
-        
+
+        super.helper.setupNavigationBar()
         if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) == nil || UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.count == 0 {
             SVProgressHUD.showError(withStatus: "まだTODOがありません")
         }
@@ -124,7 +125,8 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
             print("DEBUG_PRINT: TodoListViewController.cellForRowAt a")
             // あずかり人の場合
             // 未実施
-            if self.leaveDataArray[indexPath.row].acceptFlag == true && self.leaveDataArray[indexPath.row].runningFlag == false && self.leaveDataArray[indexPath.row].stopFlag == false {
+            if self.leaveDataArray[indexPath.row].acceptFlag == true && self.leaveDataArray[indexPath.row].runningFlag == false &&
+                self.leaveDataArray[indexPath.row].stopFlag == false && self.leaveDataArray[indexPath.row].abortFlag == false && self.leaveDataArray[indexPath.row].completeFlag == false{
                 print("DEBUG_PRINT: TodoListViewController.cellForRowAt b")
                 // 開始日 < 今日
                 if DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
@@ -133,14 +135,15 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                     print(Date())
                     // 開始日を過ぎているのに未実施の場合、セルの背景を変えて「過ぎている」ラベルを表示
                     cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
-                    cell.willDoLabel.backgroundColor = UIColor.red
                     cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = false
                     cell.isBreederLabel.isHidden = true
                 }else{
                     print(DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat))
                     print(Date())
                     print("DEBUG_PRINT: TodoListViewController.cellForRowAt d")
                     cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = true
                     cell.isBreederLabel.isHidden = true
                 }
                 // 実施中
@@ -149,13 +152,17 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                 if DateCommon.stringToDate(self.leaveDataArray[indexPath.row].endDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
                     // 終了日を過ぎているのに実施中の場合、セルの背景を変えて「過ぎている」ラベルを表示
                     cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
-                    cell.willDoLabel.backgroundColor = UIColor.red
+                    cell.willDoLabel.backgroundColor = UIColor(red:0.196, green:0.804, blue:0.196, alpha:1.0)
                     cell.willDoLabel.text = "実施中"
                     cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = false
                     cell.isBreederLabel.isHidden = true
                 }else{
+                    cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
+                    cell.willDoLabel.backgroundColor = UIColor(red:0.196, green:0.804, blue:0.196, alpha:1.0)
                     cell.willDoLabel.text = "実施中"
                     cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = true
                     cell.isBreederLabel.isHidden = true
                 }
                 // 中止
@@ -163,40 +170,46 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                 cell.willDoLabel.text = "中止"
                 cell.willDoLabel.backgroundColor = UIColor.gray
                 cell.willDoLabel.isHidden = false
+                cell.overdueLabel.isHidden = true
                 cell.isBreederLabel.isHidden = true
                 // 中断
             } else if self.leaveDataArray[indexPath.row].abortFlag == true {
                 cell.willDoLabel.text = "中断"
                 cell.willDoLabel.backgroundColor = UIColor.gray
                 cell.willDoLabel.isHidden = false
+                cell.overdueLabel.isHidden = true
                 cell.isBreederLabel.isHidden = true
                 // 完了
             } else if self.leaveDataArray[indexPath.row].completeFlag == true {
                 cell.willDoLabel.text = "完了"
                 cell.willDoLabel.backgroundColor = UIColor.gray
                 cell.willDoLabel.isHidden = false
+                cell.overdueLabel.isHidden = true
                 cell.isBreederLabel.isHidden = true
             }
         }else{
             // ブリーダーの場合
             // 未実施
-            if self.leaveDataArray[indexPath.row].acceptFlag == true && self.leaveDataArray[indexPath.row].stopFlag == false {
-                print("DEBUG_PRINT: TodoListViewController.cellForRowAt 1")
+            if self.leaveDataArray[indexPath.row].acceptFlag == true && self.leaveDataArray[indexPath.row].runningFlag == false &&
+                self.leaveDataArray[indexPath.row].stopFlag == false && self.leaveDataArray[indexPath.row].abortFlag == false && self.leaveDataArray[indexPath.row].completeFlag == false{
+                print("DEBUG_PRINT: TodoListViewController.cellForRowAt b")
                 // 開始日 < 今日
                 if DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
-                    print("DEBUG_PRINT: TodoListViewController.cellForRowAt 2")
-                    if self.leaveDataArray[indexPath.row].runningFlag == false {
-                        print("DEBUG_PRINT: TodoListViewController.cellForRowAt 3")
-                        // 開始日を過ぎているのに未実施の場合、セルの背景を変えて「過ぎている」ラベルを表示
-                        cell.backgroundColor = UIColor.red//UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
-                        cell.willDoLabel.backgroundColor = UIColor.red
-                        cell.willDoLabel.isHidden = false
-                        cell.isBreederLabel.isHidden = false
-                    }else{
-                        print("DEBUG_PRINT: TodoListViewController.cellForRowAt 4")
-                        cell.willDoLabel.isHidden = false
-                        cell.isBreederLabel.isHidden = false
-                    }
+                    print("DEBUG_PRINT: TodoListViewController.cellForRowAt c")
+                    print(DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat))
+                    print(Date())
+                    // 開始日を過ぎているのに未実施の場合、セルの背景を変えて「過ぎている」ラベルを表示
+                    cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
+                    cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = false
+                    cell.isBreederLabel.isHidden = false
+                }else{
+                    print(DateCommon.stringToDate(self.leaveDataArray[indexPath.row].startDate!, dateFormat: DateCommon.dateFormat))
+                    print(Date())
+                    print("DEBUG_PRINT: TodoListViewController.cellForRowAt d")
+                    cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = true
+                    cell.isBreederLabel.isHidden = false
                 }
                 // 実施中
             } else if self.leaveDataArray[indexPath.row].runningFlag == true && self.leaveDataArray[indexPath.row].abortFlag == false && self.leaveDataArray[indexPath.row].completeFlag == false {
@@ -204,32 +217,42 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                 if DateCommon.stringToDate(self.leaveDataArray[indexPath.row].endDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
                     // 終了日を過ぎているのに実施中の場合、セルの背景を変えて「過ぎている」ラベルを表示
                     cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
-                    cell.willDoLabel.backgroundColor = UIColor.red
+                    cell.willDoLabel.backgroundColor = UIColor(red:0.196, green:0.804, blue:0.196, alpha:1.0)
                     cell.willDoLabel.text = "実施中"
                     cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = false
                     cell.isBreederLabel.isHidden = false
                 }else{
+                    cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
+                    cell.willDoLabel.backgroundColor = UIColor(red:0.196, green:0.804, blue:0.196, alpha:1.0)
                     cell.willDoLabel.text = "実施中"
                     cell.willDoLabel.isHidden = false
+                    cell.overdueLabel.isHidden = true
                     cell.isBreederLabel.isHidden = false
                 }
                 // 中止
             } else if self.leaveDataArray[indexPath.row].stopFlag == true {
+                cell.backgroundColor = UIColor.white
                 cell.willDoLabel.text = "中止"
                 cell.willDoLabel.backgroundColor = UIColor.gray
                 cell.willDoLabel.isHidden = false
+                cell.overdueLabel.isHidden = true
                 cell.isBreederLabel.isHidden = false
                 // 中断
             } else if self.leaveDataArray[indexPath.row].abortFlag == true {
+                cell.backgroundColor = UIColor.white
                 cell.willDoLabel.text = "中断"
                 cell.willDoLabel.backgroundColor = UIColor.gray
                 cell.willDoLabel.isHidden = false
+                cell.overdueLabel.isHidden = true
                 cell.isBreederLabel.isHidden = false
                 // 完了
             } else if self.leaveDataArray[indexPath.row].completeFlag == true {
+                cell.backgroundColor = UIColor.white
                 cell.willDoLabel.text = "完了"
                 cell.willDoLabel.backgroundColor = UIColor.gray
                 cell.willDoLabel.isHidden = false
+                cell.overdueLabel.isHidden = true
                 cell.isBreederLabel.isHidden = false
             }
         }

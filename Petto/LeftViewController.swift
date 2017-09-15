@@ -21,6 +21,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var mainViewController: UINavigationController!
     var menus = ["Account","Profile", "My pet", "Message", "Oazuke / Azukari", "Logout"]
+    var myUserData: UserData?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -33,6 +34,46 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 0.5)
         
         print("DEBUG_PRINT: LeftViewController.viewDidLoad end")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("DEBUG_PRINT: LeftViewController.viewWillAppear start")
+    
+        // userを取得
+        if let user = FIRAuth.auth()?.currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
+            ref.child(user.uid).observeSingleEvent(of: .value, with: { (snapshot) in
+                print("DEBUG_PRINT: LeftViewController.viewWillAppear .observeSinleEventイベントが発生しました。")
+                if let _ = snapshot.value {
+                    self.myUserData = UserData(snapshot: snapshot, myId: user.uid)
+                    // ユーザーデフォルト設定
+                    UserDefaults.standard.set([String:Bool](), forKey: DefaultString.UnReadRoomIds)
+                    if self.myUserData?.unReadRoomIds != nil && !(self.myUserData?.unReadRoomIds.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
+                    }
+                    UserDefaults.standard.set([String:Bool](), forKey: DefaultString.TodoRoomIds)
+                    if self.myUserData?.todoRoomIds != nil && !(self.myUserData?.todoRoomIds.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.todoRoomIds , forKey: DefaultString.TodoRoomIds)
+                    }
+                    UserDefaults.standard.set([String:Bool](), forKey: DefaultString.RoomIds)
+                    if self.myUserData?.roomIds != nil && !(self.myUserData?.roomIds.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.roomIds , forKey: DefaultString.RoomIds)
+                    }
+                    self.tableView.reloadData()
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+            }
+        } else {
+            print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ゲストユーザです。")
+        }
+        
+        print("DEBUG_PRINT: LeftViewController.viewWillAppear end")
     }
     
     // データの数（＝セルの数）を返すメソッド
@@ -55,15 +96,20 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.textLabel?.text = "\(menu) (\(UserDefaults.standard.dictionary(forKey: DefaultString.UnReadRoomIds)!.count))"
                 cell.textLabel?.textColor = UIColor.red
             }else{
+                cell.textLabel?.textColor = UIColor.darkText
                 cell.textLabel?.text = menu
             }
         }else if indexPath.row == 4 {
             var count = 0
+            print("DEBUG_PRINT: LeftViewController.cellForRowAt 1")
+            print(count)
             if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil &&
                 !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
-                for (_,v) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
+                for (k,v) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
                     if v as! Bool{
-                        count = count + 1
+                        print(k)
+                        print(count)
+                       count = count + 1
                     }
                 }
             }
@@ -71,9 +117,11 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.textLabel?.text = "\(menu) (\(count))"
                 cell.textLabel?.textColor = UIColor.red
             }else{
+                cell.textLabel?.textColor = UIColor.darkText
                 cell.textLabel?.text = menu
             }
         }else {
+            cell.textLabel?.textColor = UIColor.darkText
             cell.textLabel?.text = menu
         }
         

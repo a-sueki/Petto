@@ -23,6 +23,7 @@ class TodoListTableViewCell: UITableViewCell {
     
     @IBOutlet weak var willDoLabel: UILabel!
     @IBOutlet weak var isBreederLabel: UILabel!
+    @IBOutlet weak var overdueLabel: UILabel!
     
     @IBOutlet weak var leaveInfoButton: UIButton!
     @IBOutlet weak var userDetailButton: UIButton!
