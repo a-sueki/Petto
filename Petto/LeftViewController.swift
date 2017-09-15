@@ -170,6 +170,12 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             }
         case 5:
+            if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil {
+                let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
+                ref.removeAllObservers()
+                let ref2 = FIRDatabase.database().reference().child(Paths.PetPath)
+                ref2.removeAllObservers()
+            }
             logout()
         default:
             break

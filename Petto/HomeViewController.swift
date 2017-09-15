@@ -41,7 +41,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
             self.refreshBysearch()
         }
-
+        
         print("DEBUG_PRINT: HomeViewController.viewDidLoad end")
     }
     
@@ -72,60 +72,62 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         let ref = FIRDatabase.database().reference().child(Paths.PetPath)
         
-        // HUDで処理中を表示
-        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childAdded, with: { snapshot in
-            print("DEBUG_PRINT: HomeViewController.read .childAddedイベントが発生しました。")
-            
-            if let _ = snapshot.value {
-                // petDataクラスを生成して受け取ったデータを設定する
-                let petData = PetData(snapshot: snapshot, myId: snapshot.key)
-                self.petDataArray.insert(petData, at: 0)
-                //self.petDataArray.append(petData)
-
-            }
-            DispatchQueue.main.async {
-                print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
-                self.reload(petDataArray: self.petDataArray)
-                SVProgressHUD.dismiss()
-            }
-        }) { (error) in
-            print(error.localizedDescription)
-            SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
-        }
-        
-        // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
-        // HUDで処理中を表示
-        SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childChanged, with: { snapshot in
-            print("DEBUG_PRINT: HomeViewController.read .childChangedイベントが発生しました。")
-            
-            if let _ = snapshot.value {
-                // petDataクラスを生成して受け取ったデータを設定する
-                let petData = PetData(snapshot: snapshot, myId: snapshot.key)
+        if FIRAuth.auth()?.currentUser != nil {
+            // HUDで処理中を表示
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+            ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childAdded, with: { snapshot in
+                print("DEBUG_PRINT: HomeViewController.read .childAddedイベントが発生しました。")
                 
-                // 保持している配列からidが同じものを探す
-                var index: Int = 0
-                for row in self.petDataArray {
-                    if row.id == petData.id {
-                        index = self.petDataArray.index(of: row)!
-                        break
-                    }
+                if let _ = snapshot.value {
+                    // petDataクラスを生成して受け取ったデータを設定する
+                    let petData = PetData(snapshot: snapshot, myId: snapshot.key)
+                    self.petDataArray.insert(petData, at: 0)
+                    //self.petDataArray.append(petData)
+                    
                 }
-                // 差し替えるため一度削除する
-                self.petDataArray.remove(at: index)
-                // 削除したところに更新済みのでデータを追加する
-                self.petDataArray.insert(petData, at: index)
+                DispatchQueue.main.async {
+                    print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
+                    self.reload(petDataArray: self.petDataArray)
+                    SVProgressHUD.dismiss()
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+            }
+            
+            // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
+            // HUDで処理中を表示
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+            ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childChanged, with: { snapshot in
+                print("DEBUG_PRINT: HomeViewController.read .childChangedイベントが発生しました。")
                 
+                if let _ = snapshot.value {
+                    // petDataクラスを生成して受け取ったデータを設定する
+                    let petData = PetData(snapshot: snapshot, myId: snapshot.key)
+                    
+                    // 保持している配列からidが同じものを探す
+                    var index: Int = 0
+                    for row in self.petDataArray {
+                        if row.id == petData.id {
+                            index = self.petDataArray.index(of: row)!
+                            break
+                        }
+                    }
+                    // 差し替えるため一度削除する
+                    self.petDataArray.remove(at: index)
+                    // 削除したところに更新済みのでデータを追加する
+                    self.petDataArray.insert(petData, at: index)
+                    
+                }
+                DispatchQueue.main.async {
+                    print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
+                    self.reload(petDataArray: self.petDataArray)
+                    SVProgressHUD.dismiss()
+                }
+            }) { (error) in
+                print(error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
-            DispatchQueue.main.async {
-                print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
-                self.reload(petDataArray: self.petDataArray)
-                SVProgressHUD.dismiss()
-            }
-        }) { (error) in
-            print(error.localizedDescription)
-            SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
         }
         
         print("DEBUG_PRINT: HomeViewController.read end")
