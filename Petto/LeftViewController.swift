@@ -59,7 +59,8 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }else if indexPath.row == 4 {
             var count = 0
-            if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil && !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
+            if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil &&
+                !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
                 for (_,v) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
                     if v as! Bool{
                         count = count + 1

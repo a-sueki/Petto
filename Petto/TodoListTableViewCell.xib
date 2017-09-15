@@ -12,11 +12,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" restorationIdentifier="todoListCell" selectionStyle="default" indentationWidth="10" rowHeight="155" id="KGk-i7-Jjw" customClass="TodoListTableViewCell" customModule="Petto" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="455" height="167"/>
+        <tableViewCell contentMode="scaleToFill" restorationIdentifier="todoListCell" selectionStyle="default" indentationWidth="10" rowHeight="162" id="KGk-i7-Jjw" customClass="TodoListTableViewCell" customModule="Petto" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="455" height="170"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="455" height="167"/>
+                <rect key="frame" x="0.0" y="0.0" width="455" height="170"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="あなたは飼い主です" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7wd-9P-pfW">
@@ -161,7 +161,7 @@
                         <rect key="frame" x="394" y="0.0" width="61" height="77"/>
                     </button>
                     <button opaque="NO" alpha="0.10000000000000001" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FuV-pY-HeI">
-                        <rect key="frame" x="0.0" y="77" width="455" height="30"/>
+                        <rect key="frame" x="0.0" y="77" width="455" height="92.5"/>
                     </button>
                 </subviews>
                 <constraints>
@@ -189,7 +189,6 @@
                     <constraint firstItem="umJ-s9-qBY" firstAttribute="leading" secondItem="3sk-Th-vIT" secondAttribute="trailing" constant="2" id="UWa-wP-OdL"/>
                     <constraint firstItem="tmB-NF-X9g" firstAttribute="bottom" secondItem="3sk-Th-vIT" secondAttribute="bottom" id="ZJl-5V-lxS"/>
                     <constraint firstItem="tuw-V9-V3z" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="b6f-TX-mND"/>
-                    <constraint firstAttribute="bottom" secondItem="LGx-kN-emD" secondAttribute="bottom" constant="8" id="bem-gU-0bb"/>
                     <constraint firstItem="7wd-9P-pfW" firstAttribute="top" secondItem="hKb-P1-tKF" secondAttribute="bottom" constant="8" id="cB1-Ug-Jdd"/>
                     <constraint firstAttribute="bottom" secondItem="FuV-pY-HeI" secondAttribute="bottom" id="dNy-Q3-aOV"/>
                     <constraint firstItem="FuV-pY-HeI" firstAttribute="top" secondItem="3Vo-B3-cbn" secondAttribute="bottom" id="daa-4r-bR5"/>
@@ -225,7 +224,7 @@
                 <outlet property="userProfile" destination="BI6-hm-JaR" id="anG-Gc-YkA"/>
                 <outlet property="willDoLabel" destination="LGx-kN-emD" id="pVq-HN-miP"/>
             </connections>
-            <point key="canvasLocation" x="37.5" y="88.5"/>
+            <point key="canvasLocation" x="-119" y="87"/>
         </tableViewCell>
     </objects>
     <resources>
