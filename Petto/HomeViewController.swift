@@ -56,9 +56,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     override func viewWillDisappear(_ animated: Bool) {
         print("DEBUG_PRINT: HomeViewController.viewWillDisappear start")
         
-        //        let ref = FIRDatabase.database().reference().child(Paths.PetPath)
-        //        ref.removeAllObservers()
-        
         if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
             let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
             ref.removeAllObservers()
@@ -82,19 +79,18 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                     // petDataクラスを生成して受け取ったデータを設定する
                     let petData = PetData(snapshot: snapshot, myId: snapshot.key)
                     self.petDataArray.insert(petData, at: 0)
-                    //self.petDataArray.append(petData)
-                    
-                }
+                 }
                 DispatchQueue.main.async {
                     print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
-                    self.reload(petDataArray: self.petDataArray)
+                    // collectionViewを再表示する
+                    self.collectionView.reloadData()
                     SVProgressHUD.dismiss()
                 }
             }) { (error) in
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
-            
+
             // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
             // HUDで処理中を表示
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
@@ -121,7 +117,8 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 }
                 DispatchQueue.main.async {
                     print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
-                    self.reload(petDataArray: self.petDataArray)
+                    // collectionViewを再表示する
+                    self.collectionView.reloadData()
                     SVProgressHUD.dismiss()
                 }
             }) { (error) in
@@ -137,7 +134,8 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: HomeViewController.refreshBysearch start")
         
         // 絞り込み条件を読み込む
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
+        if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil,
+            let uid = UserDefaults.standard.string(forKey: DefaultString.Uid), UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
             // HUDで処理中を表示
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             // 要素が追加されたら再表示
@@ -284,13 +282,11 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                                 }
                             }
                         }
-                        DispatchQueue.main.async {
-                            // TableViewの現在表示されているセルを更新する
-                            self.collectionView.reloadData()
-                            if snapshot.value != nil && self.petDataArray.count == 0 {
-                                SVProgressHUD.showError(withStatus: "該当するペットがいません。検索条件を変更してください")
-                            }
-                        }
+                    }
+                    // TableViewの現在表示されているセルを更新する
+                    self.collectionView.reloadData()
+                    if snapshot.value != nil && self.petDataArray.count == 0 {
+                        SVProgressHUD.showError(withStatus: "該当するペットがいません。検索条件を変更してください")
                     }
                 }
             }) { (error) in
@@ -301,23 +297,16 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: HomeViewController.refreshBysearch end")
     }
     
-    func reload(petDataArray: [PetData]) {
-        print("DEBUG_PRINT: HomeViewController.reload start")
-        
-        // collectionViewを再表示する
-        self.collectionView.reloadData()
-        
-        print("DEBUG_PRINT: HomeViewController.reload end")
-    }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
+        print("DEBUG_PRINT: HomeViewController.cellForItemAt start")
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homeCell", for: indexPath) as! HomeCollectionViewCell
         cell.setPetData(petData: petDataArray[indexPath.row])
         // セル内のボタンのアクションをソースコードで設定する
         cell.toDetailButton.addTarget(self, action: #selector(handleToDetailButton(sender:event:)), for: UIControlEvents.touchUpInside)
-        return cell
         
+        print("DEBUG_PRINT: HomeViewController.cellForItemAt end")
+        return cell
     }
     
     // Screenサイズに応じたセルサイズを返す

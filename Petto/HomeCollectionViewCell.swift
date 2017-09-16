@@ -28,6 +28,12 @@ class HomeCollectionViewCell: UICollectionViewCell {
     func setPetData(petData: PetData) {
         print("DEBUG_PRINT: HomeCollectionViewCell.setPetData start")
         
+        // 前回リロードで追加した帯があったら消す
+        let subviews = self.petImageView.subviews
+        for subview in subviews {
+            subview.removeFromSuperview()
+        }
+        
         self.petImageView.image = petData.image
         self.areaLabel.text = petData.area
         if petData.kind == "イヌ" {
@@ -40,8 +46,8 @@ class HomeCollectionViewCell: UICollectionViewCell {
         } else {
             self.sexImageView.image = UIImage(named: "female-lightgray")
         }
-        
-        if petData.isAvailable! {
+        // あずかり人募集中、かつ、終了日>今日
+        if petData.isAvailable! && DateCommon.stringToDate(petData.endDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedDescending {
             if petData.minDays == petData.maxDays {
                 self.termLabel.text = "期間：\(String(petData.minDays!))日間"
             }else{
@@ -49,16 +55,6 @@ class HomeCollectionViewCell: UICollectionViewCell {
             }
         } else {
             self.termLabel.text = "期間外"
-            // 写真をグレーアウト
-            let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")
-            myMonochromeFilter?.setValue(CIImage(image: petData.image!), forKey: kCIInputImageKey)
-            myMonochromeFilter?.setValue(CIColor(red: 0.3, green: 0.3, blue: 0.3), forKey: kCIInputColorKey)
-            myMonochromeFilter?.setValue(1.0, forKey: kCIInputIntensityKey)
-            let myOutputImage : CIImage = myMonochromeFilter!.outputImage!
-            self.petImageView.image = UIImage(ciImage: myOutputImage)
-            // 再描画
-//            self.petImageView.setNeedsDisplay()
-            
             // 帯を追加
             let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
             bandLabel.backgroundColor = UIColor.black
@@ -68,8 +64,16 @@ class HomeCollectionViewCell: UICollectionViewCell {
             bandLabel.textColor = UIColor.white
             bandLabel.textAlignment = NSTextAlignment.center
             self.petImageView.addSubview(bandLabel)
+            
+            // 写真をグレーアウト
+            let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")!
+            myMonochromeFilter.setValue(CIImage(image: petData.image!), forKey: kCIInputImageKey)
+            myMonochromeFilter.setValue(CIColor(red: 0.3, green: 0.3, blue: 0.3), forKey: kCIInputColorKey)
+            myMonochromeFilter.setValue(1.0, forKey: kCIInputIntensityKey)
+            let myOutputImage : CIImage = myMonochromeFilter.outputImage!
+            self.petImageView.image = UIImage(ciImage: myOutputImage)            
         }
-                
+        
         print("DEBUG_PRINT: HomeCollectionViewCell.setPetData end")
     }
     
