@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SCLAlertView
 
 struct Paths {
     static let PetPath = "pet"
@@ -95,7 +96,7 @@ struct Sex {
     static let searchStrings = [SearchString.unspecified,"♂", "♀"]
     static let male = "♂"
     static let female = "♀"
-
+    
 }
 struct UserSex {
     static let strings = ["男性", "女性"]
@@ -256,7 +257,7 @@ struct Tool {
     static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4,Codes.C5,Codes.C6,Codes.C7,Codes.C8]
     static let strings = ["寝床","トイレ","首輪＆リード","ケージ","歯ブラシ","ブラシ","爪研ぎ","キャットタワー"]
     static let icons = ["doghouse","sandbox","dogchain","cage","toothbrush","brush","scratch","cattower"]
-   
+    
     static func toString(_ code:String) -> String {
         switch code {
         case codes[0] : return strings[0]
@@ -362,7 +363,7 @@ struct PetNGs {
         default:  return "不明"
         }
     }
-
+    
     static func convertList(_ codeList: [String]) -> Set<String> {
         var nameList:Set<String> = []
         for code in codeList {
@@ -448,3 +449,15 @@ struct ListSet {
         return result
     }
 }
+
+struct SCLAlert {
+    
+    static let appearance = SCLAlertView.SCLAppearance(
+        kTitleFont: UIFont(name: "Helvetica", size: 17)!,
+        kTextFont: UIFont(name: "Helvetica", size: 14)!,
+        kButtonFont: UIFont(name: "Helvetica", size: 14)!,
+        showCloseButton: false
+    )
+}
+
+

@@ -45,13 +45,6 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         self.getPet()
         self.setData()
         
-        self.appearance1 = SCLAlertView.SCLAppearance(
-            kTitleFont: UIFont(name: "Helvetica", size: 17)!,
-            kTextFont: UIFont(name: "Helvetica", size: 14)!,
-            kButtonFont: UIFont(name: "Helvetica", size: 14)!,
-            showCloseButton: false
-        )
-        
         print("DEBUG_PRINT: LeaveViewController.viewDidLoad end")
     }
     
@@ -63,7 +56,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         if self.leaveData?.userId == UserDefaults.standard.string(forKey: DefaultString.Uid){
             if self.leaveData?.runningFlag == true || self.leaveData?.completeFlag == true || self.leaveData?.abortFlag == true {
                 // ポップアップ表示、ボタン活性化
-                let alertView = SCLAlertView(appearance: self.appearance1!)
+                let alertView = SCLAlertView(appearance: SCLAlert.appearance)
                 alertView.addButton("了解", target:self, selector:#selector(LeaveViewController.cancel))
                 alertView.showInfo("思い出フォト", subTitle: "\nあずかったペットとの写真を投稿できるようになりました！")
                 
@@ -342,13 +335,13 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         
         if self.leaveData?.runningFlag == false {
             // 開始
-            let alertView = SCLAlertView(appearance: self.appearance1!)
+            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
             alertView.addButton("引き渡し完了", target:self, selector:#selector(LeaveViewController.excuted))
             alertView.addButton("ちょっと待って...", target:self, selector:#selector(LeaveViewController.cancel))
             alertView.showSuccess("ペットを引き渡して下さい", subTitle: "\nトラブル防止のため、\nあずかり人の連絡先・住所の確認を推奨します。")
         } else {
             // 完了
-            let alertView = SCLAlertView(appearance: self.appearance1!)
+            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
             alertView.addButton("引き取り完了", target:self, selector:#selector(LeaveViewController.complete))
             alertView.addButton("ちょっと待って...", target:self, selector:#selector(LeaveViewController.cancel))
             alertView.showSuccess("ペットを引き取って下さい", subTitle: "\nペットに異常がないか、ペットが迷惑をかけなかったかなど確認しましょう。")
@@ -362,13 +355,13 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         
         if self.leaveData?.runningFlag == false {
             // 中止
-            let alertView = SCLAlertView(appearance: self.appearance1!)
+            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
             alertView.addButton("おあずけ中止", target:self, selector:#selector(LeaveViewController.stop))
             alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
             alertView.showWarning("おあずけを中止しますか？", subTitle: "\n中止すると、あずかり人にも通知されます。")
         }else{
             // 中断
-            let alertView = SCLAlertView(appearance: self.appearance1!)
+            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
             alertView.addButton("おあずけ中断", target:self, selector:#selector(LeaveViewController.abort))
             alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
             alertView.showWarning("おあずけを中断しますか？", subTitle: "\n中断する前に、ペットを引き取りましょう。")
@@ -426,7 +419,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         var bads = self.userData?.bads
         
         // ユーザ評価
-        let alertView = SCLAlertView(appearance: self.appearance1!)
+        let alertView = SCLAlertView(appearance: SCLAlert.appearance)
         let textField = alertView.addTextField("コメントなど")
         alertView.addButton("Good!!"){
             breederComment = textField.text
@@ -478,7 +471,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
 
         var breederComment: String?
         // 中止理由
-        let alertView = SCLAlertView(appearance: self.appearance1!)
+        let alertView = SCLAlertView(appearance: SCLAlert.appearance)
         let textField = alertView.addTextField("急な予定が入ったから")
         alertView.addButton("OK"){
             breederComment = textField.text
@@ -523,7 +516,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         var goods = self.userData?.goods
         var bads = self.userData?.bads
         // 中断理由
-        let alertView = SCLAlertView(appearance: self.appearance1!)
+        let alertView = SCLAlertView(appearance: SCLAlert.appearance)
         let textField = alertView.addTextField("ペットが病気になったから")
         alertView.addButton("Good!!"){
             breederComment = textField.text

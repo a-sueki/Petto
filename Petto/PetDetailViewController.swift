@@ -13,7 +13,6 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 
-
 class PetDetailViewController: BaseFormViewController {
     
     var petData: PetData?
@@ -24,6 +23,11 @@ class PetDetailViewController: BaseFormViewController {
 
         // ユーザプロパティを設定
         FIRAnalytics.setUserPropertyString("A", forName: "firstMessage")
+        
+        if self.petData != nil, self.petData!.isAvailable!, DateCommon.stringToDate(self.petData!.endDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
+            // 期限が過ぎているのに「おあずけ人募集中」のままの場合
+            self.petData?.isAvailable = false
+        }
         
         // フォーム
         form +++
