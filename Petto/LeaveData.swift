@@ -20,6 +20,9 @@ class LeaveData: NSObject {
     var userArea: String?
     var userAge: String?
     var userSex: String?
+    var userGoodInt: Int?
+    var userBadInt: Int?
+
     var petId: String?
     var petName: String?
     var petImage: UIImage?
@@ -59,6 +62,10 @@ class LeaveData: NSObject {
         self.userArea = valueDictionary["userArea"] as? String
         self.userAge = valueDictionary["userAge"] as? String
         self.userSex = valueDictionary["userSex"] as? String
+        self.userGoodInt = valueDictionary["userGoodInt"] as? Int
+        self.userBadInt = valueDictionary["userBadInt"] as? Int
+
+        
         self.petId = valueDictionary["petId"] as? String
         self.petName = valueDictionary["petName"] as? String
         petImageString = valueDictionary["petImageString"] as? String

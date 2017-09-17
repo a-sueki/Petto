@@ -30,8 +30,7 @@ class RoomData: NSObject {
     var breederId: String?
     
     var lastMessage:String?
-//    var userOpenedFlg :Bool?
-//    var petOpenedFlg :Bool?
+    var todoRoomIds = [String:Bool]()
     var createAt:NSDate?
     var updateAt:NSDate?
     
@@ -59,8 +58,11 @@ class RoomData: NSObject {
         self.petImage = UIImage(data: NSData(base64Encoded: petImageString!, options: .ignoreUnknownCharacters)! as Data)
         self.breederId = valueDictionary["breederId"] as? String
         self.lastMessage = valueDictionary["lastMessage"] as? String
-//        self.userOpenedFlg = valueDictionary["userOpenedFlg"] as? Bool
-//        self.petOpenedFlg = valueDictionary["petOpenedFlg"] as? Bool
+
+        if let todoRoomIds = valueDictionary["todoRoomIds"] as? [String:Bool] {
+            self.todoRoomIds = todoRoomIds
+        }
+        
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
         let updateAt = valueDictionary["updateAt"] as? String

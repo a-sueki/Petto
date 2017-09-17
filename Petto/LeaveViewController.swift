@@ -132,7 +132,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
             // 実行中
             if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
                 // 自分がブリーダーの場合
-                if endDate.compare(Date()) == ComparisonResult.orderedAscending {
+                if endDate.compare(Date()) == ComparisonResult.orderedDescending {
                     // 期間内
                     self.excuteButton.setTitle("おあずけ中です", for: .normal)
                     self.cancelButton.setTitle("中断する", for: .normal)
@@ -455,7 +455,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
             kFIRParameterContentType: "excuted" as NSObject,
             kFIRParameterItemID: "4" as NSObject
             ])
-        
+
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
         let ref = FIRDatabase.database().reference()

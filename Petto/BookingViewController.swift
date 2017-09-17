@@ -21,56 +21,10 @@ class BookingViewController: BaseFormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: BookingViewController.viewDidLoad start")
-        print("DEBUG_PRINT: BookingViewController.viewDidLoad end")
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print("DEBUG_PRINT: BookingViewController.viewWillAppear start")
         
-        self.read()
-        
-        print("DEBUG_PRINT: BookingViewController.viewWillAppear end")
-    }
-        
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        print("DEBUG_PRINT: BookingViewController.viewWillDisappear start")
-        
-        if let roomId = self.roomData?.id {
-            let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
-            ref.removeAllObservers()
-        }
-        
-        print("DEBUG_PRINT: BookingViewController.viewWillDisappear end")
-    }
-    
-    func read() {
-        print("DEBUG_PRINT: BookingViewController.read start")
-        
-        // Firebaseから登録済みデータを取得
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            if let roomId = self.roomData?.id {
-                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(roomId)
-                ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                    print("DEBUG_PRINT: BookingViewController.read .observeSingleEventイベントが発生しました。")
-                    if let _ = snapshot.value as? NSDictionary {
-                        self.leaveData = LeaveData(snapshot: snapshot, myId: uid)
-                    }
-                    DispatchQueue.main.async {
-                        // Formを表示
-                        self.showLeaveData()
-                        SVProgressHUD.dismiss()
-                    }
-                }) { (error) in
-                    print(error.localizedDescription)
-                    SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
-                }
-            }
-        }
+        self.showLeaveData()
 
-        print("DEBUG_PRINT: BookingViewController.read end")
+        print("DEBUG_PRINT: BookingViewController.viewDidLoad end")
     }
     
     func showLeaveData() {
@@ -88,7 +42,6 @@ class BookingViewController: BaseFormViewController {
         // フォーム
         form +++
             Section()
-            //TODO: 期間終了後は提案可能な状態に戻す
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 if let _ = self.leaveData, self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
                     row.title = "承諾待ち"
@@ -227,6 +180,8 @@ class BookingViewController: BaseFormViewController {
         self.inputData["userAge"] = self.roomData?.userAge
         self.inputData["userArea"] = self.roomData?.userArea
         self.inputData["userSex"] = self.roomData?.userSex
+        self.inputData["userGoodInt"] = self.roomData?.userGoodInt
+        self.inputData["userBadInt"] = self.roomData?.userBadInt
         self.inputData["petId"] = self.roomData?.petId
         self.inputData["petName"] = self.roomData?.petName
         self.inputData["petImageString"] = self.roomData?.petImageString
@@ -246,6 +201,11 @@ class BookingViewController: BaseFormViewController {
         let key = ref.child(Paths.LeavePath).childByAutoId().key
         ref.child(Paths.LeavePath).child(key).setValue(inputData)
         
+        // roomのtodoに追加
+        let ref2 = FIRDatabase.database().reference()
+        let childUpdates = ["/\(Paths.RoomPath)/\((self.roomData?.id)!)/todoRoomIds/\(key)/": true] as [String : Any]
+        ref2.updateChildValues(childUpdates)
+
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: showMessage)
         // 全てのモーダルを閉じる
