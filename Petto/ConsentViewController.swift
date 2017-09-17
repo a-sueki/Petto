@@ -105,7 +105,7 @@ class ConsentViewController: BaseFormViewController {
         
         // leaveDataをdelete
         let ref = FIRDatabase.database().reference()
-        ref.child(Paths.LeavePath).child((self.roomData?.id)!).removeValue()
+        ref.child(Paths.LeavePath).child((self.leaveData?.id)!).removeValue()
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: showMessage)
@@ -151,10 +151,11 @@ class ConsentViewController: BaseFormViewController {
         
         // leaveData,UserDataをupdate
         let ref = FIRDatabase.database().reference()
-        let childUpdates = ["/\(Paths.LeavePath)/\(self.roomData!.id!)/acceptFlag/": true,
-                            "/\(Paths.LeavePath)/\(self.roomData!.id!)/updateAt/": String(time),
-                            "/\(Paths.UserPath)/\(self.roomData!.userId!)/todoRoomIds/\(self.roomData!.id!)/": true,
-                            "/\(Paths.UserPath)/\(self.roomData!.breederId!)/todoRoomIds/\(self.roomData!.id!)/": true] as [String : Any]
+        let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/acceptFlag/": true,
+                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
+                            "/\(Paths.PetPath)/\(self.leaveData!.petId!)/historys/\(self.leaveData!.id!)/": true,
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": true,
+                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/todoRoomIds/\(self.leaveData!.id!)/": true] as [String : Any]
         ref.updateChildValues(childUpdates)
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: showMessage)

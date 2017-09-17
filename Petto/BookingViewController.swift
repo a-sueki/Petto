@@ -243,7 +243,8 @@ class BookingViewController: BaseFormViewController {
         self.inputData["createBy"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
         // insert
         let ref = FIRDatabase.database().reference()
-        ref.child(Paths.LeavePath).child((self.roomData?.id)!).setValue(inputData)
+        let key = ref.child(Paths.LeavePath).childByAutoId().key
+        ref.child(Paths.LeavePath).child(key).setValue(inputData)
         
         // HUDで投稿完了を表示する
         SVProgressHUD.showSuccess(withStatus: showMessage)
