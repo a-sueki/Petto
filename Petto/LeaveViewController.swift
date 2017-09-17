@@ -20,6 +20,8 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     var userData: UserData?
     var petData: PetData?
     var appearance1 :SCLAlertView.SCLAppearance?
+    var photeImage: UIImage?
+    var userComment: String?
     
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var petImageView: UIImageView!
@@ -52,18 +54,18 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: LeaveViewController.viewWillAppear start")
         
-        // 自分があずかり人で、かつ、あずかり中の場合
-        if self.leaveData?.userId == UserDefaults.standard.string(forKey: DefaultString.Uid){
-            if self.leaveData?.runningFlag == true || self.leaveData?.completeFlag == true || self.leaveData?.abortFlag == true {
-                // ポップアップ表示、ボタン活性化
-                let alertView = SCLAlertView(appearance: SCLAlert.appearance)
-                alertView.addButton("了解", target:self, selector:#selector(LeaveViewController.cancel))
-                alertView.showInfo("思い出フォト", subTitle: "\nあずかったペットとの写真を投稿できるようになりました！")
-                
-           }
+        // 自分があずかり人で、かつ、あずかり中もしくは過去あずかったの場合
+        if UserDefaults.standard.object(forKey: "isInitialDisplay") != nil, UserDefaults.standard.bool(forKey: "isInitialDisplay") == true {
+            if self.leaveData?.userId == UserDefaults.standard.string(forKey: DefaultString.Uid){
+                if self.leaveData?.runningFlag == true || self.leaveData?.completeFlag == true || self.leaveData?.abortFlag == true {
+                    UserDefaults.standard.set(true, forKey: "isInitialDisplay")
+                    // ポップアップ表示、ボタン活性化
+                    let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+                    alertView.addButton("了解", target:self, selector:#selector(LeaveViewController.cancel))
+                    alertView.showInfo("思い出フォト", subTitle: "\nあずかったペットとの写真を投稿できるようになりました！")
+                }
+            }
         }
-        
-        
         print("DEBUG_PRINT: LeaveViewController.viewWillAppear end")
     }
     
@@ -98,18 +100,22 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         self.petImageView.image = self.leaveData?.petImage
         self.startDateLabel.text = "開始：" + DateCommon.displayDate(stringDate: (self.leaveData?.startDate)!)
         self.endDateLabel.text = "終了：" + DateCommon.displayDate(stringDate: (self.leaveData?.endDate)!)
-        
-        let startDate = DateCommon.stringToDate((self.leaveData?.startDate)!, dateFormat: DateCommon.dateFormat)
+
         let endDate = DateCommon.stringToDate((self.leaveData?.endDate)!, dateFormat: DateCommon.dateFormat)
-        
+       
         // ボタン制御
-        if startDate.compare(Date()) == ComparisonResult.orderedDescending {
-            // 期間前（startDateが今日よりも未来）
+        if leaveData?.acceptFlag == true &&
+            leaveData?.runningFlag == false &&
+            leaveData?.stopFlag == false &&
+            leaveData?.abortFlag == false &&
+            leaveData?.completeFlag == false {
+            
+            // 未実行
             if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
                 // 自分がブリーダーの場合
                 self.excuteButton.setTitle("おあずけを開始する！", for: .normal)
                 self.cancelButton.setTitle("やっぱりやめる", for: .normal)
-                self.excuteButton.isEnabled = false
+                self.cancelButton.backgroundColor =  UIColor(red: 1.0, green: 0.498, blue: 0.314, alpha: 1.0)
             }else{
                 // 自分があずかり人の場合
                 self.excuteButton.setTitle("おあずけ開始(飼い主のみ可)", for: .normal)
@@ -117,67 +123,68 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                 self.excuteButton.isEnabled = false
                 self.cancelButton.isEnabled = false
             }
-        } else if startDate.compare(Date()) == ComparisonResult.orderedAscending && endDate.compare(Date()) == ComparisonResult.orderedDescending{
-            // 期間中（startDate < 今日 < endDate）
-            if (self.leaveData?.runningFlag)! {
-                // 実行中の場合
-                if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
-                    // 自分がブリーダーの場合
+        }else if leaveData?.acceptFlag == true &&
+            leaveData?.runningFlag == true &&
+            leaveData?.stopFlag == false &&
+            leaveData?.abortFlag == false &&
+            leaveData?.completeFlag == false {
+
+            // 実行中
+            if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+                // 自分がブリーダーの場合
+                if endDate.compare(Date()) == ComparisonResult.orderedAscending {
+                    // 期間内
                     self.excuteButton.setTitle("おあずけ中です", for: .normal)
                     self.cancelButton.setTitle("中断する", for: .normal)
+                    self.cancelButton.backgroundColor =  UIColor(red: 1.0, green: 0.498, blue: 0.314, alpha: 1.0)
                     self.excuteButton.isEnabled = false
-                } else {
-                    // 自分があずかり人の場合
-                    self.excuteButton.setTitle("あずかり中です", for: .normal)
-                    self.cancelButton.setTitle("中断する(飼い主のみ可)", for: .normal)
-                    self.excuteButton.isEnabled = false
-                    self.cancelButton.isEnabled = false
-                }
-            }else{
-                // 未実行の場合
-                if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
-                    // 自分がブリーダーの場合
-                    self.excuteButton.setTitle("おあずけを開始する！", for: .normal)
-                    self.cancelButton.setTitle("やっぱりやめる", for: .normal)
                 }else{
-                    // 自分があずかり人の場合
-                    self.excuteButton.setTitle("おあずけ開始(飼い主のみ可)", for: .normal)
-                    self.cancelButton.setTitle("キャンセル(飼い主のみ可)", for: .normal)
-                    self.excuteButton.isEnabled = false
-                    self.cancelButton.isEnabled = false
-                }
-            }
-        } else {
-            // 期間後（endDateが今日よりも過去）
-            if self.leaveData?.runningFlag == true {
-                if self.leaveData?.completeFlag == false && self.leaveData?.abortFlag == false {
-                    // 実行中の場合
-                    if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
-                        // 自分がブリーダーの場合
-                        self.excuteButton.setTitle("おあずけを終了する！", for: .normal)
-                        self.cancelButton.isHidden = true
-                    }else{
-                        // 自分があずかり人の場合
-                        self.excuteButton.setTitle("あずかり終了(飼い主のみ可)", for: .normal)
-                        self.excuteButton.isEnabled = false
-                        self.cancelButton.isHidden = true
-                    }
-                }else{
-                    // 完了・中断済みの場合
-                    self.excuteButton.setTitle("終了しました", for: .normal)
-                    self.excuteButton.isEnabled = false
+                    // 期間外
+                    self.excuteButton.setTitle("おあずけを終了する！", for: .normal)
                     self.cancelButton.isHidden = true
                 }
             } else {
-                // 未実行の場合
-                self.excuteButton.setTitle("終了しました(未実施)", for: .normal)
-                self.excuteButton.isEnabled = false
-                self.cancelButton.isHidden = true
-                
-                //TODO:自動でTODOバッジをOFFに。leaveの更新は？
+                // 自分があずかり人の場合
+                self.excuteButton.setTitle("思い出フォトをアップする！", for: .normal)
+                self.excuteButton.isEnabled = true
+                if self.leaveData?.commemorativePhoteString != nil {
+                    self.cancelButton.setTitle("思い出フォトを確認する", for: .normal)
+                    self.cancelButton.backgroundColor = UIColor(red: 1.0, green: 0.498, blue: 0.314, alpha: 1.0)
+                    self.cancelButton.isEnabled = true
+                }else{
+                    self.cancelButton.setTitle("中断する(飼い主のみ可)", for: .normal)
+                    self.cancelButton.isEnabled = false
+                }
             }
+        }else if leaveData?.acceptFlag == true &&
+            leaveData?.runningFlag == false &&
+            leaveData?.stopFlag == false,
+            leaveData?.abortFlag == true || leaveData?.completeFlag == true {
+            // 終了済（中断・完了）
+            // excute
+            if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+                // 自分がブリーダーの場合
+                self.excuteButton.setTitle("終了しました", for: .normal)
+                self.excuteButton.isEnabled = false
+            } else {
+                // 自分があずかり人の場合
+                self.excuteButton.setTitle("思い出フォトをアップする！", for: .normal)
+                self.excuteButton.isEnabled = true
+            }
+            // cancel
+            if self.leaveData?.commemorativePhoteString != nil {
+                self.cancelButton.setTitle("思い出フォトを確認する", for: .normal)
+                self.cancelButton.backgroundColor = UIColor(red: 1.0, green: 0.498, blue: 0.314, alpha: 1.0)
+                self.cancelButton.isEnabled = true
+            }else{
+                self.cancelButton.isHidden = true
+            }
+        }else{
+            // 終了済（中止）
+            self.excuteButton.setTitle("中止されました", for: .normal)
+            self.excuteButton.isEnabled = false
+            self.cancelButton.isHidden = true
         }
-        
         
         print("DEBUG_PRINT: LeaveViewController.setData end")
     }
@@ -192,7 +199,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         
         print("DEBUG_PRINT: LeaveViewController.toPetDetailButton end")
     }
-    
+
     func getPet() {
         print("DEBUG_PRINT: LeaveViewController.getPet start")
         
@@ -263,7 +270,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         
         print("DEBUG_PRINT: LeaveViewController.toUserDetailButton end")
     }
-    
+
     func getUser() {
         print("DEBUG_PRINT: LeaveViewController.getUser start")
         
@@ -333,38 +340,100 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     @IBAction func handleExcuteButton(_ sender: Any) {
         print("DEBUG_PRINT: LeaveViewController.handleExcuteButton start")
         
-        if self.leaveData?.runningFlag == false {
-            // 開始
+        let startDate = DateCommon.stringToDate((self.leaveData?.startDate)!, dateFormat: DateCommon.dateFormat)
+        let endDate = DateCommon.stringToDate((self.leaveData?.endDate)!, dateFormat: DateCommon.dateFormat)
+        
+        if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+            // ブリーダーの場合
+            if leaveData?.acceptFlag == true &&
+                leaveData?.runningFlag == false &&
+                leaveData?.stopFlag == false &&
+                leaveData?.abortFlag == false &&
+                leaveData?.completeFlag == false {
+                // 未実行
+                if startDate.compare(Date()) == ComparisonResult.orderedDescending {
+                    // 期間前
+                    let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+                    alertView.addButton("引き渡し完了", target:self, selector:#selector(LeaveViewController.excuted))
+                    alertView.addButton("まだ", target:self, selector:#selector(LeaveViewController.cancel))
+                    alertView.showWarning("予定を早めますか？", subTitle: "\nおあずけを開始する場合は、ペットを引き渡して下さい。\n\n※トラブル防止のため、あずかり人の連絡先・住所の確認を推奨します。")
+                }else if endDate.compare(Date()) == ComparisonResult.orderedAscending {
+                    // 期間後
+                    let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+                    alertView.addButton("引き渡し完了", target:self, selector:#selector(LeaveViewController.excuted))
+                    alertView.addButton("まだ", target:self, selector:#selector(LeaveViewController.cancel))
+                    alertView.showWarning("予定日を過ぎています", subTitle: "\nおあずけを開始する場合は、ペットを引き渡して下さい。\n\n※トラブル防止のため、あずかり人の連絡先・住所の確認を推奨します。")
+                }else{
+                    // 期間中
+                    let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+                    alertView.addButton("引き渡し完了", target:self, selector:#selector(LeaveViewController.excuted))
+                    alertView.addButton("まだ", target:self, selector:#selector(LeaveViewController.cancel))
+                    alertView.showSuccess("ペットを引き渡して下さい", subTitle: "\nトラブル防止のため、\nあずかり人の連絡先・住所の確認を推奨します。")
+                }
+            }else if leaveData?.acceptFlag == true &&
+                leaveData?.runningFlag == true &&
+                leaveData?.stopFlag == false &&
+                leaveData?.abortFlag == false &&
+                leaveData?.completeFlag == false {
+                // 実行中
+                let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+                alertView.addButton("引き取り完了", target:self, selector:#selector(LeaveViewController.complete))
+                alertView.addButton("まだ", target:self, selector:#selector(LeaveViewController.cancel))
+                alertView.showSuccess("ペットを引き取って下さい", subTitle: "\nペットに異常がないか、ペットが迷惑をかけなかったかなど確認しましょう。")
+            }
+        }else{
+            // あずかり人の場合
             let alertView = SCLAlertView(appearance: SCLAlert.appearance)
-            alertView.addButton("引き渡し完了", target:self, selector:#selector(LeaveViewController.excuted))
-            alertView.addButton("ちょっと待って...", target:self, selector:#selector(LeaveViewController.cancel))
-            alertView.showSuccess("ペットを引き渡して下さい", subTitle: "\nトラブル防止のため、\nあずかり人の連絡先・住所の確認を推奨します。")
-        } else {
-            // 完了
-            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
-            alertView.addButton("引き取り完了", target:self, selector:#selector(LeaveViewController.complete))
-            alertView.addButton("ちょっと待って...", target:self, selector:#selector(LeaveViewController.cancel))
-            alertView.showSuccess("ペットを引き取って下さい", subTitle: "\nペットに異常がないか、ペットが迷惑をかけなかったかなど確認しましょう。")
+            let textField = alertView.addTextField("コメントなど")
+            alertView.addButton("思い出フォトをアップ"){
+                self.userComment = textField.text
+                self.updateCommemorativePhote()
+            }
+            alertView.addButton("キャンセル", target:self, selector:#selector(LeaveViewController.cancel))
+            alertView.showEdit("思い出フォト", subTitle: "\nあずかりに関するコメントと写真をアップします。\nコメントと写真は他のユーザーにも公開されます")
         }
         
         print("DEBUG_PRINT: LeaveViewController.handleExcuteButton end")
     }
+
     
     @IBAction func handleCancelButton(_ sender: Any) {
         print("DEBUG_PRINT: LeaveViewController.handleCancelButton start")
         
-        if self.leaveData?.runningFlag == false {
-            // 中止
-            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
-            alertView.addButton("おあずけ中止", target:self, selector:#selector(LeaveViewController.stop))
-            alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
-            alertView.showWarning("おあずけを中止しますか？", subTitle: "\n中止すると、あずかり人にも通知されます。")
+        if self.leaveData?.breederId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+            // ブリーダーの場合
+            if leaveData?.acceptFlag == true &&
+                leaveData?.runningFlag == false &&
+                leaveData?.stopFlag == false &&
+                leaveData?.abortFlag == false &&
+                leaveData?.completeFlag == false {
+                // 未実行
+                let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+                alertView.addButton("おあずけ中止", target:self, selector:#selector(LeaveViewController.stop))
+                alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
+                alertView.showWarning("おあずけを中止しますか？", subTitle: "\n中止すると、あずかり人にも通知されます。")
+            }else if leaveData?.acceptFlag == true &&
+                leaveData?.runningFlag == true &&
+                leaveData?.stopFlag == false &&
+                leaveData?.abortFlag == false &&
+                leaveData?.completeFlag == false {
+                // 実行中
+                let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+                alertView.addButton("おあずけ中断", target:self, selector:#selector(LeaveViewController.abort))
+                alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
+                alertView.showWarning("おあずけを中断しますか？", subTitle: "\n中断する前に、ペットを引き取りましょう。")
+            }else{
+                // 完了・中断済みの場合、ヒストリー画面に遷移
+                let historyViewController = self.storyboard?.instantiateViewController(withIdentifier: "History") as! HistoryViewController
+                historyViewController.petData = self.petData
+                self.navigationController?.pushViewController(historyViewController, animated: true)
+            }
         }else{
-            // 中断
-            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
-            alertView.addButton("おあずけ中断", target:self, selector:#selector(LeaveViewController.abort))
-            alertView.addButton("なんでもない", target:self, selector:#selector(LeaveViewController.cancel))
-            alertView.showWarning("おあずけを中断しますか？", subTitle: "\n中断する前に、ペットを引き取りましょう。")
+            // あずかり人の場合
+            // ヒストリー画面に遷移
+            let historyViewController = self.storyboard?.instantiateViewController(withIdentifier: "History") as! HistoryViewController
+            historyViewController.petData = self.petData
+            self.navigationController?.pushViewController(historyViewController, animated: true)
         }
         
         print("DEBUG_PRINT: LeaveViewController.handleCancelButton end")
@@ -393,17 +462,14 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": true,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualStartDate/": Date().description,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
+                            "/\(Paths.PetPath)/\(self.leaveData!.petId!)/historys/\(self.leaveData!.id!)": true,
                             "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": true] as [String : Any]
         ref.updateChildValues(childUpdates)
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         // 前の画面に戻る
         navigationController?.popViewController(animated: true)
-        
-        //TODO: ユーザーが思い出写真、コメントを投稿できるようにする（通知バッジ表示、当画面を開くとポップアップ表示）
-        
-        
-        
+                
         print("DEBUG_PRINT: LeaveViewController.excuted end")
     }
     func complete(){
@@ -563,6 +629,70 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: LeaveViewController.cancel end")
     }
     
+    func toHistory() {
+        print("DEBUG_PRINT: LeaveViewController.toHistory start")
+        
+        if self.photeImage != nil {
+            // leaveをupdate
+            let imageData = UIImageJPEGRepresentation(self.photeImage! , 0.5)
+            let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+            let time = NSDate.timeIntervalSinceReferenceDate
+            let ref = FIRDatabase.database().reference()
+            let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/commemorativePhoteString/": imageString,
+                                "/\(Paths.LeavePath)/\(self.leaveData!.id!)/userComment/": self.userComment ?? "[コメントはありません]",
+                                "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time)] as [String : Any]
+            ref.updateChildValues(childUpdates)
+            /*
+             let historyViewController = self.storyboard?.instantiateViewController(withIdentifier: "History") as! HistoryViewController
+             historyViewController.petData = self.petData
+             self.navigationController?.pushViewController(historyViewController, animated: true)
+             */
+        }
+        
+        print("DEBUG_PRINT: LeaveViewController.toHistory end")
+    }
+    /*    // カメラがタップされたらカメラを起動して写真を取得
+     func commemorativePhoteUpdate() {
+     print("DEBUG_PRINT: LeaveViewController.commemorativePhoteUpdate start")
+     
+     let imageSelectViewController = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+     imageSelectViewController.resultHandler = { commemorativePhote in
+     self.photeImage = commemorativePhote
+     self.toHistory()
+     }
+     
+     print("DEBUG_PRINT: LeaveViewController.commemorativePhoteUpdate end")
+     }
+     */
+    // カメラがタップされたらカメラを起動して写真を取得
+    func updateCommemorativePhote() {
+        print("DEBUG_PRINT: LeaveViewController.updateCommemorativePhote start")
+        
+        let imageSelectViewController = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+        imageSelectViewController.delegate = self
+        self.navigationController?.pushViewController(imageSelectViewController, animated: true)
+        
+        print("DEBUG_PRINT: LeaveViewController.updateCommemorativePhote end")
+    }
     
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let image = info[UIImagePickerControllerEditedImage] {
+            setImage(image: image as! UIImage)
+        }
+        picker.dismiss(animated: true, completion: nil)
+    }
+    func setImage(image: UIImage){
+        self.photeImage = image
+        self.toHistory()
+    }
+    
+    
+
+}
+extension LeaveViewController: ImageSelectViewDelegate{
+    
+    func didCompletion(image :UIImage){
+        setImage(image: image)
+    }
 }
 

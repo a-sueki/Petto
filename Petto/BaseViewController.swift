@@ -273,7 +273,7 @@ class BaseFormViewController: FormViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear start")
         
-        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
             for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
                 if v {
                     let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
@@ -321,7 +321,7 @@ class BaseViewController: UIViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseViewController.viewWillDisappear start")
         
-        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag){
+        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
             for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
                 if v {
                     let ref = FIRDatabase.database().reference().child(Paths.LeavePath)

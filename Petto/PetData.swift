@@ -52,6 +52,8 @@ class PetData: NSObject {
     // EditView以外から更新
     // メッセージ情報
     var roomIds = [String:Bool]()
+    // おあずけヒストリー
+    var historys = [String:Bool]()
     
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: PetData.init start")
@@ -107,6 +109,9 @@ class PetData: NSObject {
         // メッセージ情報
         if let roomIds = valueDictionary["roomIds"] as? [String:Bool] {
             self.roomIds = roomIds
+        }
+        if let historys = valueDictionary["historys"] as? [String:Bool] {
+            self.historys = historys
         }
         // システム項目
         let createAt = valueDictionary["createAt"] as? String

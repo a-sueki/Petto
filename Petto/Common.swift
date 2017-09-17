@@ -36,5 +36,19 @@ struct DateCommon {
         
         return result
     }
+    
+    static func getIntervalDays(date:Date?,anotherDay:Date? = nil) -> Double {
+        
+        var retInterval:Double!
+        
+        if anotherDay == nil {
+            retInterval = date?.timeIntervalSinceNow
+        } else {
+            retInterval = date?.timeIntervalSince(anotherDay!)
+        }
+        let ret = retInterval/86400
+        
+        return floor(ret)  // n日
+    }
 
 }

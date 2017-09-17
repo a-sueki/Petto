@@ -76,6 +76,9 @@
 		84F6ACBE1EFD02630086BBB9 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACBD1EFD02630086BBB9 /* MessageUI.framework */; };
 		84F6ACC01EFD02690086BBB9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACBF1EFD02690086BBB9 /* OpenGLES.framework */; };
 		84F6ACC21EFD026F0086BBB9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F6ACC11EFD026F0086BBB9 /* QuartzCore.framework */; };
+		84FD62D51F6D05420006DB76 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FD62D41F6D05420006DB76 /* HistoryViewController.swift */; };
+		84FD62D81F6D09F30006DB76 /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FD62D61F6D09F30006DB76 /* HistoryTableViewCell.swift */; };
+		84FD62D91F6D09F30006DB76 /* HistoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84FD62D71F6D09F30006DB76 /* HistoryTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -165,6 +168,9 @@
 		84F6ACBF1EFD02690086BBB9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		84F6ACC11EFD026F0086BBB9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Petto-Bridging-Header.h"; sourceTree = "<group>"; };
+		84FD62D41F6D05420006DB76 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		84FD62D61F6D09F30006DB76 /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
+		84FD62D71F6D09F30006DB76 /* HistoryTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HistoryTableViewCell.xib; sourceTree = "<group>"; };
 		B81EF91AE6E4CACD52E5751F /* Pods-Petto.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Petto.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Petto/Pods-Petto.debug.xcconfig"; sourceTree = "<group>"; };
 		D1CF0AE273C1752201C0D265 /* Pods-Petto.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Petto.release.xcconfig"; path = "Pods/Target Support Files/Pods-Petto/Pods-Petto.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -261,6 +267,9 @@
 				847CA55D1F3ACD4E00C68672 /* LeaveViewController.swift */,
 				847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */,
 				847CA5651F3AFFE400C68672 /* ConditionsCollectionViewCell.xib */,
+				84FD62D41F6D05420006DB76 /* HistoryViewController.swift */,
+				84FD62D61F6D09F30006DB76 /* HistoryTableViewCell.swift */,
+				84FD62D71F6D09F30006DB76 /* HistoryTableViewCell.xib */,
 			);
 			name = Leave;
 			sourceTree = "<group>";
@@ -457,6 +466,7 @@
 				845F2E401F42C41100526C1F /* UserDetailHeader.xib in Resources */,
 				847CA5671F3AFFE500C68672 /* ConditionsCollectionViewCell.xib in Resources */,
 				840AB7F01F418475002EC329 /* PetDetailHeader.xib in Resources */,
+				84FD62D91F6D09F30006DB76 /* HistoryTableViewCell.xib in Resources */,
 				8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -558,6 +568,8 @@
 				84A847F71F2826A900D898EC /* MyPetListTableViewCell.swift in Sources */,
 				847CA5661F3AFFE500C68672 /* ConditionsCollectionViewCell.swift in Sources */,
 				84A847F41F28251200D898EC /* MyPetListViewController.swift in Sources */,
+				84FD62D51F6D05420006DB76 /* HistoryViewController.swift in Sources */,
+				84FD62D81F6D09F30006DB76 /* HistoryTableViewCell.swift in Sources */,
 				84D6CD331F18F7E3000CA101 /* CustomCells.swift in Sources */,
 				84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */,
 				84B577211F5C23350008622D /* LeaveData.swift in Sources */,

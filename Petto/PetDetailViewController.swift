@@ -330,7 +330,6 @@ class PetDetailViewController: BaseFormViewController {
                 $0.value = self.petData?.notices ?? nil
                 $0.disabled = true
            }
-           
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -342,6 +341,18 @@ class PetDetailViewController: BaseFormViewController {
                }.onCellSelection { [weak self] (cell, row) in
                     row.section?.form?.validate()
                     self?.toMessages()
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "あずかり人のレビューを見る"
+                row.hidden = .function([""], { form -> Bool in
+                    if self.petData != nil, self.petData?.historys != nil, !(self.petData?.historys.isEmpty)! {
+                        return false
+                    }else{
+                        return true
+                    }
+                })
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.toHistory()
             }
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.title = "もどる"
@@ -473,6 +484,18 @@ class PetDetailViewController: BaseFormViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func toHistory() {
+        print("DEBUG_PRINT: PetDetailViewController.toHistory start")
+
+        // historyに画面遷移
+        let historyViewController = self.storyboard?.instantiateViewController(withIdentifier: "History") as! HistoryViewController
+        historyViewController.petData = self.petData
+        self.navigationController?.pushViewController(historyViewController, animated: true)
+        
+        print("DEBUG_PRINT: PetDetailViewController.toHistory end")
+    }
+    
 }
 
 class PetDetailViewNib: UIView {

@@ -1,21 +1,32 @@
 import UIKit
 
 let start = "2017-09-16 13:55:01 +0900"
+let end = "2017-10-17 13:55:01 +0900"
+let dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+func stringToDate(_ string:String, dateFormat: String ) -> Date {
+    
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = dateFormat
+    
+    return dateFormatter.date(from: string)!
+}
 
-let y = start.substring(with: start.index(start.startIndex, offsetBy: 0)..<start.index(start.endIndex, offsetBy: -21))
-print(y)
 
-let m = start.substring(with: start.index(start.startIndex, offsetBy: 5)..<start.index(start.endIndex, offsetBy: -18))
-print(m)
+func getIntervalDays(date:Date?,anotherDay:Date? = nil) -> Double {
+    
+    var retInterval:Double!
+    
+    if anotherDay == nil {
+        retInterval = date?.timeIntervalSinceNow
+    } else {
+        retInterval = date?.timeIntervalSince(anotherDay!)
+    }
+    
+    let ret = retInterval/86400
+    
+    return floor(ret)  // n日
+}
 
-let d = start.substring(with: start.index(start.startIndex, offsetBy: 8)..<start.index(start.endIndex, offsetBy: -15))
-print(d)
+let result = getIntervalDays(date: stringToDate(start,dateFormat: dateFormat), anotherDay: stringToDate(end,dateFormat: dateFormat))
 
-let h = start.substring(with: start.index(start.startIndex, offsetBy: 11)..<start.index(start.endIndex, offsetBy: -12))
-print(h)
-
-let mm = start.substring(with: start.index(start.startIndex, offsetBy: 14)..<start.index(start.endIndex, offsetBy: -9))
-print(mm)
-
-let a = Int(d)! - 1
-print(a)
+print(result)
