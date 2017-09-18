@@ -52,6 +52,8 @@ class PetData: NSObject {
     var roomIds = [String:Bool]()
     // おあずけヒストリー
     var historys = [String:Bool]()
+    // おあずけ中フラグ
+    var runningFlag: Bool?
     
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: PetData.init start")
@@ -109,6 +111,7 @@ class PetData: NSObject {
         if let historys = valueDictionary["historys"] as? [String:Bool] {
             self.historys = historys
         }
+        self.runningFlag = valueDictionary["runningFlag"] as? Bool
         // システム項目
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)

@@ -37,6 +37,13 @@ struct DateCommon {
         return result
     }
     
+    static func displayShortDate(stringDate: String) -> String {
+        
+        let result = stringDate.substring(to: stringDate.index(stringDate.startIndex, offsetBy: 10))
+        
+        return result
+    }
+    
     static func getIntervalDays(date:Date?,anotherDay:Date? = nil) -> Double {
         
         var retInterval:Double!

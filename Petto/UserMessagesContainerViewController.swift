@@ -126,7 +126,7 @@ class UserMessagesContainerViewController: UIViewController {
             view.addSubview(topViewController.view)
             topViewController.didMove(toParentViewController: self)
             topViewController.view.frame = CGRect(x: 0, y: 40, width: view.frame.width, height: 260)
-            topViewController.tableView.contentOffset = CGPoint(x: 0, y: topViewController.tableView.contentSize.height - topViewController.tableView.frame.size.height)            
+            topViewController.tableView.contentOffset = CGPoint(x: 0, y: topViewController.tableView.contentSize.height - topViewController.tableView.frame.size.height)
             // ViewController②をContainerViewControllerの子として追加
             underViewController.roomData = self.roomData
             addChildViewController(underViewController)

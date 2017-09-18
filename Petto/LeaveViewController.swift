@@ -466,6 +466,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualStartDate/": Date().description,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
                             "/\(Paths.PetPath)/\(self.leaveData!.petId!)/historys/\(self.leaveData!.id!)": true,
+                            "/\(Paths.PetPath)/\(self.leaveData!.petId!)/runningFlag/": true,
                             "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": true] as [String : Any]
         ref.updateChildValues(childUpdates)
         // 全てのモーダルを閉じる
@@ -524,6 +525,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                             "/\(Paths.LeavePath)/\(id!)/userBadInt/": bad.count,
                             "/\(Paths.LeavePath)/\(id!)/actualEndDate/": Date().description,
                             "/\(Paths.LeavePath)/\(id!)/updateAt/": String(time),
+                            "/\(Paths.PetPath)/\(self.leaveData!.petId!)/runningFlag/": false,
                             "/\(Paths.UserPath)/\(uid!)/goods/": good,
                             "/\(Paths.UserPath)/\(uid!)/bads/": bad,
                             "/\(Paths.UserPath)/\(uid!)/todoRoomIds/\(id!)/": false,
@@ -629,6 +631,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                             "/\(Paths.LeavePath)/\(id!)/userBadInt/": bad.count,
                             "/\(Paths.LeavePath)/\(id!)/actualEndDate/": Date().description,
                             "/\(Paths.LeavePath)/\(id!)/updateAt/": String(time),
+                            "/\(Paths.PetPath)/\(self.leaveData!.petId!)/runningFlag/": false,
                             "/\(Paths.UserPath)/\(uid!)/goods/": good,
                             "/\(Paths.UserPath)/\(uid!)/bads/": bad,
                             "/\(Paths.UserPath)/\(uid!)/todoRoomIds/\(id!)/": false,

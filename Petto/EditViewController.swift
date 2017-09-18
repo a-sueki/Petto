@@ -659,6 +659,8 @@ class EditViewController: BaseFormViewController {
             self.inputData["createAt"] = String(data.createAt!.timeIntervalSinceReferenceDate)
             self.inputData["createBy"] = data.createBy
             self.inputData["roomIds"] = data.roomIds
+            self.inputData["historys"] = data.historys
+            self.inputData["runningFlag"] = data.runningFlag
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // pet初期化&更新

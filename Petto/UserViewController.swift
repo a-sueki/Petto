@@ -468,8 +468,6 @@ class UserViewController: BaseFormViewController  {
                     ref.updateChildValues(roomUpdateData1)
                 }
             }
-            //TODO: todo更新
-            //TODO: history更新
             
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "プロフィールを更新しました")

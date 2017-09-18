@@ -64,8 +64,8 @@ class HomeCollectionViewCell: UICollectionViewCell {
                 let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
                 bandLabel.backgroundColor = UIColor.black
                 bandLabel.alpha = 0.9
-                bandLabel.font = UIFont(name: "Gill Sans", size: 14)
-                bandLabel.text = "During sleepover"
+                bandLabel.font = UIFont(name: "Gill Sans", size: 15)
+                bandLabel.text = "inative"
                 bandLabel.textColor = UIColor.white
                 bandLabel.textAlignment = NSTextAlignment.center
                 self.petImageView.addSubview(bandLabel)
@@ -79,8 +79,20 @@ class HomeCollectionViewCell: UICollectionViewCell {
                 self.petImageView.image = UIImage(ciImage: myOutputImage)
             }
         }
-        
+        if petData.runningFlag != nil ,  petData.runningFlag! {
+            // おあずけ中
+            let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
+            bandLabel.backgroundColor = UIColor.yellow
+            bandLabel.alpha = 0.9
+            bandLabel.font = UIFont(name: "Gill Sans", size: 15)
+            bandLabel.text = "out now"
+            bandLabel.textColor = UIColor.black
+            bandLabel.textAlignment = NSTextAlignment.center
+            self.petImageView.addSubview(bandLabel)
+        }
+
+    
         print("DEBUG_PRINT: HomeCollectionViewCell.setPetData end")
     }
-    
+
 }

@@ -71,26 +71,32 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
             // HUDで処理中を表示
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childAdded, with: { snapshot in
+            ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.value, with: { snapshot in
                 print("DEBUG_PRINT: HomeViewController.read .childAddedイベントが発生しました。")
                 
+                // petDataクラスを生成して受け取ったデータを設定する
                 if let _ = snapshot.value {
-                    // petDataクラスを生成して受け取ったデータを設定する
-                    let petData = PetData(snapshot: snapshot, myId: snapshot.key)
-                    self.petDataArray.insert(petData, at: 0)
-                 }
-                DispatchQueue.main.async {
-                    print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
-                    // collectionViewを再表示する
-                    self.collectionView.reloadData()
-                    SVProgressHUD.dismiss()
+                    self.petDataArray.removeAll()
+                    for childSnap in snapshot.children {
+                        
+                        let petData = PetData(snapshot: childSnap as! FIRDataSnapshot , myId: (childSnap as! FIRDataSnapshot).key)
+                        self.petDataArray.insert(petData, at: 0)
+                        
+                        DispatchQueue.main.async {
+                            print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
+                            // collectionViewを再表示する
+                            self.collectionView.reloadData()
+                            SVProgressHUD.dismiss()
+                        }
+                    }
                 }
+                
             }) { (error) in
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
 
-            // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
+/*            // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してcollectionViewを再表示する
             // HUDで処理中を表示
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childChanged, with: { snapshot in
@@ -124,6 +130,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
+ */
         
         print("DEBUG_PRINT: HomeViewController.read end")
     }
