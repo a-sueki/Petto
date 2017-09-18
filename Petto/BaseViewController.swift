@@ -176,7 +176,7 @@ class NavigationBarHandler: NSObject {
             content.body = "明日がペット（\(leaveData.petName!)）の引き渡し日です！"
         }
         content.sound = UNNotificationSound.default()
-        content.badge = 29
+        content.badge = 1
         
         // 通知スタイルを指定
         let request = UNNotificationRequest(identifier: "petto-\(leaveData.id!)", content: content, trigger: trigger)
