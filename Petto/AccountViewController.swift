@@ -11,7 +11,6 @@ import Eureka
 import Firebase
 import FirebaseDatabase
 import SVProgressHUD
-//import CoreLocation
 
 class AccountViewController: BaseFormViewController {
     
@@ -126,9 +125,48 @@ class AccountViewController: BaseFormViewController {
                     }
             }
             
-            +++ Section()
+            
+            +++ Section(){
+                $0.hidden = .function([""], { form -> Bool in
+                    if FIRAuth.auth()?.currentUser == nil {
+                        return false
+                    }else{
+                        return true
+                    }
+                })
+            }
             <<< ButtonRow() { (row: ButtonRow) -> Void in
-                row.title = "OK"
+                row.title = "ログイン"
+                }.onCellSelection { [weak self] (cell, row) in
+                    if let error = row.section?.form?.validate() , error.count != 0 {
+                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        print("DEBUG_PRINT: AccountViewController.viewDidLoad \(error)のため処理は行いません")
+                    }else{
+                        self?.login()
+                    }
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "アカウント作成"
+                }.onCellSelection { [weak self] (cell, row) in
+                    if let error = row.section?.form?.validate() , error.count != 0 {
+                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        print("DEBUG_PRINT: AccountViewController.viewDidLoad \(error)のため処理は行いません")
+                    }else{
+                        self?.createUser()
+                    }
+            }
+            
+            +++ Section(){
+                $0.hidden = .function([""], { form -> Bool in
+                    if FIRAuth.auth()?.currentUser != nil {
+                        return false
+                    }else{
+                        return true
+                    }
+                })
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "保存する"
                 }.onCellSelection { [weak self] (cell, row) in
                     if let error = row.section?.form?.validate() , error.count != 0 {
                         SVProgressHUD.showError(withStatus: "入力を修正してください")
@@ -136,7 +174,26 @@ class AccountViewController: BaseFormViewController {
                     }else{
                         self?.executeUpdate()
                     }
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "ログアウト"
+                }.onCellSelection { [weak self] (cell, row) in
+                    if let error = row.section?.form?.validate() , error.count != 0 {
+                        SVProgressHUD.showError(withStatus: "入力を修正してください")
+                        print("DEBUG_PRINT: AccountViewController.viewDidLoad \(error)のため処理は行いません")
+                    }else{
+                        self?.logout()
+                    }
         }
+        
+            +++ Section()
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "パスワードを忘れた場合"
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.passwordReset()
+        }
+        
+
         print("DEBUG_PRINT: AccountViewController.viewDidLoad end")
     }
     
@@ -144,9 +201,261 @@ class AccountViewController: BaseFormViewController {
         _ = navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func login(){
+        print("DEBUG_PRINT: AccountViewController.login start")
+        
+        for (key,value) in form.values() {
+            if case let itemValue as String = value {
+                self.inputData["\(key)"] = itemValue
+            }
+        }
+        
+        let address = self.inputData["mail"] as! String
+        let password = self.inputData["password"] as! String
+        
+        
+        // アドレスとパスワード名のいずれかでも入力されていない時は何もしない
+        if address.characters.isEmpty || password.characters.isEmpty {
+            SVProgressHUD.showError(withStatus: "ログイン情報を入力して下さい")
+            return
+        }else if isValidEmailAddress(emailAddressString: address) == false {
+            SVProgressHUD.showError(withStatus: "メールアドレスが無効です")
+            return
+        }else if password.characters.count < 6 || password.characters.count > 12 {
+            SVProgressHUD.showError(withStatus: "パスワードは6〜12文字にして下さい")
+            return
+        }
+        
+        FIRAuth.auth()?.signIn(withEmail: address, password: password) { user, error in
+            if let error = error {
+                print("DEBUG_PRINT: " + error.localizedDescription)
+                SVProgressHUD.showError(withStatus: "ログインに失敗しました")
+                return
+            } else {
+                print("DEBUG_PRINT: ログインに成功しました")
+                
+                // Firebaseから登録済みデータを取得
+                if let uid = user?.uid {
+                    SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+                    let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+                    ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                        print("DEBUG_PRINT: LoginViewController.handleLoginButton .observeSingleEventイベントが発生しました。")
+                        if let _ = snapshot.value as? NSDictionary {
+                            let userData = UserData(snapshot: snapshot, myId: uid)
+                            
+                            UserDefaults.standard.set(false , forKey: DefaultString.GuestFlag)
+                            // ユーザーデフォルト設定（アカウント項目）
+                            UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
+                            UserDefaults.standard.set(address , forKey: DefaultString.Mail)
+                            UserDefaults.standard.set(password , forKey: DefaultString.Password)
+                            UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
+                            // ユーザーデフォルト設定（ユーザー項目（必須））
+                            UserDefaults.standard.set(userData.sex , forKey: DefaultString.Sex)
+                            UserDefaults.standard.set(userData.firstname , forKey: DefaultString.Firstname)
+                            UserDefaults.standard.set(userData.lastname , forKey: DefaultString.Lastname)
+                            UserDefaults.standard.set(userData.birthday , forKey: DefaultString.Birthday)
+                            UserDefaults.standard.set(userData.area , forKey: DefaultString.Area)
+                            UserDefaults.standard.set(userData.age , forKey: DefaultString.Age)
+                            if userData.hasAnotherPet != nil {
+                                UserDefaults.standard.set(userData.hasAnotherPet , forKey: DefaultString.HasAnotherPet)
+                            }
+                            if userData.isExperienced != nil {
+                                UserDefaults.standard.set(userData.isExperienced , forKey: DefaultString.IsExperienced)
+                            }
+                            UserDefaults.standard.set(userData.expectTo , forKey: DefaultString.ExpectTo)
+                            UserDefaults.standard.set(userData.enterDetails , forKey: DefaultString.EnterDetails)
+                            UserDefaults.standard.set(userData.createAt , forKey: DefaultString.CreateAt)
+                            UserDefaults.standard.set(userData.createBy , forKey: DefaultString.CreateBy)
+                            UserDefaults.standard.set(userData.updateAt , forKey: DefaultString.UpdateAt)
+                            UserDefaults.standard.set(userData.updateBy , forKey: DefaultString.UpdateBy)
+                            // ユーザーデフォルト設定（ユーザー項目（任意））
+                            if !userData.ngs.isEmpty {
+                                UserDefaults.standard.set(userData.ngs , forKey: DefaultString.Ngs)
+                            }
+                            if !userData.userEnvironments.isEmpty {
+                                UserDefaults.standard.set(userData.userEnvironments , forKey: DefaultString.UserEnvironments)
+                            }
+                            if !userData.userTools.isEmpty {
+                                UserDefaults.standard.set(userData.userTools , forKey: DefaultString.UserTools)
+                            }
+                            if !userData.userNgs.isEmpty {
+                                UserDefaults.standard.set(userData.userNgs , forKey: DefaultString.UserNgs)
+                            }
+                            UserDefaults.standard.set(userData.withSearch , forKey: DefaultString.WithSearch)
+                            if !userData.myPets.isEmpty {
+                                UserDefaults.standard.set(userData.myPets , forKey: DefaultString.MyPets)
+                            }
+                            if !userData.roomIds.isEmpty {
+                                UserDefaults.standard.set(userData.roomIds , forKey: DefaultString.RoomIds)
+                            }
+                            if !userData.unReadRoomIds.isEmpty {
+                                UserDefaults.standard.set(userData.unReadRoomIds , forKey: DefaultString.UnReadRoomIds)
+                            }
+                            if !userData.todoRoomIds.isEmpty {
+                                UserDefaults.standard.set(userData.todoRoomIds , forKey: DefaultString.TodoRoomIds)
+                            }
+                            if !userData.goods.isEmpty {
+                                UserDefaults.standard.set(userData.goods , forKey: DefaultString.Goods)
+                            }
+                            if !userData.bads.isEmpty {
+                                UserDefaults.standard.set(userData.bads , forKey: DefaultString.Bads)
+                            }
+                        }else{
+                            UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
+                            // ユーザーデフォルト設定（アカウント項目）
+                            UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
+                            UserDefaults.standard.set(address , forKey: DefaultString.Mail)
+                            UserDefaults.standard.set(password , forKey: DefaultString.Password)
+                            UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
+                        }
+                        DispatchQueue.main.async {
+                            // 全てのモーダルを閉じる
+                            UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+                            // HUDを消す
+                            SVProgressHUD.dismiss()
+                            // HOMEに画面遷移
+                            let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+                            self.navigationController?.pushViewController(viewController2, animated: true)
+                        }
+                    }) { (error) in
+                        print(error.localizedDescription)
+                        SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
+                    }
+                }else{
+                    UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
+                }
+            }
+        }
+        
+        print("DEBUG_PRINT: AccountViewController.login end")
+    }
+    
+    @IBAction func createUser(){
+        print("DEBUG_PRINT: AccountViewController.createUser start")
+        
+        
+        for (key,value) in form.values() {
+            if case let itemValue as String = value {
+                self.inputData["\(key)"] = itemValue
+            }
+        }
+        
+        let address = self.inputData["mail"] as! String
+        let password = self.inputData["password"] as! String
+        let displayName = self.inputData["displayName"] as! String
+        
+        // アドレスとパスワード名のいずれかでも入力されていない時は何もしない
+        if address.characters.isEmpty || password.characters.isEmpty {
+            SVProgressHUD.showError(withStatus: "ログイン情報を入力して下さい")
+            return
+        }else if isValidEmailAddress(emailAddressString: address) == false {
+            SVProgressHUD.showError(withStatus: "メールアドレスが無効です")
+            return
+        }else if password.characters.count < 6 || password.characters.count > 12 {
+            SVProgressHUD.showError(withStatus: "パスワードは6〜12文字にして下さい")
+            return
+        }
+        
+        // アドレスとパスワードでユーザー作成。ユーザー作成に成功すると、自動的にログインする
+        FIRAuth.auth()?.createUser(withEmail: address, password: password) { user, error in
+            if let error = error {
+                // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
+                print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton " + error.localizedDescription)
+                if error.localizedDescription == "The email address is already in use by another account." {
+                    SVProgressHUD.showError(withStatus: "そのアカウントは既に存在します")
+                } else {
+                    SVProgressHUD.showError(withStatus: "メールアドレスかパスワードが無効です")
+                }
+                return
+            }
+            
+            // 確認メール送信
+            if let user = FIRAuth.auth()?.currentUser {
+                if !user.isEmailVerified {
+                    let alertVC = UIAlertController(title: "仮登録が成功しました", message: "上記アドレスに確認メールを送信しました。\nメール内のURLをクリックし、登録を完了してください。", preferredStyle: .alert)
+                    let alertActionOkay = UIAlertAction(title: "OK", style: .default) {
+                        (_) in
+                        user.sendEmailVerification(completion: nil)
+                    }
+                    let alertActionCancel = UIAlertAction(title: "キャンセル", style: .default, handler: nil)
+                    alertVC.addAction(alertActionOkay)
+                    alertVC.addAction(alertActionCancel)
+                    self.present(alertVC, animated: true, completion: nil)
+                } else {
+                    // HUDで送信完了を表示する
+                    SVProgressHUD.showSuccess(withStatus: "アカウントを作成しました")
+                }
+            }
+            
+            let uid = FIRAuth.auth()?.currentUser?.uid
+            // ユーザーデフォルト設定（アカウント項目）
+            UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
+            UserDefaults.standard.set(uid! , forKey: DefaultString.Uid)
+            UserDefaults.standard.set(address , forKey: DefaultString.Mail)
+            UserDefaults.standard.set(password , forKey: DefaultString.Password)
+            UserDefaults.standard.set(displayName , forKey: DefaultString.DisplayName)
+            UserDefaults.standard.set(false , forKey: DefaultString.WithSearch)
+            
+            // 表示名を設定する
+            let user = FIRAuth.auth()?.currentUser
+            if let user = user {
+                let changeRequest = user.profileChangeRequest()
+                changeRequest.displayName = displayName
+                changeRequest.commitChanges { error in
+                    if let error = error {
+                        print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton " + error.localizedDescription)
+                    }
+                    print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton [displayName = \(user.displayName!)]の設定に成功しました。")
+                }
+            } else {
+                print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton displayNameの設定に失敗しました。")
+            }
+            
+        }
+        
+        print("DEBUG_PRINT: AccountViewController.createUser end")
+    }
+    @IBAction func logout(){
+        print("DEBUG_PRINT: AccountViewController.logout start")
+        
+        if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil {
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
+            ref.removeAllObservers()
+            let ref2 = FIRDatabase.database().reference().child(Paths.PetPath)
+            ref2.removeAllObservers()
+        }
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        // HUDを消す
+        SVProgressHUD.dismiss()
+        
+        // ログアウト
+        do {
+            try FIRAuth.auth()?.signOut()
+            // HOMEに画面遷移
+            let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+            self.navigationController?.pushViewController(viewController2, animated: true)
+            
+        }catch let error as NSError {
+            print("\(error.localizedDescription)")
+        }
+        
+        print("DEBUG_PRINT: AccountViewController.logout end")
+    }
+    
+    @IBAction func passwordReset(){
+        print("DEBUG_PRINT: AccountViewController.passwordReset start")
+        
+        self.view.endEditing(true)
+        // PasswordResetに画面遷移
+        let passwordResetViewController = self.storyboard?.instantiateViewController(withIdentifier: "PasswordReset") as! PasswordResetViewController
+        present(passwordResetViewController, animated: true, completion: nil)
+        
+        print("DEBUG_PRINT: AccountViewController.passwordReset end")
+    }
+    
     @IBAction func executeUpdate() {
         print("DEBUG_PRINT: AccountViewController.executeUpdate start")
-
         
         // アカウント情報の修正
         for (key,value) in form.values() {
@@ -167,7 +476,7 @@ class AccountViewController: BaseFormViewController {
                                     print("DEBUG_PRINT: " + error.localizedDescription)
                                     // HUDで完了を知らせる
                                     SVProgressHUD.showError(withStatus: "ニックネームの更新に失敗しました")
-                               }
+                                }
                                 print("DEBUG_PRINT: [displayName = \(user.displayName!)]の設定に成功しました。")
                                 // ユーザーデフォルト設定（アカウント項目）
                                 UserDefaults.standard.set(itemValue , forKey: DefaultString.DisplayName)
@@ -227,7 +536,7 @@ class AccountViewController: BaseFormViewController {
                 }
             }
         }
-                
+        
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         // HUDを消す
@@ -244,6 +553,44 @@ class AccountViewController: BaseFormViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("DEBUG_PRINT: AccountViewController.viewWillDisappear start")
+        
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            ref.removeAllObservers()
+        }
+        
+        print("DEBUG_PRINT: AccountViewController.viewWillDisappear end")
+    }
+    
+    func isValidEmailAddress(emailAddressString: String) -> Bool {
+        print("DEBUG_PRINT: AccountViewController.isValidEmailAddress start")
+        
+        var returnValue = true
+        let emailRegEx = "[A-Z0-9a-z.-_]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}"
+        
+        do {
+            let regex = try NSRegularExpression(pattern: emailRegEx)
+            let nsString = emailAddressString as NSString
+            let results = regex.matches(in: emailAddressString, range: NSRange(location: 0, length: nsString.length))
+            
+            if results.count == 0
+            {
+                returnValue = false
+            }
+            
+        } catch let error as NSError {
+            print("invalid regex: \(error.localizedDescription)")
+            returnValue = false
+        }
+        print("DEBUG_PRINT: AccountViewController.isValidEmailAddress end")
+        return  returnValue
+    }
+    
+    
 }
 
 class AccountView: UIView {

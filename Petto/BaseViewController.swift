@@ -83,7 +83,7 @@ class NavigationBarHandler: NSObject {
                     
                     // 通知バッジ
                     self.setNotificationBatch(button: button1, unReadCount: unReadRoomIds ,todoCount: todoRoomIds)
-
+                    
                 }
             }) { (error) in
                 print(error.localizedDescription)
@@ -256,16 +256,15 @@ class BaseFormViewController: FormViewController {
         if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || FIRAuth.auth()?.currentUser == nil{
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
-            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
-            }
-        }else{
-            // ナビゲーションバーを表示
-            helper.viewController = self
-            helper.setupNavigationBar()
         }
+        // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
+        /*            DispatchQueue.main.async {
+         let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+         self.present(loginViewController!, animated: true, completion: nil)
+         }
+         */         // ナビゲーションバーを表示
+        helper.viewController = self
+        helper.setupNavigationBar()
         print("DEBUG_PRINT: BaseFormViewController.viewDidAppear end")
     }
     
@@ -304,15 +303,14 @@ class BaseViewController: UIViewController {
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
             // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-            DispatchQueue.main.async {
-                let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-                self.present(loginViewController!, animated: true, completion: nil)
-            }
-        }else{
-            // ナビゲーションバーを表示
-            helper.viewController = self
-            helper.setupNavigationBar()
-        }
+            /*            DispatchQueue.main.async {
+             let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+             self.present(loginViewController!, animated: true, completion: nil)
+             }
+             */        }
+        // ナビゲーションバーを表示
+        helper.viewController = self
+        helper.setupNavigationBar()
         
         print("DEBUG_PRINT: BaseViewController.viewDidAppear end")
     }

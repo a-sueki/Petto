@@ -16,11 +16,12 @@ import SVProgressHUD
 class PetDetailViewController: BaseFormViewController {
     
     var petData: PetData?
+    var observing = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
-
+        
         // ユーザプロパティを設定
         FIRAnalytics.setUserPropertyString("A", forName: "firstMessage")
         
@@ -70,7 +71,7 @@ class PetDetailViewController: BaseFormViewController {
                 $0.value = self.petData?.isAvailable ?? false
                 $0.disabled = true
             }
-
+            
             +++
             Section(header: "おあずけ人募集期間", footer: "期間外では、自動的にあずかり人募集表示がOFFになります"){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
@@ -184,7 +185,7 @@ class PetDetailViewController: BaseFormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
                     return row.value ?? false == false
                 })
-        }
+            }
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
                 $0.value = self.petData?.isVaccinated ?? false
@@ -320,7 +321,7 @@ class PetDetailViewController: BaseFormViewController {
                 $0.textAreaHeight = .dynamic(initialTextViewHeight: 50)
                 $0.value = self.petData?.notices ?? nil
                 $0.disabled = true
-           }
+            }
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
@@ -329,7 +330,7 @@ class PetDetailViewController: BaseFormViewController {
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
                 })
-               }.onCellSelection { [weak self] (cell, row) in
+                }.onCellSelection { [weak self] (cell, row) in
                     row.section?.form?.validate()
                     self?.toMessages()
             }
@@ -353,24 +354,28 @@ class PetDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear start")
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear start")
+
+        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) && FIRAuth.auth()?.currentUser != nil {
+            if !observing {
+                // roomIdを取得
+                let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
+                let pid = (self.petData?.id)!
+                let roomId = uid! + pid
+                let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+                roomRef.removeAllObservers()
+            }
+        }
         
-        // roomIdを取得
-        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
-        let pid = (self.petData?.id)!
-        let roomId = uid! + pid
-        let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
-        roomRef.removeAllObservers()
-        
-        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear end")
+        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear end")
     }
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
-
+    
     @IBAction func back() {
         print("DEBUG_PRINT: PetDetailViewController.back start")
         
@@ -388,83 +393,97 @@ class PetDetailViewController: BaseFormViewController {
     @IBAction func toMessages() {
         print("DEBUG_PRINT: PetDetailViewController.toMessages start")
         
-        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
-            kFIRParameterContentType: "send" as NSObject,
-            kFIRParameterItemID: "1" as NSObject
-            ])
-
-        let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessages") as! MessagesViewController
-        let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
-        let userMessagesContainerViewController = UserMessagesContainerViewController(top: consentViewController, under: messagesViewController)
-
-        // roomIdを取得
-        let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
-        let pid = (self.petData?.id)!
-        let roomId = uid! + pid
-        
-        if self.petData?.createBy == uid {
-            SVProgressHUD.showError(withStatus: "このペットの飼い主はあなたです")
+        if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            // ユーザープロフィールが存在しない場合はクリック不可
+            let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
+            self.navigationController?.pushViewController(userViewController, animated: true)
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "飼い主さんとのやりとりには、プロフィール登録が必要です。")
+            SVProgressHUD.dismiss(withDelay: 3)
+        }else if FIRAuth.auth()?.currentUser == nil {
+            let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
+            let navigationController = UINavigationController(rootViewController: accountViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "先にログインして下さい")
+            SVProgressHUD.dismiss(withDelay: 3)
         }else{
-            // HUDで処理中を表示
-            SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            // roomDataの取得
-            let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
-            roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
-                print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。")
-                if let _ = snapshot.value as? NSDictionary {
-                    print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを取得")
-
-                    // roomDataをセットして画面遷移
-                    userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot, myId: roomId)
-                    self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
-                    
-                }else{
-                    print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを新規作成")
-                    var inputData = [String : Any]()
-                    let time = NSDate.timeIntervalSinceReferenceDate
-                    
-                    inputData["userId"] = uid
-                    inputData["userName"] = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
-//                    inputData["userImageString"] = UserDefaults.standard.string(forKey: DefaultString.ImageString)
-                    inputData["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
-                    inputData["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
-                    inputData["userSex"] = UserDefaults.standard.string(forKey: DefaultString.Sex)
-                    inputData["userGoodInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Goods)
-                    inputData["userBadInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Bads)
-                    inputData["petId"] = pid
-                    inputData["petName"] = self.petData?.name
-                    inputData["breederId"] = self.petData?.createBy
-                    inputData["lastMessage"] = " "
-                    inputData["createAt"] = String(time)
-                    inputData["updateAt"] = String(time)
-                    
-                    // roomをinsert
-                    let ref = FIRDatabase.database().reference()
-                    ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
-                    // user,petをupdate
-                    let childUpdates = ["/\(Paths.UserPath)/\(uid!)/roomIds/\(roomId)/": true,
-                                        "/\(Paths.PetPath)/\(pid)/roomIds/\(roomId)/":true,
-                                        "/\(Paths.UserPath)/\(self.petData!.createBy!)/roomIds/\(roomId)/": true]
-                    ref.updateChildValues(childUpdates)
-                    
-                    // roomDataの取得
-                    roomRef.observeSingleEvent(of: .value, with: { (snapshot2) in
-                        print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。（２）")
-                        if let _ = snapshot2.value as? NSDictionary {
-                            
-                            // roomDataをセットして画面遷移
-                            userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot2, myId: roomId)
-                            self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
-                            
-                        }
-                    })
-                }
-            }) { (error) in
-                print(error.localizedDescription)
-            }
+            FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
+                kFIRParameterContentType: "send" as NSObject,
+                kFIRParameterItemID: "1" as NSObject
+                ])
             
-            // HUDを消す
-            SVProgressHUD.dismiss()
+            let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessages") as! MessagesViewController
+            let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
+            let userMessagesContainerViewController = UserMessagesContainerViewController(top: consentViewController, under: messagesViewController)
+            
+            // roomIdを取得
+            let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
+            let pid = (self.petData?.id)!
+            let roomId = uid! + pid
+            
+            if self.petData?.createBy == uid {
+                SVProgressHUD.showError(withStatus: "このペットの飼い主はあなたです")
+            }else{
+                self.observing = true
+                // HUDで処理中を表示
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
+                // roomDataの取得
+                let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+                roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。")
+                    if let _ = snapshot.value as? NSDictionary {
+                        print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを取得")
+                        
+                        // roomDataをセットして画面遷移
+                        userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot, myId: roomId)
+                        self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
+                        
+                    }else{
+                        print("DEBUG_PRINT: PetDetailViewController.toMessages roomDataを新規作成")
+                        var inputData = [String : Any]()
+                        let time = NSDate.timeIntervalSinceReferenceDate
+                        
+                        inputData["userId"] = uid
+                        inputData["userName"] = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
+                        inputData["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
+                        inputData["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
+                        inputData["userSex"] = UserDefaults.standard.string(forKey: DefaultString.Sex)
+                        inputData["userGoodInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Goods)
+                        inputData["userBadInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Bads)
+                        inputData["petId"] = pid
+                        inputData["petName"] = self.petData?.name
+                        inputData["breederId"] = self.petData?.createBy
+                        inputData["lastMessage"] = " "
+                        inputData["createAt"] = String(time)
+                        inputData["updateAt"] = String(time)
+                        
+                        // roomをinsert
+                        let ref = FIRDatabase.database().reference()
+                        ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
+                        // user,petをupdate
+                        let childUpdates = ["/\(Paths.UserPath)/\(uid!)/roomIds/\(roomId)/": true,
+                                            "/\(Paths.PetPath)/\(pid)/roomIds/\(roomId)/":true,
+                                            "/\(Paths.UserPath)/\(self.petData!.createBy!)/roomIds/\(roomId)/": true]
+                        ref.updateChildValues(childUpdates)
+                        
+                        // roomDataの取得
+                        roomRef.observeSingleEvent(of: .value, with: { (snapshot2) in
+                            print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。（２）")
+                            if let _ = snapshot2.value as? NSDictionary {
+                                
+                                // roomDataをセットして画面遷移
+                                userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot2, myId: roomId)
+                                self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
+                                self.observing = false
+                            }
+                        })
+                    }
+                }) { (error) in
+                    print(error.localizedDescription)
+                }
+                
+                // HUDを消す
+                SVProgressHUD.dismiss()
+            }
         }
         
         print("DEBUG_PRINT: PetDetailViewController.toMessages end")
@@ -477,7 +496,7 @@ class PetDetailViewController: BaseFormViewController {
     
     @IBAction func toHistory() {
         print("DEBUG_PRINT: PetDetailViewController.toHistory start")
-
+        
         // historyに画面遷移
         let historyViewController = self.storyboard?.instantiateViewController(withIdentifier: "History") as! HistoryViewController
         historyViewController.petData = self.petData

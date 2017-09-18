@@ -69,7 +69,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         let ref = FIRDatabase.database().reference().child(Paths.PetPath)
         
-        if FIRAuth.auth()?.currentUser != nil {
             // HUDで処理中を表示
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.childAdded, with: { snapshot in
@@ -125,7 +124,6 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 print(error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
-        }
         
         print("DEBUG_PRINT: HomeViewController.read end")
     }
@@ -353,19 +351,24 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     @IBAction func registerButton(_ sender: Any) {
         print("DEBUG_PRINT: HomeViewController.registerButton start")
-        
-        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+
+        // ユーザープロフィールが未作成の場合
+        if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
+            self.navigationController?.pushViewController(userViewController, animated: true)
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "ペットの投稿にはプロフィール作成が必要です")
+            SVProgressHUD.dismiss(withDelay: 3)
+        }else if FIRAuth.auth()?.currentUser == nil {
+            let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
+            let navigationController = UINavigationController(rootViewController: accountViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "先にログインして下さい")
+            SVProgressHUD.dismiss(withDelay: 3)
+        }else{
             // ペット登録に画面遷移
             let editViewController = self.storyboard?.instantiateViewController(withIdentifier: "Edit") as! EditViewController
             self.navigationController?.pushViewController(editViewController, animated: true)
-        }else{
-            // ユーザープロフィールが存在しない場合はクリック不可
-            SVProgressHUD.show(RandomImage.getRandomImage(), status: "プロフィールを登録してください")
-            let userViewController = self.storyboard?.instantiateViewController(withIdentifier: "User") as! UserViewController
-            self.navigationController?.pushViewController(userViewController, animated: true)
         }
-        // HUDを消す
-        SVProgressHUD.dismiss(withDelay: 1)
         
         print("DEBUG_PRINT: HomeViewController.registerButton end")
     }

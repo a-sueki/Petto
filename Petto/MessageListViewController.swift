@@ -21,9 +21,6 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         print("DEBUG_PRINT: MessageListViewController.viewDidLoad start")
         
-        print(super.helper.myUserData?.area)
-        
-        
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
@@ -39,11 +36,8 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: MessageListViewController.viewWillAppear start")
         
-        print(super.helper.myUserData?.area)
-        print(UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds))
-        
         if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) == nil || UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)?.count == 0 {
-            SVProgressHUD.showError(withStatus: "まだメッセージがありません")
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだメッセージはありません")
         }
         self.roomDataArray.removeAll()
         self.read()

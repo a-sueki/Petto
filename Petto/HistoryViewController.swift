@@ -205,7 +205,7 @@ class HistoryViewController: BaseViewController, UITableViewDelegate, UITableVie
         print("DEBUG_PRINT: HistoryViewController.read end")
     }
     
-    // カメラがタップされたらカメラを起動して写真を取得
+/*    // カメラがタップされたらカメラを起動して写真を取得
     func handleCameraButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: HistoryViewController.handleLeaveInfoButton start")
         
@@ -239,7 +239,7 @@ class HistoryViewController: BaseViewController, UITableViewDelegate, UITableVie
         self.image = image
     }
 
-/*
+
     //デリゲートメソッド
     func userCommentTextFeildDidEndEditing(cell: HistoryTableViewCell, value:String) {
         print("DEBUG_PRINT: HistoryViewController.userCommentTextFeildDidEndEditing start")
@@ -309,7 +309,7 @@ class HistoryViewController: BaseViewController, UITableViewDelegate, UITableVie
     }
 */
 }
-
+/*
 extension HistoryViewController: ImageSelectViewDelegate{
     
     func didCompletion(image :UIImage){
@@ -317,3 +317,4 @@ extension HistoryViewController: ImageSelectViewDelegate{
     }
     
 }
+ */

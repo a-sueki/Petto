@@ -173,7 +173,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
                     let senderId = messageData.senderId
                     let senderDisplayName = messageData.senderDisplayName
                     let date = messageData.timestamp! as Date
-                    if messageData.text == "[写真が届いています]" {
+                    if messageData.text == nil {
                         let view = UIImageView()
                         view.sd_setImage(with: StorageRef.getRiversRef(key: messageData.id!), placeholderImage: StorageRef.placeholderImage)
                         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: view.image))

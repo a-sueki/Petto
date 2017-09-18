@@ -82,9 +82,9 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
             }
             // HUDを消す
             SVProgressHUD.dismiss()
-            // ログイン画面に遷移
-            let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-            self.present(loginViewController!, animated: true, completion: nil)
+            // HOMEに画面遷移
+            let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+            self.navigationController?.pushViewController(viewController2, animated: true)
             
             print("DEBUG_PRINT: PasswordResetViewController.handleOkButtond end")
         }
@@ -117,9 +117,9 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
         print("DEBUG_PRINT: PasswordResetViewController.handleCancelButton start")
         
         self.view.endEditing(true)
-        // ログイン画面に遷移
-        let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-        self.present(loginViewController!, animated: true, completion: nil)
+        // HOMEに画面遷移
+        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: PasswordResetViewController.handleCancelButton end")
     }

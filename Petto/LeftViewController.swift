@@ -20,7 +20,7 @@ enum LeftMenu: Int {
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var mainViewController: UINavigationController!
-    var menus = ["Account","Profile", "My pet", "Message", "Oazuke / Azukari", "Logout"]
+    var menus = ["Account","Profile", "My pet", "Message", "Oazuke / Azukari"]
     var myUserData: UserData?
     
     @IBOutlet weak var tableView: UITableView!
@@ -145,7 +145,13 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 2:
             // ユーザープロフィールが未作成の場合
             if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.showInfo(withStatus: "プロフィール登録が必要です")
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだペット投稿はありません。")
+            }else if FIRAuth.auth()?.currentUser == nil {
+                let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
+                let navigationController = UINavigationController(rootViewController: accountViewController)
+                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "先にログインして下さい")
+                SVProgressHUD.dismiss(withDelay: 3)
             }else{
                 let postViewController = self.storyboard?.instantiateViewController(withIdentifier: "MyPetList") as! MyPetListViewController
                 let navigationController = UINavigationController(rootViewController: postViewController)
@@ -154,7 +160,13 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 3:
             // ユーザープロフィールが未作成の場合
             if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.showInfo(withStatus: "プロフィール登録が必要です")
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだメッセージはありません。")
+            }else if FIRAuth.auth()?.currentUser == nil {
+                let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
+                let navigationController = UINavigationController(rootViewController: accountViewController)
+                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "先にログインして下さい")
+                SVProgressHUD.dismiss(withDelay: 3)
             }else{
                 let messageListViewController = self.storyboard?.instantiateViewController(withIdentifier: "MessageList") as! MessageListViewController
                 let navigationController = UINavigationController(rootViewController: messageListViewController)
@@ -163,20 +175,18 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 4:
             // ユーザープロフィールが未作成の場合
             if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.showInfo(withStatus: "プロフィール登録が必要です")
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだ予定はありません。")
+            }else if FIRAuth.auth()?.currentUser == nil {
+                let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
+                let navigationController = UINavigationController(rootViewController: accountViewController)
+                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+                SVProgressHUD.show(RandomImage.getRandomImage(), status: "先にログインして下さい")
+                SVProgressHUD.dismiss(withDelay: 3)
             }else{
                 let todoListViewController = self.storyboard?.instantiateViewController(withIdentifier: "TodoList") as! TodoListViewController
                 let navigationController = UINavigationController(rootViewController: todoListViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             }
-        case 5:
-            if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil {
-                let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
-                ref.removeAllObservers()
-                let ref2 = FIRDatabase.database().reference().child(Paths.PetPath)
-                ref2.removeAllObservers()
-            }
-            logout()
         default:
             break
         }
@@ -206,22 +216,6 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLayoutSubviews()
         //self.imageHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)
         self.view.layoutIfNeeded()
-    }
-    
-    func logout() {
-        print("DEBUG_PRINT: LeftViewController.logout start")
-        
-        // ログアウト
-        do {
-            try FIRAuth.auth()?.signOut()
-            let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-            self.present(loginViewController!, animated: true, completion: nil)
-            
-        }catch let error as NSError {
-            print("\(error.localizedDescription)")
-        }
-        
-        print("DEBUG_PRINT: LeftViewController.logout end")
     }
 }
 

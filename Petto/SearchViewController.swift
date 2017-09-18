@@ -463,7 +463,7 @@ class SearchViewController: BaseFormViewController {
                     }
                 }
                 // UIImage
-            }else if case let itemValue as UIImage = value {
+            }else if case let _ as UIImage = value {
                 // Bool
             }else if case let v as Bool = value {
                 switch key {

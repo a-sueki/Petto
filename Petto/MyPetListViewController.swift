@@ -41,7 +41,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
             }
         }else{
             //roomが0件の時は「メッセージ送受信はありません」を表示
-            SVProgressHUD.showError(withStatus: "まだメッセージがありません")
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだペットを投稿していません")
         }
         
         print("DEBUG_PRINT: MyPetListViewController.viewDidLoad end")

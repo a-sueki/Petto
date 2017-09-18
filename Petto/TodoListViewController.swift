@@ -38,7 +38,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
 
         super.helper.setupNavigationBar()
         if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) == nil || UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.count == 0 {
-            SVProgressHUD.showError(withStatus: "まだTODOがありません")
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "ペットのおあずけ/おあずかり予定はありません")
         }
         self.leaveDataArray.removeAll()
         self.read()
