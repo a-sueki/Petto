@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseStorageUI
 
 class MessageListTableViewCell: UITableViewCell {
 

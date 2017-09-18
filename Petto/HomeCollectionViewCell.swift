@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
+import FirebaseStorageUI
 
 class HomeCollectionViewCell: UICollectionViewCell {
     

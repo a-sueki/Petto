@@ -10,6 +10,7 @@ import UIKit
 import Eureka
 import Firebase
 import FirebaseDatabase
+import FirebaseStorageUI
 import SVProgressHUD
 import Toucan
 

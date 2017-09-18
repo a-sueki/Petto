@@ -10,8 +10,10 @@ import UIKit
 import SwiftyJSON
 import Firebase
 import FirebaseDatabase
+import FirebaseStorageUI
 import JSQMessagesViewController
 import SVProgressHUD
+import Toucan
 
 class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDelegate {
     
@@ -81,24 +83,25 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         self.collectionView?.reloadData()
         self.collectionView?.layoutIfNeeded()
         self.collectionView?.collectionViewLayout.springinessEnabled = true
+
+        // roomDataからメッセージを取得
+        getMessages()
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad end")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        // roomDataからメッセージを取得
-        getMessages()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear start")
         
         let ref = FIRDatabase.database().reference()
+        
         if self.messages.count == 0 {
             // Roomの削除
-            ref.child(Paths.RoomPath).child((self.roomData?.id)!).removeValue()
+//            ref.child(Paths.RoomPath).child((self.roomData?.id)!).removeValue()
             ref.child(Paths.MessagePath).child((self.roomData?.id)!).removeValue()
             ref.child(Paths.UserPath).child((self.roomData?.userId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
             ref.child(Paths.PetPath).child((self.roomData?.petId)!).child("roomIds").child((self.roomData?.id)!).removeValue()
@@ -123,6 +126,8 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         print("DEBUG_PRINT: MessagesViewController.viewDidDisappear start")
         print("DEBUG_PRINT: MessagesViewController.viewDidDisappear end")
     }
+    
+
     
     func gestureRecognizer(_: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith shouldRecognizeSimultaneouslyWithGestureRecognizer:UIGestureRecognizer) -> Bool {
         return true
@@ -178,6 +183,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
                         view.sd_setImage(with: StorageRef.getRiversRef(key: messageData.id!), placeholderImage: StorageRef.placeholderImage)
                         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: view.image))
                         self.messages.append(message!)
+                        self.finishReceivingMessage()
                     }else{
                         let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: messageData.text)
                         self.messages.append(message!)
@@ -235,9 +241,10 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         inputData["timestamp"] = String(time)
         
         let lastMessage = "[写真が届いています]"
-        
+        let photeImage = Toucan(image: image).resize(CGSize(width: 200, height: 200), fitMode: Toucan.Resize.FitMode.clip).image
+
         // Firebase連携
-        updateMessageData(inputData: inputData ,lastMessage: lastMessage, image: image)
+        updateMessageData(inputData: inputData ,lastMessage: lastMessage, image: photeImage)
         
         // 更新
         finishSendingMessage(animated: true)

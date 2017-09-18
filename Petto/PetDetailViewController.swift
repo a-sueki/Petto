@@ -11,6 +11,7 @@ import UIKit
 import Eureka
 import Firebase
 import FirebaseDatabase
+import FirebaseStorageUI
 import SVProgressHUD
 
 class PetDetailViewController: BaseFormViewController {
@@ -354,10 +355,20 @@ class PetDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear start")
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear start")
 
+        print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear end")
+    }
+    
+    func multipleSelectorDone(_ item:UIBarButtonItem) {
+        _ = navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func back() {
+        print("DEBUG_PRINT: PetDetailViewController.back start")
+        
         if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) && FIRAuth.auth()?.currentUser != nil {
             if !observing {
                 // roomIdを取得
@@ -368,16 +379,6 @@ class PetDetailViewController: BaseFormViewController {
                 roomRef.removeAllObservers()
             }
         }
-        
-        print("DEBUG_PRINT: PetDetailViewController.viewDidDisappear end")
-    }
-    
-    func multipleSelectorDone(_ item:UIBarButtonItem) {
-        _ = navigationController?.popViewController(animated: true)
-    }
-    
-    @IBAction func back() {
-        print("DEBUG_PRINT: PetDetailViewController.back start")
         
         FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
             kFIRParameterContentType: "send" as NSObject,
@@ -469,9 +470,9 @@ class PetDetailViewController: BaseFormViewController {
                         roomRef.observeSingleEvent(of: .value, with: { (snapshot2) in
                             print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。（２）")
                             if let _ = snapshot2.value as? NSDictionary {
-                                
+                                let roomData = RoomData(snapshot: snapshot2, myId: roomId)
                                 // roomDataをセットして画面遷移
-                                userMessagesContainerViewController.roomData = RoomData(snapshot: snapshot2, myId: roomId)
+                                userMessagesContainerViewController.roomData = roomData
                                 self.navigationController?.pushViewController(userMessagesContainerViewController, animated: true)
                                 self.observing = false
                             }
