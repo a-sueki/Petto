@@ -23,8 +23,6 @@ class BookingViewController: BaseFormViewController {
         print("DEBUG_PRINT: BookingViewController.viewDidLoad start")
         
         self.showLeaveData()
-        // 一番下までスクロール
-        self.tableView.contentOffset = CGPoint(x: 0, y: self.tableView.contentSize.height)
 
         print("DEBUG_PRINT: BookingViewController.viewDidLoad end")
     }
