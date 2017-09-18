@@ -442,7 +442,7 @@ class PetDetailViewController: BaseFormViewController {
                     inputData["userBadInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Bads)
                     inputData["petId"] = pid
                     inputData["petName"] = self.petData?.name
-                    inputData["petImageString"] = self.petData?.imageString
+//                    inputData["petImageString"] = self.petData?.imageString
                     inputData["breederId"] = self.petData?.createBy
                     inputData["lastMessage"] = " "
                     inputData["createAt"] = String(time)

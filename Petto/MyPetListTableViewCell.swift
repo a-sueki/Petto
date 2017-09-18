@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseStorageUI
+
 
 class MyPetListTableViewCell: UITableViewCell {
     
@@ -33,8 +35,11 @@ class MyPetListTableViewCell: UITableViewCell {
     
     //表示される時の値をセット
     func setData(petData: PetData) {
+
+        let storageRef = FIRStorage.storage().reference(forURL: "gs://petto-5a42d.appspot.com")
+        let imageRef = storageRef.child("images/\(petData.id).jpg")
         
-        self.photoImageView.image = petData.image
+        self.photoImageView.sd_setImage(with: imageRef)
         self.nameLabel.text = petData.name
 
     }

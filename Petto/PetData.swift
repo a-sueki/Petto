@@ -62,8 +62,33 @@ class PetData: NSObject {
         let valueDictionary = snapshot.value as! [String: AnyObject]
         
         // ペット基本情報
-        imageString = valueDictionary["imageString"] as? String
-        self.image = UIImage(data: NSData(base64Encoded: imageString!, options: .ignoreUnknownCharacters)! as Data)
+//        imageString = valueDictionary["imageString"] as? String
+/*
+        var ima: UIImage?
+        let storage = FIRStorage.storage()
+        let storageRef = storage.reference(forURL: "gs://petto-5a42d.appspot.com/")
+        print("\(String(describing: self.id))")
+        let riversRef = storageRef.child("images/\(self.id!).jpg")
+        riversRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
+            if error != nil {
+                print(error!)
+            } else {
+                ima = UIImage(data: data!)
+                print("Image Downloaded Succesfully")
+            }
+        }
+        self.image = ima
+*/
+/*
+        let url = valueDictionary["imageString"] as? String
+        let url2 = NSURL(string: url!)
+        let data = NSData(contentsOf: url2! as URL)
+        if data != nil {
+            self.image = UIImage(data: data! as Data)
+            print("Image Downloaded Succesfully")
+        }
+*/
+        
         self.area = valueDictionary["area"] as? String
         self.name = valueDictionary["name"] as? String
         self.kind = valueDictionary["kind"] as? String

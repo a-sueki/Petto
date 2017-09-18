@@ -8,6 +8,8 @@
 
 import Foundation
 import SCLAlertView
+import Firebase
+import FirebaseDatabase
 
 struct Paths {
     static let PetPath = "pet"
@@ -61,6 +63,17 @@ struct RandomImage {
     static func getRandomImage() -> UIImage {
         let index = Int(arc4random_uniform(UInt32(all.count)))
         return UIImage(named: all[index])!
+    }
+}
+
+struct StorageRef{
+    static let storage = FIRStorage.storage()
+    static let storageRef = storage.reference(forURL: "gs://petto-5a42d.appspot.com/")
+    static let placeholderImage = UIImage(named: "placeholder")
+
+    static func getRiversRef(key: String) -> FIRStorageReference {
+        let riversRef = storageRef.child("images/\(key).jpg")
+        return riversRef
     }
 }
 

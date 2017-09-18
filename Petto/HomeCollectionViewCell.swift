@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseDatabase
 
 class HomeCollectionViewCell: UICollectionViewCell {
     
@@ -33,8 +35,9 @@ class HomeCollectionViewCell: UICollectionViewCell {
         for subview in subviews {
             subview.removeFromSuperview()
         }
-        
-        self.petImageView.image = petData.image
+
+        // imageをstorageから直接ロード
+        self.petImageView.sd_setImage(with: StorageRef.getRiversRef(key: petData.id!), placeholderImage: StorageRef.placeholderImage)
         self.areaLabel.text = petData.area
         if petData.kind == "イヌ" {
             self.kindImageView.image = UIImage(named: "dog-lightgray")
@@ -55,23 +58,25 @@ class HomeCollectionViewCell: UICollectionViewCell {
             }
         } else {
             self.termLabel.text = "期間外"
-            // 帯を追加
-            let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
-            bandLabel.backgroundColor = UIColor.black
-            bandLabel.alpha = 0.9
-            bandLabel.font = UIFont(name: "Gill Sans", size: 14)
-            bandLabel.text = "During sleepover"
-            bandLabel.textColor = UIColor.white
-            bandLabel.textAlignment = NSTextAlignment.center
-            self.petImageView.addSubview(bandLabel)
-            
-            // 写真をグレーアウト
-            let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")!
-            myMonochromeFilter.setValue(CIImage(image: petData.image!), forKey: kCIInputImageKey)
-            myMonochromeFilter.setValue(CIColor(red: 0.3, green: 0.3, blue: 0.3), forKey: kCIInputColorKey)
-            myMonochromeFilter.setValue(1.0, forKey: kCIInputIntensityKey)
-            let myOutputImage : CIImage = myMonochromeFilter.outputImage!
-            self.petImageView.image = UIImage(ciImage: myOutputImage)            
+            if self.petImageView.image != nil , self.petImageView.image != StorageRef.placeholderImage {
+                // 帯を追加
+                let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
+                bandLabel.backgroundColor = UIColor.black
+                bandLabel.alpha = 0.9
+                bandLabel.font = UIFont(name: "Gill Sans", size: 14)
+                bandLabel.text = "During sleepover"
+                bandLabel.textColor = UIColor.white
+                bandLabel.textAlignment = NSTextAlignment.center
+                self.petImageView.addSubview(bandLabel)
+                
+                // 写真をグレーアウト
+                let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")!
+                myMonochromeFilter.setValue(CIImage(image: self.petImageView.image!), forKey: kCIInputImageKey)
+                myMonochromeFilter.setValue(CIColor(red: 0.3, green: 0.3, blue: 0.3), forKey: kCIInputColorKey)
+                myMonochromeFilter.setValue(1.0, forKey: kCIInputIntensityKey)
+                let myOutputImage : CIImage = myMonochromeFilter.outputImage!
+                self.petImageView.image = UIImage(ciImage: myOutputImage)
+            }
         }
         
         print("DEBUG_PRINT: HomeCollectionViewCell.setPetData end")

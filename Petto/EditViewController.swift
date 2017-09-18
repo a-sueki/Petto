@@ -20,7 +20,7 @@ class EditViewController: BaseFormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: EditViewController.viewDidLoad start")
-                
+                        
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
             cell.contentView.backgroundColor = .red
@@ -564,6 +564,8 @@ class EditViewController: BaseFormViewController {
     @IBAction func executePost() {
         print("DEBUG_PRINT: EditViewController.executePost start")
         
+        var photeImage: UIImage?
+        
         for (key,value) in form.values() {
             if value == nil {
                 //break
@@ -577,9 +579,7 @@ class EditViewController: BaseFormViewController {
                 }
                 // UIImage
             }else if case let itemValue as UIImage = value {
-                let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
-                let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                self.inputData["imageString"] = imageString
+                photeImage = itemValue
                 // Bool
             }else if case let v as Bool = value {
                 switch key {
@@ -675,6 +675,34 @@ class EditViewController: BaseFormViewController {
             self.inputData["updateBy"] = uid!
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
+            
+            // imageをアップロード
+/*            let storage = FIRStorage.storage()
+            let storageRef = storage.reference(forURL: "gs://petto-5a42d.appspot.com/")
+            if let data = UIImageJPEGRepresentation(photeImage!, 0.25) {
+                let riversRef = storageRef.child("images/\(key).jpg")
+                _ = riversRef.put(data , metadata: nil) { (metadata, error) in
+                    if error != nil {
+                        print("Image Uploaded Error")
+                        print(error!)
+                    } else {
+                        print("Image Uploaded Succesfully")
+                    }
+                }
+            }
+*/            
+            if let data = UIImageJPEGRepresentation(photeImage!, 0.25) {
+                StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+                    if error != nil {
+                        print("Image Uploaded Error")
+                        print(error!)
+                    } else {
+                        print("Image Uploaded Succesfully")
+                    }
+                }
+            }
+            
+        
             // insert
             ref.child(Paths.PetPath).child(key).setValue(self.inputData)
             //ユーザのmyPetsIdを追加
@@ -692,7 +720,7 @@ class EditViewController: BaseFormViewController {
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "ペット情報を投稿しました")
         }
-        
+
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         
