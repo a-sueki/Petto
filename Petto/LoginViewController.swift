@@ -114,7 +114,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                                 UserDefaults.standard.set(password , forKey: DefaultString.Password)
                                 UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
                                 // ユーザーデフォルト設定（ユーザー項目（必須））
-                                UserDefaults.standard.set(userData.imageString , forKey: DefaultString.ImageString)
                                 UserDefaults.standard.set(userData.sex , forKey: DefaultString.Sex)
                                 UserDefaults.standard.set(userData.firstname , forKey: DefaultString.Firstname)
                                 UserDefaults.standard.set(userData.lastname , forKey: DefaultString.Lastname)

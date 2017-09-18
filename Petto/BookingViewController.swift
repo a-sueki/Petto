@@ -171,12 +171,11 @@ class BookingViewController: BaseFormViewController {
         let messagesViewController: MessagesViewController
         messagesViewController = MessagesViewController()
         messagesViewController.roomData = self.roomData
-        messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText)
+        messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText, image: nil)
         
         // leaveDataをinsert
         self.inputData["userId"] = self.roomData?.userId
         self.inputData["userName"] = self.roomData?.userName
-        self.inputData["userImageString"] = self.roomData?.userImageString
         self.inputData["userAge"] = self.roomData?.userAge
         self.inputData["userArea"] = self.roomData?.userArea
         self.inputData["userSex"] = self.roomData?.userSex
@@ -184,7 +183,6 @@ class BookingViewController: BaseFormViewController {
         self.inputData["userBadInt"] = self.roomData?.userBadInt
         self.inputData["petId"] = self.roomData?.petId
         self.inputData["petName"] = self.roomData?.petName
-        self.inputData["petImageString"] = self.roomData?.petImageString
         self.inputData["breederId"] = self.roomData?.breederId
         self.inputData["suggestFlag"] = true
         self.inputData["acceptFlag"] = false

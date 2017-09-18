@@ -464,9 +464,6 @@ class SearchViewController: BaseFormViewController {
                 }
                 // UIImage
             }else if case let itemValue as UIImage = value {
-                let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
-                let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                self.inputData["imageString"] = imageString
                 // Bool
             }else if case let v as Bool = value {
                 switch key {

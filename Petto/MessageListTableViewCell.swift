@@ -51,14 +51,15 @@ class MessageListTableViewCell: UITableViewCell {
         self.petImageView.layer.cornerRadius = 25.0
         self.petImageView.layer.masksToBounds = true
        
-        self.userImageView.image = roomData.userImage
+        // imageをstorageから直接ロード
+        self.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: roomData.userId!), placeholderImage: StorageRef.placeholderImage)
         self.userNameLabel.text = roomData.userName
 
-        //TODO: 評価カウントをセット
-        self.goodIntLabel.text = "10" //String(roomData.userGoodInt)
-        self.badIntLabel.text = "3" //String(roomData.userBadInt)
+        //　評価カウントをセット
+        self.goodIntLabel.text = String(roomData.userGoodInt ?? 0)
+        self.badIntLabel.text = String(roomData.userBadInt ?? 0)
         self.userProfile.text = roomData.userArea! + " | " + roomData.userSex! + " | " + roomData.userAge! + "才"
-        self.petImageView.image = roomData.petImage
+        self.petImageView.sd_setImage(with: StorageRef.getRiversRef(key: roomData.petId!), placeholderImage: StorageRef.placeholderImage)
         self.petNameLabel.text = roomData.petName
         
         self.sendTimeLabel.text = DateCommon.dateToString(roomData.updateAt! as Date, dateFormat: DateCommon.displayDateFormat)

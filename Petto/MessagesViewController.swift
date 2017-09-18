@@ -51,14 +51,30 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         
         if checkSender(){
             // 自分のアバター画像設定
-            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.roomData?.userImage, diameter: 64)
+            let view = UIImageView()
+            if let key = self.roomData?.userId {
+                view.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
+            }
+            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: view.image, diameter: 64)
             // 相手のアバター画像設定
-            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.roomData?.petImage, diameter: 64)
+            let view2 = UIImageView()
+            if let key = self.roomData?.petId {
+                view2.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
+            }
+            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: view2.image, diameter: 64)
         }else{
             // 自分のアバター画像設定
-            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.roomData?.petImage, diameter: 64)
+            let view = UIImageView()
+            if let key = self.roomData?.petId {
+                view.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
+            }
+            self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: view.image, diameter: 64)
             // 相手のアバター画像設定
-            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.roomData?.userImage, diameter: 64)
+            let view2 = UIImageView()
+            if let key = self.roomData?.userId {
+                view2.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
+            }
+            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: view2.image, diameter: 64)
         }
         // 一番下までスクロールして表示
         automaticallyScrollsToMostRecentMessage = true
@@ -157,11 +173,13 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
                     let senderId = messageData.senderId
                     let senderDisplayName = messageData.senderDisplayName
                     let date = messageData.timestamp! as Date
-                    if let image = messageData.image {
-                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: image))
+                    if messageData.text == "[写真が届いています]" {
+                        let view = UIImageView()
+                        view.sd_setImage(with: StorageRef.getRiversRef(key: messageData.id!), placeholderImage: StorageRef.placeholderImage)
+                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, media: JSQPhotoMediaItem(image: view.image))
                         self.messages.append(message!)
-                    }else if let text = messageData.text {
-                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: text)
+                    }else{
+                        let message = JSQMessage(senderId: senderId, senderDisplayName: senderDisplayName, date: date, text: messageData.text)
                         self.messages.append(message!)
                         self.finishReceivingMessage()
                     }
@@ -195,7 +213,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         inputData["timestamp"] = String(time)
         
         // Firebase連携
-        updateMessageData(inputData: inputData, lastMessage: text)
+        updateMessageData(inputData: inputData, lastMessage: text, image: nil)
         
         // 更新
         finishSendingMessage(animated: true)
@@ -210,19 +228,16 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         let imageMessage = JSQMessage(senderId: senderId, displayName: senderDisplayName, media: JSQPhotoMediaItem(image: image))
         messages.append(imageMessage!)
         // データセット
-        let imageData = UIImageJPEGRepresentation(image , 0.5)
-        let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
         let time = NSDate.timeIntervalSinceReferenceDate
         var inputData = [String : Any]()  //message
         inputData["senderId"] = senderId
         inputData["senderDisplayName"] = senderDisplayName
-        inputData["imageString"] = imageString
         inputData["timestamp"] = String(time)
         
         let lastMessage = "[写真が届いています]"
         
         // Firebase連携
-        updateMessageData(inputData: inputData ,lastMessage: lastMessage)
+        updateMessageData(inputData: inputData ,lastMessage: lastMessage, image: image)
         
         // 更新
         finishSendingMessage(animated: true)
@@ -231,13 +246,30 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         print("DEBUG_PRINT: MessagesViewController.sendImageMessage end")
     }
     
-    func updateMessageData(inputData: [String : Any], lastMessage: String ){
+    func storageUpload(photeImage: UIImage, key: String){
+        
+        if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
+            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+                if error != nil {
+                    print("Image Uploaded Error")
+                    print(error!)
+                } else {
+                    print("Image Uploaded Succesfully")
+                }
+            }
+        }
+    }
+    
+    func updateMessageData(inputData: [String : Any], lastMessage: String ,image: UIImage?){
         print("DEBUG_PRINT: MessagesViewController.updateMessageData start")
         
         // messageをinsert
         let ref = FIRDatabase.database().reference()
         let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
         ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
+        if image != nil {
+            storageUpload(photeImage: image!, key: key)
+        }
         
         // room,user,petをupdate
         if checkSender() {

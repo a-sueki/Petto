@@ -24,23 +24,13 @@ class UserDetailViewController: BaseFormViewController {
         // フォーム
         form +++
             Section() {
-                if let _ = UserDefaults.standard.string(forKey: DefaultString.ImageString) {
+                if let key = self.userData?.id, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
                     var header = HeaderFooterView<UserDetailViewNib>(.nibFile(name: "UserDetailHeader", bundle: nil))
                     header.onSetupView = { (view, section) -> () in
-                        let imageString = UserDefaults.standard.string(forKey: DefaultString.ImageString)!
-                        let image = UIImage(data: NSData(base64Encoded: imageString, options: .ignoreUnknownCharacters)! as Data)!
-                        view.userImageView.image = image
+                        view.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
                         
                         view.userImageView.alpha = 1;
-                        /*                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
-                         view?.userImageView.alpha = 1
-                         })
-                         view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-                         UIView.animate(withDuration: 1.0, animations: { [weak view] in
-                         view?.layer.transform = CATransform3DIdentity
-                         })
-                         */
-                    }
+                     }
                     $0.header = header
                 }
             }
@@ -180,8 +170,6 @@ class UserDetailViewController: BaseFormViewController {
                     let _ = to.view
                     to.tableView?.isUserInteractionEnabled = false
             }
-            
-            
             
             //TODO:Petto利用履歴
             +++ Section()

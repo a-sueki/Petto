@@ -12,6 +12,7 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 import SCLAlertView
+import Toucan
 
 class LeaveViewController: BaseViewController,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
     
@@ -96,8 +97,9 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
             // 自分がブリーダーの場合
             self.termLabel.text = "おあずけ期間"
         }
-        self.userImageView.image = self.leaveData?.userImage
-        self.petImageView.image = self.leaveData?.petImage
+        // imageをstorageから直接ロード
+        self.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: (self.leaveData?.userId)!), placeholderImage: StorageRef.placeholderImage)
+        self.petImageView.sd_setImage(with: StorageRef.getRiversRef(key: (self.leaveData?.petId)!), placeholderImage: StorageRef.placeholderImage)
         self.startDateLabel.text = "開始：" + DateCommon.displayDate(stringDate: (self.leaveData?.startDate)!)
         self.endDateLabel.text = "終了：" + DateCommon.displayDate(stringDate: (self.leaveData?.endDate)!)
 
@@ -147,7 +149,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                 // 自分があずかり人の場合
                 self.excuteButton.setTitle("思い出フォトをアップする！", for: .normal)
                 self.excuteButton.isEnabled = true
-                if self.leaveData?.commemorativePhoteString != nil {
+                if self.leaveData?.userComment != nil || self.leaveData?.breederComment != nil {
                     self.cancelButton.setTitle("思い出フォトを確認する", for: .normal)
                     self.cancelButton.backgroundColor = UIColor(red: 1.0, green: 0.498, blue: 0.314, alpha: 1.0)
                     self.cancelButton.isEnabled = true
@@ -172,7 +174,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                 self.excuteButton.isEnabled = true
             }
             // cancel
-            if self.leaveData?.commemorativePhoteString != nil {
+            if self.leaveData?.userComment != nil || self.leaveData?.breederComment != nil {
                 self.cancelButton.setTitle("思い出フォトを確認する", for: .normal)
                 self.cancelButton.backgroundColor = UIColor(red: 1.0, green: 0.498, blue: 0.314, alpha: 1.0)
                 self.cancelButton.isEnabled = true
@@ -504,19 +506,27 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     
     func completeUpdateFIR(breederComment: String?, goods: [String]?, bads: [String]? ){
         print("DEBUG_PRINT: LeaveViewController.completeUpdateFIR start")
-        
+
+        let id = self.leaveData?.id!
+        let uid = self.leaveData?.userId!
+        let bid = self.leaveData?.breederId!
+        let good = goods ?? []
+        let bad = bads ?? []
+        let com = breederComment ?? "[コメントはありません]"
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
         let ref = FIRDatabase.database().reference()
-        let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": false,
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/completeFlag/": true,
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/breederComment/": breederComment ?? "[コメントはありません]",
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualEndDate/": Date().description,
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
-                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/goods/": goods ?? [],
-                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/bads/": bads ?? [],
-                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": false,
-                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/todoRoomIds/\(self.leaveData!.id!)/": false] as [String : Any]
+        let childUpdates = ["/\(Paths.LeavePath)/\(id!)/runningFlag/": false,
+                            "/\(Paths.LeavePath)/\(id!)/completeFlag/": true,
+                            "/\(Paths.LeavePath)/\(id!)/breederComment/": com,
+                            "/\(Paths.LeavePath)/\(id!)/userGoodInt/": good.count,
+                            "/\(Paths.LeavePath)/\(id!)/userBadInt/": bad.count,
+                            "/\(Paths.LeavePath)/\(id!)/actualEndDate/": Date().description,
+                            "/\(Paths.LeavePath)/\(id!)/updateAt/": String(time),
+                            "/\(Paths.UserPath)/\(uid!)/goods/": good,
+                            "/\(Paths.UserPath)/\(uid!)/bads/": bad,
+                            "/\(Paths.UserPath)/\(uid!)/todoRoomIds/\(id!)/": false,
+                            "/\(Paths.UserPath)/\(bid!)/todoRoomIds/\(id!)/": false] as [String : Any]
         ref.updateChildValues(childUpdates)
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
@@ -602,19 +612,28 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     func abortUpdateFIR(breederComment: String?, goods: [String]?, bads: [String]? ){
         print("DEBUG_PRINT: LeaveViewController.abortUpdateFIR start")
         
+        let id = self.leaveData?.id!
+        let uid = self.leaveData?.userId!
+        let bid = self.leaveData?.breederId!
+        let good = goods ?? []
+        let bad = bads ?? []
+        let com = breederComment ?? "[コメントはありません]"
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
         let ref = FIRDatabase.database().reference()
-        let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": false,
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/abortFlag/": true,
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/breederComment/": breederComment ?? "[コメントはありません]",
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualEndDate/": Date().description,
-                            "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
-                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/goods/": goods ?? [],
-                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/bads/": bads ?? [],
-                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": false,
-                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/todoRoomIds/\(self.leaveData!.id!)/": false] as [String : Any]
+        let childUpdates = ["/\(Paths.LeavePath)/\(id!)/runningFlag/": false,
+                            "/\(Paths.LeavePath)/\(id!)/abortFlag/": true,
+                            "/\(Paths.LeavePath)/\(id!)/breederComment/": com,
+                            "/\(Paths.LeavePath)/\(id!)/userGoodInt/": good.count,
+                            "/\(Paths.LeavePath)/\(id!)/userBadInt/": bad.count,
+                            "/\(Paths.LeavePath)/\(id!)/actualEndDate/": Date().description,
+                            "/\(Paths.LeavePath)/\(id!)/updateAt/": String(time),
+                            "/\(Paths.UserPath)/\(uid!)/goods/": good,
+                            "/\(Paths.UserPath)/\(uid!)/bads/": bad,
+                            "/\(Paths.UserPath)/\(uid!)/todoRoomIds/\(id!)/": false,
+                            "/\(Paths.UserPath)/\(bid!)/todoRoomIds/\(id!)/": false] as [String : Any]
         ref.updateChildValues(childUpdates)
+
         // 全てのモーダルを閉じる
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
         // 前の画面に戻る
@@ -634,23 +653,31 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         
         if self.photeImage != nil {
             // leaveをupdate
-            let imageData = UIImageJPEGRepresentation(self.photeImage! , 0.5)
-            let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
+            storageUpload(photeImage: photeImage!, key: self.leaveData!.id!)
             let time = NSDate.timeIntervalSinceReferenceDate
             let ref = FIRDatabase.database().reference()
-            let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/commemorativePhoteString/": imageString,
-                                "/\(Paths.LeavePath)/\(self.leaveData!.id!)/userComment/": self.userComment ?? "[コメントはありません]",
+            let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/userComment/": self.userComment ?? "[コメントはありません]",
                                 "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time)] as [String : Any]
             ref.updateChildValues(childUpdates)
-            /*
-             let historyViewController = self.storyboard?.instantiateViewController(withIdentifier: "History") as! HistoryViewController
-             historyViewController.petData = self.petData
-             self.navigationController?.pushViewController(historyViewController, animated: true)
-             */
         }
         
         print("DEBUG_PRINT: LeaveViewController.toHistory end")
     }
+    
+    func storageUpload(photeImage: UIImage, key: String){
+        
+        if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
+            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+                if error != nil {
+                    print("Image Uploaded Error")
+                    print(error!)
+                } else {
+                    print("Image Uploaded Succesfully")
+                }
+            }
+        }
+    }
+
     /*    // カメラがタップされたらカメラを起動して写真を取得
      func commemorativePhoteUpdate() {
      print("DEBUG_PRINT: LeaveViewController.commemorativePhoteUpdate start")
@@ -682,7 +709,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         picker.dismiss(animated: true, completion: nil)
     }
     func setImage(image: UIImage){
-        self.photeImage = image
+        self.photeImage = Toucan(image: image).resize(CGSize(width: 200, height: 200), fitMode: Toucan.Resize.FitMode.clip).image
         self.toHistory()
     }
     

@@ -15,8 +15,6 @@ class LeaveData: NSObject {
     
     var userId: String?
     var userName: String?
-    var userImage: UIImage?
-    var userImageString: String?
     var userArea: String?
     var userAge: String?
     var userSex: String?
@@ -25,8 +23,6 @@ class LeaveData: NSObject {
 
     var petId: String?
     var petName: String?
-    var petImage: UIImage?
-    var petImageString: String?
     var breederId: String?
     
     var startDate: String?
@@ -41,8 +37,6 @@ class LeaveData: NSObject {
     var stopFlag: Bool?
     var abortFlag: Bool?
     
-    var commemorativePhote: UIImage?
-    var commemorativePhoteString: String?
     var userComment: String?
     var breederComment: String?
     
@@ -57,8 +51,6 @@ class LeaveData: NSObject {
         
         self.userId = valueDictionary["userId"] as? String
         self.userName = valueDictionary["userName"] as? String
-        userImageString = valueDictionary["userImageString"] as? String
-        self.userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
         self.userArea = valueDictionary["userArea"] as? String
         self.userAge = valueDictionary["userAge"] as? String
         self.userSex = valueDictionary["userSex"] as? String
@@ -68,8 +60,6 @@ class LeaveData: NSObject {
         
         self.petId = valueDictionary["petId"] as? String
         self.petName = valueDictionary["petName"] as? String
-        petImageString = valueDictionary["petImageString"] as? String
-        self.petImage = UIImage(data: NSData(base64Encoded: petImageString!, options: .ignoreUnknownCharacters)! as Data)
         self.breederId = valueDictionary["breederId"] as? String
         
         self.startDate = valueDictionary["startDate"] as? String
@@ -83,12 +73,7 @@ class LeaveData: NSObject {
         self.completeFlag = valueDictionary["completeFlag"] as? Bool
         self.stopFlag = valueDictionary["stopFlag"] as? Bool
         self.abortFlag = valueDictionary["abortFlag"] as? Bool
-        
-        
-        commemorativePhoteString = valueDictionary["commemorativePhoteString"] as? String
-        if commemorativePhoteString != nil {
-            self.commemorativePhote = UIImage(data: NSData(base64Encoded: commemorativePhoteString!, options: .ignoreUnknownCharacters)! as Data)
-        }
+                
         self.userComment = valueDictionary["userComment"] as? String
         self.breederComment = valueDictionary["breederComment"] as? String
 

@@ -119,7 +119,7 @@ class HistoryViewController: BaseViewController, UITableViewDelegate, UITableVie
         
         cell.setData(leaveData: self.leaveDataArray[indexPath.row])
         
-        if self.leaveDataArray[indexPath.row].commemorativePhote != nil {
+        if self.leaveDataArray[indexPath.row].userComment != nil || self.leaveDataArray[indexPath.row].breederComment != nil{
             cell.noImageView.isHidden = true
         }else{
             cell.noImageView.isHidden = false
@@ -219,15 +219,10 @@ class HistoryViewController: BaseViewController, UITableViewDelegate, UITableVie
         self.navigationController?.pushViewController(imageSelectViewController, animated: true)
         
         if self.image != nil {
-            let imageData = UIImageJPEGRepresentation(self.image! , 0.5)
-            let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
             let time = NSDate.timeIntervalSinceReferenceDate
             let ref = FIRDatabase.database().reference()
-            let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveDataArray[(indexPath?.row)!].id!)/commemorativePhoteString/": imageString,
-                                "/\(Paths.LeavePath)/\(self.leaveDataArray[(indexPath?.row)!].id!)/updateAt/": String(time)] as [String : Any]
+            let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveDataArray[(indexPath?.row)!].id!)/updateAt/": String(time)] as [String : Any]
             ref.updateChildValues(childUpdates)
-            
-            self.leaveDataArray[(indexPath?.row)!].commemorativePhote = self.image
             self.tableView.reloadData()
         }
         

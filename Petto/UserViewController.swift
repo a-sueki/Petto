@@ -12,6 +12,7 @@ import Firebase
 import FirebaseDatabase
 import SVProgressHUD
 import CoreLocation
+import Toucan
 
 class UserViewController: BaseFormViewController  {
     
@@ -30,6 +31,11 @@ class UserViewController: BaseFormViewController  {
     
     func showForm(){
         print("DEBUG_PRINT: UserViewController.showForm start")
+        
+        let view = UIImageView()
+        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            view.sd_setImage(with: StorageRef.getRiversRef(key: UserDefaults.standard.string(forKey: DefaultString.Uid)!), placeholderImage: StorageRef.placeholderImage)
+        }
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
             cell.contentView.backgroundColor = .red
@@ -62,13 +68,7 @@ class UserViewController: BaseFormViewController  {
             //TODO: コミットメント＆小さなバッジ（メダル）
             <<< ImageRow("image"){
                 $0.title = "写真"
-                if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                    let imageString = UserDefaults.standard.string(forKey: DefaultString.ImageString)!
-                    let image = UIImage(data: NSData(base64Encoded: imageString, options: .ignoreUnknownCharacters)! as Data)!
-                    $0.baseValue = image
-                }else {
-                    $0.baseValue = nil
-                }
+                $0.baseValue = view.image ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellSetup { cell, row in
@@ -347,6 +347,7 @@ class UserViewController: BaseFormViewController  {
     @IBAction func executePost() {
         print("DEBUG_PRINT: UserViewController.executePost start")
         
+        var photeImage: UIImage?
         // ユーザ情報
         for (key,value) in form.values() {
             if value == nil {
@@ -357,9 +358,7 @@ class UserViewController: BaseFormViewController  {
                 self.inputData["\(key)"] = itemValue
                 // UIImage
             }else if case let itemValue as UIImage = value {
-                let imageData = UIImageJPEGRepresentation(itemValue , 0.5)
-                let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-                self.inputData["imageString"] = imageString
+                photeImage = Toucan(image: itemValue).resize(CGSize(width: 200, height: 200), fitMode: Toucan.Resize.FitMode.clip).image
                 // Bool
             }else if case let v as Bool = value {
                 switch key {
@@ -452,12 +451,13 @@ class UserViewController: BaseFormViewController  {
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).child("ngs").removeValue()
             // user更新
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).updateChildValues(self.inputData)
+            storageUpload(photeImage: photeImage!, key: uid!)
+
             // room更新
             var roomUpdateData1 = [String : Any]()
             if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) != nil {
                 for (roomId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)! {
                     roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userName"] = inputData["firstname"]
-                    roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userImageString"] = inputData["imageString"]
                     roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userArea"] = inputData["area"]
                     roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userAge"] = inputData["age"]
                     roomUpdateData1["\(Paths.RoomPath)/\(roomId)/userSex"] = inputData["sex"]
@@ -480,13 +480,13 @@ class UserViewController: BaseFormViewController  {
             self.inputData["createBy"] = uid!
             // insert
             ref.child(Paths.UserPath).child(key!).setValue(self.inputData)
+            storageUpload(photeImage: photeImage!, key: key!)
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "プロフィールを作成しました")
         }
         
         // UserDefaultsを更新（ユーザー項目）
         UserDefaults.standard.set(false, forKey: DefaultString.GuestFlag)
-        UserDefaults.standard.set(self.inputData["imageString"] , forKey: DefaultString.ImageString)
         UserDefaults.standard.set(self.inputData["sex"] , forKey: DefaultString.Sex)
         UserDefaults.standard.set(self.inputData["lastname"] , forKey: DefaultString.Lastname)
         UserDefaults.standard.set(self.inputData["firstname"] , forKey: DefaultString.Firstname)
@@ -510,6 +510,20 @@ class UserViewController: BaseFormViewController  {
         self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: UserViewController.executePost end")
+    }
+    
+    func storageUpload(photeImage: UIImage, key: String){
+        
+        if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
+            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+                if error != nil {
+                    print("Image Uploaded Error")
+                    print(error!)
+                } else {
+                    print("Image Uploaded Succesfully")
+                }
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

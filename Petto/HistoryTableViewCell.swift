@@ -98,20 +98,20 @@ class HistoryTableViewCell: UITableViewCell, UITextFieldDelegate  {
             self.termEndLabel.text = "おあずけ終了：\(end)（\(dayNum)日間）"
         }
         
-        if leaveData.commemorativePhote != nil {
-            self.photeImageView.image = leaveData.commemorativePhote
-        }
+        self.photeImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.id!), placeholderImage: StorageRef.placeholderImage)
+
         // 写真を丸くする
         self.userImageView.layer.cornerRadius = 25.0
         self.userImageView.layer.masksToBounds = true
         self.breederImageView.layer.cornerRadius = 25.0
         self.breederImageView.layer.masksToBounds = true
         
-        self.userImageView.image = leaveData.userImage
-        self.breederImageView.image = leaveData.petImage
+        // imageをstorageから直接ロード
+        self.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.userId!), placeholderImage: StorageRef.placeholderImage)
+        self.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.breederId!), placeholderImage: StorageRef.placeholderImage)
         
         self.userNameLabel.text = leaveData.userName
-        self.breederNameLabel.text = leaveData.petName
+        self.breederNameLabel.text = "\(leaveData.petName)の飼い主さん"
         
         if leaveData.userComment != nil{
             self.userCommentTextFeild.text = leaveData.userComment

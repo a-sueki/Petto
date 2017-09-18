@@ -51,14 +51,15 @@ class TodoListTableViewCell: UITableViewCell {
         self.petImageView.layer.cornerRadius = 25.0
         self.petImageView.layer.masksToBounds = true
         
-        self.userImageView.image = leaveData.userImage
+        // imageをstorageから直接ロード
+        self.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.userId!), placeholderImage: StorageRef.placeholderImage)
         self.userNameLabel.text = leaveData.userName
         
-        //TODO: 評価カウントをセット
-        self.goodIntLabel.text = "10" //String(roomData.userGoodInt)
-        self.badIntLabel.text = "3" //String(roomData.userBadInt)
+        // 評価カウントをセット
+        self.goodIntLabel.text = String(leaveData.userGoodInt ?? 0)
+        self.badIntLabel.text = String(leaveData.userBadInt ?? 0)
         self.userProfile.text = leaveData.userArea! + " | " + leaveData.userSex! + " | " + leaveData.userAge! + "才"
-        self.petImageView.image = leaveData.petImage
+        self.petImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.petId!), placeholderImage: StorageRef.placeholderImage)
         self.petNameLabel.text = leaveData.petName
         if leaveData.userId == UserDefaults.standard.string(forKey: DefaultString.Uid) {
             self.startDateLabel.text = "あずかり開始：" + DateCommon.displayDate(stringDate: leaveData.startDate!)

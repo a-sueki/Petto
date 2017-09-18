@@ -15,8 +15,6 @@ class RoomData: NSObject {
     
     var userId: String?
     var userName: String?
-    var userImage: UIImage?
-    var userImageString: String?
     var userArea: String?
     var userAge: String?
     var userSex: String?
@@ -25,8 +23,6 @@ class RoomData: NSObject {
     
     var petId: String?
     var petName: String?
-    var petImage: UIImage?
-    var petImageString: String?
     var breederId: String?
     
     var lastMessage:String?
@@ -43,8 +39,6 @@ class RoomData: NSObject {
         self.id = myId
         self.userId = valueDictionary["userId"] as? String
         self.userName = valueDictionary["userName"] as? String
-        userImageString = valueDictionary["userImageString"] as? String
-        self.userImage = UIImage(data: NSData(base64Encoded: userImageString!, options: .ignoreUnknownCharacters)! as Data)
         self.userArea = valueDictionary["userArea"] as? String
         self.userAge = valueDictionary["userAge"] as? String
         self.userSex = valueDictionary["userSex"] as? String
@@ -54,8 +48,6 @@ class RoomData: NSObject {
         
         self.petId = valueDictionary["petId"] as? String
         self.petName = valueDictionary["petName"] as? String
-        petImageString = valueDictionary["petImageString"] as? String
-        self.petImage = UIImage(data: NSData(base64Encoded: petImageString!, options: .ignoreUnknownCharacters)! as Data)
         self.breederId = valueDictionary["breederId"] as? String
         self.lastMessage = valueDictionary["lastMessage"] as? String
 

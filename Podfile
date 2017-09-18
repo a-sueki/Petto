@@ -22,4 +22,5 @@ target 'Petto' do
   pod 'RKNotificationHub'
   pod 'Firebase/Messaging'
   pod 'SCLAlertView'
+  pod 'Toucan'
 end

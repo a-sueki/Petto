@@ -101,7 +101,7 @@ class ConsentViewController: BaseFormViewController {
         let messagesViewController: MessagesViewController
         messagesViewController = MessagesViewController()
         messagesViewController.roomData = self.roomData
-        messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText)
+        messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText, image: nil)
         
         // leaveDataをdelete
         let ref = FIRDatabase.database().reference()
@@ -147,7 +147,7 @@ class ConsentViewController: BaseFormViewController {
         let messagesViewController: MessagesViewController
         messagesViewController = MessagesViewController()
         messagesViewController.roomData = self.roomData
-        messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText)
+        messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText, image: nil)
         
         // leaveData,UserDataをupdate
         let ref = FIRDatabase.database().reference()

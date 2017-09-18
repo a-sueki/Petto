@@ -28,7 +28,6 @@ struct DefaultString {
     static let Password = "password"
     static let DisplayName = "displayName"
     // ユーザー項目（必須）
-    static let ImageString = "imageString"
     static let Sex = "sex"
     static let Firstname = "firstname"
     static let Lastname = "lastname"
@@ -69,7 +68,7 @@ struct RandomImage {
 struct StorageRef{
     static let storage = FIRStorage.storage()
     static let storageRef = storage.reference(forURL: "gs://petto-5a42d.appspot.com/")
-    static let placeholderImage = UIImage(named: "placeholder")
+    static let placeholderImage = UIImage(named: "loading")
 
     static func getRiversRef(key: String) -> FIRStorageReference {
         let riversRef = storageRef.child("images/\(key).jpg")

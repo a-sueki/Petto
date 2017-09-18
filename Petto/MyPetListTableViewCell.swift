@@ -35,11 +35,8 @@ class MyPetListTableViewCell: UITableViewCell {
     
     //表示される時の値をセット
     func setData(petData: PetData) {
-
-        let storageRef = FIRStorage.storage().reference(forURL: "gs://petto-5a42d.appspot.com")
-        let imageRef = storageRef.child("images/\(petData.id).jpg")
         
-        self.photoImageView.sd_setImage(with: imageRef)
+        self.photoImageView.sd_setImage(with: StorageRef.getRiversRef(key: petData.id!), placeholderImage: StorageRef.placeholderImage)
         self.nameLabel.text = petData.name
 
     }

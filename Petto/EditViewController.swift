@@ -11,6 +11,7 @@ import Eureka
 import Firebase
 import FirebaseDatabase
 import SVProgressHUD
+import Toucan
 
 class EditViewController: BaseFormViewController {
     
@@ -20,7 +21,12 @@ class EditViewController: BaseFormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: EditViewController.viewDidLoad start")
-                        
+        
+        let view = UIImageView()
+        if let key = self.petData?.id {
+            view.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
+        }
+        
         // 必須入力チェック
         LabelRow.defaultCellUpdate = { cell, row in
             cell.contentView.backgroundColor = .red
@@ -53,7 +59,7 @@ class EditViewController: BaseFormViewController {
             }
             <<< ImageRow("image"){
                 $0.title = "写真"
-                $0.baseValue = self.petData?.image ?? nil
+                $0.baseValue = view.image ?? nil
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellSetup { cell, row in
@@ -579,7 +585,7 @@ class EditViewController: BaseFormViewController {
                 }
                 // UIImage
             }else if case let itemValue as UIImage = value {
-                photeImage = itemValue
+                photeImage = Toucan(image: itemValue).resize(CGSize(width: 200, height: 200), fitMode: Toucan.Resize.FitMode.clip).image
                 // Bool
             }else if case let v as Bool = value {
                 switch key {
@@ -657,11 +663,12 @@ class EditViewController: BaseFormViewController {
             // pet初期化&更新
             ref.child(Paths.PetPath).child(data.id!).removeValue()
             ref.child(Paths.PetPath).child(data.id!).setValue(self.inputData)
+            storageUpload(photeImage: photeImage!, key: data.id!)
+
             // room更新
             var roomUpdateData1 = [String : Any]()
             for (roomId,_) in data.roomIds {
                 roomUpdateData1["\(Paths.RoomPath)/\(roomId)/petName"] = self.inputData["name"]
-                roomUpdateData1["\(Paths.RoomPath)/\(roomId)/petImageString"] = self.inputData["imageString"]
                 roomUpdateData1["\(Paths.RoomPath)/\(roomId)/updateAt"] = self.inputData["updateAt"]
             }
             if !roomUpdateData1.isEmpty{
@@ -676,35 +683,10 @@ class EditViewController: BaseFormViewController {
             self.inputData["createAt"] = String(time)
             self.inputData["createBy"] = uid!
             
-            // imageをアップロード
-/*            let storage = FIRStorage.storage()
-            let storageRef = storage.reference(forURL: "gs://petto-5a42d.appspot.com/")
-            if let data = UIImageJPEGRepresentation(photeImage!, 0.25) {
-                let riversRef = storageRef.child("images/\(key).jpg")
-                _ = riversRef.put(data , metadata: nil) { (metadata, error) in
-                    if error != nil {
-                        print("Image Uploaded Error")
-                        print(error!)
-                    } else {
-                        print("Image Uploaded Succesfully")
-                    }
-                }
-            }
-*/            
-            if let data = UIImageJPEGRepresentation(photeImage!, 0.25) {
-                StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
-                    if error != nil {
-                        print("Image Uploaded Error")
-                        print(error!)
-                    } else {
-                        print("Image Uploaded Succesfully")
-                    }
-                }
-            }
-            
-        
             // insert
             ref.child(Paths.PetPath).child(key).setValue(self.inputData)
+            storageUpload(photeImage: photeImage!, key: key)
+            
             //ユーザのmyPetsIdを追加
             ref.child(Paths.UserPath).child(uid!).child("myPets").updateChildValues([key: true])
             // ユーザーデフォルトを更新
@@ -732,6 +714,20 @@ class EditViewController: BaseFormViewController {
         self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: EditViewController.executePost end")
+    }
+    
+    func storageUpload(photeImage: UIImage, key: String){
+        
+        if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
+            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+                if error != nil {
+                    print("Image Uploaded Error")
+                    print(error!)
+                } else {
+                    print("Image Uploaded Succesfully")
+                }
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

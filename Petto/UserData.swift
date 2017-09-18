@@ -13,8 +13,6 @@ class UserData: NSObject {
     
     // 必須
     var id: String
-    var image: UIImage
-    var imageString: String
     var sex: String
     var firstname: String
     var lastname: String
@@ -53,8 +51,6 @@ class UserData: NSObject {
         
         // 必須
         self.id = myId
-        self.imageString = valueDictionary["imageString"] as! String
-        self.image = UIImage(data: NSData(base64Encoded: self.imageString, options: .ignoreUnknownCharacters)! as Data)!
         self.sex = valueDictionary["sex"] as! String
         self.firstname = valueDictionary["firstname"] as! String
         self.lastname = valueDictionary["lastname"] as! String

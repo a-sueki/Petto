@@ -32,20 +32,11 @@ class PetDetailViewController: BaseFormViewController {
         // フォーム
         form +++
             Section() {
-                if let _ = self.petData {
+                if let key = self.petData?.id {
                     var header = HeaderFooterView<PetDetailViewNib>(.nibFile(name: "PetDetailHeader", bundle: nil))
                     header.onSetupView = { (view, section) -> () in
-                        view.petImageView.image = self.petData!.image
-                        
+                        view.petImageView.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
                         view.petImageView.alpha = 1;
-/*                        UIView.animate(withDuration: 2.0, animations: { [weak view] in
-                            view?.petImageView.alpha = 1
-                        })
-                        view.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1)
-                        UIView.animate(withDuration: 1.0, animations: { [weak view] in
-                            view?.layer.transform = CATransform3DIdentity
-                        })
- */
                     }
                     $0.header = header
                 }
@@ -434,7 +425,7 @@ class PetDetailViewController: BaseFormViewController {
                     
                     inputData["userId"] = uid
                     inputData["userName"] = UserDefaults.standard.string(forKey: DefaultString.DisplayName)
-                    inputData["userImageString"] = UserDefaults.standard.string(forKey: DefaultString.ImageString)
+//                    inputData["userImageString"] = UserDefaults.standard.string(forKey: DefaultString.ImageString)
                     inputData["userArea"] = UserDefaults.standard.string(forKey: DefaultString.Area)
                     inputData["userAge"] = UserDefaults.standard.string(forKey: DefaultString.Age)
                     inputData["userSex"] = UserDefaults.standard.string(forKey: DefaultString.Sex)
@@ -442,7 +433,6 @@ class PetDetailViewController: BaseFormViewController {
                     inputData["userBadInt"] = UserDefaults.standard.dictionary(forKey: DefaultString.Bads)
                     inputData["petId"] = pid
                     inputData["petName"] = self.petData?.name
-//                    inputData["petImageString"] = self.petData?.imageString
                     inputData["breederId"] = self.petData?.createBy
                     inputData["lastMessage"] = " "
                     inputData["createAt"] = String(time)
