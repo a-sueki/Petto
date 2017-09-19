@@ -17,11 +17,11 @@ class BreederMessagesContainerViewController: UIViewController {
     var messageData: MessageData?
     var leaveData: LeaveData?
  
-    let topViewController: BookingViewController  // ViewController①を保持
-    let underViewController: MessagesViewController  // ViewController②を保持
+    let topViewController: MessagesViewController // ViewController①を保持
+    let underViewController: BookingViewController  // ViewController②を保持
     
     // ContainerViewControllerにViewController①と②をセットするイニシャライザ
-    init(top:BookingViewController, under:MessagesViewController){
+    init(top:MessagesViewController, under:BookingViewController){
         print("DEBUG_PRINT: BreederMessagesContainerViewController.init start")
 
         topViewController = top
@@ -102,23 +102,22 @@ class BreederMessagesContainerViewController: UIViewController {
         
         // ViewController①をContainerViewControllerの子として追加
         topViewController.roomData = self.roomData
-        topViewController.leaveData = self.leaveData
         addChildViewController(topViewController)
         
         // ViewController①の表示
         view.addSubview(topViewController.view)
         topViewController.didMove(toParentViewController: self)
-        topViewController.view.frame = CGRect(x: 0, y: 40, width: view.frame.width, height: 210)
-        topViewController.tableView.contentOffset = CGPoint(x: 0, y: topViewController.tableView.contentSize.height - topViewController.tableView.frame.size.height)
+        topViewController.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height / 5 * 4)
         
         // ViewController②をContainerViewControllerの子として追加
         underViewController.roomData = self.roomData
+        underViewController.leaveData = self.leaveData
         addChildViewController(underViewController)
         
         // ViewController②の表示
         view.addSubview(underViewController.view)
         underViewController.didMove(toParentViewController: self)
-        underViewController.view.frame = CGRect(x: 0, y: 210, width: view.frame.width, height: view.frame.height - 210)
+        underViewController.view.frame = CGRect(x: 0, y: view.frame.height / 5 * 4, width: view.frame.width, height: view.frame.height / 5)
         
         print("DEBUG_PRINT: BreederMessagesContainerViewController.setView end")
     }

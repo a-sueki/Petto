@@ -228,7 +228,6 @@
 		8457462F1F2FF73300CE5470 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				842810A41F5526ED001A59D9 /* AccountViewController.swift */,
 				8420E0AC1F29C1300088E509 /* UserViewController.swift */,
 				8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */,
 				845F2E3D1F42C25B00526C1F /* UserDetailViewController.swift */,
@@ -259,7 +258,6 @@
 				84DB3BF91F540A490067A680 /* BookingViewController.swift */,
 				844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */,
 				841ADB171F0CA18C00534A37 /* MessagesViewController.swift */,
-				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -338,15 +336,11 @@
 				84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */,
 				84CCE00A1EFB791D0025B5D3 /* ViewController.swift */,
 				84BC45A31F2729FE0017AF53 /* Assets.xcassets */,
-				846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */,
-				84D253071F0217D700D877A9 /* LeftViewController.swift */,
-				848FF95D1F7082AC0000F62C /* ContactViewController.swift */,
-				848FF9611F70A1000000F62C /* Policy.txt */,
-				848FF9631F70A14C0000F62C /* PolicyViewController.swift */,
 				84CCE0141EFB791D0025B5D3 /* Info.plist */,
 				844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
+				84D373FE1F70F7A100500B0F /* Others */,
 				849ED1E31F1CF912003AD9F5 /* Model */,
 				84D523F21F57AD15004092D5 /* Login */,
 				849ED1E01F1B2F60003AD9F5 /* MyPet */,
@@ -358,9 +352,23 @@
 			path = Petto;
 			sourceTree = "<group>";
 		};
+		84D373FE1F70F7A100500B0F /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */,
+				846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */,
+				84D253071F0217D700D877A9 /* LeftViewController.swift */,
+				848FF95D1F7082AC0000F62C /* ContactViewController.swift */,
+				848FF9611F70A1000000F62C /* Policy.txt */,
+				848FF9631F70A14C0000F62C /* PolicyViewController.swift */,
+			);
+			name = Others;
+			sourceTree = "<group>";
+		};
 		84D523F21F57AD15004092D5 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				842810A41F5526ED001A59D9 /* AccountViewController.swift */,
 				84D9267F1F559A5A008E419E /* PasswordResetViewController.swift */,
 			);
 			name = Login;

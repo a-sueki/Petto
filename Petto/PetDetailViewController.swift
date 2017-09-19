@@ -414,7 +414,7 @@ class PetDetailViewController: BaseFormViewController {
             
             let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessages") as! MessagesViewController
             let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
-            let userMessagesContainerViewController = UserMessagesContainerViewController(top: consentViewController, under: messagesViewController)
+            let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)
             
             // roomIdを取得
             let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)

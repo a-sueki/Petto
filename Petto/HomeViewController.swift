@@ -137,20 +137,18 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     
     func refreshBysearch(){
         print("DEBUG_PRINT: HomeViewController.refreshBysearch start")
-        
+/*
         // 絞り込み条件を読み込む
-        if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil,
-            let uid = UserDefaults.standard.string(forKey: DefaultString.Uid), UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
+        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil , let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
             // HUDで処理中を表示
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             // 要素が追加されたら再表示
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
+            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: HomeViewController.viewWillAppear .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
                     
-                    self.searchData = SearchData(snapshot: snapshot, myId: uid)
-                    
+                    self.searchData = SearchData(snapshot: snapshot, myId: key)
                     
                     // 絞り込み条件でフィルタリング
                     var index: Int = 0
@@ -300,8 +298,8 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         }
         
         print("DEBUG_PRINT: HomeViewController.refreshBysearch end")
+         */
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         print("DEBUG_PRINT: HomeViewController.cellForItemAt start")
         

@@ -28,7 +28,7 @@ class SearchViewController: BaseFormViewController {
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: SearchViewController.viewWillAppear start")
         
-        if UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
+        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil , let _ = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
             self.read()
         }else{
             self.updateSearchData()
@@ -42,11 +42,11 @@ class SearchViewController: BaseFormViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: SearchViewController.viewWillDisappear start")
         
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
+        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil , let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
+            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
             ref.removeAllObservers()
         }
-
+        
         print("DEBUG_PRINT: SearchViewController.viewWillDisappear end")
     }
     
@@ -54,13 +54,13 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.read start")
         
         // Firebaseから登録済みデータを取得
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
+        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil , let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(uid)
+            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: SearchViewController.read .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
-                    self.searchData = SearchData(snapshot: snapshot, myId: uid)
+                    self.searchData = SearchData(snapshot: snapshot, myId: key)
                     // Formを表示
                     self.updateSearchData()
                 }
@@ -84,39 +84,121 @@ class SearchViewController: BaseFormViewController {
         
         // フォーム
         form +++
-            Section("絞り込み条件") {
-                $0.header = HeaderFooterView<SearchView>(.class)
-            }
+            Section("絞り込み条件")
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.searchStrings
                 $0.value = self.searchData?.area ?? UserDefaults.standard.string(forKey: DefaultString.Area)
             }
+            
+            +++ Section("ペットのプロフィール①")
+            <<< SwitchRow("lv1-1"){
+                $0.title = "ペットのプロフで絞り込む"
+                $0.value = false
+            }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
+                $0.hidden = .function(["lv1-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv1-1")
+                    return row.value ?? false == false
+                })
                 $0.options = Kind.searchStrings
                 $0.value = self.searchData?.kind ?? $0.options.first
             }
-            <<< SegmentedRow<String>("sex") {
-                $0.title =  "性別"
-                $0.options = Sex.searchStrings
-                $0.value = self.searchData?.sex ?? $0.options.first
+            <<< PickerInputRow<String>("age"){
+                $0.title = "ペットの年齢"
+                $0.hidden = .function(["lv1-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv1-1")
+                    return row.value ?? false == false
+                })
+                $0.options = Age.searchStrings
+                $0.value = self.searchData?.age ?? $0.options.first
             }
             
-            +++ Section()
-            <<< SwitchRow("isAvailable"){
-                $0.title = "あずかり人を募集中"
-                $0.value = self.searchData?.isAvailable ?? true
-            }
-            +++
-            Section(header: "あずかり人の募集条件", footer: ""){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+            +++ Section("ペットのプロフィール②"){
+                $0.hidden = .function(["lv1-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv1-1")
                     return row.value ?? false == false
                 })
             }
+            <<< SwitchRow("lv1-2"){
+                $0.title = "もっと詳しく"
+                $0.value = false
+            }
+            <<< SegmentedRow<String>("size") {
+                $0.title =  "大きさ"
+                $0.hidden = .function(["lv1-2"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv1-2")
+                    return row.value ?? false == false
+                })
+                $0.options = Size.searchStrings
+                $0.value = self.searchData?.size ?? $0.options.first
+                $0.add(rule: RuleRequired())
+                $0.validationOptions = .validatesOnChange
+            }
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.hidden = .function(["lv1-2"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv1-2")
+                    return row.value ?? false == false
+                })
+                $0.options = Sex.searchStrings
+                $0.value = self.searchData?.sex ?? $0.options.first
+            }
+            <<< MultipleSelectorRow<String>("color") {
+                $0.title = "色"
+                $0.hidden = .function(["lv1-2"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv1-2")
+                    return row.value ?? false == false
+                })
+                $0.options = Color.strings
+                if let data = self.searchData , data.color.count > 0 {
+                    var codes = [String]()
+                    for (key,val) in data.color {
+                        if val == true {
+                            codes.append(key)
+                        }
+                    }
+                    $0.value = Color.convertList(codes)
+                }else{
+                    $0.value = []
+                }
+                }
+                .onPresent { from, to in
+                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
+            }
+            
+            
+            +++ Section("ペットあずかりに関する条件①")
+            <<< SwitchRow("lv2-1"){
+                $0.title = "あずかりの条件で絞り込む"
+                $0.value = false
+            }
+            <<< CheckRow("isAvailable"){
+                $0.title = "あずかり人を募集中"
+                $0.hidden = .function(["lv2-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-1")
+                    return row.value ?? false == false
+                })
+                $0.value = self.searchData?.isAvailable ?? true
+            }
+            
+            +++ Section("ペットあずかりに関する条件②"){
+                $0.hidden = .function(["lv2-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-1")
+                    return row.value ?? false == false
+                })
+            }
+            <<< SwitchRow("lv2-2"){
+                $0.title = "もっと詳しく"
+                $0.value = false
+            }
             <<< CheckRow("toolRentalAllowed") {
                 $0.title = "道具の貸し出し可能"
+                $0.hidden = .function(["lv2-2"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-2")
+                    return row.value ?? false == false
+                })
                 $0.value = self.searchData?.toolRentalAllowed ?? true
                 }
                 .cellSetup { cell, row in
@@ -124,14 +206,37 @@ class SearchViewController: BaseFormViewController {
             }
             <<< CheckRow("feedingFeePayable") {
                 $0.title = "エサ代は飼い主負担"
+                $0.hidden = .function(["lv2-2"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-2")
+                    return row.value ?? false == false
+                })
                 $0.value = self.searchData?.feedingFeePayable ?? true
                 }
                 .cellSetup { cell, row in
                     cell.imageView?.image = UIImage(named: "dogBowl")
             }
             
+            +++ Section("ペットあずかりに関する条件③"){
+                $0.hidden = .function(["lv2-1","lv2-2"], { form -> Bool in
+                    let row1: RowOf<Bool>! = form.rowBy(tag: "lv2-1")
+                    let row2: RowOf<Bool>! = form.rowBy(tag: "lv2-2")
+                    if row1.value == true && row2.value == true {
+                        return false
+                    }else{
+                        return true
+                    }
+                })
+            }
+            <<< SwitchRow("lv2-3"){
+                $0.title = "あずかり期間・日数を指定"
+                $0.value = false
+            }
             <<< DateRow("startDate") {
-                $0.title = "開始日付"
+                $0.title = "期間（開始）"
+                $0.hidden = .function(["lv2-3"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-3")
+                    return row.value ?? false == false
+                })
                 if let dateString = self.searchData?.startDate {
                     $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
@@ -164,9 +269,12 @@ class SearchViewController: BaseFormViewController {
                         }
                     }
             }
-            
             <<< DateRow("endDate") {
-                $0.title = "終了日付"
+                $0.title = "期間（終了）"
+                $0.hidden = .function(["lv2-3"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-3")
+                    return row.value ?? false == false
+                })
                 if let dateString = self.searchData?.endDate {
                     $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
                 }else{
@@ -201,15 +309,12 @@ class SearchViewController: BaseFormViewController {
                         }
                     }
             }
-            +++
-            Section(header:"連続おあずけ日数", footer:"連続30日間以上でのおあずけ依頼はできません。"){
-                $0.hidden = .function(["isAvailable"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
+            <<< PickerInputRow<Int>("minDays"){
+                $0.title = "日数（最短）"
+                $0.hidden = .function(["lv2-3"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-3")
                     return row.value ?? false == false
                 })
-            }
-            <<< PickerInputRow<Int>("minDays"){
-                $0.title = "最短"
                 $0.options = []
                 for i in 1...30{
                     $0.options.append(i)
@@ -242,7 +347,11 @@ class SearchViewController: BaseFormViewController {
                     }
             }
             <<< PickerInputRow<Int>("maxDays"){
-                $0.title = "最長"
+                $0.title = "日数（最長）"
+                $0.hidden = .function(["lv2-3"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv2-3")
+                    return row.value ?? false == false
+                })
                 $0.options = []
                 for i in 1...30{
                     $0.options.append(i)
@@ -278,104 +387,54 @@ class SearchViewController: BaseFormViewController {
                     }
             }
             
-            +++ Section()
-            <<< SwitchRow("enterDetails"){
-                $0.title = "より詳細なプロフィールで検索する"
-                $0.value = self.searchData?.enterDetails ?? false
-            }
             
-            +++ Section("プロフィール（詳細）"){
-                $0.hidden = .function(["enterDetails"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "enterDetails")
-                    return row.value ?? false == false
-                })
-            }
-            
-            <<< PickerInputRow<String>("age"){
-                $0.title = "ペットの年齢"
-                $0.options = Age.searchStrings
-                $0.value = self.searchData?.age ?? $0.options.first
-            }
-            <<< SegmentedRow<String>("size") {
-                $0.title =  "大きさ"
-                $0.options = Size.searchStrings
-                $0.value = self.searchData?.size ?? $0.options.first
-                $0.add(rule: RuleRequired())
-                $0.validationOptions = .validatesOnChange
-            }
-            
-            <<< MultipleSelectorRow<String>("color") {
-                $0.title = "色"
-                $0.options = Color.strings
-                if let data = self.searchData , data.color.count > 0 {
-                    var codes = [String]()
-                    for (key,val) in data.color {
-                        if val == true {
-                            codes.append(key)
-                        }
-                    }
-                    $0.value = Color.convertList(codes)
-                }else{
-                    $0.value = []
-                }
-                }
-                .onPresent { from, to in
-                    to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
-            }
-            //TODO: もうちょい選択しやすいUIに変更
-            <<< PickerInputRow<String>("categoryDog"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    if row.value != nil ,row.value != SearchString.unspecified {
-                        return row.value ?? Kind.dog == Kind.cat
-                    }else{
-                        return true
-                    }
-                })
-                $0.options = CategoryDog.searchStrings
-                $0.value = self.searchData?.category ?? $0.options.first
-            }
-            <<< PickerInputRow<String>("categoryCat"){
-                $0.title = "品種"
-                $0.hidden = .function(["kind"], { form -> Bool in
-                    let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    if row.value != nil ,row.value != SearchString.unspecified {
-                        return row.value ?? Kind.dog == Kind.dog
-                    }else{
-                        return true
-                    }
-                })
-                $0.options = CategoryCat.searchStrings
-                $0.value = self.searchData?.category ?? $0.options.first
-            }
-            
-            +++ Section()
-            <<< SwitchRow("specifyConditions"){
-                $0.title = "ペットの状態を指定する"
-                $0.value = self.searchData?.specifyConditions ?? false
-            }
-            
-            +++ Section("ペットの状態"){
-                $0.hidden = .function(["specifyConditions"], { form -> Bool in
-                    let row: RowOf<Bool>! = form.rowBy(tag: "specifyConditions")
-                    return row.value ?? false == false
-                })
+            +++ Section("ペットの状態①")
+            <<< SwitchRow("lv3-1"){
+                $0.title = "ペットの状態で絞り込む"
+                $0.value = false
             }
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
+                $0.hidden = .function(["lv3-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv3-1")
+                    return row.value ?? false == false
+                })
                 $0.value = self.searchData?.isVaccinated ?? true
             }
             <<< CheckRow("isCastrated") {
                 $0.title = "去勢/避妊手術済み"
+                $0.hidden = .function(["lv3-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv3-1")
+                    return row.value ?? false == false
+                })
                 $0.value = self.searchData?.isCastrated ?? true
             }
             <<< CheckRow("wanted") {
                 $0.title = "里親を募集中"
+                $0.hidden = .function(["lv3-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv3-1")
+                    return row.value ?? false == false
+                })
                 $0.value = self.searchData?.wanted ?? true
+            }
+            
+            
+            +++ Section("ペットの状態②"){
+                $0.hidden = .function(["lv3-1"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv3-1")
+                    return row.value ?? false == false
+                })
+            }
+            <<< SwitchRow("lv3-2"){
+                $0.title = "もっと詳しく"
+                $0.value = false
             }
             <<< MultipleSelectorRow<String>("userNgs") {
                 $0.title = "訳ありペットを除外"
+                $0.hidden = .function(["lv3-2"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "lv3-2")
+                    return row.value ?? false == false
+                })
                 $0.options = UserNGs.strings
                 if let data = self.searchData , data.userNgs.count > 0 {
                     var codes = [String]()
@@ -392,6 +451,8 @@ class SearchViewController: BaseFormViewController {
                 .onPresent { from, to in
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
+            
+            
             
             //TODO: 並び順
             
@@ -454,25 +515,24 @@ class SearchViewController: BaseFormViewController {
                 if itemValue == SearchString.unspecified {
                     self.removeKeyList.append("\(key)")
                 } else {
-                    print(key)
-                    print(itemValue)
-                    if key == "categoryDog" || key == "categoryCat" {
-                        self.inputData["category"] = itemValue
-                    }else{
-                        self.inputData["\(key)"] = itemValue
-                    }
+                    self.inputData["\(key)"] = itemValue
                 }
                 // Bool
             }else if case let v as Bool = value {
                 switch key {
+                case "lv1-1": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.lev11)
+                case "lv1-2": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.lev12)
+                case "lv2-1": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.lev21)
+                case "lv2-2": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.lev22)
+                case "lv2-3": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.lev23)
+                case "lv3-1": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.lev31)
+                case "lv3-2": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.lev32)
                 case "isVaccinated": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.isVaccinated)
                 case "isCastrated": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.isCastrated)
                 case "wanted": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.wanted)
                 case "isAvailable": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.isAvailable)
-                case "enterDetails": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.enterDetails)
                 case "toolRentalAllowed": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.toolRentalAllowed)
                 case "feedingFeePayable": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.feedingFeePayable)
-                case "specifyConditions": self.inputData["\(key)"] = boolSet(new: v ,old: self.searchData?.specifyConditions)
                 default: break
                 }
                 // Date
@@ -514,25 +574,26 @@ class SearchViewController: BaseFormViewController {
             self.inputData["createAt"] = String(data.createAt!.timeIntervalSinceReferenceDate)
             self.inputData["createBy"] = data.createBy
             self.inputData["updateAt"] = String(time)
-            self.inputData["updateBy"] = uid!
+            self.inputData["updateBy"] = uid ?? "guest"
             // search初期化&更新
             ref.child(Paths.SearchPath).child(data.id!).removeValue()
             ref.child(Paths.SearchPath).child(data.id!).setValue(self.inputData)
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を更新しました")
         }else{
+            let key = ref.child(Paths.SearchPath).childByAutoId().key
             self.inputData["updateAt"] = String(time)
-            self.inputData["updateBy"] = uid!
+            self.inputData["updateBy"] = uid ?? "guest"
             self.inputData["createAt"] = String(time)
-            self.inputData["createBy"] = uid!
+            self.inputData["createBy"] = uid ?? "guest"
             // insert
-            ref.child(Paths.SearchPath).child(uid!).setValue(inputData)
+            ref.child(Paths.SearchPath).child(key).setValue(inputData)
             //ユーザのwithSearchを追加
-            ref.child(Paths.UserPath).child(uid!).updateChildValues(["withSearch": true])
-            
+            if uid != nil{
+                ref.child(Paths.UserPath).child(uid!).updateChildValues(["withSearch": key])
+            }
             // ユーザーデフォルトを更新
-            UserDefaults.standard.set(true , forKey: DefaultString.WithSearch)
-            
+            UserDefaults.standard.set(key , forKey: DefaultString.WithSearch)
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件を保存しました")
         }

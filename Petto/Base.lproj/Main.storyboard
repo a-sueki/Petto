@@ -362,17 +362,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VcQ-G0-TcQ">
-                                <rect key="frame" x="0.0" y="0.0" width="417.66666666666669" height="195.66666666666666"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="VcQ-G0-TcQ" secondAttribute="height" multiplier="32:15" id="9fR-lR-XdY"/>
-                                </constraints>
-                                <connections>
-                                    <segue destination="2fO-h8-X2k" kind="embed" identifier="toBooking" id="fWe-i1-y8D"/>
-                                </connections>
-                            </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="504-en-YbV">
-                                <rect key="frame" x="0.0" y="195.66666666666669" width="414" height="540.33333333333326"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="540.66666666666663"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="504-en-YbV" secondAttribute="height" multiplier="160:209" id="tD4-yh-VPd"/>
                                 </constraints>
@@ -380,22 +371,32 @@
                                     <segue destination="MKo-Z6-pNE" kind="embed" identifier="toBreederMessages" id="bAN-dR-FO0"/>
                                 </connections>
                             </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VcQ-G0-TcQ">
+                                <rect key="frame" x="0.0" y="542" width="414" height="194"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="VcQ-G0-TcQ" secondAttribute="height" multiplier="32:15" id="9fR-lR-XdY"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="2fO-h8-X2k" kind="embed" identifier="toBooking" id="fWe-i1-y8D"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="504-en-YbV" secondAttribute="trailing" id="5AV-jA-4KO"/>
-                            <constraint firstItem="504-en-YbV" firstAttribute="top" secondItem="VcQ-G0-TcQ" secondAttribute="bottom" id="OeF-Gb-yHK"/>
-                            <constraint firstItem="VcQ-G0-TcQ" firstAttribute="leading" secondItem="IDt-rh-AEL" secondAttribute="leading" id="Pv5-D9-ub9"/>
-                            <constraint firstItem="504-en-YbV" firstAttribute="leading" secondItem="IDt-rh-AEL" secondAttribute="leading" id="bzn-rC-ZAu"/>
-                            <constraint firstItem="VcQ-G0-TcQ" firstAttribute="top" secondItem="IDt-rh-AEL" secondAttribute="top" id="qcy-HS-me8"/>
-                            <constraint firstItem="daH-Iv-H63" firstAttribute="top" secondItem="504-en-YbV" secondAttribute="bottom" id="xWd-J5-1fs"/>
-                            <constraint firstAttribute="trailing" secondItem="VcQ-G0-TcQ" secondAttribute="trailing" id="ynv-Dj-7ED"/>
+                            <constraint firstItem="504-en-YbV" firstAttribute="leading" secondItem="IDt-rh-AEL" secondAttribute="leading" id="1QJ-bj-Sxw"/>
+                            <constraint firstItem="504-en-YbV" firstAttribute="centerX" secondItem="IDt-rh-AEL" secondAttribute="centerX" id="3XX-Rw-Cl3"/>
+                            <constraint firstAttribute="trailing" secondItem="504-en-YbV" secondAttribute="trailing" id="AR7-vV-8Wq"/>
+                            <constraint firstItem="VcQ-G0-TcQ" firstAttribute="centerX" secondItem="IDt-rh-AEL" secondAttribute="centerX" id="DCR-jE-IxU"/>
+                            <constraint firstAttribute="trailing" secondItem="VcQ-G0-TcQ" secondAttribute="trailing" id="IWa-WD-u6a"/>
+                            <constraint firstItem="VcQ-G0-TcQ" firstAttribute="leading" secondItem="IDt-rh-AEL" secondAttribute="leading" id="JtU-Uc-bC3"/>
+                            <constraint firstItem="daH-Iv-H63" firstAttribute="top" secondItem="VcQ-G0-TcQ" secondAttribute="bottom" id="QHB-rG-yaA"/>
+                            <constraint firstItem="504-en-YbV" firstAttribute="top" secondItem="IDt-rh-AEL" secondAttribute="top" id="yVk-qV-wpq"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Y0-bR-uoT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1464" y="2114"/>
+            <point key="canvasLocation" x="1462.3188405797102" y="2113.858695652174"/>
         </scene>
         <!--Message List View Controller-->
         <scene sceneID="mZd-9L-Dru">
@@ -1105,7 +1106,7 @@
                         <viewControllerLayoutGuide type="bottom" id="W28-Gq-uZu"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="jG7-ru-VoH">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="540.33333333333326"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="540.66666666666663"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -1126,17 +1127,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8r-Uj-hsb">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="194"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="d8r-Uj-hsb" secondAttribute="height" multiplier="32:15" id="gFc-DO-IxU"/>
-                                </constraints>
-                                <connections>
-                                    <segue destination="DCS-cI-o43" kind="embed" identifier="toConsent" id="ddp-81-zIH"/>
-                                </connections>
-                            </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WwY-cX-8fm">
-                                <rect key="frame" x="0.0" y="194" width="415.33333333333331" height="542"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="540.33333333333337"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="WwY-cX-8fm" secondAttribute="height" multiplier="160:209" id="eiV-4d-Ukm"/>
                                 </constraints>
@@ -1144,17 +1136,26 @@
                                     <segue destination="ntY-MF-vyv" kind="embed" identifier="toUserMessages" id="Nmq-sP-7ci"/>
                                 </connections>
                             </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d8r-Uj-hsb">
+                                <rect key="frame" x="0.0" y="541.33333333333337" width="414.66666666666669" height="194.33333333333326"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="d8r-Uj-hsb" secondAttribute="height" multiplier="32:15" id="gFc-DO-IxU"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="DCS-cI-o43" kind="embed" identifier="toConsent" id="ddp-81-zIH"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="WwY-cX-8fm" firstAttribute="top" secondItem="d8r-Uj-hsb" secondAttribute="bottom" id="3yb-k7-yyA"/>
-                            <constraint firstItem="d8r-Uj-hsb" firstAttribute="leading" secondItem="xWa-h2-FWN" secondAttribute="leading" id="4vZ-dw-YsE"/>
-                            <constraint firstItem="pCp-Tz-svQ" firstAttribute="top" secondItem="WwY-cX-8fm" secondAttribute="bottom" id="5bf-eW-YjB"/>
-                            <constraint firstAttribute="trailing" secondItem="WwY-cX-8fm" secondAttribute="trailing" id="8UK-sk-m1g"/>
-                            <constraint firstItem="WwY-cX-8fm" firstAttribute="leading" secondItem="xWa-h2-FWN" secondAttribute="leading" id="AOh-D4-w8F"/>
-                            <constraint firstItem="d8r-Uj-hsb" firstAttribute="top" secondItem="xWa-h2-FWN" secondAttribute="top" id="VUj-gC-ARi"/>
-                            <constraint firstAttribute="trailing" secondItem="d8r-Uj-hsb" secondAttribute="trailing" id="gFB-nc-yLL"/>
-                            <constraint firstItem="WwY-cX-8fm" firstAttribute="top" secondItem="d8r-Uj-hsb" secondAttribute="bottom" id="wm6-bz-utX"/>
+                            <constraint firstItem="WwY-cX-8fm" firstAttribute="centerX" secondItem="xWa-h2-FWN" secondAttribute="centerX" id="1Y8-Vg-k2J"/>
+                            <constraint firstItem="d8r-Uj-hsb" firstAttribute="leading" secondItem="xWa-h2-FWN" secondAttribute="leading" id="AmF-4S-NEF"/>
+                            <constraint firstAttribute="trailing" secondItem="WwY-cX-8fm" secondAttribute="trailing" id="L2f-kh-KD3"/>
+                            <constraint firstItem="WwY-cX-8fm" firstAttribute="leading" secondItem="xWa-h2-FWN" secondAttribute="leading" id="eCN-Tc-2Dm"/>
+                            <constraint firstItem="d8r-Uj-hsb" firstAttribute="centerX" secondItem="xWa-h2-FWN" secondAttribute="centerX" id="mzR-wC-BRH"/>
+                            <constraint firstItem="pCp-Tz-svQ" firstAttribute="top" secondItem="d8r-Uj-hsb" secondAttribute="bottom" id="vlU-Zv-i3H"/>
+                            <constraint firstAttribute="trailing" secondItem="d8r-Uj-hsb" secondAttribute="trailing" id="wxc-fn-pl8"/>
+                            <constraint firstItem="WwY-cX-8fm" firstAttribute="top" secondItem="xWa-h2-FWN" secondAttribute="top" id="yGa-m5-f3g"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -1171,11 +1172,11 @@
                         <viewControllerLayoutGuide type="bottom" id="aQx-Mf-uUO"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Z1e-6t-ygR">
-                        <rect key="frame" x="0.0" y="0.0" width="417.66666666666669" height="195.66666666666666"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="sMa-AY-qu4">
-                                <rect key="frame" x="0.0" y="0.0" width="417.66666666666669" height="195.66666666666666"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="194"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -1204,7 +1205,7 @@
                         <viewControllerLayoutGuide type="bottom" id="YXg-Ez-5YV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="VRO-KA-yRV">
-                        <rect key="frame" x="0.0" y="0.0" width="415.33333333333331" height="542"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="540.33333333333337"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -1222,7 +1223,7 @@
                         <viewControllerLayoutGuide type="bottom" id="t9V-i0-904"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="yau-dv-1xG">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414.66666666666669" height="194.33333333333326"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="0MM-So-GcC">

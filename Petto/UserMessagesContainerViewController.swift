@@ -17,11 +17,11 @@ class UserMessagesContainerViewController: UIViewController {
     var messageData: MessageData?
     var leaveData: LeaveData?
     
-    let topViewController: ConsentViewController  // ViewController①を保持
-    let underViewController: MessagesViewController  // ViewController②を保持
+    let topViewController:  MessagesViewController // ViewController①を保持
+    let underViewController: ConsentViewController  // ViewController②を保持
     
     // ContainerViewControllerにViewController①と②をセットするイニシャライザ
-    init(top:ConsentViewController, under:MessagesViewController){
+    init(top:MessagesViewController, under:ConsentViewController){
         print("DEBUG_PRINT: UserMessagesContainerViewController.init start")
         
         topViewController = top
@@ -106,35 +106,35 @@ class UserMessagesContainerViewController: UIViewController {
         if self.leaveData == nil {
             print("DEBUG_PRINT: UserMessagesContainerViewController.setView 1")
             
-            // ViewController②をContainerViewControllerの子として追加
-            underViewController.roomData = self.roomData
-            addChildViewController(underViewController)
-            
-            // ViewController②の表示
-            view.addSubview(underViewController.view)
-            underViewController.didMove(toParentViewController: self)
-            underViewController.view.frame = CGRect(x: 0, y: 60, width: view.frame.width, height: view.frame.height - 60)
-        }else{
-            print("DEBUG_PRINT: UserMessagesContainerViewController.setView 2")
-            
             // ViewController①をContainerViewControllerの子として追加
             topViewController.roomData = self.roomData
-            topViewController.leaveData = self.leaveData
             addChildViewController(topViewController)
             
             // ViewController①の表示
             view.addSubview(topViewController.view)
             topViewController.didMove(toParentViewController: self)
-            topViewController.view.frame = CGRect(x: 0, y: 40, width: view.frame.width, height: 260)
-            topViewController.tableView.contentOffset = CGPoint(x: 0, y: topViewController.tableView.contentSize.height - topViewController.tableView.frame.size.height)
+            topViewController.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+            
+        }else{
+            print("DEBUG_PRINT: UserMessagesContainerViewController.setView 2")
+            
+            // ViewController①をContainerViewControllerの子として追加
+            topViewController.roomData = self.roomData
+            addChildViewController(topViewController)
+            
+            // ViewController①の表示
+            view.addSubview(topViewController.view)
+            topViewController.didMove(toParentViewController: self)
+            topViewController.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height / 5 * 4)
             // ViewController②をContainerViewControllerの子として追加
             underViewController.roomData = self.roomData
+            underViewController.leaveData = self.leaveData
             addChildViewController(underViewController)
             
             // ViewController②の表示
             view.addSubview(underViewController.view)
             underViewController.didMove(toParentViewController: self)
-            underViewController.view.frame = CGRect(x: 0, y: 260, width: view.frame.width, height: view.frame.height - 260)
+            underViewController.view.frame = CGRect(x: 0, y: view.frame.height / 5 * 4, width: view.frame.width, height: view.frame.height / 5)
         }
         
         print("DEBUG_PRINT: UserMessagesContainerViewController.setView end")
