@@ -34,7 +34,7 @@ class UserViewController: BaseFormViewController  {
         print("DEBUG_PRINT: UserViewController.showForm start")
 
         if UserDefaults.standard.object(forKey: DefaultString.RunningFlag) != nil,
-            UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) == true {
+            UserDefaults.standard.bool(forKey: DefaultString.RunningFlag) == true {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "おあずけ中は更新できません")
         }
 
@@ -335,7 +335,7 @@ class UserViewController: BaseFormViewController  {
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 if UserDefaults.standard.object(forKey: DefaultString.RunningFlag) != nil,
-                    UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) == true {
+                    UserDefaults.standard.bool(forKey: DefaultString.RunningFlag) == true {
                     row.title = "おあずけ中は更新できません"
                     row.disabled = true
                 }else{
@@ -347,7 +347,7 @@ class UserViewController: BaseFormViewController  {
                         print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
                     }else{
                         if UserDefaults.standard.object(forKey: DefaultString.RunningFlag) != nil,
-                            UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) == true {
+                            UserDefaults.standard.bool(forKey: DefaultString.RunningFlag) == true {
                             SVProgressHUD.show(RandomImage.getRandomImage(), status: "おあずけ中は更新できません")
                         }else{
                             self?.executePost()
@@ -536,8 +536,9 @@ class UserViewController: BaseFormViewController  {
     @IBAction func back() {
         print("DEBUG_PRINT: UserViewController.back start")
         
-        //前画面に戻る
-        self.navigationController?.popViewController(animated: true)
+        // HOMEに画面遷移
+        let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
+        self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: UserViewController.back end")
     }

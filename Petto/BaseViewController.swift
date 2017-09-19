@@ -96,9 +96,9 @@ class NavigationBarHandler: NSObject {
                         UserDefaults.standard.set(self.myUserData?.historys , forKey: DefaultString.Historys)
                     }
                     UserDefaults.standard.set(Bool(), forKey: DefaultString.RunningFlag)
-                    if self.myUserData?.runningFlag != nil && self.myUserData?.runningFlag != nil {
+                    if self.myUserData?.runningFlag != nil {
                         // ユーザーデフォルト設定
-                        UserDefaults.standard.set(self.myUserData?.historys , forKey: DefaultString.RunningFlag)
+                        UserDefaults.standard.set(self.myUserData?.runningFlag , forKey: DefaultString.RunningFlag)
                     }
                     
                     // 通知バッジ
