@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import SVProgressHUD
 
-class HistoryViewController: BaseViewController, UITableViewDelegate, UITableViewDataSource { //, HistoryDelegate
+class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource { //, HistoryDelegate
     
     var petData: PetData?
     var leaveDataArray: [LeaveData] = []

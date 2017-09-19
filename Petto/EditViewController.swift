@@ -23,6 +23,10 @@ class EditViewController: BaseFormViewController {
         super.viewDidLoad()
         print("DEBUG_PRINT: EditViewController.viewDidLoad start")
         
+        if self.petData?.runningFlag != nil , self.petData?.runningFlag == true{
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "おあずけ中は更新できません")
+        }
+        
         let view = UIImageView()
         if let key = self.petData?.id {
             view.sd_setImage(with: StorageRef.getRiversRef(key: key), placeholderImage: StorageRef.placeholderImage)
@@ -552,13 +556,26 @@ class EditViewController: BaseFormViewController {
             
             +++ Section(footer: "※投稿したペットは削除できません（編集・非活性は可）")
             <<< ButtonRow() { (row: ButtonRow) -> Void in
-                row.title = "投稿する"
+                if self.petData?.runningFlag != nil , self.petData?.runningFlag == true{
+                    row.title = "おあずけ中は更新できません"
+                    row.disabled = true
+                }else{
+                    if self.petData != nil {
+                        row.title = "投稿する"
+                    }else{
+                        row.title = "更新する"
+                    }
+                }
                 }.onCellSelection { [weak self] (cell, row) in
                     if let error = row.section?.form?.validate(), error.count != 0 {
                         SVProgressHUD.showError(withStatus: "\(error.count)件の入力エラーがあります")
                         print("DEBUG_PRINT: EditViewController.viewDidLoad \(error)")
                     }else{
-                        self?.executePost()
+                        if self?.petData?.runningFlag != nil , self?.petData?.runningFlag == true{
+                            SVProgressHUD.showError(withStatus: "おあずけ中は更新できません！")
+                        }else{
+                            self?.executePost()
+                        }
                     }
             }
             <<< ButtonRow() { (row: ButtonRow) -> Void in
