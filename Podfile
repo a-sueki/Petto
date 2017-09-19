@@ -23,4 +23,5 @@ target 'Petto' do
   pod 'Firebase/Messaging'
   pod 'SCLAlertView'
   pod 'Toucan'
+  pod "LINEActivity", "~> 0.2.0"
 end

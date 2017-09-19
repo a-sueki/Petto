@@ -30,6 +30,7 @@
 		846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */; };
 		846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */; };
 		846705E71F0F81E400FFEA8D /* MessageListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 846705E51F0F81E400FFEA8D /* MessageListTableViewCell.xib */; };
+		846EA6481F71C64100B2F187 /* LINEActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 846EA6471F71C64100B2F187 /* LINEActivity.h */; };
 		8470FD7E1F10C613002F4690 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8470FD7D1F10C613002F4690 /* UserData.swift */; };
 		847CA55E1F3ACD4E00C68672 /* LeaveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847CA55D1F3ACD4E00C68672 /* LeaveViewController.swift */; };
 		847CA5661F3AFFE500C68672 /* ConditionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */; };
@@ -123,6 +124,7 @@
 		846705E21F0F7C3D00FFEA8D /* MessageListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListViewController.swift; sourceTree = "<group>"; };
 		846705E41F0F81E400FFEA8D /* MessageListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewCell.swift; sourceTree = "<group>"; };
 		846705E51F0F81E400FFEA8D /* MessageListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageListTableViewCell.xib; sourceTree = "<group>"; };
+		846EA6471F71C64100B2F187 /* LINEActivity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LINEActivity.h; path = ../Pods/LINEActivity/LINEActivity/LINEActivity.h; sourceTree = "<group>"; };
 		8470FD7D1F10C613002F4690 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		847CA55D1F3ACD4E00C68672 /* LeaveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaveViewController.swift; sourceTree = "<group>"; };
 		847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -331,6 +333,7 @@
 			children = (
 				84F55FEF1F5886C200EAE4BE /* Petto.entitlements */,
 				84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */,
+				846EA6471F71C64100B2F187 /* LINEActivity.h */,
 				84F6ACC41EFD02DC0086BBB9 /* Petto-Bridging-Header.h */,
 				84D6CD311F18819E000CA101 /* Eureka */,
 				84CCE0081EFB791D0025B5D3 /* AppDelegate.swift */,
@@ -397,6 +400,17 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		846EA6461F71C5E500B2F187 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846EA6481F71C64100B2F187 /* LINEActivity.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		84CCE0041EFB791D0025B5D3 /* Petto */ = {
 			isa = PBXNativeTarget;
@@ -410,6 +424,7 @@
 				5A33CE4A0AD4348E73839884 /* [CP] Copy Pods Resources */,
 				84F6ACAA1EFD01EE0086BBB9 /* Embed Frameworks */,
 				84F6ACC31EFD02830086BBB9 /* ShellScript */,
+				846EA6461F71C5E500B2F187 /* Headers */,
 			);
 			buildRules = (
 			);

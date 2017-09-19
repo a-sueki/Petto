@@ -11,5 +11,6 @@
 
 #import <AdobeCreativeSDKCore/AdobeCreativeSDKCore.h>
 #import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
+#import "LINEActivity.h"
 
 #endif /* Petto_Bridging_Header_h */

@@ -538,8 +538,9 @@ class PetDetailViewController: BaseFormViewController {
             shareImage = view.image!
         }
         let shareItems = [shareText, shareWebsite, shareImage] as [Any]
-        
-        let avc = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+        // LINEで送るボタンを追加
+        let line = LINEActivity()
+        let avc = UIActivityViewController(activityItems: shareItems, applicationActivities: [line])
         present(avc, animated: true, completion: nil)
         
         print("DEBUG_PRINT: PetDetailViewController.share end")
