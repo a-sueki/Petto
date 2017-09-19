@@ -35,6 +35,10 @@
 		847CA5661F3AFFE500C68672 /* ConditionsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */; };
 		847CA5671F3AFFE500C68672 /* ConditionsCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 847CA5651F3AFFE400C68672 /* ConditionsCollectionViewCell.xib */; };
 		8480595D1F04CCB3003E2613 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8480595C1F04CCB3003E2613 /* Const.swift */; };
+		848FF95E1F7082AC0000F62C /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848FF95D1F7082AC0000F62C /* ContactViewController.swift */; };
+		848FF9601F70834F0000F62C /* ContactData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848FF95F1F70834F0000F62C /* ContactData.swift */; };
+		848FF9621F70A1000000F62C /* Policy.txt in Resources */ = {isa = PBXBuildFile; fileRef = 848FF9611F70A1000000F62C /* Policy.txt */; };
+		848FF9641F70A14C0000F62C /* PolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848FF9631F70A14C0000F62C /* PolicyViewController.swift */; };
 		8491640D1F288093007597F9 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8491640C1F288093007597F9 /* EditViewController.swift */; };
 		8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8491640E1F2884B7007597F9 /* EditSectionHeader.xib */; };
 		849ED1E21F1CEE47003AD9F5 /* PetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849ED1E11F1CEE47003AD9F5 /* PetData.swift */; };
@@ -49,7 +53,6 @@
 		84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE00A1EFB791D0025B5D3 /* ViewController.swift */; };
 		84CCE00E1EFB791D0025B5D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CCE00C1EFB791D0025B5D3 /* Main.storyboard */; };
 		84CCE0131EFB791D0025B5D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */; };
-		84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */; };
 		84CCE01D1EFB8C040025B5D3 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */; };
 		84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */; };
 		84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D253071F0217D700D877A9 /* LeftViewController.swift */; };
@@ -125,6 +128,10 @@
 		847CA5641F3AFFE400C68672 /* ConditionsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConditionsCollectionViewCell.swift; sourceTree = "<group>"; };
 		847CA5651F3AFFE400C68672 /* ConditionsCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConditionsCollectionViewCell.xib; sourceTree = "<group>"; };
 		8480595C1F04CCB3003E2613 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
+		848FF95D1F7082AC0000F62C /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
+		848FF95F1F70834F0000F62C /* ContactData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactData.swift; sourceTree = "<group>"; };
+		848FF9611F70A1000000F62C /* Policy.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Policy.txt; sourceTree = "<group>"; };
+		848FF9631F70A14C0000F62C /* PolicyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolicyViewController.swift; sourceTree = "<group>"; };
 		8491640C1F288093007597F9 /* EditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		8491640E1F2884B7007597F9 /* EditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditSectionHeader.xib; sourceTree = "<group>"; };
 		849ED1E11F1CEE47003AD9F5 /* PetData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetData.swift; sourceTree = "<group>"; };
@@ -141,7 +148,6 @@
 		84CCE00D1EFB791D0025B5D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		84CCE0121EFB791D0025B5D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84CCE0141EFB791D0025B5D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		84CCE01C1EFB8C040025B5D3 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		84CCE01E1EFB8C1C0025B5D3 /* ImageSelectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelectViewController.swift; sourceTree = "<group>"; };
 		84D253071F0217D700D877A9 /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
@@ -299,6 +305,7 @@
 				84AC70E61F11E43A001F7563 /* MessageData.swift */,
 				84DB3BFD1F5453410067A680 /* RoomData.swift */,
 				84B577201F5C23350008622D /* LeaveData.swift */,
+				848FF95F1F70834F0000F62C /* ContactData.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -333,6 +340,9 @@
 				84BC45A31F2729FE0017AF53 /* Assets.xcassets */,
 				846705DD1F0F78BC00FFEA8D /* BaseViewController.swift */,
 				84D253071F0217D700D877A9 /* LeftViewController.swift */,
+				848FF95D1F7082AC0000F62C /* ContactViewController.swift */,
+				848FF9611F70A1000000F62C /* Policy.txt */,
+				848FF9631F70A14C0000F62C /* PolicyViewController.swift */,
 				84CCE0141EFB791D0025B5D3 /* Info.plist */,
 				844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */,
 				84CCE0111EFB791D0025B5D3 /* LaunchScreen.storyboard */,
@@ -351,7 +361,6 @@
 		84D523F21F57AD15004092D5 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				84CCE01A1EFB8B4B0025B5D3 /* LoginViewController.swift */,
 				84D9267F1F559A5A008E419E /* PasswordResetViewController.swift */,
 			);
 			name = Login;
@@ -454,6 +463,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				848FF9621F70A1000000F62C /* Policy.txt in Resources */,
 				84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */,
 				8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */,
 				84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */,
@@ -550,7 +560,6 @@
 				84D6CD351F18F828000CA101 /* FloatLabelTextField.swift in Sources */,
 				840EE9551F4C7864004E9AF8 /* SearchViewController.swift in Sources */,
 				846705E31F0F7C3D00FFEA8D /* MessageListViewController.swift in Sources */,
-				84CCE01B1EFB8B4B0025B5D3 /* LoginViewController.swift in Sources */,
 				84CCE00B1EFB791D0025B5D3 /* ViewController.swift in Sources */,
 				84DB3BFE1F5453410067A680 /* RoomData.swift in Sources */,
 				84067B541F0B6C9600F01905 /* HomeCollectionViewCell.swift in Sources */,
@@ -561,6 +570,7 @@
 				84CCE01F1EFB8C1C0025B5D3 /* ImageSelectViewController.swift in Sources */,
 				84D6CD2E1F1880DC000CA101 /* ImageRow.swift in Sources */,
 				84D926801F559A5A008E419E /* PasswordResetViewController.swift in Sources */,
+				848FF9601F70834F0000F62C /* ContactData.swift in Sources */,
 				84DB3BFC1F543D5B0067A680 /* BreederMessagesContainerViewController.swift in Sources */,
 				845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */,
 				844062FE1F60B36200640124 /* TodoListViewController.swift in Sources */,
@@ -574,10 +584,12 @@
 				84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */,
 				84B577211F5C23350008622D /* LeaveData.swift in Sources */,
 				846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */,
+				848FF95E1F7082AC0000F62C /* ContactViewController.swift in Sources */,
 				84CCE01D1EFB8C040025B5D3 /* HomeViewController.swift in Sources */,
 				84DB3BFA1F540A490067A680 /* BookingViewController.swift in Sources */,
 				840EE9581F4D616C004E9AF8 /* SearchData.swift in Sources */,
 				847CA55E1F3ACD4E00C68672 /* LeaveViewController.swift in Sources */,
+				848FF9641F70A14C0000F62C /* PolicyViewController.swift in Sources */,
 				849ED1E21F1CEE47003AD9F5 /* PetData.swift in Sources */,
 				8470FD7E1F10C613002F4690 /* UserData.swift in Sources */,
 				8480595D1F04CCB3003E2613 /* Const.swift in Sources */,

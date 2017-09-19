@@ -20,7 +20,7 @@ enum LeftMenu: Int {
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var mainViewController: UINavigationController!
-    var menus = ["Account","Profile", "My pet", "Message", "Oazuke / Azukari"]
+    var menus = ["Account","Profile", "My Pet", "Message", "Oazuke / Azukari","Contact Us", "Terms of Use"]
     var myUserData: UserData?
     
     @IBOutlet weak var tableView: UITableView!
@@ -187,6 +187,14 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let navigationController = UINavigationController(rootViewController: todoListViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             }
+        case 5:
+                let contactViewController = self.storyboard?.instantiateViewController(withIdentifier: "Contact") as! ContactViewController
+                let navigationController = UINavigationController(rootViewController: contactViewController)
+                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+        case 6:
+            let policyViewController = self.storyboard?.instantiateViewController(withIdentifier: "Policy") as! PolicyViewController
+            let navigationController = UINavigationController(rootViewController: policyViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         default:
             break
         }

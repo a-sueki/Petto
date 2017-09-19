@@ -209,7 +209,7 @@ class NavigationBarHandler: NSObject {
             // アニメーション削除
             self.viewController?.navigationController?.view.layer.removeAllAnimations()
             
-            let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "TodoList") as! TodoListViewController
+            let viewController3 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "Search") as! SearchViewController
             self.viewController?.navigationController?.pushViewController(viewController3, animated: false)
         }
     }
@@ -257,12 +257,7 @@ class BaseFormViewController: FormViewController {
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
         }
-        // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-        /*            DispatchQueue.main.async {
-         let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-         self.present(loginViewController!, animated: true, completion: nil)
-         }
-         */         // ナビゲーションバーを表示
+        // ナビゲーションバーを表示
         helper.viewController = self
         helper.setupNavigationBar()
         print("DEBUG_PRINT: BaseFormViewController.viewDidAppear end")
@@ -302,12 +297,7 @@ class BaseViewController: UIViewController {
         if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || FIRAuth.auth()?.currentUser == nil{
             // オブザーバーを削除する
             FIRDatabase.database().reference().removeAllObservers()
-            // viewDidAppear内でpresent()を呼び出しても表示されないためメソッドが終了してから呼ばれるようにする
-            /*            DispatchQueue.main.async {
-             let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
-             self.present(loginViewController!, animated: true, completion: nil)
-             }
-             */        }
+        }
         // ナビゲーションバーを表示
         helper.viewController = self
         helper.setupNavigationBar()

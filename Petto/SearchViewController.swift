@@ -109,7 +109,7 @@ class SearchViewController: BaseFormViewController {
                 $0.value = self.searchData?.isAvailable ?? true
             }
             +++
-            Section(header: "あずかり人の募集条件", footer: "期間外では、自動的に募集OFFになります"){
+            Section(header: "あずかり人の募集条件", footer: ""){
                 $0.hidden = .function(["isAvailable"], { form -> Bool in
                     let row: RowOf<Bool>! = form.rowBy(tag: "isAvailable")
                     return row.value ?? false == false
@@ -462,8 +462,6 @@ class SearchViewController: BaseFormViewController {
                         self.inputData["\(key)"] = itemValue
                     }
                 }
-                // UIImage
-            }else if case let _ as UIImage = value {
                 // Bool
             }else if case let v as Bool = value {
                 switch key {

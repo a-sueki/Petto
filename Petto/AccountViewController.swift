@@ -239,7 +239,7 @@ class AccountViewController: BaseFormViewController {
                     SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                     let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
                     ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                        print("DEBUG_PRINT: LoginViewController.handleLoginButton .observeSingleEventイベントが発生しました。")
+                        print("DEBUG_PRINT: AccountViewController.login .observeSingleEventイベントが発生しました。")
                         if let _ = snapshot.value as? NSDictionary {
                             let userData = UserData(snapshot: snapshot, myId: uid)
                             
@@ -360,7 +360,7 @@ class AccountViewController: BaseFormViewController {
         FIRAuth.auth()?.createUser(withEmail: address, password: password) { user, error in
             if let error = error {
                 // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
-                print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton " + error.localizedDescription)
+                print("DEBUG_PRINT: AcountViewController.createUser " + error.localizedDescription)
                 if error.localizedDescription == "The email address is already in use by another account." {
                     SVProgressHUD.showError(withStatus: "そのアカウントは既に存在します")
                 } else {
@@ -403,12 +403,12 @@ class AccountViewController: BaseFormViewController {
                 changeRequest.displayName = displayName
                 changeRequest.commitChanges { error in
                     if let error = error {
-                        print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton " + error.localizedDescription)
+                        print("DEBUG_PRINT: AcountViewController.handleCreateAcountButton " + error.localizedDescription)
                     }
-                    print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton [displayName = \(user.displayName!)]の設定に成功しました。")
+                    print("DEBUG_PRINT: AcountViewController.handleCreateAcountButton [displayName = \(user.displayName!)]の設定に成功しました。")
                 }
             } else {
-                print("DEBUG_PRINT: LoginViewController.handleCreateAcountButton displayNameの設定に失敗しました。")
+                print("DEBUG_PRINT: AcountViewController.handleCreateAcountButton displayNameの設定に失敗しました。")
             }
             
         }

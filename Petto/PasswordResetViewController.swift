@@ -37,21 +37,21 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
     
     // Returnキーでキーボードを閉じる
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
-        print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn start")
+        print("DEBUG_PRINT: PasswordResetViewController.textFieldShouldReturn start")
         
         textField.resignFirstResponder()
         
-        print("DEBUG_PRINT: LoginViewController.textFieldShouldReturn end")
+        print("DEBUG_PRINT: PasswordResetViewController.textFieldShouldReturn end")
         return true
     }
     
     // TextField以外の部分をタッチでキーボードを閉じる
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("DEBUG_PRINT: LoginViewController.touchesBegan start")
+        print("DEBUG_PRINT: PasswordResetViewController.touchesBegan start")
         
         self.view.endEditing(true)
         
-        print("DEBUG_PRINT: LoginViewController.touchesBegan end")
+        print("DEBUG_PRINT: PasswordResetViewController.touchesBegan end")
     }
     
     @IBAction func handleOkButton(_ sender: Any) {
