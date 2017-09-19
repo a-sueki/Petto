@@ -53,13 +53,13 @@ class SearchData: NSObject {
         
         let valueDictionary = snapshot.value as! [String: AnyObject]
         
-        self.lev11 = valueDictionary["lev11"] as? Bool
-        self.lev12 = valueDictionary["lev12"] as? Bool
-        self.lev21 = valueDictionary["lev21"] as? Bool
-        self.lev22 = valueDictionary["lev22"] as? Bool
-        self.lev23 = valueDictionary["lev23"] as? Bool
-        self.lev31 = valueDictionary["lev31"] as? Bool
-        self.lev32 = valueDictionary["lev32"] as? Bool
+        self.lev11 = valueDictionary["lv1-1"] as? Bool
+        self.lev12 = valueDictionary["lv1-2"] as? Bool
+        self.lev21 = valueDictionary["lv2-1"] as? Bool
+        self.lev22 = valueDictionary["lv2-2"] as? Bool
+        self.lev23 = valueDictionary["lv2-3"] as? Bool
+        self.lev31 = valueDictionary["lv3-1"] as? Bool
+        self.lev32 = valueDictionary["lv3-2"] as? Bool
         // ペットプロフ
         self.area = valueDictionary["area"] as? String
         self.kind = valueDictionary["kind"] as? String

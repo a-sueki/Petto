@@ -21,20 +21,19 @@ class SearchViewController: BaseFormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: SearchViewController.viewDidLoad start")
+
+        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
+            self.read()
+        }else{
+            self.updateSearchData()
+        }
+        
         print("DEBUG_PRINT: SearchViewController.viewDidLoad end")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: SearchViewController.viewWillAppear start")
-        
-        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil , let _ = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
-            self.read()
-        }else{
-            self.updateSearchData()
-        }
-        
-        
         print("DEBUG_PRINT: SearchViewController.viewWillAppear end")
     }
     
@@ -42,7 +41,7 @@ class SearchViewController: BaseFormViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: SearchViewController.viewWillDisappear start")
         
-        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil , let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
+        if let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
             let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
             ref.removeAllObservers()
         }
@@ -54,7 +53,7 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.read start")
         
         // Firebaseから登録済みデータを取得
-        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil , let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
+        if let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
@@ -94,7 +93,7 @@ class SearchViewController: BaseFormViewController {
             +++ Section("ペットのプロフィール①")
             <<< SwitchRow("lv1-1"){
                 $0.title = "ペットのプロフで絞り込む"
-                $0.value = false
+                $0.value = self.searchData?.lev11 ?? false
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
@@ -123,7 +122,7 @@ class SearchViewController: BaseFormViewController {
             }
             <<< SwitchRow("lv1-2"){
                 $0.title = "もっと詳しく"
-                $0.value = false
+                $0.value = self.searchData?.lev12 ?? false
             }
             <<< SegmentedRow<String>("size") {
                 $0.title =  "大きさ"
@@ -172,7 +171,7 @@ class SearchViewController: BaseFormViewController {
             +++ Section("ペットあずかりに関する条件①")
             <<< SwitchRow("lv2-1"){
                 $0.title = "あずかりの条件で絞り込む"
-                $0.value = false
+                $0.value = self.searchData?.lev21 ?? false
             }
             <<< CheckRow("isAvailable"){
                 $0.title = "あずかり人を募集中"
@@ -191,7 +190,7 @@ class SearchViewController: BaseFormViewController {
             }
             <<< SwitchRow("lv2-2"){
                 $0.title = "もっと詳しく"
-                $0.value = false
+                $0.value = self.searchData?.lev22 ?? false
             }
             <<< CheckRow("toolRentalAllowed") {
                 $0.title = "道具の貸し出し可能"
@@ -229,7 +228,7 @@ class SearchViewController: BaseFormViewController {
             }
             <<< SwitchRow("lv2-3"){
                 $0.title = "あずかり期間・日数を指定"
-                $0.value = false
+                $0.value = self.searchData?.lev23 ?? false
             }
             <<< DateRow("startDate") {
                 $0.title = "期間（開始）"
@@ -391,7 +390,7 @@ class SearchViewController: BaseFormViewController {
             +++ Section("ペットの状態①")
             <<< SwitchRow("lv3-1"){
                 $0.title = "ペットの状態で絞り込む"
-                $0.value = false
+                $0.value = self.searchData?.lev31 ?? false
             }
             <<< CheckRow("isVaccinated") {
                 $0.title = "ワクチン接種済み"
@@ -427,7 +426,7 @@ class SearchViewController: BaseFormViewController {
             }
             <<< SwitchRow("lv3-2"){
                 $0.title = "もっと詳しく"
-                $0.value = false
+                $0.value = self.searchData?.lev32 ?? false
             }
             <<< MultipleSelectorRow<String>("userNgs") {
                 $0.title = "訳ありペットを除外"

@@ -560,7 +560,25 @@ class EditViewController: BaseFormViewController {
                     }else{
                         self?.executePost()
                     }
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "思い出フォト・コメントを見る"
+                row.hidden = .function([""], { form -> Bool in
+                    if self.petData != nil, self.petData?.historys != nil, !(self.petData?.historys.isEmpty)! {
+                        return false
+                    }else{
+                        return true
+                    }
+                })
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.toHistory()
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "もどる"
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.back()
         }
+
         print("DEBUG_PRINT: EditViewController.viewDidLoad end")
     }
     
@@ -718,6 +736,27 @@ class EditViewController: BaseFormViewController {
         
         print("DEBUG_PRINT: EditViewController.executePost end")
     }
+    
+    @IBAction func back() {
+        print("DEBUG_PRINT: EditViewController.back start")
+        
+        //前画面に戻る
+        self.navigationController?.popViewController(animated: true)
+        
+        print("DEBUG_PRINT: EditViewController.back end")
+    }
+    
+    @IBAction func toHistory() {
+        print("DEBUG_PRINT: EditViewController.toHistory start")
+        
+        // historyに画面遷移
+        let historyViewController = self.storyboard?.instantiateViewController(withIdentifier: "History") as! HistoryViewController
+        historyViewController.petData = self.petData
+        self.navigationController?.pushViewController(historyViewController, animated: true)
+        
+        print("DEBUG_PRINT: EditViewController.toHistory end")
+    }
+
     
     func storageUpload(photeImage: UIImage, key: String){
         
