@@ -32,6 +32,12 @@ class UserViewController: BaseFormViewController  {
     
     func showForm(){
         print("DEBUG_PRINT: UserViewController.showForm start")
+
+        if UserDefaults.standard.object(forKey: DefaultString.RunningFlag) != nil,
+            UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) == true {
+            SVProgressHUD.show(RandomImage.getRandomImage(), status: "おあずけ中は更新できません")
+        }
+
         
         let view = UIImageView()
         if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
@@ -328,16 +334,32 @@ class UserViewController: BaseFormViewController  {
             
             +++ Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
-                row.title = "OK"
+                if UserDefaults.standard.object(forKey: DefaultString.RunningFlag) != nil,
+                    UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) == true {
+                    row.title = "おあずけ中は更新できません"
+                    row.disabled = true
+                }else{
+                    row.title = "保存する"
+                }
                 }.onCellSelection { [weak self] (cell, row) in
                     if let error = row.section?.form?.validate(), error.count != 0 {
                         SVProgressHUD.showError(withStatus: "入力を修正してください")
                         print("DEBUG_PRINT: UserViewController.updateUserData \(error)のため処理は行いません")
                     }else{
-                        self?.executePost()
+                        if UserDefaults.standard.object(forKey: DefaultString.RunningFlag) != nil,
+                            UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) == true {
+                            SVProgressHUD.show(RandomImage.getRandomImage(), status: "おあずけ中は更新できません")
+                        }else{
+                            self?.executePost()
+                        }
                     }
+            }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "もどる"
+                }.onCellSelection { [weak self] (cell, row) in
+                    self?.back()
         }
-        
+
         print("DEBUG_PRINT: UserViewController.showForm end")
     }
     
@@ -509,6 +531,15 @@ class UserViewController: BaseFormViewController  {
         self.navigationController?.pushViewController(viewController2, animated: true)
         
         print("DEBUG_PRINT: UserViewController.executePost end")
+    }
+    
+    @IBAction func back() {
+        print("DEBUG_PRINT: UserViewController.back start")
+        
+        //前画面に戻る
+        self.navigationController?.popViewController(animated: true)
+        
+        print("DEBUG_PRINT: UserViewController.back end")
     }
     
     func storageUpload(photeImage: UIImage, key: String){

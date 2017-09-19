@@ -300,6 +300,12 @@ class AccountViewController: BaseFormViewController {
                             if !userData.bads.isEmpty {
                                 UserDefaults.standard.set(userData.bads , forKey: DefaultString.Bads)
                             }
+                            if !userData.historys.isEmpty {
+                                UserDefaults.standard.set(userData.historys , forKey: DefaultString.Historys)
+                            }
+                            if userData.runningFlag != nil {
+                                UserDefaults.standard.set(userData.runningFlag , forKey: DefaultString.RunningFlag)
+                            }
                         }else{
                             UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
                             // ユーザーデフォルト設定（アカウント項目）

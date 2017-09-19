@@ -467,6 +467,10 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
                             "/\(Paths.PetPath)/\(self.leaveData!.petId!)/historys/\(self.leaveData!.id!)": true,
                             "/\(Paths.PetPath)/\(self.leaveData!.petId!)/runningFlag/": true,
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/historys/\(self.leaveData!.id!)": true,
+                            "/\(Paths.UserPath)/\(self.leaveData!.userId!)/runningFlag/": true,
+                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/historys/\(self.leaveData!.id!)": true,
+                            "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/runningFlag/": true,
                             "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": true] as [String : Any]
         ref.updateChildValues(childUpdates)
         // 全てのモーダルを閉じる

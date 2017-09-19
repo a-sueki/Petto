@@ -80,6 +80,26 @@ class NavigationBarHandler: NSObject {
                         // ユーザーデフォルト設定
                         UserDefaults.standard.set(self.myUserData?.roomIds , forKey: DefaultString.RoomIds)
                     }
+                    UserDefaults.standard.set([Int:String](), forKey: DefaultString.Goods)
+                    if self.myUserData?.goods != nil && !(self.myUserData?.goods.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.goods , forKey: DefaultString.Goods)
+                    }
+                    UserDefaults.standard.set([Int:String](), forKey: DefaultString.Bads)
+                    if self.myUserData?.bads != nil && !(self.myUserData?.bads.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.bads , forKey: DefaultString.Bads)
+                    }
+                    UserDefaults.standard.set([String:Bool](), forKey: DefaultString.Historys)
+                    if self.myUserData?.historys != nil && !(self.myUserData?.historys.isEmpty)! {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.historys , forKey: DefaultString.Historys)
+                    }
+                    UserDefaults.standard.set(Bool(), forKey: DefaultString.RunningFlag)
+                    if self.myUserData?.runningFlag != nil && self.myUserData?.runningFlag != nil {
+                        // ユーザーデフォルト設定
+                        UserDefaults.standard.set(self.myUserData?.historys , forKey: DefaultString.RunningFlag)
+                    }
                     
                     // 通知バッジ
                     self.setNotificationBatch(button: button1, unReadCount: unReadRoomIds ,todoCount: todoRoomIds)

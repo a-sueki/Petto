@@ -55,6 +55,8 @@ struct DefaultString {
     static let TodoRoomIds = "todoRoomIds"
     static let Goods = "goods"
     static let Bads = "bads"
+    static let Historys = "historys"
+    static let RunningFlag = "runningFlag"
 }
 
 struct RandomImage {

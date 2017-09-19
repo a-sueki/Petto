@@ -153,7 +153,6 @@ class ConsentViewController: BaseFormViewController {
         let ref = FIRDatabase.database().reference()
         let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/acceptFlag/": true,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
-                            "/\(Paths.PetPath)/\(self.leaveData!.petId!)/historys/\(self.leaveData!.id!)/": true,
                             "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": true,
                             "/\(Paths.UserPath)/\(self.leaveData!.breederId!)/todoRoomIds/\(self.leaveData!.id!)/": true] as [String : Any]
         ref.updateChildValues(childUpdates)

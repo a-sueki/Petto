@@ -43,6 +43,12 @@ class UserData: NSObject {
     var bads: [String] = []
     var isBaded: Bool = false
     
+    // おあずけヒストリー
+    var historys = [String:Bool]()
+    // おあずけ中フラグ
+    var runningFlag: Bool?
+
+    
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: UserData.init start")
         
@@ -112,6 +118,11 @@ class UserData: NSObject {
                 break
             }
         }
+        if let historys = valueDictionary["historys"] as? [String:Bool] {
+            self.historys = historys
+        }
+        self.runningFlag = valueDictionary["runningFlag"] as? Bool
+
         
         print("DEBUG_PRINT: UserData.init end")
     }
