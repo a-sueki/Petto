@@ -43,15 +43,33 @@ class PetDetailViewController: BaseFormViewController {
                     $0.header = header
                 }
             }
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "シェアする"
+                }
+                .cellSetup { cell, row in
+                    cell.imageView?.image = UIImage(named: "share")
+                }
+                .onCellSelection { [weak self] (cell, row) in
+                    row.section?.form?.validate()
+                    self?.share()
+            }
+
+            +++ Section("プロフィール")
             <<< NameRow("name") {
                 $0.title = "名前"
                 $0.value = self.petData?.name ?? nil
                 $0.disabled = true
             }
+            .cellSetup { cell, row in
+                cell.imageView?.image = UIImage(named: "dogtag")
+            }
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.value = self.petData?.area ?? nil
                 $0.disabled = true
+            }
+            .cellSetup { cell, row in
+                cell.imageView?.image = UIImage(named: "maker")
             }
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
@@ -505,6 +523,28 @@ class PetDetailViewController: BaseFormViewController {
         
         print("DEBUG_PRINT: PetDetailViewController.toHistory end")
     }
+    
+    @IBAction func share() {
+        print("DEBUG_PRINT: PetDetailViewController.share start")
+        
+        // 共有する項目
+        let shareText = ShareString.text
+        let shareWebsite = ShareString.website
+        // 画像を追加
+        let view = UIImageView()
+        var shareImage = UIImage()
+        view.sd_setImage(with: StorageRef.getRiversRef(key: (self.petData?.id)!), placeholderImage: StorageRef.placeholderImage)
+        if view.image != StorageRef.placeholderImage {
+            shareImage = view.image!
+        }
+        let shareItems = [shareText, shareWebsite, shareImage] as [Any]
+        
+        let avc = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+        present(avc, animated: true, completion: nil)
+        
+        print("DEBUG_PRINT: PetDetailViewController.share end")
+    }
+
     
 }
 

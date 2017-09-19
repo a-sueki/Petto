@@ -12,6 +12,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import SVProgressHUD
 
+
 class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource { //, HistoryDelegate
     
     var petData: PetData?
@@ -107,6 +108,10 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         //xibとカスタムクラスで作成したCellのインスタンスを作成
         let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath) as! HistoryTableViewCell
+        
+        cell.shearButton.addTarget(self, action:#selector(handleFacebookButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+        cell.facebookButton.addTarget(self, action:#selector(handleFacebookButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+        
 /*        //自作セルのデリゲート先に自分を設定する。
         cell.delegate = self
         // セル内のボタンのアクションをソースコードで設定する
@@ -169,6 +174,34 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         print("DEBUG_PRINT: HistoryViewController.cellForRowAt end")
         return cell
     }
+    
+    func handleFacebookButton(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: HistoryViewController.handleFacebookButton start")
+        
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+
+        // 共有する項目
+        let shareText = ShareString.text
+        let shareWebsite = ShareString.website
+        // 画像を追加
+        let view = UIImageView()
+        var shareImage = UIImage()
+        view.sd_setImage(with: StorageRef.getRiversRef(key: self.leaveDataArray[indexPath!.row].id!), placeholderImage: StorageRef.placeholderImage)
+        if view.image != StorageRef.placeholderImage {
+            shareImage = view.image!
+        }
+        let shareItems = [shareText, shareWebsite, shareImage] as [Any]
+        
+        let avc = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
+        
+        present(avc, animated: true, completion: nil)
+        
+        print("DEBUG_PRINT: HistoryViewController.handleFacebookButton end")
+    }
+ 
     
     func read() {
         print("DEBUG_PRINT: HistoryViewController.read start")

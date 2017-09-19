@@ -16,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="553" height="550"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="553" height="549.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="553" height="550"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="me6-e3-PJd">
@@ -132,6 +132,14 @@
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Veo-BV-syD">
+                        <rect key="frame" x="495" y="286" width="50" height="50"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="50" id="20j-Xw-ZYC"/>
+                            <constraint firstAttribute="height" constant="50" id="fxS-2O-ft8"/>
+                        </constraints>
+                        <state key="normal" image="share"/>
+                    </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dGR-xn-004">
                         <rect key="frame" x="514" y="518" width="31" height="30"/>
                         <constraints>
@@ -146,6 +154,11 @@
                         </constraints>
                         <state key="normal" title="保存"/>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eMp-ak-s8I">
+                        <rect key="frame" x="383" y="291.5" width="112" height="39"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                        <state key="normal" title="シェアする"/>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="H7u-Vr-K7X" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="0ao-bY-OOc"/>
@@ -153,6 +166,8 @@
                     <constraint firstItem="4sX-xD-hWe" firstAttribute="top" secondItem="kBh-6M-Hzw" secondAttribute="bottom" constant="3" id="4rS-Cr-hxq"/>
                     <constraint firstItem="kBh-6M-Hzw" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="4y9-Qr-nxh"/>
                     <constraint firstItem="k3T-vH-510" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="6d9-wU-eCe"/>
+                    <constraint firstItem="Veo-BV-syD" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="7UB-5L-O3b"/>
+                    <constraint firstItem="Veo-BV-syD" firstAttribute="centerY" secondItem="eMp-ak-s8I" secondAttribute="centerY" id="8vW-ua-iJl"/>
                     <constraint firstItem="dGR-xn-004" firstAttribute="top" secondItem="0Kg-td-lmU" secondAttribute="bottom" id="A5p-Yt-JSd"/>
                     <constraint firstItem="0Kg-td-lmU" firstAttribute="top" secondItem="4sX-xD-hWe" secondAttribute="top" id="Ahm-X9-Qdu"/>
                     <constraint firstItem="hDK-hO-ICH" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="BQ0-3a-9Y6"/>
@@ -161,7 +176,10 @@
                     <constraint firstItem="4sX-xD-hWe" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="F4k-0F-Lmo"/>
                     <constraint firstItem="kBh-6M-Hzw" firstAttribute="top" secondItem="ePv-vI-kBg" secondAttribute="bottom" constant="3" id="G5r-nU-Jly"/>
                     <constraint firstItem="hDK-hO-ICH" firstAttribute="top" secondItem="ePv-vI-kBg" secondAttribute="bottom" constant="3" id="Hvz-Lx-qhF"/>
+                    <constraint firstItem="Veo-BV-syD" firstAttribute="top" secondItem="MXa-XO-62d" secondAttribute="bottom" id="KfY-xx-zh6"/>
+                    <constraint firstItem="ePv-vI-kBg" firstAttribute="top" secondItem="Veo-BV-syD" secondAttribute="bottom" constant="3" id="L5Z-zW-3Qx"/>
                     <constraint firstItem="me6-e3-PJd" firstAttribute="top" secondItem="523-JF-MP9" secondAttribute="bottom" constant="4" id="LUh-Qk-aBO"/>
+                    <constraint firstItem="Veo-BV-syD" firstAttribute="leading" secondItem="eMp-ak-s8I" secondAttribute="trailing" id="M1w-3l-CQK"/>
                     <constraint firstItem="oaY-pG-G1f" firstAttribute="bottom" secondItem="0Kg-td-lmU" secondAttribute="bottom" id="NJr-Ei-GkC"/>
                     <constraint firstItem="HMy-Uc-DbP" firstAttribute="top" secondItem="MXa-XO-62d" secondAttribute="bottom" constant="3" id="O4C-sp-IuR"/>
                     <constraint firstAttribute="trailing" secondItem="MXa-XO-62d" secondAttribute="trailing" id="PUn-BN-h6H"/>
@@ -202,8 +220,10 @@
                 <outlet property="breederNameLabel" destination="oaY-pG-G1f" id="XYO-da-yT9"/>
                 <outlet property="cameraImageButton" destination="0vL-Fu-wII" id="3Yi-7P-Nv1"/>
                 <outlet property="cameraLabelButton" destination="HMy-Uc-DbP" id="qPh-J9-D51"/>
+                <outlet property="facebookButton" destination="Veo-BV-syD" id="SaC-Vb-JlC"/>
                 <outlet property="noImageView" destination="MXa-XO-62d" id="I7C-qp-dv1"/>
                 <outlet property="photeImageView" destination="me6-e3-PJd" id="cZB-Bc-JrY"/>
+                <outlet property="shearButton" destination="eMp-ak-s8I" id="aWu-8Q-rri"/>
                 <outlet property="termEndLabel" destination="523-JF-MP9" id="hvx-sb-Bd9"/>
                 <outlet property="termLabel" destination="pG0-Ex-dIQ" id="s1s-lC-lBd"/>
                 <outlet property="userCommentSaveButton" destination="hDK-hO-ICH" id="eUw-3V-wSp"/>
@@ -216,6 +236,7 @@
     </objects>
     <resources>
         <image name="camera-2" width="25" height="25"/>
+        <image name="share" width="25" height="25"/>
         <image name="user" width="25" height="25"/>
     </resources>
 </document>
