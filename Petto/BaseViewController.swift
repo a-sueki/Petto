@@ -32,12 +32,11 @@ class NavigationBarHandler: NSObject {
         print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar start")
         
         let button1 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+        button1.contentMode = .scaleAspectFit
         button1.setImage(UIImage(named: "menu"), for: .normal)
         button1.addTarget(self, action: #selector(onClick1), for: .touchUpInside)
-        let button2 = UIButton(frame: CGRect(x: 0, y: 0, width: 120, height: 30))
-        button2.setImage(UIImage(named: "logo"), for: .normal)
-        button2.addTarget(self, action: #selector(onClick2), for: .touchUpInside)
         let button3 = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+        button3.contentMode = .scaleAspectFit
         button3.setImage(UIImage(named: "search"), for: .normal)
         button3.addTarget(self, action: #selector(onClick3), for: .touchUpInside)
         
@@ -114,13 +113,25 @@ class NavigationBarHandler: NSObject {
         }
         
         btn1 = UIBarButtonItem(customView: button1)
-        btn2 = UIBarButtonItem(customView: button2)
         btn3 = UIBarButtonItem(customView: button3)
         
-        let leftBtns: [UIBarButtonItem] = [btn1,btn2]
+        let leftBtns: [UIBarButtonItem] = [btn1]
         let rightBtns: [UIBarButtonItem] = [btn3]
         self.viewController?.navigationItem.leftBarButtonItems = leftBtns
         self.viewController?.navigationItem.rightBarButtonItems = rightBtns
+        
+        // タイトル表示用
+        let logo = UIImageView()
+        logo.frame = CGRect(x: 0, y: 0, width: 100, height: 30)
+        logo.image = UIImage(named: "dogbone")
+        logo.contentMode = .scaleAspectFit
+        // タップジェスチャーを設定
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(onClick2))
+        logo.addGestureRecognizer(gestureRecognizer)
+        logo.isUserInteractionEnabled = true
+
+        //ナビゲーションアイテムのタイトルに画像を設定する。
+        self.viewController?.navigationItem.titleView = logo
         
         print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar end")
         

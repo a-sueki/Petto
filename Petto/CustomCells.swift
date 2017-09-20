@@ -593,7 +593,7 @@ public class MapViewController : UIViewController, TypedRowControllerType, MKMap
         mapView.layer.insertSublayer(ellipsisLayer, below: pinView.layer)
 
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(MapViewController.tappedDone(_:)))
-        button.title = "Done"
+        button.title = "保存"
         navigationItem.rightBarButtonItem = button
 
         if let value = row.value {

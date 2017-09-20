@@ -55,7 +55,7 @@ class EditViewController: BaseFormViewController {
         
         // フォーム
         form +++
-            Section() {
+            Section(header:"", footer:"人と一緒に写ってるとGood!") {
                 if let _ = self.petData {
                     $0.header = HeaderFooterView<EditView>(.class)
                 }else {
@@ -88,6 +88,7 @@ class EditViewController: BaseFormViewController {
                         }
                     }
             }
+            +++ Section("ペットのプロフィール")
             <<< NameRow("name") {
                 $0.title = "名前"
                 $0.placeholder = "ポチ"
@@ -531,7 +532,7 @@ class EditViewController: BaseFormViewController {
             }
             <<< SegmentedRow<String>("dentifrice") {
                 $0.title = "歯磨きの回数/日"
-                $0.options = ["1回","2回","3回","その他"]
+                $0.options = ["不要","1回","2回","その他"]
                 $0.value = self.petData?.dentifrice ?? $0.options.last
             }
             <<< SegmentedRow<String>("walk") {
@@ -560,7 +561,7 @@ class EditViewController: BaseFormViewController {
                     row.title = "おあずけ中は更新できません"
                     row.disabled = true
                 }else{
-                    if self.petData != nil {
+                    if self.petData == nil {
                         row.title = "投稿する"
                     }else{
                         row.title = "更新する"
