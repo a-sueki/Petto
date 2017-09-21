@@ -112,10 +112,10 @@ class HistoryTableViewCell: UITableViewCell, UITextFieldDelegate  {
         
         // imageをstorageから直接ロード
         self.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.userId!), placeholderImage: StorageRef.placeholderImage)
-        self.userImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.breederId!), placeholderImage: StorageRef.placeholderImage)
+        self.breederImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.petId!), placeholderImage: StorageRef.placeholderImage)
         
         self.userNameLabel.text = leaveData.userName
-        self.breederNameLabel.text = "\(leaveData.petName)の飼い主さん"
+        self.breederNameLabel.text = leaveData.petName
         
         if leaveData.userComment != nil{
             self.userCommentTextFeild.text = leaveData.userComment
