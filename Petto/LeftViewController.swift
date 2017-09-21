@@ -20,7 +20,7 @@ enum LeftMenu: Int {
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var mainViewController: UINavigationController!
-    var menus = ["Account","Profile", "My Pet", "Message", "Oazuke / Azukari","Contact Us", "Terms of Use"]
+    var menus = ["Account","Profile", "My Pet", "Message", "Oazuke / Azukari","Contact Us", "How to Use","Privacy Policy"]
     var myUserData: UserData?
     
     @IBOutlet weak var tableView: UITableView!
@@ -192,6 +192,15 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let navigationController = UINavigationController(rootViewController: contactViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 6:
+            guard let url = URL(string: URLs.howToUseURL) else {
+                return //be safe
+            }
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        case 7:
             let policyViewController = self.storyboard?.instantiateViewController(withIdentifier: "Policy") as! PolicyViewController
             let navigationController = UINavigationController(rootViewController: policyViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)

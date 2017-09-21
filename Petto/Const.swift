@@ -59,6 +59,10 @@ struct DefaultString {
     static let RunningFlag = "runningFlag"
 }
 
+struct URLs {
+    static let howToUseURL = "http://novelel.com/index.php/page-2829/"
+}
+
 struct ShareString {
     static let text = "#Petto #ペットのおあずけ・あずかりSNSアプリ "
     static let website = NSURL(string: "https://www.apple.co.jp")!
