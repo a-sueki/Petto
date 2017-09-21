@@ -162,7 +162,6 @@ class NavigationBarHandler: NSObject {
             if let _ = snapshot.value {
                 let leaveData = LeaveData(snapshot: snapshot, myId: leaveId)
                 if leaveData.acceptFlag! && !leaveData.runningFlag! && !leaveData.stopFlag! && !leaveData.abortFlag! && !leaveData.completeFlag! {
-                    //TODO: おあずけ開始（予定）が今日より未来の場合
                     self.registerLocalNotification(leaveData: leaveData)
                 }
                 
@@ -298,7 +297,7 @@ class BaseFormViewController: FormViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear start")
         
-        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
+/*        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
             for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
                 if v {
                     let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
@@ -306,7 +305,7 @@ class BaseFormViewController: FormViewController {
                 }
             }
         }
-        
+*/
         print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear end")
     }
 }
@@ -340,7 +339,7 @@ class BaseViewController: UIViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseViewController.viewWillDisappear start")
         
-        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
+/*        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
             for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
                 if v {
                     let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
@@ -348,7 +347,7 @@ class BaseViewController: UIViewController {
                 }
             }
         }
-        
+*/
         print("DEBUG_PRINT: BaseViewController.viewWillDisappear end")
     }
 }
