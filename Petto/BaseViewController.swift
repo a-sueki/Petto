@@ -122,8 +122,8 @@ class NavigationBarHandler: NSObject {
         
         // タイトル表示用
         let logo = UIImageView()
-        logo.frame = CGRect(x: 0, y: 0, width: 100, height: 30)
-        logo.image = UIImage(named: "dogbone")
+        logo.frame = CGRect(x: 0, y: 0, width: 200, height: 30)
+        logo.image = UIImage(named: "logo")
         logo.contentMode = .scaleAspectFit
         // タップジェスチャーを設定
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(onClick2))
