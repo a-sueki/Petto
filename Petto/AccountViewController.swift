@@ -42,10 +42,10 @@ class AccountViewController: BaseFormViewController {
         
         // フォーム
         form +++
-            Section("Account") {
+/*            Section("Account") {
                 $0.header = HeaderFooterView<AccountView>(.class)
             }
-            
+*/          Section("アカウント情報")
             <<< EmailRow("mail") {
                 $0.title = "メールアドレス"
                 $0.value = UserDefaults.standard.string(forKey: DefaultString.Mail)
