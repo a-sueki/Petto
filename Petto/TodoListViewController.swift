@@ -57,7 +57,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
             }
         }
         
-        for leaves in self.leaveDataArray {
+/*        for leaves in self.leaveDataArray {
             if let userId = leaves.userId {
                 let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
                 ref.removeAllObservers()
@@ -67,7 +67,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
                 ref.removeAllObservers()
             }
         }
-        
+*/
         print("DEBUG_PRINT: TodoListViewController.viewWillDisappear end")
     }
     
