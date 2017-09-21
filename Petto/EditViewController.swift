@@ -525,18 +525,18 @@ class EditViewController: BaseFormViewController {
                     to.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: from, action: #selector(self.multipleSelectorDone(_:)))
             }
             <<< SegmentedRow<String>("feeding"){
-                $0.title =  "ごはんの回数/日"
+                $0.title =  "ごはん/日"
                 $0.options = ["1回","2回","3回","その他"]
                 $0.value = self.petData?.feeding ?? $0.options.last
                 
             }
             <<< SegmentedRow<String>("dentifrice") {
-                $0.title = "歯磨きの回数/日"
+                $0.title = "歯磨き/日"
                 $0.options = ["不要","1回","2回","その他"]
                 $0.value = self.petData?.dentifrice ?? $0.options.last
             }
             <<< SegmentedRow<String>("walk") {
-                $0.title = "お散歩の回数/日"
+                $0.title = "お散歩/日"
                 $0.options = ["不要","1回","2回","その他"]
                 $0.value = self.petData?.walk ?? $0.options.last
             }
