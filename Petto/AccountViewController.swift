@@ -281,7 +281,9 @@ class AccountViewController: BaseFormViewController {
                             if !userData.userNgs.isEmpty {
                                 UserDefaults.standard.set(userData.userNgs , forKey: DefaultString.UserNgs)
                             }
-                            UserDefaults.standard.set(userData.withSearch , forKey: DefaultString.WithSearch)
+                            if userData.withSearch != nil {
+                                UserDefaults.standard.set(userData.withSearch , forKey: DefaultString.WithSearch)
+                            }
                             if !userData.myPets.isEmpty {
                                 UserDefaults.standard.set(userData.myPets , forKey: DefaultString.MyPets)
                             }
@@ -400,7 +402,7 @@ class AccountViewController: BaseFormViewController {
             UserDefaults.standard.set(address , forKey: DefaultString.Mail)
             UserDefaults.standard.set(password , forKey: DefaultString.Password)
             UserDefaults.standard.set(displayName , forKey: DefaultString.DisplayName)
-            UserDefaults.standard.set(false , forKey: DefaultString.WithSearch)
+            UserDefaults.standard.removeObject(forKey: DefaultString.WithSearch)
             
             // 表示名を設定する
             let user = FIRAuth.auth()?.currentUser

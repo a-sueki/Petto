@@ -56,8 +56,8 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     override func viewWillDisappear(_ animated: Bool) {
         print("DEBUG_PRINT: HomeViewController.viewWillDisappear start")
         
-        if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.bool(forKey: DefaultString.WithSearch) {
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
+        if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
+            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(UserDefaults.standard.string(forKey: DefaultString.WithSearch)!)
             ref.removeAllObservers()
         }
         
@@ -114,22 +114,18 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                     
                     self.searchData = SearchData(snapshot: snapshot, myId: key)
                     
-                    
                     // 絞り込み条件でフィルタリング
                     var index: Int = 0
                     for petInfo in self.petDataArray {
-                        print("aaaaaaaaaaaaaaaaaaaaaa")
-                        print(self.searchData?.isAvailable)
-                        print(petInfo.isAvailable)
-                        
+                        if let _ = self.searchData?.area , self.searchData?.area != SearchString.unspecified ,petInfo.area != self.searchData?.area {
+                            print("1")
+                            print("\(String(describing: self.searchData?.area))と違うから\(String(describing: petInfo.area))は除外するお \(String(describing: petInfo.name))")
+                            index = self.petDataArray.index(of: petInfo)!
+                            self.petDataArray.remove(at: index)
+                            continue
+                        }
                         if (self.searchData?.lev11)! {
-                            if let _ = self.searchData?.area , self.searchData?.area != SearchString.unspecified ,petInfo.area != self.searchData?.area {
-                                print("1")
-                                print("\(String(describing: self.searchData?.area))と違うから\(String(describing: petInfo.area))は除外するお \(String(describing: petInfo.name))")
-                                index = self.petDataArray.index(of: petInfo)!
-                                self.petDataArray.remove(at: index)
-                                continue
-                            }else if let _ = self.searchData?.kind , self.searchData?.kind != SearchString.unspecified ,petInfo.kind != self.searchData?.kind {
+                            if let _ = self.searchData?.kind , self.searchData?.kind != SearchString.unspecified ,petInfo.kind != self.searchData?.kind {
                                 print("2")
                                 print("\(String(describing: self.searchData?.kind))と違うから\(String(describing: petInfo.kind))は除外するお \(String(describing: petInfo.name))")
                                 index = self.petDataArray.index(of: petInfo)!

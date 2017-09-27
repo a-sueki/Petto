@@ -33,7 +33,7 @@ class UserData: NSObject {
     var userEnvironments = [String:Bool]()
     var userTools = [String:Bool]()
     var userNgs = [String:Bool]()
-    var withSearch: Bool?
+    var withSearch: String?
     var myPets = [String:Bool]()
     var roomIds = [String:Bool]()
     var unReadRoomIds = [String:Bool]()
@@ -87,7 +87,7 @@ class UserData: NSObject {
         if let userNgs = valueDictionary["userNgs"] as? [String:Bool] {
             self.userNgs = userNgs
         }
-        self.withSearch = valueDictionary["withSearch"] as? Bool
+        self.withSearch = valueDictionary["withSearch"] as? String
         if let myPets = valueDictionary["myPets"] as? [String:Bool] {
             self.myPets = myPets
         }

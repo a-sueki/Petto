@@ -22,11 +22,6 @@ class SearchViewController: BaseFormViewController {
         super.viewDidLoad()
         print("DEBUG_PRINT: SearchViewController.viewDidLoad start")
 
-        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
-            self.read()
-        }else{
-            self.updateSearchData()
-        }
         
         print("DEBUG_PRINT: SearchViewController.viewDidLoad end")
     }
@@ -34,6 +29,11 @@ class SearchViewController: BaseFormViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: SearchViewController.viewWillAppear start")
+        if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
+            self.read()
+        }else{
+            self.updateSearchData()
+        }
         print("DEBUG_PRINT: SearchViewController.viewWillAppear end")
     }
     
@@ -61,6 +61,8 @@ class SearchViewController: BaseFormViewController {
                 if let _ = snapshot.value as? NSDictionary {
                     self.searchData = SearchData(snapshot: snapshot, myId: key)
                     // Formを表示
+                    self.updateSearchData()
+                }else{
                     self.updateSearchData()
                 }
                 DispatchQueue.main.async {
@@ -482,14 +484,16 @@ class SearchViewController: BaseFormViewController {
     @IBAction func clear() {
         print("DEBUG_PRINT: SearchViewController.clear start")
         
+        // 辞書を作成
+        let ref = FIRDatabase.database().reference()
+        if let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
+            ref.child(Paths.SearchPath).child(key).removeValue()
+        }
         if let uid = FIRAuth.auth()?.currentUser?.uid {
-            // 辞書を作成
-            let ref = FIRDatabase.database().reference()
-            ref.child(Paths.SearchPath).child(uid).removeValue()
-            //ユーザのwithSearchを追加
-            ref.child(Paths.UserPath).child(uid).updateChildValues(["withSearch": false])
+            ref.child(Paths.UserPath).child(uid).child(DefaultString.WithSearch).removeValue()
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件をクリアしました")
         } else{
+            UserDefaults.standard.removeObject(forKey: DefaultString.WithSearch)
             SVProgressHUD.showError(withStatus: "更新に失敗しました。再度ログインしてから実行してください")
         }
         
