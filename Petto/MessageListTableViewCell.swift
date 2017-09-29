@@ -59,7 +59,11 @@ class MessageListTableViewCell: UITableViewCell {
         //　評価カウントをセット
         self.goodIntLabel.text = String(roomData.userGoodInt ?? 0)
         self.badIntLabel.text = String(roomData.userBadInt ?? 0)
-        self.userProfile.text = roomData.userArea! + " | " + roomData.userSex! + " | " + roomData.userAge! + "才"
+        if roomData.userAge == "秘密" {
+            self.userProfile.text = roomData.userArea! + " | " + roomData.userSex!
+        }else{
+            self.userProfile.text = roomData.userArea! + " | " + roomData.userSex! + " | " + roomData.userAge! + "才"
+        }
         self.petImageView.sd_setImage(with: StorageRef.getRiversRef(key: roomData.petId!), placeholderImage: StorageRef.placeholderImage)
         self.petNameLabel.text = roomData.petName
         

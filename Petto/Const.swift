@@ -37,6 +37,7 @@ struct DefaultString {
     static let Age = "age"
     static let HasAnotherPet = "hasAnotherPet"
     static let IsExperienced = "isExperienced"
+    static let Option = "option"
     static let ExpectTo = "expectTo"
     static let EnterDetails = "enterDetails"
     static let CreateAt = "createAt"
@@ -131,14 +132,13 @@ struct Sex {
     static let searchStrings = [SearchString.unspecified,"♂", "♀"]
     static let male = "♂"
     static let female = "♀"
-    
 }
 struct UserSex {
-    static let strings = ["男性", "女性"]
+    static let strings = ["男性", "女性","秘密"]
     static let male = "男性"
     static let female = "女性"
+    static let unKnown = "秘密"
 }
-
 struct Size {
     static let strings = ["小型", "中型", "大型"]
     static let searchStrings = [SearchString.unspecified,"小型", "中型", "大型"]

@@ -262,6 +262,7 @@ class AccountViewController: BaseFormViewController {
                             if userData.isExperienced != nil {
                                 UserDefaults.standard.set(userData.isExperienced , forKey: DefaultString.IsExperienced)
                             }
+                            UserDefaults.standard.set(userData.option , forKey: DefaultString.Option)
                             UserDefaults.standard.set(userData.expectTo , forKey: DefaultString.ExpectTo)
                             UserDefaults.standard.set(userData.enterDetails , forKey: DefaultString.EnterDetails)
                             UserDefaults.standard.set(userData.createAt , forKey: DefaultString.CreateAt)

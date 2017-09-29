@@ -42,6 +42,12 @@ class UserDetailViewController: BaseFormViewController {
                 $0.value = self.userData?.firstname ?? nil
                 $0.disabled = true
             }
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = UserSex.strings
+                $0.value = self.userData?.sex ?? $0.options.last
+                $0.disabled = true
+            }
             <<< TextRow("area") {
                 $0.title = "エリア"
                 $0.value = self.userData?.area ?? nil
@@ -49,13 +55,7 @@ class UserDetailViewController: BaseFormViewController {
             }
             <<< TextRow("age") {
                 $0.title = "年齢"
-                $0.value = self.userData?.age ?? nil
-                $0.disabled = true
-            }
-            <<< SegmentedRow<String>("sex") {
-                $0.title =  "性別"
-                $0.options = UserSex.strings
-                $0.value = self.userData?.sex ?? $0.options.first
+                $0.value = self.userData?.age ?? "秘密"
                 $0.disabled = true
             }
             

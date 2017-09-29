@@ -59,7 +59,11 @@ class TodoListTableViewCell: UITableViewCell {
         // 評価カウントをセット
         self.goodIntLabel.text = String(leaveData.userGoodInt ?? 0)
         self.badIntLabel.text = String(leaveData.userBadInt ?? 0)
-        self.userProfile.text = leaveData.userArea! + " | " + leaveData.userSex! + " | " + leaveData.userAge! + "才"
+        if leaveData.userAge == "秘密" {
+            self.userProfile.text = leaveData.userArea! + " | " + leaveData.userSex!
+        }else{
+            self.userProfile.text = leaveData.userArea! + " | " + leaveData.userSex! + " | " + leaveData.userAge! + "才"
+        }
         self.petImageView.sd_setImage(with: StorageRef.getRiversRef(key: leaveData.petId!), placeholderImage: StorageRef.placeholderImage)
         self.petNameLabel.text = leaveData.petName
         if leaveData.userId == UserDefaults.standard.string(forKey: DefaultString.Uid) {

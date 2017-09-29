@@ -20,7 +20,7 @@ enum LeftMenu: Int {
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var mainViewController: UINavigationController!
-    var menus = ["Account","Profile", "My Pet", "Message", "Oazuke / Azukari","Contact Us", "How to Use","Privacy Policy"]
+    var menus = ["Account","Profile", "My Pet", "Message", "Oazuke / Azukari", "How to Use","Contact Us","Privacy Policy"]
     var myUserData: UserData?
     
     @IBOutlet weak var tableView: UITableView!
@@ -188,10 +188,6 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             }
         case 5:
-                let contactViewController = self.storyboard?.instantiateViewController(withIdentifier: "Contact") as! ContactViewController
-                let navigationController = UINavigationController(rootViewController: contactViewController)
-                self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 6:
             guard let url = URL(string: URLs.howToUseURL) else {
                 return //be safe
             }
@@ -200,6 +196,10 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             } else {
                 UIApplication.shared.openURL(url)
             }
+        case 6:
+            let contactViewController = self.storyboard?.instantiateViewController(withIdentifier: "Contact") as! ContactViewController
+            let navigationController = UINavigationController(rootViewController: contactViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 7:
             let policyViewController = self.storyboard?.instantiateViewController(withIdentifier: "Policy") as! PolicyViewController
             let navigationController = UINavigationController(rootViewController: policyViewController)

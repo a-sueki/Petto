@@ -147,6 +147,11 @@ class UserViewController: BaseFormViewController  {
                         }
                     }
             }
+            <<< SegmentedRow<String>("sex") {
+                $0.title =  "性別"
+                $0.options = UserSex.strings
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Sex) ?? $0.options.last
+            }
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
                 $0.options = Area.strings
@@ -172,7 +177,16 @@ class UserViewController: BaseFormViewController  {
                         }
                     }
             }
+            +++ Section("オプション")
+            <<< SwitchRow("option"){
+                $0.title = "年齢を登録する"
+                $0.value = false
+            }
             <<< DateRow("birthday") {
+                $0.hidden = .function(["option"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "option")
+                    return row.value ?? false == false
+                })
                 $0.title = "生年月日"
                 if let dateString = UserDefaults.standard.string(forKey: DefaultString.Birthday) {
                     $0.value = DateCommon.stringToDate(dateString, dateFormat: DateCommon.dateFormat)
@@ -197,16 +211,14 @@ class UserViewController: BaseFormViewController  {
                     self?.form.rowBy(tag: "age")?.baseValue = age.description
                     self?.form.rowBy(tag: "age")?.updateCell()
             }
-            
             <<< TextRow("age") {
+                $0.hidden = .function(["option"], { form -> Bool in
+                    let row: RowOf<Bool>! = form.rowBy(tag: "option")
+                    return row.value ?? false == false
+                })
                 $0.title = "年齢"
                 $0.value = UserDefaults.standard.string(forKey: DefaultString.Age) ?? nil
                 $0.disabled = true
-            }
-            <<< SegmentedRow<String>("sex") {
-                $0.title =  "性別"
-                $0.options = UserSex.strings
-                $0.value = UserDefaults.standard.string(forKey: DefaultString.Sex) ?? $0.options.first
             }
             
             +++ Section()
@@ -386,6 +398,7 @@ class UserViewController: BaseFormViewController  {
             }else if case let v as Bool = value {
                 switch key {
                 case "enterDetails": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.EnterDetails))
+                case "option": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.Option))
                 case "expectTo": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.ExpectTo))
                 case "hasAnotherPet": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.HasAnotherPet))
                 case "isExperienced": self.inputData["\(key)"] = boolSet(new: v ,old: UserDefaults.standard.bool(forKey: DefaultString.IsExperienced))
@@ -454,10 +467,16 @@ class UserViewController: BaseFormViewController  {
             }
         }
         
+        // 生年月日・年齢をオプション化対応
+        if inputData["age"] == nil {
+            self.inputData["age"] = "秘密"
+            self.inputData["birthday"] = "1980-01-01 00:00:00 +0000"
+        }
+        
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
         let uid = FIRAuth.auth()?.currentUser?.uid
-        
+
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
         
@@ -517,6 +536,7 @@ class UserViewController: BaseFormViewController  {
         UserDefaults.standard.set(self.inputData["hasAnotherPet"] , forKey: DefaultString.HasAnotherPet)
         UserDefaults.standard.set(self.inputData["isExperienced"] , forKey: DefaultString.IsExperienced)
         UserDefaults.standard.set(self.inputData["ngs"] , forKey: DefaultString.Ngs)
+        UserDefaults.standard.set(self.inputData["option"] , forKey: DefaultString.Option)
         UserDefaults.standard.set(self.inputData["expectTo"] , forKey: DefaultString.ExpectTo)
         UserDefaults.standard.set(self.inputData["enterDetails"] , forKey: DefaultString.EnterDetails)
         UserDefaults.standard.set(self.inputData["userEnvironments"] , forKey: DefaultString.UserEnvironments)

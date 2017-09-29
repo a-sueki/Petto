@@ -21,6 +21,7 @@ class UserData: NSObject {
     var age: String
     var hasAnotherPet: Bool?        // 他にペットを飼っている
     var isExperienced: Bool?        // ペット飼育経験あり
+    var option: Bool                // 生年月日・年齢の登録
     var expectTo: Bool              // ペットあずかりを希望する
     var enterDetails: Bool // add
     var createAt: NSDate
@@ -65,6 +66,7 @@ class UserData: NSObject {
         self.age = valueDictionary["age"] as! String
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
         self.isExperienced = valueDictionary["isExperienced"] as? Bool
+        self.option = valueDictionary["option"] as! Bool
         self.expectTo = valueDictionary["expectTo"] as! Bool
         self.enterDetails = valueDictionary["enterDetails"] as! Bool
         let createAtString = valueDictionary["createAt"] as! String
