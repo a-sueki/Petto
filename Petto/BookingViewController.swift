@@ -145,11 +145,6 @@ class BookingViewController: BaseFormViewController {
     @IBAction func suggest() {
         print("DEBUG_PRINT: BookingViewController.suggest start")
         
-        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
-            kFIRParameterContentType: "suggest" as NSObject,
-            kFIRParameterItemID: "2" as NSObject
-            ])
-
         for (key,value) in form.values() {
             if value == nil {
                 // Date

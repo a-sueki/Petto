@@ -70,7 +70,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 SVProgressHUD.showError(withStatus: "データ通信でエラーが発生しました")
             }
         } else {
-            print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar ゲストユーザです。")
+            print("DEBUG_PRINT: LeftViewController.viewWillAppear ゲストユーザです。")
         }
         
         print("DEBUG_PRINT: LeftViewController.viewWillAppear end")
@@ -224,11 +224,10 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         //self.imageHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)

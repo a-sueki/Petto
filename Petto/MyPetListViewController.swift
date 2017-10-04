@@ -106,15 +106,20 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         
         if self.petDataArray[indexPath.row].isAvailable! {
             let endDate = DateCommon.stringToDate(self.petDataArray[indexPath.row].endDate!, dateFormat: DateCommon.dateFormat)
-            if endDate.compare(Date()) == ComparisonResult.orderedDescending {
-                // 期間内
-                cell.backgroundColor = UIColor(red:1.00, green:1.00, blue:0.88, alpha:1.0)
-            }else{
+            if endDate.compare(Date()) == ComparisonResult.orderedAscending {
                 // 期間外
                 cell.isAvailableLabel.isHidden = true
             }
+            if self.petDataArray[indexPath.row].runningFlag != nil ,  self.petDataArray[indexPath.row].runningFlag! {
+                // おあずけ中
+                cell.outNowLabel.isHidden = false
+            }else{
+                // おあずけ中
+                cell.outNowLabel.isHidden = true
+            }
         }else{
             cell.isAvailableLabel.isHidden = true
+            cell.outNowLabel.isHidden = true
             cell.endDateLabel.isHidden = true
         }
         

@@ -169,7 +169,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
         // Messageの取得
         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        ref.queryLimited(toLast: 100).observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.queryLimited(toLast: 1000).observeSingleEvent(of: .value, with: { (snapshot) in
             print("DEBUG_PRINT: MessagesViewController.getMessages .observeSingleEventイベントが発生しました。")
             
             for v in snapshot.children {

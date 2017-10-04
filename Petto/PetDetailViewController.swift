@@ -23,9 +23,6 @@ class PetDetailViewController: BaseFormViewController {
         super.viewDidLoad()
         print("DEBUG_PRINT: PetDetailViewController.viewDidLoad start")
         
-        // ユーザプロパティを設定
-        FIRAnalytics.setUserPropertyString("A", forName: "firstMessage")
-        
         if self.petData != nil, self.petData!.isAvailable!, DateCommon.stringToDate(self.petData!.endDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
             // 期限が過ぎているのに「おあずけ人募集中」のままの場合
             self.petData?.isAvailable = false
@@ -398,10 +395,6 @@ class PetDetailViewController: BaseFormViewController {
             }
         }
         
-        FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
-            kFIRParameterContentType: "send" as NSObject,
-            kFIRParameterItemID: "1" as NSObject
-            ])
         //前画面に戻る
         self.navigationController?.popViewController(animated: true)
         
@@ -425,11 +418,6 @@ class PetDetailViewController: BaseFormViewController {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "先にログインして下さい")
             SVProgressHUD.dismiss(withDelay: 3)
         }else{
-            FIRAnalytics.logEvent(withName: kFIREventSelectContent, parameters: [
-                kFIRParameterContentType: "send" as NSObject,
-                kFIRParameterItemID: "1" as NSObject
-                ])
-            
             let messagesViewController = self.storyboard?.instantiateViewController(withIdentifier: "UserMessages") as! MessagesViewController
             let consentViewController = self.storyboard?.instantiateViewController(withIdentifier: "Consent") as! ConsentViewController
             let userMessagesContainerViewController = UserMessagesContainerViewController(top: messagesViewController, under: consentViewController)

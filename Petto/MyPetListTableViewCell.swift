@@ -19,6 +19,7 @@ class MyPetListTableViewCell: UITableViewCell {
     @IBOutlet weak var startDateLabel: UILabel!
     @IBOutlet weak var endDateLabel: UILabel!
     
+    @IBOutlet weak var outNowLabel: UILabel!
     @IBOutlet weak var isAvailableLabel: UILabel!
 
     override func awakeFromNib() {
@@ -37,28 +38,23 @@ class MyPetListTableViewCell: UITableViewCell {
         
 
         self.photoImageView.sd_setImage(with: StorageRef.getRiversRef(key: petData.id!), placeholderImage: StorageRef.placeholderImage)
+        // 写真を丸くする
+        self.photoImageView.layer.cornerRadius = 40.0
+        self.photoImageView.layer.masksToBounds = true
+
         self.nameLabel.text = petData.name
         
         if petData.isAvailable! {
-            self.startDateLabel.text = "開始：" + DateCommon.displayShortDate(stringDate: petData.startDate!)
-            self.endDateLabel.text = "終了：" + DateCommon.displayShortDate(stringDate: petData.endDate!)
+            self.startDateLabel.text = "\(DateCommon.displayShortDate(stringDate: petData.startDate!)) 〜 \(DateCommon.displayShortDate(stringDate: petData.endDate!))"
+            self.endDateLabel.text = "\(petData.minDays!)〜\(petData.maxDays!)日間"
         }else{
             self.startDateLabel.text = "設定されていません"
+            self.endDateLabel.text = ""
         }
         
         // 期間外（あずかり人募集中ではない、もしくは、終了日 < 今日）
         if !petData.isAvailable! || DateCommon.stringToDate(petData.endDate!, dateFormat: DateCommon.dateFormat).compare(Date()) == ComparisonResult.orderedAscending {
             if self.photoImageView.image != nil , self.photoImageView.image != StorageRef.placeholderImage {
-                // 帯を追加
-                let bandLabel = UILabel(frame: CGRect(x: 0, y: self.photoImageView.frame.width/5 * 2, width: self.photoImageView.frame.width, height: self.photoImageView.frame.width/5))
-                bandLabel.backgroundColor = UIColor.black
-                bandLabel.alpha = 0.9
-                bandLabel.font = UIFont(name: "Gill Sans", size: 15)
-                bandLabel.text = "inative"
-                bandLabel.textColor = UIColor.white
-                bandLabel.textAlignment = NSTextAlignment.center
-                self.photoImageView.addSubview(bandLabel)
-                
                 // 写真をグレーアウト
                 let myMonochromeFilter = CIFilter(name: "CIColorMonochrome")!
                 myMonochromeFilter.setValue(CIImage(image: self.photoImageView.image!), forKey: kCIInputImageKey)
@@ -67,16 +63,6 @@ class MyPetListTableViewCell: UITableViewCell {
                 let myOutputImage : CIImage = myMonochromeFilter.outputImage!
                 self.photoImageView.image = UIImage(ciImage: myOutputImage)
             }
-        } else if petData.runningFlag != nil ,  petData.runningFlag! {
-            // おあずけ中
-            let bandLabel = UILabel(frame: CGRect(x: 0, y: self.photoImageView.frame.width/5 * 2, width: self.photoImageView.frame.width, height: self.photoImageView.frame.width/5))
-            bandLabel.backgroundColor = UIColor.yellow
-            bandLabel.alpha = 0.9
-            bandLabel.font = UIFont(name: "Gill Sans", size: 15)
-            bandLabel.text = "out now"
-            bandLabel.textColor = UIColor.black
-            bandLabel.textAlignment = NSTextAlignment.center
-            self.photoImageView.addSubview(bandLabel)
         }
     }
 }

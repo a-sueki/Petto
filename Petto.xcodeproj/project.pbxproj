@@ -142,6 +142,7 @@
 		84A847F61F2826A900D898EC /* MyPetListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPetListTableViewCell.xib; sourceTree = "<group>"; };
 		84AC70E61F11E43A001F7563 /* MessageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageData.swift; sourceTree = "<group>"; };
 		84B577201F5C23350008622D /* LeaveData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaveData.swift; sourceTree = "<group>"; };
+		84BB20721F85679900CD682D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		84BB421F1F413F1A007D867A /* PetDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetDetailViewController.swift; sourceTree = "<group>"; };
 		84BC45A31F2729FE0017AF53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84CCE0051EFB791D0025B5D3 /* Petto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Petto.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -211,6 +212,7 @@
 		06FAA2B132BA87C253DF4E2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				84BB20721F85679900CD682D /* AdSupport.framework */,
 				84F6ACC11EFD026F0086BBB9 /* QuartzCore.framework */,
 				84F6ACBF1EFD02690086BBB9 /* OpenGLES.framework */,
 				84F6ACBD1EFD02630086BBB9 /* MessageUI.framework */,

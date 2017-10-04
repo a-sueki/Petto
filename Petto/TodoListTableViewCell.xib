@@ -58,7 +58,7 @@
                         <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="user" translatesAutoresizingMaskIntoConstraints="NO" id="tuw-V9-V3z">
+                    <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="user" translatesAutoresizingMaskIntoConstraints="NO" id="tuw-V9-V3z">
                         <rect key="frame" x="8" y="8" width="50" height="50"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="50" id="bJc-by-fg8"/>
@@ -141,7 +141,7 @@
                             <constraint firstAttribute="width" constant="20" id="wbH-ki-Av7"/>
                         </constraints>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" tag="8" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="catProfile" translatesAutoresizingMaskIntoConstraints="NO" id="PeS-5U-Uwm">
+                    <imageView userInteractionEnabled="NO" tag="8" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="catProfile" translatesAutoresizingMaskIntoConstraints="NO" id="PeS-5U-Uwm">
                         <rect key="frame" x="397" y="8" width="50" height="50"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="50" id="GrU-ll-PRq"/>

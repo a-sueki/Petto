@@ -71,7 +71,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         
         // HUDで処理中を表示
         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-        ref.queryOrderedByKey().queryLimited(toLast: 100).observe(.value, with: { snapshot in
+        ref.queryOrderedByKey().queryLimited(toLast: 1000).observe(.value, with: { snapshot in
             print("DEBUG_PRINT: HomeViewController.read .childAddedイベントが発生しました。")
             
             // petDataクラスを生成して受け取ったデータを設定する
@@ -296,6 +296,23 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         // セル内のボタンのアクションをソースコードで設定する
         cell.toDetailButton.addTarget(self, action: #selector(handleToDetailButton(sender:event:)), for: UIControlEvents.touchUpInside)
         
+        // ラベル非表示
+        if petDataArray[indexPath.row].isAvailable!, petDataArray[indexPath.row].toolRentalAllowed != nil, !petDataArray[indexPath.row].toolRentalAllowed! {
+            cell.toolLabel.isHidden = true
+        }
+        if petDataArray[indexPath.row].isAvailable!, petDataArray[indexPath.row].feedingFeePayable != nil, !petDataArray[indexPath.row].feedingFeePayable! {
+            cell.feedLabel.isHidden = true
+        }
+        if !petDataArray[indexPath.row].isAvailable! {
+            cell.toolLabel.isHidden = true
+            cell.feedLabel.isHidden = true
+        }
+        // 枠線
+        cell.layer.borderColor = UIColor.lightGray.cgColor
+        cell.layer.borderWidth = 0.1
+        cell.layer.cornerRadius = 5
+        cell.petImageView.layer.cornerRadius = 5
+
         print("DEBUG_PRINT: HomeViewController.cellForItemAt end")
         return cell
     }
