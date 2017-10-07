@@ -27,21 +27,37 @@ class ConsentViewController: BaseFormViewController {
         form +++
             Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
-                if self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
-                    row.title = "あずかりを承諾する"
-                 }else if self.leaveData?.acceptFlag == true {
-                    row.title = "以下あずかり期間で承諾済み"
+                if roomData?.blocked != nil {
+                    row.title = "ブロック中です"
                     row.disabled = true
+                }else{
+                    if self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
+                        row.title = "あずかりを承諾する"
+                    }else if self.leaveData?.acceptFlag == true {
+                        row.title = "以下あずかり期間で承諾済み"
+                        row.disabled = true
+                    }
                 }
                 }.onCellSelection { [weak self] (cell, row) in
-                    if self?.leaveData?.suggestFlag == true ,self?.leaveData?.acceptFlag == false {
-                        row.section?.form?.validate()
-                        self?.accept()
+                    if let error = row.section?.form?.validate(), error.count != 0 {
+                        SVProgressHUD.showError(withStatus: "\(error.count)件の入力エラーがあります")
+                        print("DEBUG_PRINT: ConsentViewController.viewDidLoad \(error)")
+                    }else{
+                        if self?.roomData?.blocked != nil {
+                            SVProgressHUD.showError(withStatus: "ブロック中です")
+                        }else if self?.leaveData?.suggestFlag == true ,self?.leaveData?.acceptFlag == false {
+                            self?.accept()
+                        }else if self?.leaveData?.acceptFlag == true {
+                        }else{
+                            self?.accept()
+                        }
                     }
             }
             <<< ButtonRow() { (row: ButtonRow) -> Void in
                 row.hidden = .function([], { form -> Bool in
-                    if self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
+                    if self.roomData?.blocked != nil {
+                        return true
+                    }else if self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
                         return false
                     }else{
                         return true
@@ -49,8 +65,12 @@ class ConsentViewController: BaseFormViewController {
                 })
                 row.title = "あずかりを断る"
                 }.onCellSelection { [weak self] (cell, row) in
-                        row.section?.form?.validate()
+                    if let error = row.section?.form?.validate(), error.count != 0 {
+                        SVProgressHUD.showError(withStatus: "\(error.count)件の入力エラーがあります")
+                        print("DEBUG_PRINT: ConsentViewController.viewDidLoad \(error)")
+                    }else{
                         self?.deny()
+                    }
             }
             <<< DateRow("startDate") {
                 $0.title = "開始日付"

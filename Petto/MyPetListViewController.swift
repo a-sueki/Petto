@@ -48,7 +48,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: MyPetListViewController.viewWillDisappear start")
         
-        if UserDefaults.standard.dictionary(forKey: DefaultString.MyPets) != nil && (UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)?.isEmpty)! {
+        if UserDefaults.standard.dictionary(forKey: DefaultString.MyPets) != nil, !UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!.isEmpty {
             for (pid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)! {
                 let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(pid)
                 ref.removeAllObservers()

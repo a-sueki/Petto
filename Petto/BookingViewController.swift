@@ -43,22 +43,35 @@ class BookingViewController: BaseFormViewController {
         form +++
             Section()
             <<< ButtonRow() { (row: ButtonRow) -> Void in
-                if let _ = self.leaveData, self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
-                    row.title = "承諾待ち"
-                    row.disabled = true
-                }else if self.leaveData?.acceptFlag == true {
-                    row.title = "承認済み"
+                if roomData?.blocked != nil {
+                    row.title = "ブロック中です"
                     row.disabled = true
                 }else{
-                    row.title = "この期間でペットおあずけを提案する"
+                    if let _ = self.leaveData, self.leaveData?.suggestFlag == true ,self.leaveData?.acceptFlag == false {
+                        row.title = "承諾待ち"
+                        row.disabled = true
+                    }else if self.leaveData?.acceptFlag == true {
+                        row.title = "承認済み"
+                        row.disabled = true
+                    }else{
+                        row.title = "この期間でペットおあずけを提案する"
+                    }
                 }
-                }
-                .onCellSelection { [weak self] (cell, row) in
-                    if self?.leaveData == nil || self?.leaveData?.suggestFlag == false{
-                        row.section?.form?.validate()
-                        self?.suggest()
+                }.onCellSelection { [weak self] (cell, row) in
+                    if let error = row.section?.form?.validate(), error.count != 0 {
+                        SVProgressHUD.showError(withStatus: "\(error.count)件の入力エラーがあります")
+                        print("DEBUG_PRINT: BookingViewController.showLeaveData \(error)")
+                    }else{
+                        if self?.roomData?.blocked != nil {
+                            SVProgressHUD.showError(withStatus: "ブロック中です")
+                        }else if let _ = self?.leaveData, self?.leaveData?.suggestFlag == true ,self?.leaveData?.acceptFlag == false {
+                        }else if self?.leaveData?.acceptFlag == true {
+                        }else{
+                            self?.suggest()
+                        }
                     }
             }
+
             <<< DateTimeRow("startDate") {
                 $0.title = "開始日付"
                 if let _ = self.leaveData, self.leaveData?.suggestFlag == true {

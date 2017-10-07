@@ -12,7 +12,7 @@ import Firebase
 import FirebaseDatabase
 import FirebaseStorageUI
 import SVProgressHUD
-
+import SCLAlertView
 
 class UserDetailViewController: BaseFormViewController {
     
@@ -178,9 +178,104 @@ class UserDetailViewController: BaseFormViewController {
                 row.title = "もどる"
                 }.onCellSelection { [weak self] (cell, row) in
                     self?.back()
+            }
+            
+            +++ Section()
+            <<< ButtonRow() { (row: ButtonRow) -> Void in
+                row.title = "このユーザーを運営に通報する"
+                }.onCellSelection { [weak self] (cell, row) in
+                    row.section?.form?.validate()
+                    self?.report()
         }
+
         print("DEBUG_PRINT: UserDetailViewController.viewDidLoad end")
     }
+    
+    @IBAction func report() {
+        print("DEBUG_PRINT: UserDetailViewController.report start")
+        
+        if self.userData?.id == UserDefaults.standard.string(forKey: DefaultString.Uid) {
+            SVProgressHUD.showError(withStatus: "このペットの飼い主はあなたです")
+        }else{
+            let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+            let textField = alertView.addTextField("違反内容など")
+            let nameFeild = alertView.addTextField("あなたのお名前")
+            let mailFeild = alertView.addTextField("あなたのメールアドレス")
+            alertView.addButton("通報&ブロックする"){
+                if let violationContent = textField.text, let name = nameFeild.text ,let mail = mailFeild.text{
+                    self.excuteReport(text: violationContent,mail:mail,name:name)
+                }
+            }
+            alertView.addButton("キャンセル", target:self, selector:#selector(UserDetailViewController.cancel))
+            alertView.showEdit("違反報告", subTitle: "\n違反内容について記載し、通報して下さい。\n通報後はこのユーザーからの、あなたの全てのペットに対するメッセージをブロックします。\nブロックリストはメニューの 'BlockList' から編集可能です。")
+        }
+        print("DEBUG_PRINT: UserDetailViewController.report end")
+    }
+    
+    func excuteReport(text :String, mail :String, name :String) {
+        print("DEBUG_PRINT: UserDetailViewController.excuteReport start")
+        
+        var inputData = [String : Any]()
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let ref = FIRDatabase.database().reference()
+        
+        // DB保存（運営が参照するのみ）
+        let key = ref.child(Paths.ViolationUserPath).childByAutoId().key
+        inputData["mail"] = mail
+        inputData["name"] = name
+        inputData["text"] = text
+        inputData["targetID"] = self.userData?.id
+        inputData["createAt"] = String(time)
+        inputData["createBy"] = UserDefaults.standard.string(forKey: DefaultString.Uid) ?? "guest"
+        // insert
+        ref.child(Paths.ViolationUserPath).child(key).setValue(inputData)
+        // 表示用
+        var blockedUsers = [String]()
+        if UserDefaults.standard.array(forKey: DefaultString.BlockedUserIds) != nil{
+            for uid in UserDefaults.standard.array(forKey: DefaultString.BlockedUserIds) as! [String] {
+                if uid == (self.userData?.id)! {
+                    // なにもしない（重複登録対応）
+                }else{
+                    blockedUsers.append((self.userData?.id)!)
+                }
+            }
+        }
+        blockedUsers.append((self.userData?.id)!)
+        UserDefaults.standard.set(blockedUsers, forKey: DefaultString.BlockedUserIds)
+        
+        // メッセージブロック用（ブリーダーがユーザーをブロック）
+        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) ,let uid = UserDefaults.standard.string(forKey: DefaultString.Uid){
+            //自分（ユーザー）をブロックしたペット
+            if UserDefaults.standard.dictionary(forKey: DefaultString.MyPets) != nil , !UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!.isEmpty {
+                for (pid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)! {
+                    let childUpdates1 = ["/\(Paths.PetPath)/\(pid)/blockingUser/\((self.userData?.id)!)": true] as [String : Any]
+                    ref.updateChildValues(childUpdates1)
+                    // 既存のルームをブロック
+                    if self.userData?.roomIds != nil {
+                        for (roomId,_) in (self.userData?.roomIds)! {
+                            if roomId.contains(pid) {
+                                let childUpdates3 = ["/\(Paths.RoomPath)/\(roomId)/blocked/": uid] as [String : Any]
+                                ref.updateChildValues(childUpdates3)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        // HUDで投稿完了を表示する
+        SVProgressHUD.showSuccess(withStatus: "運営に違反報告が送信されました。")
+
+        print("DEBUG_PRINT: UserDetailViewController.excuteReport end")
+    }
+    
+    func cancel() {
+        print("DEBUG_PRINT: UserDetailViewController.cancel start")
+        print("DEBUG_PRINT: UserDetailViewController.cancel end")
+    }
+
     
     @IBAction func back() {
         print("DEBUG_PRINT: UserDetailViewController.back start")

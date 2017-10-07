@@ -54,7 +54,11 @@ class PetData: NSObject {
     var historys = [String:Bool]()
     // おあずけ中フラグ
     var runningFlag: Bool?
-    
+    // 自分がブロックしているユーザー
+    var blockingUser = [String:Bool]()
+    // 非表示フラグ（違反用）
+    var violationFlag: Bool?    // 運営が手動でセット
+
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: PetData.init start")
         self.id = snapshot.key
@@ -112,6 +116,11 @@ class PetData: NSObject {
             self.historys = historys
         }
         self.runningFlag = valueDictionary["runningFlag"] as? Bool
+        // 違反・ブロック
+        if let blockingUser = valueDictionary["blockingUser"] as? [String:Bool] {
+            self.blockingUser = blockingUser
+        }
+        self.violationFlag = valueDictionary["violationFlag"] as? Bool
         // システム項目
         let createAt = valueDictionary["createAt"] as? String
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)

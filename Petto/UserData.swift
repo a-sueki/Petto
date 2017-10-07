@@ -16,9 +16,9 @@ class UserData: NSObject {
     var sex: String
     var firstname: String
     var lastname: String
-    var birthday: String
+    var birthday: String?
     var area: String
-    var age: String
+    var age: String?
     var hasAnotherPet: Bool?        // 他にペットを飼っている
     var isExperienced: Bool?        // ペット飼育経験あり
     var option: Bool                // 生年月日・年齢の登録
@@ -43,7 +43,8 @@ class UserData: NSObject {
     var isGooded: Bool = false
     var bads: [String] = []
     var isBaded: Bool = false
-    
+    // 非表示フラグ（違反用）
+    var violationFlag: Bool?    // 運営が手動でセット
     // おあずけヒストリー
     var historys = [String:Bool]()
     // おあずけ中フラグ
@@ -61,9 +62,9 @@ class UserData: NSObject {
         self.sex = valueDictionary["sex"] as! String
         self.firstname = valueDictionary["firstname"] as! String
         self.lastname = valueDictionary["lastname"] as! String
-        self.birthday = valueDictionary["birthday"] as! String
+        self.birthday = valueDictionary["birthday"] as? String
         self.area = valueDictionary["area"] as! String
-        self.age = valueDictionary["age"] as! String
+        self.age = valueDictionary["age"] as? String
         self.hasAnotherPet = valueDictionary["hasAnotherPet"] as? Bool
         self.isExperienced = valueDictionary["isExperienced"] as? Bool
         self.option = valueDictionary["option"] as! Bool
@@ -120,11 +121,13 @@ class UserData: NSObject {
                 break
             }
         }
+        // 違反・ブロック
+        self.violationFlag = valueDictionary["violationFlag"] as? Bool
+
         if let historys = valueDictionary["historys"] as? [String:Bool] {
             self.historys = historys
         }
         self.runningFlag = valueDictionary["runningFlag"] as? Bool
-
         
         print("DEBUG_PRINT: UserData.init end")
     }

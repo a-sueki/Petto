@@ -697,6 +697,8 @@ class EditViewController: BaseFormViewController {
             self.inputData["roomIds"] = data.roomIds
             self.inputData["historys"] = data.historys
             self.inputData["runningFlag"] = data.runningFlag
+            self.inputData["violationFlag"] = false
+            self.inputData["blockingUser"] = data.blockingUser
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             // pet初期化&更新
@@ -716,7 +718,17 @@ class EditViewController: BaseFormViewController {
             // HUDで投稿完了を表示する
             SVProgressHUD.showSuccess(withStatus: "ペット情報を更新しました")
         }else{
+            
+            var blockDict = [String:Bool]()
+            if UserDefaults.standard.object(forKey: DefaultString.BlockedUserIds) != nil, !UserDefaults.standard.array(forKey: DefaultString.BlockedUserIds)!.isEmpty {
+                for uid in UserDefaults.standard.array(forKey: DefaultString.BlockedUserIds)! as! [String] {
+                    blockDict[uid] = true
+                }
+            }
+            
             let key = ref.child(Paths.PetPath).childByAutoId().key
+            self.inputData["violationFlag"] = false
+            self.inputData["blockingUser"] = blockDict
             self.inputData["updateAt"] = String(time)
             self.inputData["updateBy"] = uid!
             self.inputData["createAt"] = String(time)
@@ -729,7 +741,7 @@ class EditViewController: BaseFormViewController {
             //ユーザのmyPetsIdを追加
             ref.child(Paths.UserPath).child(uid!).child("myPets").updateChildValues([key: true])
             // ユーザーデフォルトを更新
-            if UserDefaults.standard.dictionary(forKey: DefaultString.MyPets) != nil && !UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!.isEmpty {
+            if UserDefaults.standard.dictionary(forKey: DefaultString.MyPets) != nil , !UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!.isEmpty {
                 var myPets = UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!
                 myPets[key] = true
                 UserDefaults.standard.set(myPets , forKey: DefaultString.MyPets)

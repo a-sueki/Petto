@@ -29,7 +29,9 @@ class RoomData: NSObject {
     var todoRoomIds = [String:Bool]()
     var createAt:NSDate?
     var updateAt:NSDate?
-    
+    // ブロックしたユーザーもしくはペット
+    var blocked: String?
+
     init(snapshot: FIRDataSnapshot, myId: String) {
         print("DEBUG_PRINT: RoomData.init start")
         
@@ -59,7 +61,8 @@ class RoomData: NSObject {
         self.createAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(createAt!)!)
         let updateAt = valueDictionary["updateAt"] as? String
         self.updateAt = NSDate(timeIntervalSinceReferenceDate: TimeInterval(updateAt!)!)
-        
+        self.blocked = valueDictionary["blocked"] as? String
+
         print("DEBUG_PRINT: RoomData.init end")
     }
 }

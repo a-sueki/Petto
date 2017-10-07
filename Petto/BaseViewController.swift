@@ -99,7 +99,6 @@ class NavigationBarHandler: NSObject {
                         // ユーザーデフォルト設定
                         UserDefaults.standard.set(self.myUserData?.runningFlag , forKey: DefaultString.RunningFlag)
                     }
-                    
                     // 通知バッジ
                     self.setNotificationBatch(button: button1, unReadCount: unReadRoomIds ,todoCount: todoRoomIds)
                     

@@ -32,12 +32,12 @@ class UserViewController: BaseFormViewController  {
     
     func showForm(){
         print("DEBUG_PRINT: UserViewController.showForm start")
-
+        
         if UserDefaults.standard.object(forKey: DefaultString.RunningFlag) != nil,
             UserDefaults.standard.bool(forKey: DefaultString.RunningFlag) == true {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "おあずけ中は更新できません")
         }
-
+        
         
         let view = UIImageView()
         if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
@@ -180,7 +180,7 @@ class UserViewController: BaseFormViewController  {
             +++ Section("オプション")
             <<< SwitchRow("option"){
                 $0.title = "年齢を登録する"
-                $0.value = false
+                $0.value = UserDefaults.standard.bool(forKey: DefaultString.Option)
             }
             <<< DateRow("birthday") {
                 $0.hidden = .function(["option"], { form -> Bool in
@@ -371,7 +371,7 @@ class UserViewController: BaseFormViewController  {
                 }.onCellSelection { [weak self] (cell, row) in
                     self?.back()
         }
-
+        
         print("DEBUG_PRINT: UserViewController.showForm end")
     }
     
@@ -476,7 +476,7 @@ class UserViewController: BaseFormViewController  {
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
         let uid = FIRAuth.auth()?.currentUser?.uid
-
+        
         // 辞書を作成
         let ref = FIRDatabase.database().reference()
         
@@ -494,7 +494,7 @@ class UserViewController: BaseFormViewController  {
             // user更新
             ref.child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!).updateChildValues(self.inputData)
             storageUpload(photeImage: photeImage!, key: uid!)
-
+            
             // room更新
             var roomUpdateData1 = [String : Any]()
             if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) != nil {

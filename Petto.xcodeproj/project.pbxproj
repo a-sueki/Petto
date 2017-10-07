@@ -14,6 +14,13 @@
 		840EE9551F4C7864004E9AF8 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840EE9541F4C7864004E9AF8 /* SearchViewController.swift */; };
 		840EE9581F4D616C004E9AF8 /* SearchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840EE9571F4D616C004E9AF8 /* SearchData.swift */; };
 		841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ADB171F0CA18C00534A37 /* MessagesViewController.swift */; };
+		84208F711F876A5A00FBCFB8 /* BlockListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84208F701F876A5A00FBCFB8 /* BlockListViewController.swift */; };
+		84208F7B1F877A0A00FBCFB8 /* BlockedPetListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84208F7A1F877A0A00FBCFB8 /* BlockedPetListViewController.swift */; };
+		84208F7E1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84208F7C1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.swift */; };
+		84208F7F1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84208F7D1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.xib */; };
+		84208F821F877A8D00FBCFB8 /* BlockedUserListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84208F801F877A8D00FBCFB8 /* BlockedUserListTableViewCell.swift */; };
+		84208F831F877A8D00FBCFB8 /* BlockedUserListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84208F811F877A8D00FBCFB8 /* BlockedUserListTableViewCell.xib */; };
+		84208F851F877A9F00FBCFB8 /* BlockedUserListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84208F841F877A9F00FBCFB8 /* BlockedUserListViewController.swift */; };
 		8420E0AD1F29C1300088E509 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8420E0AC1F29C1300088E509 /* UserViewController.swift */; };
 		8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */; };
 		842732831F4FFA2400C32367 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842732821F4FFA2400C32367 /* Common.swift */; };
@@ -108,6 +115,13 @@
 		840EE9541F4C7864004E9AF8 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		840EE9571F4D616C004E9AF8 /* SearchData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchData.swift; sourceTree = "<group>"; };
 		841ADB171F0CA18C00534A37 /* MessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		84208F701F876A5A00FBCFB8 /* BlockListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListViewController.swift; sourceTree = "<group>"; };
+		84208F7A1F877A0A00FBCFB8 /* BlockedPetListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedPetListViewController.swift; sourceTree = "<group>"; };
+		84208F7C1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedPetListTableViewCell.swift; sourceTree = "<group>"; };
+		84208F7D1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BlockedPetListTableViewCell.xib; sourceTree = "<group>"; };
+		84208F801F877A8D00FBCFB8 /* BlockedUserListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUserListTableViewCell.swift; sourceTree = "<group>"; };
+		84208F811F877A8D00FBCFB8 /* BlockedUserListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BlockedUserListTableViewCell.xib; sourceTree = "<group>"; };
+		84208F841F877A9F00FBCFB8 /* BlockedUserListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUserListViewController.swift; sourceTree = "<group>"; };
 		8420E0AC1F29C1300088E509 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		8420E0AE1F29C95E0088E509 /* UserEditSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserEditSectionHeader.xib; sourceTree = "<group>"; };
 		842732821F4FFA2400C32367 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
@@ -282,6 +296,20 @@
 			name = Leave;
 			sourceTree = "<group>";
 		};
+		8499FEA61F87D75F00A7E35E /* Block */ = {
+			isa = PBXGroup;
+			children = (
+				84208F701F876A5A00FBCFB8 /* BlockListViewController.swift */,
+				84208F7A1F877A0A00FBCFB8 /* BlockedPetListViewController.swift */,
+				84208F7C1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.swift */,
+				84208F7D1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.xib */,
+				84208F841F877A9F00FBCFB8 /* BlockedUserListViewController.swift */,
+				84208F801F877A8D00FBCFB8 /* BlockedUserListTableViewCell.swift */,
+				84208F811F877A8D00FBCFB8 /* BlockedUserListTableViewCell.xib */,
+			);
+			name = Block;
+			sourceTree = "<group>";
+		};
 		849ED1E01F1B2F60003AD9F5 /* MyPet */ = {
 			isa = PBXGroup;
 			children = (
@@ -347,6 +375,7 @@
 				84CCE00C1EFB791D0025B5D3 /* Main.storyboard */,
 				84D373FE1F70F7A100500B0F /* Others */,
 				849ED1E31F1CF912003AD9F5 /* Model */,
+				8499FEA61F87D75F00A7E35E /* Block */,
 				84D523F21F57AD15004092D5 /* Login */,
 				849ED1E01F1B2F60003AD9F5 /* MyPet */,
 				8457462F1F2FF73300CE5470 /* User */,
@@ -490,6 +519,7 @@
 			files = (
 				848FF9621F70A1000000F62C /* Policy.txt in Resources */,
 				84067B551F0B6C9600F01905 /* HomeCollectionViewCell.xib in Resources */,
+				84208F831F877A8D00FBCFB8 /* BlockedUserListTableViewCell.xib in Resources */,
 				8420E0AF1F29C95E0088E509 /* UserEditSectionHeader.xib in Resources */,
 				84A847F81F2826A900D898EC /* MyPetListTableViewCell.xib in Resources */,
 				846705E71F0F81E400FFEA8D /* MessageListTableViewCell.xib in Resources */,
@@ -500,6 +530,7 @@
 				844063021F60B44F00640124 /* TodoListTableViewCell.xib in Resources */,
 				845F2E401F42C41100526C1F /* UserDetailHeader.xib in Resources */,
 				847CA5671F3AFFE500C68672 /* ConditionsCollectionViewCell.xib in Resources */,
+				84208F7F1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.xib in Resources */,
 				840AB7F01F418475002EC329 /* PetDetailHeader.xib in Resources */,
 				84FD62D91F6D09F30006DB76 /* HistoryTableViewCell.xib in Resources */,
 				8491640F1F2884B7007597F9 /* EditSectionHeader.xib in Resources */,
@@ -576,9 +607,11 @@
 			files = (
 				844063011F60B44F00640124 /* TodoListTableViewCell.swift in Sources */,
 				8491640D1F288093007597F9 /* EditViewController.swift in Sources */,
+				84208F711F876A5A00FBCFB8 /* BlockListViewController.swift in Sources */,
 				8420E0AD1F29C1300088E509 /* UserViewController.swift in Sources */,
 				84D6CD301F18817E000CA101 /* ImagePickerController.swift in Sources */,
 				841ADB181F0CA18C00534A37 /* MessagesViewController.swift in Sources */,
+				84208F851F877A9F00FBCFB8 /* BlockedUserListViewController.swift in Sources */,
 				842732831F4FFA2400C32367 /* Common.swift in Sources */,
 				846705E61F0F81E400FFEA8D /* MessageListTableViewCell.swift in Sources */,
 				844577F21F59F4B2006AB5C6 /* ConsentViewController.swift in Sources */,
@@ -597,6 +630,7 @@
 				84D926801F559A5A008E419E /* PasswordResetViewController.swift in Sources */,
 				848FF9601F70834F0000F62C /* ContactData.swift in Sources */,
 				84DB3BFC1F543D5B0067A680 /* BreederMessagesContainerViewController.swift in Sources */,
+				84208F7E1F877A6A00FBCFB8 /* BlockedPetListTableViewCell.swift in Sources */,
 				845F2E3E1F42C25B00526C1F /* UserDetailViewController.swift in Sources */,
 				844062FE1F60B36200640124 /* TodoListViewController.swift in Sources */,
 				84D253081F0217D700D877A9 /* LeftViewController.swift in Sources */,
@@ -608,6 +642,7 @@
 				84D6CD331F18F7E3000CA101 /* CustomCells.swift in Sources */,
 				84AC70E71F11E43A001F7563 /* MessageData.swift in Sources */,
 				84B577211F5C23350008622D /* LeaveData.swift in Sources */,
+				84208F821F877A8D00FBCFB8 /* BlockedUserListTableViewCell.swift in Sources */,
 				846705DE1F0F78BC00FFEA8D /* BaseViewController.swift in Sources */,
 				848FF95E1F7082AC0000F62C /* ContactViewController.swift in Sources */,
 				84CCE01D1EFB8C040025B5D3 /* HomeViewController.swift in Sources */,
@@ -615,6 +650,7 @@
 				840EE9581F4D616C004E9AF8 /* SearchData.swift in Sources */,
 				847CA55E1F3ACD4E00C68672 /* LeaveViewController.swift in Sources */,
 				848FF9641F70A14C0000F62C /* PolicyViewController.swift in Sources */,
+				84208F7B1F877A0A00FBCFB8 /* BlockedPetListViewController.swift in Sources */,
 				849ED1E21F1CEE47003AD9F5 /* PetData.swift in Sources */,
 				8470FD7E1F10C613002F4690 /* UserData.swift in Sources */,
 				8480595D1F04CCB3003E2613 /* Const.swift in Sources */,

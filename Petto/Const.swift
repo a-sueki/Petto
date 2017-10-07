@@ -19,6 +19,9 @@ struct Paths {
     static let SearchPath = "search"
     static let LeavePath = "leave"
     static let ContactPath = "contact"
+    static let ViolationPetPath = "violationPet"
+    static let ViolationUserPath = "violationUser"
+    static let ViolationHistoryPath = "violationHistory"
 }
 
 struct DefaultString {
@@ -58,6 +61,11 @@ struct DefaultString {
     static let Bads = "bads"
     static let Historys = "historys"
     static let RunningFlag = "runningFlag"
+    static let ViolationPets = "violationPets"          // DB保存用（運営が参照するのみ）
+    static let ViolationUsers = "violationUsers"        // DB保存用（運営が参照するのみ）
+    static let ViolationHistorys = "violationHistorys"  // DB保存用（運営が参照するのみ）
+    static let BlockedPetIds = "blockedPetIds"          // 除外対応（全ユーザ用）
+    static let BlockedUserIds = "blockedUserIds"        // 除外対応（全ユーザ用）
 }
 
 struct URLs {
@@ -491,6 +499,13 @@ struct SCLAlert {
         kTitleFont: UIFont(name: "Helvetica", size: 17)!,
         kTextFont: UIFont(name: "Helvetica", size: 14)!,
         kButtonFont: UIFont(name: "Helvetica", size: 14)!,
+        showCloseButton: false
+    )
+
+    static let appearanceEULA = SCLAlertView.SCLAppearance(
+        kTitleFont: UIFont(name: "Helvetica", size: 14)!,
+        kTextFont: UIFont(name: "Helvetica", size: 8)!,
+        kButtonFont: UIFont(name: "Helvetica", size: 12)!,
         showCloseButton: false
     )
 }

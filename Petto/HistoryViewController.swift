@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import SVProgressHUD
-
+import SCLAlertView
 
 class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource { //, HistoryDelegate
     
@@ -111,7 +111,8 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.shearButton.addTarget(self, action:#selector(handleFacebookButton(sender:event:)), for:  UIControlEvents.touchUpInside)
         cell.facebookButton.addTarget(self, action:#selector(handleFacebookButton(sender:event:)), for:  UIControlEvents.touchUpInside)
-        
+        cell.reportButton.addTarget(self, action:#selector(handleReportButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+
 /*        //自作セルのデリゲート先に自分を設定する。
         cell.delegate = self
         // セル内のボタンのアクションをソースコードで設定する
@@ -174,7 +175,58 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         print("DEBUG_PRINT: HistoryViewController.cellForRowAt end")
         return cell
     }
+
+    func handleReportButton(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: HistoryViewController.handleReportButton start")
+        
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+
+        
+        let alertView = SCLAlertView(appearance: SCLAlert.appearance)
+        let textField = alertView.addTextField("違反内容など")
+        let nameFeild = alertView.addTextField("あなたのお名前")
+        let mailFeild = alertView.addTextField("あなたのメールアドレス")
+        alertView.addButton("通報する"){
+            if let violationContent = textField.text, let name = nameFeild.text ,let mail = mailFeild.text{
+                self.excuteReport(text: violationContent, mail:mail, name:name, index: (indexPath?.row)!)
+            }
+        }
+        alertView.addButton("キャンセル", target:self, selector:#selector(HistoryViewController.cancel))
+        alertView.showEdit("違反報告", subTitle: "\n違反内容について記載し、通報して下さい。\n")
+        
+        print("DEBUG_PRINT: HistoryViewController.handleReportButton end")
+    }
+    func excuteReport(text :String, mail :String, name :String, index:Int) {
+        print("DEBUG_PRINT: HistoryViewController.excuteReport start")
+        
+        var inputData = [String : Any]()
+        let time = NSDate.timeIntervalSinceReferenceDate
+        let ref = FIRDatabase.database().reference()
+        
+        let key = ref.child(Paths.ViolationHistoryPath).childByAutoId().key
+        inputData["mail"] = mail
+        inputData["name"] = name
+        inputData["text"] = text
+        inputData["targetID"] = self.leaveDataArray[index].id!
+        inputData["createAt"] = String(time)
+        inputData["createBy"] = UserDefaults.standard.string(forKey: DefaultString.Uid) ?? "guest"
+        // insert
+        ref.child(Paths.ViolationHistoryPath).child(key).setValue(inputData)
+        
+        // 全てのモーダルを閉じる
+        UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        
+        print("DEBUG_PRINT: HistoryViewController.excuteReport end")
+    }
     
+    func cancel() {
+        print("DEBUG_PRINT: HistoryViewController.cancel start")
+        print("DEBUG_PRINT: HistoryViewController.cancel end")
+    }
+
     func handleFacebookButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: HistoryViewController.handleFacebookButton start")
         

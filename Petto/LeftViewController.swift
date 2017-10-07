@@ -20,7 +20,7 @@ enum LeftMenu: Int {
 class LeftViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var mainViewController: UINavigationController!
-    var menus = ["Account","Profile", "My Pet", "Message", "Oazuke / Azukari", "How to Use","Contact Us","Privacy Policy"]
+    var menus = ["Account","Profile", "My Pet", "Message", "Oazuke / Azukari", "BlockList" , "How to Use","Contact Us","Privacy Policy"]
     var myUserData: UserData?
     
     @IBOutlet weak var tableView: UITableView!
@@ -40,7 +40,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewWillAppear(animated)
         print("DEBUG_PRINT: LeftViewController.viewWillAppear start")
     
-        // userを取得
+        // 未読・未実施ハイライト
         if let user = FIRAuth.auth()?.currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
             let ref = FIRDatabase.database().reference().child(Paths.UserPath)
             ref.child(user.uid).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -101,8 +101,6 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }else if indexPath.row == 4 {
             var count = 0
-            print("DEBUG_PRINT: LeftViewController.cellForRowAt 1")
-            print(count)
             if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil &&
                 !(UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
                 for (k,v) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
@@ -120,6 +118,26 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.textLabel?.textColor = UIColor.darkText
                 cell.textLabel?.text = menu
             }
+/*        }else if indexPath.row == 5 {
+            if UserDefaults.standard.object(forKey: DefaultString.BlockedPetIds) != nil ,!UserDefaults.standard.array(forKey: DefaultString.BlockedPetIds)!.isEmpty {
+                print("DEBUG_PRINT: LeftViewController.cellForRowAt 1")
+                print(UserDefaults.standard.array(forKey: DefaultString.BlockedPetIds))
+                cell.textLabel?.textColor = UIColor.darkText
+                cell.textLabel?.text = menu
+            }else if UserDefaults.standard.object(forKey: DefaultString.BlockedUserIds) != nil ,!UserDefaults.standard.array(forKey: DefaultString.BlockedUserIds)!.isEmpty {
+                print("DEBUG_PRINT: LeftViewController.cellForRowAt 2")
+                print(UserDefaults.standard.array(forKey: DefaultString.BlockedUserIds))
+                cell.textLabel?.textColor = UIColor.darkText
+                cell.textLabel?.text = menu
+            }else{
+                print("DEBUG_PRINT: LeftViewController.cellForRowAt 3")
+                print(UserDefaults.standard.array(forKey: DefaultString.BlockedPetIds))
+                print(UserDefaults.standard.array(forKey: DefaultString.BlockedUserIds))
+                cell.textLabel?.textColor = UIColor.lightGray
+                cell.textLabel?.text = menu
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
+            }
+ */
         }else {
             cell.textLabel?.textColor = UIColor.darkText
             cell.textLabel?.text = menu
@@ -144,9 +162,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 2:
             // ユーザープロフィールが未作成の場合
-            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだペット投稿はありません。")
-            }else if FIRAuth.auth()?.currentUser == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || FIRAuth.auth()?.currentUser == nil {
                 let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
                 let navigationController = UINavigationController(rootViewController: accountViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
@@ -159,9 +175,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         case 3:
             // ユーザープロフィールが未作成の場合
-            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだメッセージはありません。")
-            }else if FIRAuth.auth()?.currentUser == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || FIRAuth.auth()?.currentUser == nil {
                 let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
                 let navigationController = UINavigationController(rootViewController: accountViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
@@ -174,9 +188,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         case 4:
             // ユーザープロフィールが未作成の場合
-            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-                SVProgressHUD.show(RandomImage.getRandomImage(), status: "まだ予定はありません。")
-            }else if FIRAuth.auth()?.currentUser == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || FIRAuth.auth()?.currentUser == nil {
                 let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
                 let navigationController = UINavigationController(rootViewController: accountViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
@@ -188,6 +200,10 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
             }
         case 5:
+            let blockListViewController = self.storyboard?.instantiateViewController(withIdentifier: "BlockList") as! BlockListViewController
+            let navigationController = UINavigationController(rootViewController: blockListViewController)
+            self.slideMenuController()?.changeMainViewController(navigationController, close: true)
+        case 6:
             guard let url = URL(string: URLs.howToUseURL) else {
                 return //be safe
             }
@@ -196,18 +212,17 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             } else {
                 UIApplication.shared.openURL(url)
             }
-        case 6:
+        case 7:
             let contactViewController = self.storyboard?.instantiateViewController(withIdentifier: "Contact") as! ContactViewController
             let navigationController = UINavigationController(rootViewController: contactViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
-        case 7:
+        case 8:
             let policyViewController = self.storyboard?.instantiateViewController(withIdentifier: "Policy") as! PolicyViewController
             let navigationController = UINavigationController(rootViewController: policyViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         default:
             break
         }
-        
         self.slideMenuController()?.closeLeft()
         
         print("DEBUG_PRINT: LeftViewController.didSelectRowAt end")

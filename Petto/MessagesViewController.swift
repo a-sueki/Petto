@@ -34,6 +34,10 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         
         print("DEBUG_PRINT: MessagesViewController.viewDidLoad start")
         
+        if roomData?.blocked != nil {
+            SVProgressHUD.showError(withStatus: "ブロック中です")
+        }
+        
         // 画面タップでキーボードを隠す
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         tapGestureRecognizer.delegate = self
@@ -208,22 +212,26 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
     override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         print("DEBUG_PRINT: MessagesViewController.didPressSend start")
         
-        let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
-        messages.append(message!)
-        // データセット
-        let time = NSDate.timeIntervalSinceReferenceDate
-        var inputData = [String : Any]()  //message
-        inputData["senderId"] = senderId
-        inputData["senderDisplayName"] = senderDisplayName
-        inputData["text"] = text
-        inputData["timestamp"] = String(time)
-        
-        // Firebase連携
-        updateMessageData(inputData: inputData, lastMessage: text, image: nil)
-        
-        // 更新
-        finishSendingMessage(animated: true)
-        //sendAutoMessage()
+        if roomData?.blocked != nil {
+            SVProgressHUD.showError(withStatus: "ブロック中です")
+        }else{
+            let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
+            messages.append(message!)
+            // データセット
+            let time = NSDate.timeIntervalSinceReferenceDate
+            var inputData = [String : Any]()  //message
+            inputData["senderId"] = senderId
+            inputData["senderDisplayName"] = senderDisplayName
+            inputData["text"] = text
+            inputData["timestamp"] = String(time)
+            
+            // Firebase連携
+            updateMessageData(inputData: inputData, lastMessage: text, image: nil)
+            
+            // 更新
+            finishSendingMessage(animated: true)
+            //sendAutoMessage()
+        }
         
         print("DEBUG_PRINT: MessagesViewController.didPressSend end")
     }
@@ -396,11 +404,13 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
     }
     
     override func didPressAccessoryButton(_ sender: UIButton!) {
-        
-        let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
-        viewController4.delegate = self
-        self.navigationController?.pushViewController(viewController4, animated: true)
-        
+        if roomData?.blocked != nil {
+            SVProgressHUD.showError(withStatus: "ブロック中です")
+        }else{
+            let viewController4 = self.storyboard?.instantiateViewController(withIdentifier: "ImageSelect") as! ImageSelectViewController
+            viewController4.delegate = self
+            self.navigationController?.pushViewController(viewController4, animated: true)
+        }
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {

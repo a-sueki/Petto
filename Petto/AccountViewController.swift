@@ -11,6 +11,7 @@ import Eureka
 import Firebase
 import FirebaseDatabase
 import SVProgressHUD
+import SCLAlertView
 
 class AccountViewController: BaseFormViewController {
     
@@ -42,10 +43,7 @@ class AccountViewController: BaseFormViewController {
         
         // フォーム
         form +++
-/*            Section("Account") {
-                $0.header = HeaderFooterView<AccountView>(.class)
-            }
-*/          Section("アカウント情報")
+          Section("アカウント情報")
             <<< EmailRow("mail") {
                 $0.title = "メールアドレス"
                 $0.value = UserDefaults.standard.string(forKey: DefaultString.Mail)
@@ -124,8 +122,6 @@ class AccountViewController: BaseFormViewController {
                         }
                     }
             }
-            
-            
             +++ Section(){
                 $0.hidden = .function([""], { form -> Bool in
                     if FIRAuth.auth()?.currentUser == nil {
@@ -152,7 +148,7 @@ class AccountViewController: BaseFormViewController {
                         SVProgressHUD.showError(withStatus: "入力を修正してください")
                         print("DEBUG_PRINT: AccountViewController.viewDidLoad \(error)のため処理は行いません")
                     }else{
-                        self?.createUser()
+                        self?.displayEULA()
                     }
             }
             
@@ -196,6 +192,50 @@ class AccountViewController: BaseFormViewController {
 
         print("DEBUG_PRINT: AccountViewController.viewDidLoad end")
     }
+    
+    @IBAction func displayEULA() {
+        print("DEBUG_PRINT: AccountViewController.displayEULA start")
+        
+        if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            if let filePath = Bundle.main.path(forResource: "Policy", ofType: "txt"){
+                if let data = NSData(contentsOfFile: filePath){
+                    let eulaText = String(NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)!)
+                    // ポップアップ表示
+                    let alertView = SCLAlertView(appearance: SCLAlert.appearanceEULA)
+                    // Creat the subview
+                    let subview = UIView(frame: CGRect(x:0,y:0,width:216,height:100))
+                    let x = (subview.frame.width - 200) / 2
+                    // Add textfield 1
+                    let textView = UITextView(frame: CGRect(x:x,y:0,width:200,height:100))
+                    textView.layer.borderColor = UIColor.lightGray.cgColor
+                    textView.layer.borderWidth = 0.5
+                    textView.layer.cornerRadius = 3
+                    textView.font = UIFont(name: "Helvetica", size: 10)
+                    textView.isEditable = false
+                    textView.text = eulaText
+                    textView.textAlignment = NSTextAlignment.left
+                    subview.addSubview(textView)
+                    alertView.customSubview = subview
+                    
+                    alertView.addButton("同意します", target:self, selector:#selector(AccountViewController.createUser))
+                    alertView.addButton("キャンセル", target:self, selector:#selector(AccountViewController.cancel))
+                    alertView.showInfo("利用規約", subTitle: "")
+                }else{
+                    print("データなし")
+                }
+            }
+        }else{
+            self.createUser()
+        }
+        
+        print("DEBUG_PRINT: AccountViewController.displayEULA end")
+    }
+    func cancel(){
+        print("DEBUG_PRINT: AccountViewController.cancel start")
+        // なにもしない
+        print("DEBUG_PRINT: AccountViewController.cancel end")
+    }
+
     
     func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
@@ -309,6 +349,7 @@ class AccountViewController: BaseFormViewController {
                             if userData.runningFlag != nil {
                                 UserDefaults.standard.set(userData.runningFlag , forKey: DefaultString.RunningFlag)
                             }
+                            // 違反は運営が参照するのみ。ブロックは、UserDefaultsのBlockedPetIds、BlockedUserIdsだけで、編集はブロック画面で行う。
                         }else{
                             UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
                             // ユーザーデフォルト設定（アカウント項目）
@@ -339,7 +380,7 @@ class AccountViewController: BaseFormViewController {
         print("DEBUG_PRINT: AccountViewController.login end")
     }
     
-    @IBAction func createUser(){
+    func createUser(){
         print("DEBUG_PRINT: AccountViewController.createUser start")
         
         
@@ -597,9 +638,7 @@ class AccountViewController: BaseFormViewController {
         }
         print("DEBUG_PRINT: AccountViewController.isValidEmailAddress end")
         return  returnValue
-    }
-    
-    
+    }    
 }
 
 class AccountView: UIView {

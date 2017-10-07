@@ -80,8 +80,19 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 for childSnap in snapshot.children {
                     
                     let petData = PetData(snapshot: childSnap as! FIRDataSnapshot , myId: (childSnap as! FIRDataSnapshot).key)
-                    self.petDataArray.insert(petData, at: 0)
-                    
+                    // 違反ペットを除外
+                    if !petData.violationFlag! {
+                        // ローカルで除外（ユーザーがブロック中のペット）
+                        if let blockedPets = UserDefaults.standard.array(forKey: DefaultString.BlockedPetIds) ,!UserDefaults.standard.array(forKey: DefaultString.BlockedPetIds)!.isEmpty{
+                            for pid in blockedPets as! [String] {
+                                if petData.id != pid {
+                                    self.petDataArray.insert(petData, at: 0)
+                                }
+                            }
+                        }else{
+                            self.petDataArray.insert(petData, at: 0)
+                        }
+                    }
                     DispatchQueue.main.async {
                         print("DEBUG_PRINT: HomeViewController.read [DispatchQueue.main.async]")
                         // collectionViewを再表示する

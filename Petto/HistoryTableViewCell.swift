@@ -41,6 +41,7 @@ class HistoryTableViewCell: UITableViewCell, UITextFieldDelegate  {
     
     @IBOutlet weak var shearButton: UIButton!
     @IBOutlet weak var facebookButton: UIButton!
+    @IBOutlet weak var reportButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
