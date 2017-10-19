@@ -404,7 +404,7 @@ class EditViewController: BaseFormViewController {
                 $0.title = "品種"
                 $0.hidden = .function(["kind"], { form -> Bool in
                     let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? Kind.dog == Kind.cat
+                    return row.value ?? Kind.dog != Kind.dog
                 })
                 $0.options = CategoryDog.strings
                 $0.value = self.petData?.category ?? $0.options.first
@@ -413,7 +413,7 @@ class EditViewController: BaseFormViewController {
                 $0.title = "品種"
                 $0.hidden = .function(["kind"], { form -> Bool in
                     let row: RowOf<String>! = form.rowBy(tag: "kind")
-                    return row.value ?? Kind.dog == Kind.dog
+                    return row.value ?? Kind.dog != Kind.cat
                 })
                 $0.options = CategoryCat.strings
                 $0.value = self.petData?.category ?? $0.options.first

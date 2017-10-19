@@ -156,7 +156,7 @@ struct Size {
 }
 struct Color {
     static let codes = [Codes.C1,Codes.C2,Codes.C3,Codes.C4,Codes.C5,Codes.C6,Codes.C7,Codes.C8]
-    static let strings = ["白","黒","灰","黄","茶","赤","青","紫"]
+    static let strings = ["白","黒","灰","黄","茶","赤","青","紫","緑"]
     static let icons = strings
     
     static func toString(_ code:String) -> String {
@@ -209,10 +209,11 @@ struct Color {
 }
 
 struct Kind {
-    static let strings = ["イヌ", "ネコ"]
-    static let searchStrings = [SearchString.unspecified,"イヌ", "ネコ"]
+    static let strings = ["イヌ", "ネコ","その他"]
+    static let searchStrings = [SearchString.unspecified,"イヌ", "ネコ","その他"]
     static let dog = "イヌ"
     static let cat = "ネコ"
+    static let other = "その他"
 }
 
 struct CategoryDog {
