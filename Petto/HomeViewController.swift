@@ -12,8 +12,9 @@ import FirebaseAuth
 import FirebaseDatabase
 import SVProgressHUD
 import UserNotifications
+import GoogleMobileAds
 
-class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout {
+class HomeViewController: BaseViewController ,UICollectionViewDataSource, UICollectionViewDelegate , UICollectionViewDelegateFlowLayout,GADBannerViewDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -21,14 +22,15 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     var searchOnFlag :Bool?
     var searchData: SearchData?
     var petDataArray: [PetData] = []
+    var bannerView: GADBannerView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("DEBUG_PRINT: HomeViewController.viewDidLoad start")
         
         //ペット登録ボタンを丸くする
-        registerButton.layer.cornerRadius = 75.0
-        registerButton.layer.masksToBounds = true
+//        registerButton.layer.cornerRadius = 75.0
+//        registerButton.layer.masksToBounds = true
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -41,6 +43,30 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         if UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
             self.refreshBysearch()
         }
+        
+        // iAd広告設定
+        //self.canDisplayBannerAds = true
+        // In this case, we instantiate the banner with desired ad size.
+        bannerView = GADBannerView(adSize: kGADAdSizeBanner)
+
+        bannerView.frame.origin = CGPoint(x:0, y:self.view.frame.size.height - bannerView.frame.height)
+        bannerView.frame.size = CGSize(width:self.view.frame.width, height:bannerView.frame.height)
+        // AdMobで発行された広告ユニットIDを設定
+        bannerView.adUnitID = "ca-app-pub-5249520015075390/9898037567"
+
+        // テスト用ID
+        //bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+
+        bannerView.delegate = self
+        bannerView.rootViewController = self
+        let gadRequest:GADRequest = GADRequest()
+        // テスト用の広告を表示する時のみ使用（申請時に削除）
+        //gadRequest.testDevices = ["26a658cbdbafefa0529a98321fa5a5b1"]
+    
+        bannerView.load(gadRequest)
+        self.view.addSubview(bannerView)
+
+
         
         print("DEBUG_PRINT: HomeViewController.viewDidLoad end")
     }

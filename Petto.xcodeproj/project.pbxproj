@@ -28,6 +28,15 @@
 		844062FE1F60B36200640124 /* TodoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844062FD1F60B36200640124 /* TodoListViewController.swift */; };
 		844063011F60B44F00640124 /* TodoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844062FF1F60B44F00640124 /* TodoListTableViewCell.swift */; };
 		844063021F60B44F00640124 /* TodoListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 844063001F60B44F00640124 /* TodoListTableViewCell.xib */; };
+		8441C9AB20CA68F700524A9C /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BB20721F85679900CD682D /* AdSupport.framework */; };
+		8441C9AD20CA68FF00524A9C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9AC20CA68FF00524A9C /* AudioToolbox.framework */; };
+		8441C9AF20CA690600524A9C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9AE20CA690600524A9C /* AVFoundation.framework */; };
+		8441C9B120CA690C00524A9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9B020CA690C00524A9C /* CoreGraphics.framework */; };
+		8441C9B320CA691300524A9C /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9B220CA691300524A9C /* CoreTelephony.framework */; };
+		8441C9B520CA691B00524A9C /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9B420CA691B00524A9C /* EventKit.framework */; };
+		8441C9B720CA692000524A9C /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9B620CA692000524A9C /* EventKitUI.framework */; };
+		8441C9B920CA693100524A9C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9B820CA693100524A9C /* StoreKit.framework */; };
+		8441C9BB20CA69F400524A9C /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8441C9BA20CA69F400524A9C /* GoogleMobileAds.framework */; };
 		844577EE1F590F4A006AB5C6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */; };
 		844577F01F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844577EF1F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift */; };
 		844577F21F59F4B2006AB5C6 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */; };
@@ -129,6 +138,14 @@
 		844062FD1F60B36200640124 /* TodoListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoListViewController.swift; sourceTree = "<group>"; };
 		844062FF1F60B44F00640124 /* TodoListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodoListTableViewCell.swift; sourceTree = "<group>"; };
 		844063001F60B44F00640124 /* TodoListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TodoListTableViewCell.xib; sourceTree = "<group>"; };
+		8441C9AC20CA68FF00524A9C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		8441C9AE20CA690600524A9C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		8441C9B020CA690C00524A9C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		8441C9B220CA691300524A9C /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		8441C9B420CA691B00524A9C /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
+		8441C9B620CA692000524A9C /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
+		8441C9B820CA693100524A9C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		8441C9BA20CA69F400524A9C /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		844577ED1F590F4A006AB5C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		844577EF1F59F3BF006AB5C6 /* UserMessagesContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserMessagesContainerViewController.swift; sourceTree = "<group>"; };
 		844577F11F59F4B2006AB5C6 /* ConsentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
@@ -203,12 +220,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F6ACB81EFD02500086BBB9 /* SystemConfiguration.framework in Frameworks */,
+				8441C9B920CA693100524A9C /* StoreKit.framework in Frameworks */,
+				84F6ACBE1EFD02630086BBB9 /* MessageUI.framework in Frameworks */,
+				8441C9B720CA692000524A9C /* EventKitUI.framework in Frameworks */,
+				8441C9B520CA691B00524A9C /* EventKit.framework in Frameworks */,
+				8441C9B320CA691300524A9C /* CoreTelephony.framework in Frameworks */,
+				8441C9B120CA690C00524A9C /* CoreGraphics.framework in Frameworks */,
+				8441C9AF20CA690600524A9C /* AVFoundation.framework in Frameworks */,
+				8441C9AD20CA68FF00524A9C /* AudioToolbox.framework in Frameworks */,
+				8441C9AB20CA68F700524A9C /* AdSupport.framework in Frameworks */,
 				84F6ACC21EFD026F0086BBB9 /* QuartzCore.framework in Frameworks */,
 				84F6ACC01EFD02690086BBB9 /* OpenGLES.framework in Frameworks */,
-				84F6ACBE1EFD02630086BBB9 /* MessageUI.framework in Frameworks */,
 				84F6ACBC1EFD025C0086BBB9 /* CoreData.framework in Frameworks */,
+				8441C9BB20CA69F400524A9C /* GoogleMobileAds.framework in Frameworks */,
 				84F6ACBA1EFD02560086BBB9 /* Accelerate.framework in Frameworks */,
-				84F6ACB81EFD02500086BBB9 /* SystemConfiguration.framework in Frameworks */,
 				84F6ACB61EFD024A0086BBB9 /* MobileCoreServices.framework in Frameworks */,
 				84F6ACB41EFD02430086BBB9 /* libsqlite3.0.tbd in Frameworks */,
 				84F6ACB21EFD023C0086BBB9 /* libz.1.2.5.tbd in Frameworks */,
@@ -226,6 +252,13 @@
 		06FAA2B132BA87C253DF4E2A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8441C9B820CA693100524A9C /* StoreKit.framework */,
+				8441C9B620CA692000524A9C /* EventKitUI.framework */,
+				8441C9B420CA691B00524A9C /* EventKit.framework */,
+				8441C9B220CA691300524A9C /* CoreTelephony.framework */,
+				8441C9B020CA690C00524A9C /* CoreGraphics.framework */,
+				8441C9AE20CA690600524A9C /* AVFoundation.framework */,
+				8441C9AC20CA68FF00524A9C /* AudioToolbox.framework */,
 				84BB20721F85679900CD682D /* AdSupport.framework */,
 				84F6ACC11EFD026F0086BBB9 /* QuartzCore.framework */,
 				84F6ACBF1EFD02690086BBB9 /* OpenGLES.framework */,
@@ -361,6 +394,7 @@
 		84CCE0071EFB791D0025B5D3 /* Petto */ = {
 			isa = PBXGroup;
 			children = (
+				8441C9BA20CA69F400524A9C /* GoogleMobileAds.framework */,
 				84F55FEF1F5886C200EAE4BE /* Petto.entitlements */,
 				84F6ACA41EFD01D30086BBB9 /* AdobeCreativeSDKCore.framework */,
 				846EA6471F71C64100B2F187 /* LINEActivity.h */,

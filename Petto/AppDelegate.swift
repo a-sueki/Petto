@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import SlideMenuControllerSwift
 import UserNotifications
+import GoogleMobileAds
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterDelegate{
@@ -81,6 +82,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
                           options: UIViewAnimationOptions.transitionFlipFromLeft,
                           animations: {},
                           completion: {(b) in })
+        
+        GADMobileAds.configure(withApplicationID: "ca-app-pub-5249520015075390~6202593928")
 
         print("DEBUG_PRINT: AppDelegate.didFinishLaunchingWithOptions end")
         return true

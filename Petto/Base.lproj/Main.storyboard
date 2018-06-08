@@ -61,35 +61,24 @@
                                 <cells/>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aEY-md-RnE">
-                                <rect key="frame" x="294" y="616" width="150" height="150"/>
+                                <rect key="frame" x="0.0" y="636" width="414" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="150" id="0a6-WY-EaQ"/>
-                                    <constraint firstAttribute="height" constant="150" id="K5f-xZ-9hD"/>
+                                    <constraint firstAttribute="height" constant="50" id="IIF-WZ-ZTY"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <state key="normal" image="footprint-white2" backgroundImage="btn"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
+                                <state key="normal" title="+++ ペットを投稿してみる +++" backgroundImage="btn"/>
                                 <connections>
                                     <action selector="registerButton:" destination="Kbz-Jc-Q80" eventType="touchUpInside" id="bfD-BD-Tb8"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ペット追加" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wXX-oz-N9w">
-                                <rect key="frame" x="334" y="631" width="70" height="15"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="70" id="4H7-m2-lsc"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="xRq-m0-zeu" secondAttribute="trailing" id="3gp-lk-5Yc"/>
-                            <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="aEY-md-RnE" secondAttribute="bottom" constant="-30" id="8SX-Tk-POL"/>
-                            <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="wXX-oz-N9w" secondAttribute="bottom" constant="90" id="Oc5-Pq-f8E"/>
-                            <constraint firstAttribute="trailing" secondItem="aEY-md-RnE" secondAttribute="trailing" constant="-30" id="T0K-DF-fEA"/>
+                            <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="aEY-md-RnE" secondAttribute="bottom" constant="50" id="FGq-mm-spC"/>
+                            <constraint firstAttribute="trailing" secondItem="aEY-md-RnE" secondAttribute="trailing" id="Gfl-Ui-M5i"/>
                             <constraint firstItem="6Kr-iJ-nNz" firstAttribute="top" secondItem="xRq-m0-zeu" secondAttribute="bottom" id="bjw-pV-bay"/>
-                            <constraint firstItem="wXX-oz-N9w" firstAttribute="centerX" secondItem="aEY-md-RnE" secondAttribute="centerX" id="e7k-Rh-yl6"/>
+                            <constraint firstItem="aEY-md-RnE" firstAttribute="leading" secondItem="hha-2o-qo5" secondAttribute="leading" id="d6N-AJ-0qx"/>
                             <constraint firstItem="xRq-m0-zeu" firstAttribute="top" secondItem="hha-2o-qo5" secondAttribute="top" id="hUp-cB-eEp"/>
                             <constraint firstItem="xRq-m0-zeu" firstAttribute="leading" secondItem="hha-2o-qo5" secondAttribute="leading" id="vMm-6e-7Ws"/>
                         </constraints>
@@ -101,7 +90,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KLT-3V-GmV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1438" y="128"/>
+            <point key="canvasLocation" x="1437.68115942029" y="127.98913043478262"/>
         </scene>
         <!--Left View Controller-->
         <scene sceneID="gg6-t7-kOs">
@@ -1373,6 +1362,5 @@
     </scenes>
     <resources>
         <image name="btn" width="300" height="40"/>
-        <image name="footprint-white2" width="80" height="80"/>
     </resources>
 </document>
