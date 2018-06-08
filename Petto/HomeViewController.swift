@@ -57,7 +57,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: HomeViewController.viewWillDisappear start")
         
         if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil && UserDefaults.standard.string(forKey: DefaultString.WithSearch) != nil {
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(UserDefaults.standard.string(forKey: DefaultString.WithSearch)!)
+            let ref = Database.database().reference().child(Paths.SearchPath).child(UserDefaults.standard.string(forKey: DefaultString.WithSearch)!)
             ref.removeAllObservers()
         }
         
@@ -67,7 +67,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
     func read(){
         print("DEBUG_PRINT: HomeViewController.read start")
         
-        let ref = FIRDatabase.database().reference().child(Paths.PetPath)
+        let ref = Database.database().reference().child(Paths.PetPath)
         
         // HUDで処理中を表示
         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
@@ -79,7 +79,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
                 self.petDataArray.removeAll()
                 for childSnap in snapshot.children {
                     
-                    let petData = PetData(snapshot: childSnap as! FIRDataSnapshot , myId: (childSnap as! FIRDataSnapshot).key)
+                    let petData = PetData(snapshot: childSnap as! DataSnapshot , myId: (childSnap as! DataSnapshot).key)
                     // 違反ペットを除外
                     if !petData.violationFlag! {
                         // ローカルで除外（ユーザーがブロック中のペット）
@@ -118,7 +118,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             // HUDで処理中を表示
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             // 要素が追加されたら再表示
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
+            let ref = Database.database().reference().child(Paths.SearchPath).child(key)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: HomeViewController.viewWillAppear .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
@@ -352,7 +352,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
         // Dispose of any resources that can be recreated.
     }
     
-    func handleToDetailButton(sender: UIButton, event: UIEvent) {
+    @objc func handleToDetailButton(sender: UIButton, event: UIEvent) {
         print("DEBUG_PRINT: HomeViewController.handleToDetailButton start")
         
         // タップされたセルのインデックスを求める
@@ -379,7 +379,7 @@ class HomeViewController: BaseViewController ,UICollectionViewDataSource, UIColl
             self.navigationController?.pushViewController(userViewController, animated: true)
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "ペットの投稿にはプロフィール作成が必要です")
             SVProgressHUD.dismiss(withDelay: 3)
-        }else if FIRAuth.auth()?.currentUser == nil {
+        }else if Auth.auth().currentUser == nil {
             let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
             let navigationController = UINavigationController(rootViewController: accountViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)

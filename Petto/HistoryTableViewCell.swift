@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FirebaseStorageUI
+import FirebaseUI
 
 //デリゲート先に適用してもらうプロトコル
 protocol HistoryDelegate {

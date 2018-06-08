@@ -59,7 +59,7 @@ class PetData: NSObject {
     // 非表示フラグ（違反用）
     var violationFlag: Bool?    // 運営が手動でセット
 
-    init(snapshot: FIRDataSnapshot, myId: String) {
+    init(snapshot: DataSnapshot, myId: String) {
         print("DEBUG_PRINT: PetData.init start")
         self.id = snapshot.key
         

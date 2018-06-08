@@ -43,7 +43,7 @@ class LeaveData: NSObject {
     var createAt:NSDate?
     var updateAt:NSDate?
     
-    init(snapshot: FIRDataSnapshot, myId: String) {
+    init(snapshot: DataSnapshot, myId: String) {
         print("DEBUG_PRINT: LeaveData.init start")
         
         self.id = snapshot.key

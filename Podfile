@@ -18,22 +18,24 @@ target 'Petto' do
   pod 'RxSwift'
   pod 'JSQMessagesViewController'
   pod 'SwiftyJSON'
-  pod 'Eureka', :git => 'https://github.com/xmartlabs/Eureka.git', :branch => 'feature/Xcode9-Swift3_2'
+#  pod 'Eureka', :git => 'https://github.com/xmartlabs/Eureka.git', :branch => 'feature/Xcode9-Swift3_2'
+  pod 'Eureka', :git => 'https://github.com/xmartlabs/Eureka.git'
   pod 'RKNotificationHub'
   pod 'Firebase/Messaging'
   pod 'SCLAlertView'
   pod 'Toucan'
   pod "LINEActivity", "~> 0.2.0"
 
-# Manually making Quick compiler version be swift 3.2
-    post_install do |installer|
-        installer.pods_project.targets.each do |target|
-            if target.name == 'Quick'
-                print "Changing Quick swift version to 3.2\n"
-                target.build_configurations.each do |config|
-                    config.build_settings['SWIFT_VERSION'] = '3.2'
-                end
-            end
-        end
-    end
+## Manually making Quick compiler version be swift 3.2
+#    post_install do |installer|
+#        installer.pods_project.targets.each do |target|
+#            if target.name == 'Quick'
+#                print "Changing Quick swift version to 3.2\n"
+#                target.build_configurations.each do |config|
+#                    config.build_settings['SWIFT_VERSION'] = '3.2'
+#                end
+#            end
+#        end
+#    end
+
 end

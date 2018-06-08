@@ -204,12 +204,12 @@ class BookingViewController: BaseFormViewController {
         self.inputData["createAt"] = String(time)
         self.inputData["createBy"] = UserDefaults.standard.string(forKey: DefaultString.Uid)
         // insert
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let key = ref.child(Paths.LeavePath).childByAutoId().key
         ref.child(Paths.LeavePath).child(key).setValue(inputData)
         
         // roomのtodoに追加
-        let ref2 = FIRDatabase.database().reference()
+        let ref2 = Database.database().reference()
         let childUpdates = ["/\(Paths.RoomPath)/\((self.roomData?.id)!)/todoRoomIds/\(key)/": true] as [String : Any]
         ref2.updateChildValues(childUpdates)
 

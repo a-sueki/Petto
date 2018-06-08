@@ -10,7 +10,7 @@ import UIKit
 import Eureka
 import Firebase
 import FirebaseDatabase
-import FirebaseStorageUI
+import FirebaseUI
 import SVProgressHUD
 import SCLAlertView
 import Toucan
@@ -76,11 +76,11 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: LeaveViewController.viewWillDisappear start")
         
         if let pid = self.leaveData?.petId {
-            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(pid)
+            let ref = Database.database().reference().child(Paths.PetPath).child(pid)
             ref.removeAllObservers()
         }
         if let uid = self.leaveData?.userId {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            let ref = Database.database().reference().child(Paths.UserPath).child(uid)
             ref.removeAllObservers()
         }
         
@@ -210,7 +210,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         if let pid = self.leaveData?.petId {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             // 要素が追加されたら再表示
-            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(pid)
+            let ref = Database.database().reference().child(Paths.PetPath).child(pid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: LeaveViewController.getPet .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
@@ -281,7 +281,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         if let uid = self.leaveData?.userId {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             // 要素が追加されたら再表示
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+            let ref = Database.database().reference().child(Paths.UserPath).child(uid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: LeaveViewController.getUser .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
@@ -451,12 +451,12 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: LeaveViewController.handleBackButton end")
     }
     
-    func excuted(){
+    @objc func excuted(){
         print("DEBUG_PRINT: LeaveViewController.excuted start")
         
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": true,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/actualStartDate/": Date().description,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
@@ -475,7 +475,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
                 
         print("DEBUG_PRINT: LeaveViewController.excuted end")
     }
-    func complete(){
+    @objc func complete(){
         print("DEBUG_PRINT: LeaveViewController.complete start")
         
         var breederComment: String?
@@ -511,7 +511,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         let com = breederComment ?? "[コメントはありません]"
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let childUpdates = ["/\(Paths.LeavePath)/\(id!)/runningFlag/": false,
                             "/\(Paths.LeavePath)/\(id!)/completeFlag/": true,
                             "/\(Paths.LeavePath)/\(id!)/breederComment/": com,
@@ -536,7 +536,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     }
     
     
-    func stop(){
+    @objc func stop(){
         print("DEBUG_PRINT: LeaveViewController.stop start")
         
         var breederComment: String?
@@ -557,7 +557,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/runningFlag/": false,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/stopFlag/": true,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/breederComment/": breederComment ?? "[コメントはありません]",
@@ -574,7 +574,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: LeaveViewController.stopUpdateFIR end")
     }
     
-    func abort(){
+    @objc func abort(){
         print("DEBUG_PRINT: LeaveViewController.abort start")
         
         var breederComment: String?
@@ -609,7 +609,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         let com = breederComment ?? "[コメントはありません]"
         // leaveData,UserDataをupdate
         let time = NSDate.timeIntervalSinceReferenceDate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let childUpdates = ["/\(Paths.LeavePath)/\(id!)/runningFlag/": false,
                             "/\(Paths.LeavePath)/\(id!)/abortFlag/": true,
                             "/\(Paths.LeavePath)/\(id!)/breederComment/": com,
@@ -634,7 +634,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
         print("DEBUG_PRINT: LeaveViewController.abortUpdateFIR end")
     }
     
-    func cancel(){
+    @objc func cancel(){
         print("DEBUG_PRINT: LeaveViewController.cancel start")
         // なにもしない
         print("DEBUG_PRINT: LeaveViewController.cancel end")
@@ -647,7 +647,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
             // leaveをupdate
             storageUpload(photeImage: photeImage!, key: self.leaveData!.id!)
             let time = NSDate.timeIntervalSinceReferenceDate
-            let ref = FIRDatabase.database().reference()
+            let ref = Database.database().reference()
             let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/userComment/": self.userComment ?? "[コメントはありません]",
                                 "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time)] as [String : Any]
             ref.updateChildValues(childUpdates)
@@ -659,7 +659,7 @@ class LeaveViewController: BaseViewController,UICollectionViewDataSource, UIColl
     func storageUpload(photeImage: UIImage, key: String){
         
         if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
-            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+            StorageRef.getRiversRef(key: key).putData(data , metadata: nil) { (metadata, error) in
                 if error != nil {
                     print("Image Uploaded Error")
                     print(error!)

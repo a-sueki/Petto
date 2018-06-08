@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
         print("DEBUG_PRINT: AppDelegate.didFinishLaunchingWithOptions start ")
         
         // FireBase setup
-        FIRApp.configure()
+        FirebaseApp.configure()
         
         // Register APNs
         if #available(iOS 10.0, *) {
@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,UNUserNotificationCenterD
         // Adobeの管理画面で登録したアプリの API key と Client secret の文字列を設定する
         AdobeUXAuthManager.shared().setAuthenticationParametersWithClientID("2643141de91c492087357e553e904699", withClientSecret: "efb2a972-e7a0-4d97-bc5c-084d2e3ddc96")
         
-        FIRAuth.auth()?.addStateDidChangeListener { auth, user in
+        Auth.auth().addStateDidChangeListener { auth, user in
             print("DEBUG_PRINT: AppDelegate.application .addStateDidChangeListenerイベントが発生しました")
             if let user = user {
                 print("DEBUG_PRINT: AppDelegate.application ユーザ「\(user.uid)」がログイン中")

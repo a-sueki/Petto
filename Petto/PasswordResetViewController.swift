@@ -70,7 +70,7 @@ class PasswordResetViewController: UIViewController, UITextFieldDelegate {
             }
 
             // パスワードの再設定メールを送信する
-            FIRAuth.auth()?.sendPasswordReset(withEmail: address) { (error) in
+            Auth.auth().sendPasswordReset(withEmail: address) { (error) in
                 if let error = error {
                     // HUDで送信失敗を表示する
                     SVProgressHUD.showError(withStatus: "メール送信に失敗しました。")

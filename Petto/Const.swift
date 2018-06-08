@@ -69,12 +69,13 @@ struct DefaultString {
 }
 
 struct URLs {
-    static let howToUseURL = "http://novelel.com/index.php/page-2829/"
+    static let howToUseURL = "https://aolabo.net/index.php/category/petto/"
+    static let iTunesStore = "https://itunes.apple.com/gb/app/petto/id1287417018?mt=8"
 }
 
 struct ShareString {
     static let text = "#Petto #ペットのおあずけ・あずかりSNSアプリ "
-    static let website = NSURL(string: "https://www.apple.co.jp")!
+    static let website = NSURL(string: URLs.iTunesStore)
     static let excludedActivityTypes = [
         UIActivityType.postToWeibo,
         UIActivityType.saveToCameraRoll,
@@ -98,11 +99,11 @@ struct RandomImage {
 }
 
 struct StorageRef{
-    static let storage = FIRStorage.storage()
+    static let storage = Storage.storage()
     static let storageRef = storage.reference(forURL: "gs://petto-5a42d.appspot.com/")
     static let placeholderImage = UIImage(named: "loading")
 
-    static func getRiversRef(key: String) -> FIRStorageReference {
+    static func getRiversRef(key: String) -> StorageReference {
         let riversRef = storageRef.child("images/\(key).jpg")
         return riversRef
     }

@@ -19,7 +19,7 @@ class MessageData: NSObject {
     var text: String?
     var timestamp: NSDate?
     
-    init(snapshot: FIRDataSnapshot, myId: String) {
+    init(snapshot: DataSnapshot, myId: String) {
         print("DEBUG_PRINT: MessageData.init start")
         print(snapshot)
 

@@ -50,7 +50,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
         
         if UserDefaults.standard.dictionary(forKey: DefaultString.MyPets) != nil, !UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)!.isEmpty {
             for (pid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)! {
-                let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(pid)
+                let ref = Database.database().reference().child(Paths.PetPath).child(pid)
                 ref.removeAllObservers()
             }
         }
@@ -134,7 +134,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
             // petリストの取得
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             for (pid,_) in UserDefaults.standard.dictionary(forKey: DefaultString.MyPets)! {
-                let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(pid).queryOrderedByKey()
+                let ref = Database.database().reference().child(Paths.PetPath).child(pid).queryOrderedByKey()
                 ref.observeSingleEvent(of: .value, with: { (snapshot) in
                     print("DEBUG_PRINT: MyPetListViewController.read .observeSingleEventイベントが発生しました。")
                     if let _ = snapshot.value as? NSDictionary {
@@ -166,7 +166,7 @@ class MyPetListViewController: BaseViewController, UITableViewDelegate, UITableV
     }
     
     // ペットの写真がタップされたら編集画面に遷移
-    func handleImageView(sender: UIButton, event:UIEvent) {
+    @objc func handleImageView(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: MyPetListViewController.handleImageView start")
         
         // タップされたセルのインデックスを求める

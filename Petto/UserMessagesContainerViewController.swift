@@ -42,10 +42,10 @@ class UserMessagesContainerViewController: UIViewController {
         print("DEBUG_PRINT: UserMessagesContainerViewController.viewDidLoad start")
 
         // Firebaseから登録済みデータを取得
-        if let uid = FIRAuth.auth()?.currentUser?.uid, self.roomData?.todoRoomIds != nil, !(self.roomData?.todoRoomIds.isEmpty)!{
+        if let uid = Auth.auth().currentUser?.uid, self.roomData?.todoRoomIds != nil, !(self.roomData?.todoRoomIds.isEmpty)!{
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             for (leaveId,_) in (self.roomData?.todoRoomIds)! {
-                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
+                let ref = Database.database().reference().child(Paths.LeavePath).child(leaveId)
                 ref.observeSingleEvent(of: .value, with: { (snapshot) in
                     print("DEBUG_PRINT: UserMessagesContainerViewController.viewDidLoad .observeSingleEventイベントが発生しました。")
                     if let _ = snapshot.value as? NSDictionary {
@@ -90,9 +90,9 @@ class UserMessagesContainerViewController: UIViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: UserMessagesContainerViewController.viewWillDisappear start")
         
-        if let _ = FIRAuth.auth()?.currentUser?.uid, self.roomData?.todoRoomIds != nil, !(self.roomData?.todoRoomIds.isEmpty)!{
+        if let _ = Auth.auth().currentUser?.uid, self.roomData?.todoRoomIds != nil, !(self.roomData?.todoRoomIds.isEmpty)!{
             for (leaveId,_) in (self.roomData?.todoRoomIds)! {
-                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
+                let ref = Database.database().reference().child(Paths.LeavePath).child(leaveId)
                 ref.removeAllObservers()
             }
         }

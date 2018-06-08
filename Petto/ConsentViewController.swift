@@ -119,7 +119,7 @@ class ConsentViewController: BaseFormViewController {
         messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText, image: nil)
         
         // leaveDataをdelete
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         ref.child(Paths.LeavePath).child((self.leaveData?.id)!).removeValue()
         
         // HUDで投稿完了を表示する
@@ -160,7 +160,7 @@ class ConsentViewController: BaseFormViewController {
         messagesViewController.updateMessageData(inputData: inputData2, lastMessage: sendText, image: nil)
         
         // leaveData,UserDataをupdate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let childUpdates = ["/\(Paths.LeavePath)/\(self.leaveData!.id!)/acceptFlag/": true,
                             "/\(Paths.LeavePath)/\(self.leaveData!.id!)/updateAt/": String(time),
                             "/\(Paths.UserPath)/\(self.leaveData!.userId!)/todoRoomIds/\(self.leaveData!.id!)/": true,

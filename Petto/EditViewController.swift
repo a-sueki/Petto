@@ -10,7 +10,7 @@ import UIKit
 import Eureka
 import Firebase
 import FirebaseDatabase
-import FirebaseStorageUI
+import FirebaseUI
 import SVProgressHUD
 import Toucan
 
@@ -55,7 +55,7 @@ class EditViewController: BaseFormViewController {
         
         // フォーム
         form +++
-            Section(header:"", footer:"人と一緒に写ってるとGood!") {
+            Section {
                 if let _ = self.petData {
                     $0.header = HeaderFooterView<EditView>(.class)
                 }else {
@@ -151,7 +151,7 @@ class EditViewController: BaseFormViewController {
             <<< SegmentedRow<String>("kind") {
                 $0.title =  "種類"
                 $0.options = Kind.strings
-                $0.value = self.petData?.kind ?? $0.options.first
+                $0.value = self.petData?.kind ?? $0.options?.first
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
                 }.cellUpdate { cell, row in
@@ -176,7 +176,7 @@ class EditViewController: BaseFormViewController {
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
                 $0.options = Sex.strings
-                $0.value = self.petData?.sex ?? $0.options.first
+                $0.value = self.petData?.sex ?? $0.options?.first
             }
             
             
@@ -376,7 +376,7 @@ class EditViewController: BaseFormViewController {
             <<< SegmentedRow<String>("size") {
                 $0.title =  "大きさ"
                 $0.options = Size.strings
-                $0.value = self.petData?.size ?? $0.options.first
+                $0.value = self.petData?.size ?? $0.options?.first
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
             }
@@ -527,18 +527,18 @@ class EditViewController: BaseFormViewController {
             <<< SegmentedRow<String>("feeding"){
                 $0.title =  "ごはん/日"
                 $0.options = ["1回","2回","3回","その他"]
-                $0.value = self.petData?.feeding ?? $0.options.last
+                $0.value = self.petData?.feeding ?? $0.options?.last
                 
             }
             <<< SegmentedRow<String>("dentifrice") {
                 $0.title = "歯磨き/日"
                 $0.options = ["不要","1回","2回","その他"]
-                $0.value = self.petData?.dentifrice ?? $0.options.last
+                $0.value = self.petData?.dentifrice ?? $0.options?.last
             }
             <<< SegmentedRow<String>("walk") {
                 $0.title = "お散歩/日"
                 $0.options = ["不要","1回","2回","その他"]
-                $0.value = self.petData?.walk ?? $0.options.last
+                $0.value = self.petData?.walk ?? $0.options?.last
             }
             
             +++
@@ -600,7 +600,7 @@ class EditViewController: BaseFormViewController {
         print("DEBUG_PRINT: EditViewController.viewDidLoad end")
     }
     
-    func multipleSelectorDone(_ item:UIBarButtonItem) {
+    @objc func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
     
@@ -687,7 +687,7 @@ class EditViewController: BaseFormViewController {
         let time = NSDate.timeIntervalSinceReferenceDate
         let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
         // 辞書を作成
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         //Firebaseに保存
         if let data = self.petData {
@@ -791,7 +791,7 @@ class EditViewController: BaseFormViewController {
     func storageUpload(photeImage: UIImage, key: String){
         
         if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
-            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+            StorageRef.getRiversRef(key: key).putData(data, metadata: nil) { (metadata, error) in
                 if error != nil {
                     print("Image Uploaded Error")
                     print(error!)

@@ -58,18 +58,18 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         
         if UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds) != nil && (UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)?.isEmpty)! {
             for (roomId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)! {
-                let ref = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+                let ref = Database.database().reference().child(Paths.RoomPath).child(roomId)
                 ref.removeAllObservers()
             }
         }
         
         for rooms in self.roomDataArray {
             if let userId = rooms.userId {
-                let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+                let ref = Database.database().reference().child(Paths.UserPath).child(userId)
                 ref.removeAllObservers()
             }
             if let petId = rooms.petId {
-                let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+                let ref = Database.database().reference().child(Paths.PetPath).child(petId)
                 ref.removeAllObservers()
             }
         }
@@ -186,7 +186,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
             // roomDataリストの取得
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             for (roomId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.RoomIds)! {
-                let ref = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId).queryOrderedByKey()
+                let ref = Database.database().reference().child(Paths.RoomPath).child(roomId).queryOrderedByKey()
                 ref.observeSingleEvent(of: .value, with: { (snapshot) in
                     print("DEBUG_PRINT: MessageListViewController.read .observeSingleEventイベントが発生しました。")
                     if let _ = snapshot.value as? NSDictionary {
@@ -227,7 +227,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     
     
     // メッセージラベルがタップされたらメッセージ画面に遷移
-    func handleMessageLabelButton(sender: UIButton, event:UIEvent) {
+    @objc func handleMessageLabelButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: MessageListViewController.handleMessageLabelButton start")
         
         // タップされたセルのインデックスを求める
@@ -236,7 +236,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         let indexPath = tableView.indexPathForRow(at: point)
         
         // 辞書を作成
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         // 既読フラグupdate
         let room = self.roomDataArray[(indexPath?.row)!]
@@ -264,7 +264,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     }
     
     // ユーザープロフィールがタップされたらユーザー詳細画面に遷移
-    func handleUserProfileButton(sender: UIButton, event:UIEvent) {
+    @objc func handleUserProfileButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton start")
         
         // タップされたセルのインデックスを求める
@@ -275,7 +275,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         // 画面遷移
         if let userId = self.roomDataArray[(indexPath?.row)!].userId {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+            let ref = Database.database().reference().child(Paths.UserPath).child(userId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: MessageListViewController.handleUserProfileButton .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
@@ -296,7 +296,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
     }
     
     // ペットプロフィールがタップされたらペット詳細画面に遷移
-    func handlePetProfileButton(sender: UIButton, event:UIEvent) {
+    @objc func handlePetProfileButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton start")
         
         // タップされたセルのインデックスを求める
@@ -307,7 +307,7 @@ class MessageListViewController: BaseViewController, UITableViewDelegate, UITabl
         // 画面遷移
         if let petId = self.roomDataArray[(indexPath?.row)!].petId {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+            let ref = Database.database().reference().child(Paths.PetPath).child(petId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: MessageListViewController.handlePetProfileButton .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {

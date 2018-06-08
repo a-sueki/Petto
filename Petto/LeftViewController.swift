@@ -41,8 +41,8 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
         print("DEBUG_PRINT: LeftViewController.viewWillAppear start")
     
         // 未読・未実施ハイライト
-        if let user = FIRAuth.auth()?.currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
+        if let user = Auth.auth().currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            let ref = Database.database().reference().child(Paths.UserPath)
             ref.child(user.uid).observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: LeftViewController.viewWillAppear .observeSinleEventイベントが発生しました。")
                 if let _ = snapshot.value {
@@ -162,7 +162,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
         case 2:
             // ユーザープロフィールが未作成の場合
-            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || FIRAuth.auth()?.currentUser == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || Auth.auth().currentUser == nil {
                 let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
                 let navigationController = UINavigationController(rootViewController: accountViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
@@ -175,7 +175,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         case 3:
             // ユーザープロフィールが未作成の場合
-            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || FIRAuth.auth()?.currentUser == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || Auth.auth().currentUser == nil {
                 let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
                 let navigationController = UINavigationController(rootViewController: accountViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)
@@ -188,7 +188,7 @@ class LeftViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         case 4:
             // ユーザープロフィールが未作成の場合
-            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || FIRAuth.auth()?.currentUser == nil {
+            if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) || Auth.auth().currentUser == nil {
                 let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
                 let navigationController = UINavigationController(rootViewController: accountViewController)
                 self.slideMenuController()?.changeMainViewController(navigationController, close: true)

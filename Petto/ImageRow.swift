@@ -21,7 +21,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
 import Foundation
 import Eureka
 
@@ -42,7 +41,7 @@ public struct ImageRowSourceTypes : OptionSet {
 
 extension ImageRowSourceTypes {
     
-// MARK: Helpers
+    // MARK: Helpers
     
     var localizedString: String {
         switch self {
@@ -64,10 +63,17 @@ public enum ImageClearAction {
 }
 
 //MARK: Row
-
-open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> where Cell: BaseCell, Cell: TypedCellType, Cell.Value == UIImage {
+open class _ImageRow<Cell: CellType>: OptionsRow<Cell>, PresenterRowType where Cell: BaseCell, Cell.Value == UIImage {
     
-
+    public typealias PresenterRow = ImagePickerController
+    
+    /// Defines how the view controller will be presented, pushed, etc.
+    open var presentationMode: PresentationMode<PresenterRow>?
+    
+    /// Will be called before the presentation occurs.
+    open var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
+    
+    
     open var sourceTypes: ImageRowSourceTypes
     open internal(set) var imageURL: URL?
     open var clearAction = ImageClearAction.yes(style: .destructive)
@@ -80,7 +86,7 @@ open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> w
         presentationMode = .presentModally(controllerProvider: ControllerProvider.callback { return ImagePickerController() }, onDismiss: { [weak self] vc in
             self?.select()
             vc.dismiss(animated: true)
-            })
+        })
         self.displayValueFor = nil
         
     }
@@ -101,6 +107,7 @@ open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> w
         }
     }
     
+    /// Extends `didSelect` method
     /// Selecting the Image Row cell will open a popup to choose where to source the photo from,
     /// based on the `sourceTypes` configured and the available sources.
     open override func customDidSelect() {
@@ -111,7 +118,7 @@ open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> w
         deselect()
         
         var availableSources: ImageRowSourceTypes = []
-            
+        
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             let _ = availableSources.insert(.PhotoLibrary)
         }
@@ -121,11 +128,20 @@ open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> w
         if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum) {
             let _ = availableSources.insert(.SavedPhotosAlbum)
         }
-
+        
         sourceTypes.formIntersection(availableSources)
         
         if sourceTypes.isEmpty {
             super.customDidSelect()
+            guard let presentationMode = presentationMode else { return }
+            if let controller = presentationMode.makeController() {
+                controller.row = self
+                controller.title = selectorTitle ?? controller.title
+                onPresentCallback?(cell.formViewController()!, controller)
+                presentationMode.present(controller, row: self, presentingController: self.cell.formViewController()!)
+            } else {
+                presentationMode.present(nil, row: self, presentingController: self.cell.formViewController()!)
+            }
             return
         }
         
@@ -142,7 +158,7 @@ open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> w
                 self?.value = nil
                 self?.imageURL = nil
                 self?.updateCell()
-                })
+            })
             sourceActionSheet.addAction(clearPhotoOption)
         }
         if sourceActionSheet.actions.count == 1 {
@@ -158,11 +174,16 @@ open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> w
         }
     }
     
+    /**
+     Prepares the pushed row setting its title and completion callback.
+     */
     open override func prepare(for segue: UIStoryboardSegue) {
         super.prepare(for: segue)
-        guard let rowVC = segue.destination as? ImagePickerController else {
-            return
-        }
+        guard let rowVC = segue.destination as? PresenterRow else { return }
+        rowVC.title = selectorTitle ?? rowVC.title
+        rowVC.onDismissCallback = presentationMode?.onDismissCallback ?? rowVC.onDismissCallback
+        onPresentCallback?(cell.formViewController()!, rowVC)
+        rowVC.row = self
         rowVC.sourceType = _sourceType
     }
     
@@ -186,12 +207,12 @@ open class _ImageRow<Cell: CellType>: SelectorRow<Cell, ImagePickerController> w
         }
     }
     
-
+    
 }
 
 extension _ImageRow {
     
-//MARK: Helpers
+    //MARK: Helpers
     
     func createOptionForAlertController(_ alertController: UIAlertController, sourceType: ImageRowSourceTypes) {
         guard let pickerSourceType = UIImagePickerControllerSourceType(rawValue: sourceType.imagePickerControllerSourceTypeRawValue), sourceTypes.contains(sourceType) else { return }
@@ -214,4 +235,3 @@ public final class ImageRow : _ImageRow<PushSelectorCell<UIImage>>, RowType {
         super.init(tag: tag)
     }
 }
-

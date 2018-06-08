@@ -51,7 +51,7 @@ class UserData: NSObject {
     var runningFlag: Bool?
 
     
-    init(snapshot: FIRDataSnapshot, myId: String) {
+    init(snapshot: DataSnapshot, myId: String) {
         print("DEBUG_PRINT: UserData.init start")
         
         self.id = snapshot.key

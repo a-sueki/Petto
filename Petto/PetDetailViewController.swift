@@ -11,7 +11,7 @@ import UIKit
 import Eureka
 import Firebase
 import FirebaseDatabase
-import FirebaseStorageUI
+import FirebaseUI
 import SVProgressHUD
 import SCLAlertView
 
@@ -167,7 +167,7 @@ class PetDetailViewController: BaseFormViewController {
             <<< SegmentedRow<String>("size") {
                 $0.title =  "大きさ"
                 $0.options = Size.strings
-                $0.value = self.petData?.size ?? $0.options.first
+                $0.value = self.petData?.size ?? $0.options?.first
                 $0.disabled = true
             }
             <<< MultipleSelectorRow<String>("color") {
@@ -391,7 +391,7 @@ class PetDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: PetDetailViewController.viewWillDisappear start")
         
         if let userId = self.petData?.createBy {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+            let ref = Database.database().reference().child(Paths.UserPath).child(userId)
             ref.removeAllObservers()
         }
         
@@ -427,7 +427,7 @@ class PetDetailViewController: BaseFormViewController {
         
         var inputData = [String : Any]()
         let time = NSDate.timeIntervalSinceReferenceDate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         // DB保存（運営が参照するのみ）
         let key = ref.child(Paths.ViolationPetPath).childByAutoId().key
@@ -475,7 +475,7 @@ class PetDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: PetDetailViewController.excuteReport end")
     }
     
-    func cancel() {
+    @objc func cancel() {
         print("DEBUG_PRINT: PetDetailViewController.cancel start")
         print("DEBUG_PRINT: PetDetailViewController.cancel end")
     }
@@ -485,7 +485,7 @@ class PetDetailViewController: BaseFormViewController {
         
         if let userId = self.petData?.createBy {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+            let ref = Database.database().reference().child(Paths.UserPath).child(userId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: PetDetailViewController.showBreederDetail .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
@@ -507,13 +507,13 @@ class PetDetailViewController: BaseFormViewController {
     @IBAction func back() {
         print("DEBUG_PRINT: PetDetailViewController.back start")
         
-        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) && FIRAuth.auth()?.currentUser != nil {
+        if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) && Auth.auth().currentUser != nil {
             if !observing {
                 // roomIdを取得
                 let uid = UserDefaults.standard.string(forKey: DefaultString.Uid)
                 let pid = (self.petData?.id)!
                 let roomId = uid! + pid
-                let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+                let roomRef = Database.database().reference().child(Paths.RoomPath).child(roomId)
                 roomRef.removeAllObservers()
             }
         }
@@ -534,7 +534,7 @@ class PetDetailViewController: BaseFormViewController {
             self.navigationController?.pushViewController(userViewController, animated: true)
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "飼い主さんとのやりとりには、プロフィール登録が必要です。")
             SVProgressHUD.dismiss(withDelay: 3)
-        }else if FIRAuth.auth()?.currentUser == nil {
+        }else if Auth.auth().currentUser == nil {
             let accountViewController = self.storyboard?.instantiateViewController(withIdentifier: "Account") as! AccountViewController
             let navigationController = UINavigationController(rootViewController: accountViewController)
             self.slideMenuController()?.changeMainViewController(navigationController, close: true)
@@ -576,7 +576,7 @@ class PetDetailViewController: BaseFormViewController {
                     // HUDで処理中を表示
                     SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
                     // roomDataの取得
-                    let roomRef = FIRDatabase.database().reference().child(Paths.RoomPath).child(roomId)
+                    let roomRef = Database.database().reference().child(Paths.RoomPath).child(roomId)
                     roomRef.observeSingleEvent(of: .value, with: { (snapshot) in
                         print("DEBUG_PRINT: PetDetailViewController.toMessages .observeSingleEventイベントが発生しました。")
                         if let _ = snapshot.value as? NSDictionary {
@@ -606,7 +606,7 @@ class PetDetailViewController: BaseFormViewController {
                             inputData["updateAt"] = String(time)
                             
                             // roomをinsert
-                            let ref = FIRDatabase.database().reference()
+                            let ref = Database.database().reference()
                             ref.child(Paths.RoomPath).child(roomId).setValue(inputData)
                             // user,petをupdate
                             let childUpdates = ["/\(Paths.UserPath)/\(uid!)/roomIds/\(roomId)/": true,
@@ -671,7 +671,7 @@ class PetDetailViewController: BaseFormViewController {
         if view.image != StorageRef.placeholderImage {
             shareImage = view.image!
         }
-        let shareItems = [shareText, shareWebsite, shareImage] as [Any]
+        let shareItems = [shareText, shareWebsite ?? URLs.howToUseURL , shareImage] as [Any]
         // LINEで送るボタンを追加
         let line = LINEActivity()
         let avc = UIActivityViewController(activityItems: shareItems, applicationActivities: [line])

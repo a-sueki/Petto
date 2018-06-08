@@ -10,7 +10,7 @@ import UIKit
 import Eureka
 import Firebase
 import FirebaseDatabase
-import FirebaseStorageUI
+import FirebaseUI
 import SVProgressHUD
 import SCLAlertView
 
@@ -45,7 +45,7 @@ class UserDetailViewController: BaseFormViewController {
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
                 $0.options = UserSex.strings
-                $0.value = self.userData?.sex ?? $0.options.last
+                $0.value = self.userData?.sex ?? $0.options?.last
                 $0.disabled = true
             }
             <<< TextRow("area") {
@@ -217,7 +217,7 @@ class UserDetailViewController: BaseFormViewController {
         
         var inputData = [String : Any]()
         let time = NSDate.timeIntervalSinceReferenceDate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         // DB保存（運営が参照するのみ）
         let key = ref.child(Paths.ViolationUserPath).childByAutoId().key
@@ -271,7 +271,7 @@ class UserDetailViewController: BaseFormViewController {
         print("DEBUG_PRINT: UserDetailViewController.excuteReport end")
     }
     
-    func cancel() {
+    @objc func cancel() {
         print("DEBUG_PRINT: UserDetailViewController.cancel start")
         print("DEBUG_PRINT: UserDetailViewController.cancel end")
     }

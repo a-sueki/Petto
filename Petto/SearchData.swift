@@ -47,7 +47,7 @@ class SearchData: NSObject {
     var updateAt: NSDate?
     var updateBy: String?
     
-    init(snapshot: FIRDataSnapshot, myId: String) {
+    init(snapshot: DataSnapshot, myId: String) {
         print("DEBUG_PRINT: SearchData.init start")
         self.id = snapshot.key
         

@@ -52,7 +52,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         
         if UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds) != nil && (UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)?.isEmpty)! {
             for (leaveId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
-                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
+                let ref = Database.database().reference().child(Paths.LeavePath).child(leaveId)
                 ref.removeAllObservers()
             }
         }
@@ -270,7 +270,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
             // leaveDataリストの取得
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
             for (leaveId,_) in UserDefaults.standard.dictionary(forKey: DefaultString.TodoRoomIds)! {
-                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId).queryOrderedByKey()
+                let ref = Database.database().reference().child(Paths.LeavePath).child(leaveId).queryOrderedByKey()
                 ref.observeSingleEvent(of: .value, with: { (snapshot) in
                     print("DEBUG_PRINT: TodoListViewController.read .observeSingleEventイベントが発生しました。")
                     if let _ = snapshot.value as? NSDictionary {
@@ -309,7 +309,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     // TODOラベルがタップされたらメッセージ画面に遷移
-    func handleLeaveInfoButton(sender: UIButton, event:UIEvent) {
+    @objc func handleLeaveInfoButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: TodoListViewController.handleLeaveInfoButton start")
         
         // タップされたセルのインデックスを求める
@@ -326,7 +326,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         print("DEBUG_PRINT: TodoListViewController.handleLeaveInfoButton end")
     }
     // ユーザープロフィールがタップされたらユーザー詳細画面に遷移
-    func handleUserDetailButton(sender: UIButton, event:UIEvent) {
+    @objc func handleUserDetailButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: TodoListViewController.handleUserDetailButton start")
         
         // タップされたセルのインデックスを求める
@@ -337,7 +337,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         // 画面遷移
         if let userId = self.leaveDataArray[(indexPath?.row)!].userId {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(userId)
+            let ref = Database.database().reference().child(Paths.UserPath).child(userId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: TodoListViewController.handleUserDetailButton .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
@@ -357,7 +357,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
     }
     
     // ペットプロフィールがタップされたらペット詳細画面に遷移
-    func handlePetDetailButton(sender: UIButton, event:UIEvent) {
+    @objc func handlePetDetailButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: TodoListViewController.handlePetDetailButton start")
         
         // タップされたセルのインデックスを求める
@@ -368,7 +368,7 @@ class TodoListViewController: BaseViewController, UITableViewDelegate, UITableVi
         // 画面遷移
         if let petId = self.leaveDataArray[(indexPath?.row)!].petId {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            let ref = FIRDatabase.database().reference().child(Paths.PetPath).child(petId)
+            let ref = Database.database().reference().child(Paths.PetPath).child(petId)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: TodoListViewController.handlePetDetailButton .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {

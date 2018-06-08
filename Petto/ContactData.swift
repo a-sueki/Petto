@@ -18,7 +18,7 @@ class ContactData: NSObject {
     var createAt: NSDate
     var createBy: String
     
-    init(snapshot: FIRDataSnapshot, myId: String) {
+    init(snapshot: DataSnapshot, myId: String) {
         print("DEBUG_PRINT: ContactData.init start")
         
         self.id = snapshot.key

@@ -42,7 +42,7 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.viewWillDisappear start")
         
         if let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
+            let ref = Database.database().reference().child(Paths.SearchPath).child(key)
             ref.removeAllObservers()
         }
         
@@ -55,7 +55,7 @@ class SearchViewController: BaseFormViewController {
         // Firebaseから登録済みデータを取得
         if let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
             SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-            let ref = FIRDatabase.database().reference().child(Paths.SearchPath).child(key)
+            let ref = Database.database().reference().child(Paths.SearchPath).child(key)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: SearchViewController.read .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
@@ -104,7 +104,7 @@ class SearchViewController: BaseFormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = Kind.searchStrings
-                $0.value = self.searchData?.kind ?? $0.options.first
+                $0.value = self.searchData?.kind ?? $0.options?.first
             }
             <<< PickerInputRow<String>("age"){
                 $0.title = "ペットの年齢"
@@ -133,7 +133,7 @@ class SearchViewController: BaseFormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = Size.searchStrings
-                $0.value = self.searchData?.size ?? $0.options.first
+                $0.value = self.searchData?.size ?? $0.options?.first
                 $0.add(rule: RuleRequired())
                 $0.validationOptions = .validatesOnChange
             }
@@ -144,7 +144,7 @@ class SearchViewController: BaseFormViewController {
                     return row.value ?? false == false
                 })
                 $0.options = Sex.searchStrings
-                $0.value = self.searchData?.sex ?? $0.options.first
+                $0.value = self.searchData?.sex ?? $0.options?.first
             }
             <<< MultipleSelectorRow<String>("color") {
                 $0.title = "色"
@@ -477,7 +477,7 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.updateSearchData end")
     }
     
-    func multipleSelectorDone(_ item:UIBarButtonItem) {
+    @objc func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
     
@@ -485,11 +485,11 @@ class SearchViewController: BaseFormViewController {
         print("DEBUG_PRINT: SearchViewController.clear start")
         
         // 辞書を作成
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         if let key = UserDefaults.standard.string(forKey: DefaultString.WithSearch) {
             ref.child(Paths.SearchPath).child(key).removeValue()
         }
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
+        if let uid = Auth.auth().currentUser?.uid {
             ref.child(Paths.UserPath).child(uid).child(DefaultString.WithSearch).removeValue()
             SVProgressHUD.showSuccess(withStatus: "絞り込み条件をクリアしました")
         } else{
@@ -567,9 +567,9 @@ class SearchViewController: BaseFormViewController {
         
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
-        let uid = FIRAuth.auth()?.currentUser?.uid
+        let uid = Auth.auth().currentUser?.uid
         // 辞書を作成
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         //Firebaseに保存
         if let data = self.searchData {

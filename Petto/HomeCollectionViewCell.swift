@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
-import FirebaseStorageUI
+import FirebaseUI
 
 class HomeCollectionViewCell: UICollectionViewCell {
     
@@ -69,7 +69,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
         } else {
             self.termLabel.text = "現在、募集していません。"
             self.daysNumLabel.text = ""
-            if self.petImageView.image != nil , self.petImageView.image != StorageRef.placeholderImage {
+/*            if self.petImageView.image != nil , self.petImageView.image != StorageRef.placeholderImage {
                 // 帯を追加
                 let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))
                 bandLabel.backgroundColor = UIColor.black
@@ -88,7 +88,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
                 let myOutputImage : CIImage = myMonochromeFilter.outputImage!
                 self.petImageView.image = UIImage(ciImage: myOutputImage)
             }
-        }
+*/        }
         if petData.runningFlag != nil ,  petData.runningFlag! {
             // おあずけ中
             let bandLabel = UILabel(frame: CGRect(x: 0, y: self.frame.width/5 * 2, width: self.frame.width, height: self.frame.width/5))

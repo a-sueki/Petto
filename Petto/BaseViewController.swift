@@ -41,8 +41,8 @@ class NavigationBarHandler: NSObject {
         button3.addTarget(self, action: #selector(onClick3), for: .touchUpInside)
         
         // userを取得
-        if let user = FIRAuth.auth()?.currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath)
+        if let user = Auth.auth().currentUser ,!UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
+            let ref = Database.database().reference().child(Paths.UserPath)
             ref.child(user.uid).observe(.value, with: { (snapshot) in
                 print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .valueイベントが発生しました。")
                 if let _ = snapshot.value {
@@ -155,7 +155,7 @@ class NavigationBarHandler: NSObject {
     func readLeaveData(leaveId: String) {
         print("DEBUG_PRINT: NavigationBarHandler.readLeaveData start")
         
-        let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
+        let ref = Database.database().reference().child(Paths.LeavePath)
         ref.child(leaveId).observeSingleEvent(of: .value, with: { (snapshot) in
             print("DEBUG_PRINT: NavigationBarHandler.setupNavigationBar .observeSingleEventイベントが発生しました。")
             if let _ = snapshot.value {
@@ -199,7 +199,7 @@ class NavigationBarHandler: NSObject {
         
         // 通知内容の設定
         content.title = "Pettoリマインド通知"
-        if leaveData.userId == FIRAuth.auth()?.currentUser?.uid {
+        if leaveData.userId == Auth.auth().currentUser?.uid {
             content.body = "明日がペット（\(leaveData.petName!)）の引き取り日です！"
         }else{
             content.body = "明日がペット（\(leaveData.petName!)）の引き渡し日です！"
@@ -215,17 +215,17 @@ class NavigationBarHandler: NSObject {
         print("DEBUG_PRINT: NavigationBarHandler.registerLocalNotification end")
     }
     
-    func onClick1() {
+    @objc func onClick1() {
         self.viewController?.slideMenuController()?.openLeft()
     }
-    func onClick2() {
+    @objc func onClick2() {
         // アニメーション削除
         self.viewController?.navigationController?.view.layer.removeAllAnimations()
         
         let viewController2 = self.viewController?.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
         self.viewController?.navigationController?.pushViewController(viewController2, animated: false)
     }
-    func onClick3() {
+    @objc func onClick3() {
         // ユーザープロフィールが未作成の場合
         if UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
             SVProgressHUD.showError(withStatus: "ユーザプロフィールを設定してください")
@@ -282,9 +282,9 @@ class BaseFormViewController: FormViewController {
         print("DEBUG_PRINT: BaseFormViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
-        if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || FIRAuth.auth()?.currentUser == nil{
+        if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || Auth.auth().currentUser == nil{
             // オブザーバーを削除する
-            FIRDatabase.database().reference().removeAllObservers()
+            Database.database().reference().removeAllObservers()
         }
         // ナビゲーションバーを表示
         helper.viewController = self
@@ -296,7 +296,7 @@ class BaseFormViewController: FormViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseFormViewController.viewWillDisappear start")
         
-/*        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
+/*        if let _ = Auth.auth().currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
             for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
                 if v {
                     let ref = FIRDatabase.database().reference().child(Paths.LeavePath)
@@ -323,9 +323,9 @@ class BaseViewController: UIViewController {
         print("DEBUG_PRINT: BaseViewController.viewDidAppear start")
         
         // ログインしてないか、ユーザーデフォルトが消えてる場合
-        if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || FIRAuth.auth()?.currentUser == nil{
+        if UserDefaults.standard.string(forKey: DefaultString.GuestFlag) == nil || Auth.auth().currentUser == nil{
             // オブザーバーを削除する
-            FIRDatabase.database().reference().removeAllObservers()
+            Database.database().reference().removeAllObservers()
         }
         // ナビゲーションバーを表示
         helper.viewController = self
@@ -338,7 +338,7 @@ class BaseViewController: UIViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: BaseViewController.viewWillDisappear start")
         
-/*        if let _ = FIRAuth.auth()?.currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
+/*        if let _ = Auth.auth().currentUser, !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag), self.helper.myUserData != nil{
             for (k,v) in (self.helper.myUserData?.todoRoomIds)! {
                 if v {
                     let ref = FIRDatabase.database().reference().child(Paths.LeavePath)

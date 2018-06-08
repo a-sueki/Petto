@@ -10,7 +10,7 @@ import UIKit
 import Eureka
 import Firebase
 import FirebaseDatabase
-import FirebaseStorageUI
+import FirebaseUI
 import SVProgressHUD
 import CoreLocation
 import Toucan
@@ -150,7 +150,7 @@ class UserViewController: BaseFormViewController  {
             <<< SegmentedRow<String>("sex") {
                 $0.title =  "性別"
                 $0.options = UserSex.strings
-                $0.value = UserDefaults.standard.string(forKey: DefaultString.Sex) ?? $0.options.last
+                $0.value = UserDefaults.standard.string(forKey: DefaultString.Sex) ?? $0.options?.last
             }
             <<< PickerInputRow<String>("area"){
                 $0.title = "エリア"
@@ -375,7 +375,7 @@ class UserViewController: BaseFormViewController  {
         print("DEBUG_PRINT: UserViewController.showForm end")
     }
     
-    func multipleSelectorDone(_ item:UIBarButtonItem) {
+    @objc func multipleSelectorDone(_ item:UIBarButtonItem) {
         _ = navigationController?.popViewController(animated: true)
     }
     
@@ -444,11 +444,11 @@ class UserViewController: BaseFormViewController  {
         }
         
         // 表示名（ニックネーム）を名前で更新
-        let user = FIRAuth.auth()?.currentUser
+        let user = Auth.auth().currentUser
         if let newName = self.inputData["firstname"] as? String,
             newName != UserDefaults.standard.string(forKey: DefaultString.DisplayName){
             if let user = user {
-                let changeRequest = user.profileChangeRequest()
+                let changeRequest = user.createProfileChangeRequest()
                 changeRequest.displayName = newName
                 changeRequest.commitChanges { error in
                     if let error = error {
@@ -475,10 +475,10 @@ class UserViewController: BaseFormViewController  {
         
         // inputDataに必要な情報を取得しておく
         let time = NSDate.timeIntervalSinceReferenceDate
-        let uid = FIRAuth.auth()?.currentUser?.uid
+        let uid = Auth.auth().currentUser?.uid
         
         // 辞書を作成
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         //Firebaseに保存
         if !UserDefaults.standard.bool(forKey: DefaultString.GuestFlag) {
@@ -566,7 +566,7 @@ class UserViewController: BaseFormViewController  {
     func storageUpload(photeImage: UIImage, key: String){
         
         if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
-            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+            StorageRef.getRiversRef(key: key).putData(data , metadata: nil) { (metadata, error) in
                 if error != nil {
                     print("Image Uploaded Error")
                     print(error!)

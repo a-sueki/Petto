@@ -135,7 +135,7 @@ class ContactViewController: BaseFormViewController {
         }
         self.inputData["createAt"] = String(time)
         // 辞書を作成
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let key = ref.child(Paths.ContactPath).childByAutoId().key
         ref.child(Paths.ContactPath).child(key).setValue(self.inputData)
 

@@ -32,7 +32,7 @@ class RoomData: NSObject {
     // ブロックしたユーザーもしくはペット
     var blocked: String?
 
-    init(snapshot: FIRDataSnapshot, myId: String) {
+    init(snapshot: DataSnapshot, myId: String) {
         print("DEBUG_PRINT: RoomData.init start")
         
         self.id = snapshot.key

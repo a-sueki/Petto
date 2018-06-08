@@ -124,7 +124,7 @@ class AccountViewController: BaseFormViewController {
             }
             +++ Section(){
                 $0.hidden = .function([""], { form -> Bool in
-                    if FIRAuth.auth()?.currentUser == nil {
+                    if Auth.auth().currentUser == nil {
                         return false
                     }else{
                         return true
@@ -154,7 +154,7 @@ class AccountViewController: BaseFormViewController {
             
             +++ Section(){
                 $0.hidden = .function([""], { form -> Bool in
-                    if FIRAuth.auth()?.currentUser != nil {
+                    if Auth.auth().currentUser != nil {
                         return false
                     }else{
                         return true
@@ -230,7 +230,7 @@ class AccountViewController: BaseFormViewController {
         
         print("DEBUG_PRINT: AccountViewController.displayEULA end")
     }
-    func cancel(){
+    @objc func cancel(){
         print("DEBUG_PRINT: AccountViewController.cancel start")
         // なにもしない
         print("DEBUG_PRINT: AccountViewController.cancel end")
@@ -266,7 +266,7 @@ class AccountViewController: BaseFormViewController {
             return
         }
         
-        FIRAuth.auth()?.signIn(withEmail: address, password: password) { user, error in
+        Auth.auth().signIn(withEmail: address, password: password) { user, error in
             if let error = error {
                 print("DEBUG_PRINT: " + error.localizedDescription)
                 SVProgressHUD.showError(withStatus: "ログインに失敗しました")
@@ -275,9 +275,9 @@ class AccountViewController: BaseFormViewController {
                 print("DEBUG_PRINT: ログインに成功しました")
                 
                 // Firebaseから登録済みデータを取得
-                if let uid = user?.uid {
+                if let uid = user?.user.uid {
                     SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-                    let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+                    let ref = Database.database().reference().child(Paths.UserPath).child(uid)
                     ref.observeSingleEvent(of: .value, with: { (snapshot) in
                         print("DEBUG_PRINT: AccountViewController.login .observeSingleEventイベントが発生しました。")
                         if let _ = snapshot.value as? NSDictionary {
@@ -285,10 +285,10 @@ class AccountViewController: BaseFormViewController {
                             
                             UserDefaults.standard.set(false , forKey: DefaultString.GuestFlag)
                             // ユーザーデフォルト設定（アカウント項目）
-                            UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
+                            UserDefaults.standard.set(user?.user.uid , forKey: DefaultString.Uid)
                             UserDefaults.standard.set(address , forKey: DefaultString.Mail)
                             UserDefaults.standard.set(password , forKey: DefaultString.Password)
-                            UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
+                            UserDefaults.standard.set(user?.user.displayName , forKey: DefaultString.DisplayName)
                             // ユーザーデフォルト設定（ユーザー項目（必須））
                             UserDefaults.standard.set(userData.sex , forKey: DefaultString.Sex)
                             UserDefaults.standard.set(userData.firstname , forKey: DefaultString.Firstname)
@@ -353,10 +353,10 @@ class AccountViewController: BaseFormViewController {
                         }else{
                             UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
                             // ユーザーデフォルト設定（アカウント項目）
-                            UserDefaults.standard.set(user?.uid , forKey: DefaultString.Uid)
+                            UserDefaults.standard.set(user?.user.uid , forKey: DefaultString.Uid)
                             UserDefaults.standard.set(address , forKey: DefaultString.Mail)
                             UserDefaults.standard.set(password , forKey: DefaultString.Password)
-                            UserDefaults.standard.set(user?.displayName , forKey: DefaultString.DisplayName)
+                            UserDefaults.standard.set(user?.user.displayName , forKey: DefaultString.DisplayName)
                         }
                         DispatchQueue.main.async {
                             // 全てのモーダルを閉じる
@@ -380,7 +380,7 @@ class AccountViewController: BaseFormViewController {
         print("DEBUG_PRINT: AccountViewController.login end")
     }
     
-    func createUser(){
+    @objc func createUser(){
         print("DEBUG_PRINT: AccountViewController.createUser start")
         
         
@@ -407,7 +407,7 @@ class AccountViewController: BaseFormViewController {
         }
         
         // アドレスとパスワードでユーザー作成。ユーザー作成に成功すると、自動的にログインする
-        FIRAuth.auth()?.createUser(withEmail: address, password: password) { user, error in
+        Auth.auth().createUser(withEmail: address, password: password) { user, error in
             if let error = error {
                 // エラーがあったら原因をprintして、returnすることで以降の処理を実行せずに処理を終了する
                 print("DEBUG_PRINT: AcountViewController.createUser " + error.localizedDescription)
@@ -420,7 +420,7 @@ class AccountViewController: BaseFormViewController {
             }
             
             // 確認メール送信
-            if let user = FIRAuth.auth()?.currentUser {
+            if let user = Auth.auth().currentUser {
                 if !user.isEmailVerified {
                     let alertVC = UIAlertController(title: "仮登録が成功しました", message: "上記アドレスに確認メールを送信しました。\nメール内のURLをクリックし、登録を完了してください。", preferredStyle: .alert)
                     let alertActionOkay = UIAlertAction(title: "OK", style: .default) {
@@ -437,7 +437,7 @@ class AccountViewController: BaseFormViewController {
                 }
             }
             
-            let uid = FIRAuth.auth()?.currentUser?.uid
+            let uid = Auth.auth().currentUser?.uid
             // ユーザーデフォルト設定（アカウント項目）
             UserDefaults.standard.set(true , forKey: DefaultString.GuestFlag)
             UserDefaults.standard.set(uid! , forKey: DefaultString.Uid)
@@ -447,9 +447,9 @@ class AccountViewController: BaseFormViewController {
             UserDefaults.standard.removeObject(forKey: DefaultString.WithSearch)
             
             // 表示名を設定する
-            let user = FIRAuth.auth()?.currentUser
+            let user = Auth.auth().currentUser
             if let user = user {
-                let changeRequest = user.profileChangeRequest()
+                let changeRequest = user.createProfileChangeRequest()
                 changeRequest.displayName = displayName
                 changeRequest.commitChanges { error in
                     if let error = error {
@@ -469,9 +469,9 @@ class AccountViewController: BaseFormViewController {
         print("DEBUG_PRINT: AccountViewController.logout start")
         
         if UserDefaults.standard.string(forKey: DefaultString.Uid) != nil {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
+            let ref = Database.database().reference().child(Paths.UserPath).child(UserDefaults.standard.string(forKey: DefaultString.Uid)!)
             ref.removeAllObservers()
-            let ref2 = FIRDatabase.database().reference().child(Paths.PetPath)
+            let ref2 = Database.database().reference().child(Paths.PetPath)
             ref2.removeAllObservers()
         }
         // 全てのモーダルを閉じる
@@ -481,7 +481,7 @@ class AccountViewController: BaseFormViewController {
         
         // ログアウト
         do {
-            try FIRAuth.auth()?.signOut()
+            try Auth.auth().signOut()
             // HOMEに画面遷移
             let viewController2 = self.storyboard?.instantiateViewController(withIdentifier: "Home") as! HomeViewController
             self.navigationController?.pushViewController(viewController2, animated: true)
@@ -517,9 +517,9 @@ class AccountViewController: BaseFormViewController {
                     if UserDefaults.standard.string(forKey: DefaultString.DisplayName) != itemValue {
                         // HUDで処理中を表示
                         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-                        let user = FIRAuth.auth()?.currentUser
+                        let user = Auth.auth().currentUser
                         if let user = user {
-                            let changeRequest = user.profileChangeRequest()
+                            let changeRequest = user.createProfileChangeRequest()
                             changeRequest.displayName = itemValue
                             changeRequest.commitChanges { error in
                                 if let error = error {
@@ -542,9 +542,9 @@ class AccountViewController: BaseFormViewController {
                     if UserDefaults.standard.string(forKey: DefaultString.Mail) != itemValue {
                         // HUDで処理中を表示
                         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-                        let user = FIRAuth.auth()?.currentUser
+                        let user = Auth.auth().currentUser
                         if let user = user {
-                            user.updateEmail(itemValue, completion: { error in
+                            user.updateEmail(to: itemValue, completion: { error in
                                 if let error = error {
                                     print("DEBUG_PRINT: " + error.localizedDescription)
                                     // HUDで完了を知らせる
@@ -565,9 +565,9 @@ class AccountViewController: BaseFormViewController {
                     if UserDefaults.standard.string(forKey: DefaultString.Password) != itemValue {
                         // HUDで処理中を表示
                         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
-                        let user = FIRAuth.auth()?.currentUser
+                        let user = Auth.auth().currentUser
                         if let user = user {
-                            user.updatePassword(itemValue, completion: { error in
+                            user.updatePassword(to: itemValue, completion: { error in
                                 if let error = error {
                                     print("DEBUG_PRINT: " + error.localizedDescription)
                                     // HUDで完了を知らせる
@@ -608,8 +608,8 @@ class AccountViewController: BaseFormViewController {
         super.viewWillDisappear(animated)
         print("DEBUG_PRINT: AccountViewController.viewWillDisappear start")
         
-        if let uid = FIRAuth.auth()?.currentUser?.uid {
-            let ref = FIRDatabase.database().reference().child(Paths.UserPath).child(uid)
+        if let uid = Auth.auth().currentUser?.uid {
+            let ref = Database.database().reference().child(Paths.UserPath).child(uid)
             ref.removeAllObservers()
         }
         

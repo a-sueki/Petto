@@ -10,7 +10,7 @@ import UIKit
 import SwiftyJSON
 import Firebase
 import FirebaseDatabase
-import FirebaseStorageUI
+import FirebaseUI
 import JSQMessagesViewController
 import SVProgressHUD
 import Toucan
@@ -101,7 +101,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
     override func viewWillDisappear(_ animated: Bool) {
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear start")
         
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         if self.messages.count == 0 {
             // Roomの削除
@@ -120,7 +120,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
             }
         }
         
-        let ref1 = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
+        let ref1 = Database.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
         ref1.removeAllObservers()
         
         print("DEBUG_PRINT: MessagesViewController.viewWillDisappear end")
@@ -137,7 +137,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         return true
     }
     
-    func dismissKeyboard(gesture: UITapGestureRecognizer) {
+    @objc func dismissKeyboard(gesture: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
     
@@ -170,14 +170,14 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
     func getMessages() {
         print("DEBUG_PRINT: MessagesViewController.getMessages start")
         
-        let ref = FIRDatabase.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
+        let ref = Database.database().reference().child(Paths.MessagePath).child((self.roomData?.id)!)
         // Messageの取得
         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         ref.queryLimited(toLast: 1000).observeSingleEvent(of: .value, with: { (snapshot) in
             print("DEBUG_PRINT: MessagesViewController.getMessages .observeSingleEventイベントが発生しました。")
             
             for v in snapshot.children {
-                if let _v = v as? FIRDataSnapshot {
+                if let _v = v as? DataSnapshot {
                     let messageData = MessageData(snapshot: _v, myId: (self.roomData?.id)!)
                     let senderId = messageData.senderId
                     let senderDisplayName = messageData.senderDisplayName
@@ -264,7 +264,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
     func storageUpload(photeImage: UIImage, key: String){
         
         if let data = UIImageJPEGRepresentation(photeImage, 0.25) {
-            StorageRef.getRiversRef(key: key).put(data , metadata: nil) { (metadata, error) in
+            StorageRef.getRiversRef(key: key).putData(data , metadata: nil) { (metadata, error) in
                 if error != nil {
                     print("Image Uploaded Error")
                     print(error!)
@@ -279,7 +279,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         print("DEBUG_PRINT: MessagesViewController.updateMessageData start")
         
         // messageをinsert
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         let key = ref.child(Paths.MessagePath).child((self.roomData?.id)!).childByAutoId().key
         ref.child(Paths.MessagePath).child((self.roomData?.id)!).child(key).setValue(inputData)
         if image != nil {
@@ -399,7 +399,7 @@ class MessagesViewController: JSQMessagesViewController, UIGestureRecognizerDele
         return cell
     }
     
-    func tappedAvatar() {
+    @objc func tappedAvatar() {
         print("tapped user avatar")
     }
     

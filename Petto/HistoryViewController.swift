@@ -55,7 +55,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if self.petData != nil, self.petData?.historys != nil, !(self.petData?.historys.isEmpty)! {
             for (leaveId,_) in (self.petData?.historys)! {
-                let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId)
+                let ref = Database.database().reference().child(Paths.LeavePath).child(leaveId)
                 ref.removeAllObservers()
             }
         }
@@ -176,7 +176,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
 
-    func handleReportButton(sender: UIButton, event:UIEvent) {
+    @objc func handleReportButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: HistoryViewController.handleReportButton start")
         
         // タップされたセルのインデックスを求める
@@ -204,7 +204,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         var inputData = [String : Any]()
         let time = NSDate.timeIntervalSinceReferenceDate
-        let ref = FIRDatabase.database().reference()
+        let ref = Database.database().reference()
         
         let key = ref.child(Paths.ViolationHistoryPath).childByAutoId().key
         inputData["mail"] = mail
@@ -222,12 +222,12 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         print("DEBUG_PRINT: HistoryViewController.excuteReport end")
     }
     
-    func cancel() {
+    @objc func cancel() {
         print("DEBUG_PRINT: HistoryViewController.cancel start")
         print("DEBUG_PRINT: HistoryViewController.cancel end")
     }
 
-    func handleFacebookButton(sender: UIButton, event:UIEvent) {
+    @objc func handleFacebookButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: HistoryViewController.handleFacebookButton start")
         
         // タップされたセルのインデックスを求める
@@ -263,7 +263,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         // historysのleaveを取得
         SVProgressHUD.show(RandomImage.getRandomImage(), status: "Now Loading...")
         for (leaveId,_) in (self.petData?.historys)! {
-            let ref = FIRDatabase.database().reference().child(Paths.LeavePath).child(leaveId).queryOrderedByKey()
+            let ref = Database.database().reference().child(Paths.LeavePath).child(leaveId).queryOrderedByKey()
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
                 print("DEBUG_PRINT: HistoryViewController.read .observeSingleEventイベントが発生しました。")
                 if let _ = snapshot.value as? NSDictionary {
